@@ -39,6 +39,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   int selectedOption = 0;
 
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
@@ -308,7 +309,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ],
                   ),
                   h20,
-                  TextFormField(
+                  selectedOption!=4
+                  ?TextFormField(
                     controller: _emailController,
                     autovalidateMode:
                     AutovalidateMode.onUserInteraction,
@@ -321,6 +323,28 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     decoration: InputDecoration(
                         floatingLabelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 14),
                         labelText: 'E-mail',
+                        labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 14),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                                color: ColorManager.black
+                            )
+                        )
+                    ),
+                  )
+                      : TextFormField(
+                    controller: _usernameController,
+                    autovalidateMode:
+                    AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Username is required';
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                        floatingLabelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 14),
+                        labelText: 'Username',
                         labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 14),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -419,7 +443,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             login();
                             final response = await ref.read(userLoginProvider).userLogin(
                               accountId: selectedOption,
-                              email: _emailController.text.trim(),
+                              email: selectedOption==4? _usernameController.text.trim():_emailController.text.trim(),
                               password: _passController.text.trim(),
                             );
                             if (response.isLeft()) {
@@ -470,30 +494,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           fontSize: 14),
                     ),
                   ),
-                  SizedBox(
-                    height: 18.h,
-                  ),
-                  ElevatedButton(
-                    onPressed: ()=>Get.to(()=>PatientMainPage()),
-                    style: TextButton.styleFrom(
-                      elevation: 0,
-                        backgroundColor: ColorManager.white,
-                        foregroundColor: Colors.black,
-                        fixedSize: Size(380.w, 50.h),
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(
-                            color: ColorManager.black
-                          ),
-                          borderRadius:
-                          BorderRadius.circular(10),
-                        )),
-                    child:Text(
-                      'Patient dashboard',
-                      style: getRegularStyle(
-                          color: ColorManager.black,
-                          fontSize: 14),
-                    ),
-                  ),
+
                   SizedBox(height: 50.h,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

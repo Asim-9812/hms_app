@@ -28,7 +28,29 @@ class LoginProvider{
         }
         else{
           if(accountId == 4){
-            return Left('Coming soon...');
+            final typeId = 4;
+            final response = await dio.post(Api.patientLogin, data: {
+              "username": email,
+              "password": password,
+            });
+
+            if(response.statusCode == 200 && response.data["result"]["id"] != 0){
+
+              if(typeId == accountId){
+                final token = response.data["result"]["token"];
+                Box tokenBox = Hive.box<String>('tokenBox');
+                tokenBox.put('accessToken', token);
+                print(response.data);
+                return Right(response.data);
+              }else{
+                return Left('Account Type doesn\'t match');
+              }
+
+            }else{
+              print(response.data);
+              return Left('Invalid Credential');
+            }
+
           }
           else{
             final response = await dio.post(Api.userLogin, data: {
