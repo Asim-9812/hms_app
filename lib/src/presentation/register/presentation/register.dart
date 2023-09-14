@@ -225,6 +225,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                     ],
                   ),
                   h100,
+                  h100,
+                  h100
                 ],
               ),
             ),

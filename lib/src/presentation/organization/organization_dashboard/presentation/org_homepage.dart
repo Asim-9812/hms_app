@@ -187,8 +187,6 @@ class _OrgHomePageState extends State<OrgHomePage> {
         h10,
         _overallStat(),
         h20,
-        _financialReport(),
-        h20,
         _notices(),
         h100,
         h100, h100, h100, h100
@@ -447,136 +445,12 @@ class _OrgHomePageState extends State<OrgHomePage> {
 
 
 
-  Widget _financialReport(){
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding:EdgeInsets.symmetric(horizontal: 18.w),
-          child: Text('Financial Reports',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 24:24.sp),),
-        ),
-        h20,
-        Container(
-          decoration: BoxDecoration(
-              
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: ColorManager.black.withOpacity(0.5)
-            )
-          ),
-          margin: EdgeInsets.symmetric(horizontal: 18.w),
-          padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  w10,
-                  Text('2022-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
-                ],
-              ),
-              h20,
-
-              Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: ColorManager.textGrey.withOpacity(0.1)
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal:18.w,vertical: 18.h),
-                    child: FaIcon(FontAwesomeIcons.dollarSign,color: Colors.green,size: 12,),
-                  ),
-                  w10,
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Total Profit',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:20),),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text('\$1522',style: getRegularStyle(color: ColorManager.primaryDark,fontSize: widget.isNarrowScreen?18.sp:20),),
-                          w10,
-                          FaIcon(CupertinoIcons.triangle_fill,color: ColorManager.primary,size: 16,)
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-
-
-              h20,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: ColorManager.textGrey.withOpacity(0.1)
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal:16.w,vertical: 18.h),
-                        child: FaIcon(FontAwesomeIcons.moneyBill,size: 12,color: ColorManager.primary,)
-                      ),
-                      w10,
-
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Total Income',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:20),),
-                          h10,
-                          Text('\$1522',style: getRegularStyle(color: ColorManager.primaryDark,fontSize: widget.isNarrowScreen?18.sp:20),),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: ColorManager.textGrey.withOpacity(0.1)
-                          ),
-                          padding: EdgeInsets.symmetric(horizontal:16.w,vertical: 18.h),
-                          child: FaIcon(FontAwesomeIcons.chartLine,size: 12,color: ColorManager.red,)
-                      ),
-                      w10,
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Total Expense',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:20),),
-                          h10,
-                          Text('\$1522',style: getRegularStyle(color: ColorManager.red,fontSize: widget.isNarrowScreen?18.sp:20),),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              h20,
-              FinancialCharts()
-            ],
-          ),
-        ),
-
-
-      ],
-    );
-  }
-
 
   Widget _notices(){
-    return Container(
+    return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18.w),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -585,79 +459,21 @@ class _OrgHomePageState extends State<OrgHomePage> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
             color: ColorManager.dotGrey.withOpacity(0.2),
-            child: Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Drink water everyday.', style: getMediumStyle(color: Colors.black,fontSize: 20)),
-                  h10,
-                  Text(
-                    'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
-                    style: getRegularStyle(color: Colors.black, fontSize: 16),
-                  ),
-                ],
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Drink water everyday.', style: getMediumStyle(color: Colors.black,fontSize: 20)),
+                h10,
+                Text(
+                  'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
+                  style: getRegularStyle(color: Colors.black, fontSize: 16),
+                ),
+              ],
             ),
           ),
           h10,
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
-            color: ColorManager.dotGrey.withOpacity(0.2),
-            child: Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Drink water everyday.', style: getMediumStyle(color: Colors.black,fontSize: 20)),
-                  h10,
-                  Text(
-                    'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
-                    style: getRegularStyle(color: Colors.black, fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          h10,
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
-            color: ColorManager.dotGrey.withOpacity(0.2),
-            child: Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Drink water everyday.', style: getMediumStyle(color: Colors.black,fontSize: 20)),
-                  h10,
-                  Text(
-                    'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
-                    style: getRegularStyle(color: Colors.black, fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          h10,
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
-            color: ColorManager.dotGrey.withOpacity(0.2),
-            child: Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Drink water everyday.', style: getMediumStyle(color: Colors.black,fontSize: 20)),
-                  h10,
-                  Text(
-                    'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
-                    style: getRegularStyle(color: Colors.black, fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          h10,
+
         ],
       ),
     );

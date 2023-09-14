@@ -477,9 +477,10 @@ class _PatientHomePageState extends State<PatientHomePage> {
   }
 
   Widget _buildHealthTips(bool isWideScreen){
-    return Container(
+    return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18.w),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -488,80 +489,20 @@ class _PatientHomePageState extends State<PatientHomePage> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
             color: ColorManager.dotGrey.withOpacity(0.2),
-            child: Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Drink water everyday.', style: getMediumStyle(color: Colors.black)),
-                  h10,
-                  Text(
-                    'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
-                    style: getRegularStyle(color: Colors.black, fontSize: 16),
-                  ),
-                ],
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Drink water everyday.', style: getMediumStyle(color: Colors.black)),
+                h10,
+                Text(
+                  'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
+                  style: getRegularStyle(color: Colors.black, fontSize: 16),
+                ),
+              ],
             ),
           ),
           h10,
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
-            color: ColorManager.dotGrey.withOpacity(0.2),
-            child: Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Drink water everyday.', style: getMediumStyle(color: Colors.black)),
-                  h10,
-                  Text(
-                    'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
-                    style: getRegularStyle(color: Colors.black, fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          h10,
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
-            color: ColorManager.dotGrey.withOpacity(0.2),
-            child: Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Drink water everyday.', style: getMediumStyle(color: Colors.black)),
-                  h10,
-                  Text(
-                    'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
-                    style: getRegularStyle(color: Colors.black, fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          h10,
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
-            color: ColorManager.dotGrey.withOpacity(0.2),
-            child: Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Drink water everyday.', style: getMediumStyle(color: Colors.black)),
-                  h10,
-                  Text(
-                    'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
-                    style: getRegularStyle(color: Colors.black, fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          h10,
-
         ],
       ),
     );

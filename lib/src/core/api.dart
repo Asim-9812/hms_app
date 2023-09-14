@@ -6,7 +6,8 @@ class Api{
 
    static const bearerToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiZjZhNTdmNC1iN2JmLTQzYmItODgzNy0yY2NiZDE4NDM5ODIiLCJ2YWxpZCI6IjEiLCJ1c2VyaWQiOiJET0MwMDAxIiwiZXhwIjoxNzIxMjc3NDc0LCJpc3MiOiJsb2NhbGhvc3QiLCJhdWQiOiJXZWxjb21lIn0.o7_teFlpwxmG7EOBO9eL46bfOwLySS6Qyc1Yj8ZgcyI';
 
-   static const baseUrl = 'http://192.168.1.110:404';
+   //static const baseUrl = 'http://192.168.1.110:404';
+   static const baseUrl = 'http://202.51.74.138:4010';
 
    ///register type accounts ...
    static const registerPatient = '$baseUrl/api/Member/Insert';

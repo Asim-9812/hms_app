@@ -463,6 +463,9 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
           duration: const Duration(seconds: 2)
       ),
     );
+    setState(() {
+      isPostingData = true;
+    });
     if(success.status.toLowerCase() == 'complete'){
       final paymentResponse = await ref.read(paymentSuccessProvider).InsertPaymentInfo(
           token: '',
