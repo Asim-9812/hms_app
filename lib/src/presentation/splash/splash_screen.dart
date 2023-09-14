@@ -28,7 +28,7 @@ class _SplashViewState extends ConsumerState<SplashView> {
   Widget build(BuildContext context) {
 
     final userBox = Hive.box<User>('session').values.toList();
-    if(userBox.isEmpty){
+    if(userBox[0].typeID == null){
       setState(() {
         accountId = 0;
       });

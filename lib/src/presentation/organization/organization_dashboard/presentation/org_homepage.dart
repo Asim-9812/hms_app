@@ -25,7 +25,7 @@ import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../../../dummy_datas/dummy_datas.dart';
-import '../../../../test/test.dart';
+
 import '../../../login/domain/model/user.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../../patient/quick_services/presentation/e_ticket.dart';

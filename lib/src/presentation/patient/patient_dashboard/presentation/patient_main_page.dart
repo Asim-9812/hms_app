@@ -7,7 +7,7 @@ import 'package:medical_app/src/app/app.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/test/test1.dart';
-import 'package:medical_app/src/test/testpage.dart';
+import 'package:medical_app/src/test/backup.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
