@@ -28,7 +28,6 @@ class LoginProvider{
         }
         else{
           if(accountId == 4){
-            final typeId = 4;
             final response = await dio.post(Api.patientLogin, data: {
               "username": email,
               "password": password,
@@ -36,20 +35,23 @@ class LoginProvider{
 
             if(response.statusCode == 200 && response.data["result"]["id"] != 0){
 
-              if(typeId == accountId){
-                final token = response.data["result"]["token"];
-                Box tokenBox = Hive.box<String>('tokenBox');
-                tokenBox.put('accessToken', token);
-                print(response.data);
-                return Right(response.data);
-              }else{
-                return Left('Account Type doesn\'t match');
-              }
+                response.data["result"]["typeID"] = 4;
+                  final token = response.data["result"]["token"];
+                  Box tokenBox = Hive.box<String>('tokenBox');
+                  tokenBox.put('accessToken', token);
+                  print(response.data);
+                  return Right(response.data);
 
-            }else{
+
+
+
+              }
+            else{
               print(response.data);
               return Left('Invalid Credential');
             }
+
+
 
           }
           else{

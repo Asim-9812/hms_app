@@ -69,7 +69,7 @@ class DocProfilePage extends ConsumerWidget {
                              mainAxisAlignment: MainAxisAlignment.start,
                              crossAxisAlignment: CrossAxisAlignment.start,
                              children: [
-                               Text('Details',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen?24.sp: 24),),
+                               Text('Details',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen?18.sp: 18),),
                                h10,
                                _profileItems(screenSize: screenSize,title: 'Phone Number', icon: FontAwesomeIcons.phone, onTap: (){},subtitle: '${data.contactNo}'),
                                _profileItems(screenSize: screenSize,title: 'E-Mail', icon: Icons.email_outlined, onTap: (){},subtitle: '${data.email}'),
@@ -85,7 +85,7 @@ class DocProfilePage extends ConsumerWidget {
                              mainAxisAlignment: MainAxisAlignment.start,
                              crossAxisAlignment: CrossAxisAlignment.start,
                              children: [
-                               Text('Education',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen?24.sp: 24),),
+                               Text('Education',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen?18.sp: 18),),
                                h10,
                                _profileItems(screenSize: screenSize,title: 'MD, University of Medical Sciences', icon: Icons.school, onTap: (){},subtitle: '20XX'),
                                _profileItems(screenSize: screenSize,title: 'Residency in Pediatrics, Children\'s Hospital', icon: Icons.school, onTap: (){},subtitle: '20XX'),
@@ -100,7 +100,7 @@ class DocProfilePage extends ConsumerWidget {
                              mainAxisAlignment: MainAxisAlignment.start,
                              crossAxisAlignment: CrossAxisAlignment.start,
                              children: [
-                               Text('Experience',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen?24.sp: 24),),
+                               Text('Experience',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen?18.sp: 18),),
                                h10,
                                _profileItems(screenSize: screenSize,title: 'Pediatrician, Sunshine Pediatrics Clinic', icon: CupertinoIcons.rectangle_3_offgrid_fill, onTap: (){},subtitle: '20XX-present'),
                                _profileItems(screenSize: screenSize,title: 'Pediatric Resident, Children\'s Hospital', icon: CupertinoIcons.rectangle_3_offgrid_fill, onTap: (){},subtitle: '20XX'),
@@ -115,7 +115,7 @@ class DocProfilePage extends ConsumerWidget {
                              mainAxisAlignment: MainAxisAlignment.start,
                              crossAxisAlignment: CrossAxisAlignment.start,
                              children: [
-                               Text('Certifications',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen?24.sp: 24),),
+                               Text('Certifications',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen?18.sp: 18),),
                                h10,
                                _profileItems(screenSize: screenSize,title: 'Board Certified Pediatrician', icon: FontAwesomeIcons.certificate, onTap: (){},subtitle: '20XX'),
                                _profileItems(screenSize: screenSize,title: 'Advanced Pediatric Life Support (APLS)', icon: FontAwesomeIcons.certificate, onTap: (){},subtitle: '20XX'),
@@ -130,7 +130,7 @@ class DocProfilePage extends ConsumerWidget {
                              mainAxisAlignment: MainAxisAlignment.start,
                              crossAxisAlignment: CrossAxisAlignment.start,
                              children: [
-                               Text('Patient Reviews (152)',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen?24.sp: 24),),
+                               Text('Patient Reviews (152)',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen?18.sp: 18),),
                                h10,
                                Container(
                                  padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
@@ -142,7 +142,7 @@ class DocProfilePage extends ConsumerWidget {
                                    crossAxisAlignment: CrossAxisAlignment.center,
                                    children: [
                                      CircleAvatar(
-                                       radius: 30.r,
+                                       radius: 20.r,
                                        backgroundColor: ColorManager.black,
                                        child: Icon(Icons.person,color: ColorManager.white,),
                                      ),
@@ -158,7 +158,7 @@ class DocProfilePage extends ConsumerWidget {
                                                  mainAxisAlignment: MainAxisAlignment.start,
                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                  children: [
-                                                   FaIcon(i>3?Icons.star_border:Icons.star,color: ColorManager.black,)
+                                                   FaIcon(i>3?Icons.star_border:Icons.star,color: ColorManager.black,size: 16,)
                                                  ],
                                                ),
                                            ],
@@ -183,7 +183,7 @@ class DocProfilePage extends ConsumerWidget {
                                    crossAxisAlignment: CrossAxisAlignment.center,
                                    children: [
                                      CircleAvatar(
-                                       radius: 30.r,
+                                       radius: 20.r,
                                        backgroundColor: ColorManager.black,
                                        child: Icon(Icons.person,color: ColorManager.white,),
                                      ),
@@ -199,7 +199,7 @@ class DocProfilePage extends ConsumerWidget {
                                                  mainAxisAlignment: MainAxisAlignment.start,
                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                  children: [
-                                                   FaIcon(i>3?Icons.star_border:Icons.star,color: ColorManager.black,)
+                                                   FaIcon(i>3?Icons.star_border:Icons.star,color: ColorManager.black,size: 16,)
                                                  ],
                                                ),
                                            ],
@@ -224,7 +224,7 @@ class DocProfilePage extends ConsumerWidget {
                                    crossAxisAlignment: CrossAxisAlignment.center,
                                    children: [
                                      CircleAvatar(
-                                       radius: 30.r,
+                                       radius: 20.r,
                                        backgroundColor: ColorManager.black,
                                        child: Icon(Icons.person,color: ColorManager.white,),
                                      ),
@@ -240,7 +240,7 @@ class DocProfilePage extends ConsumerWidget {
                                                  mainAxisAlignment: MainAxisAlignment.start,
                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                  children: [
-                                                   FaIcon(i>3?Icons.star_border:Icons.star,color: ColorManager.black,)
+                                                   FaIcon(i>3?Icons.star_border:Icons.star,color: ColorManager.black,size: 16,)
                                                  ],
                                                ),
                                            ],
@@ -265,7 +265,7 @@ class DocProfilePage extends ConsumerWidget {
                                    crossAxisAlignment: CrossAxisAlignment.center,
                                    children: [
                                      CircleAvatar(
-                                       radius: 30.r,
+                                       radius: 20.r,
                                        backgroundColor: ColorManager.black,
                                        child: Icon(Icons.person,color: ColorManager.white,),
                                      ),
@@ -281,7 +281,7 @@ class DocProfilePage extends ConsumerWidget {
                                                  mainAxisAlignment: MainAxisAlignment.start,
                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                  children: [
-                                                   FaIcon(i>3?Icons.star_border:Icons.star,color: ColorManager.black,)
+                                                   FaIcon(i>3?Icons.star_border:Icons.star,color: ColorManager.black,size: 16,)
                                                  ],
                                                ),
                                            ],

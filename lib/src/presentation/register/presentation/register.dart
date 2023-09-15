@@ -220,8 +220,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Already have an account?',style: getRegularStyle(color: ColorManager.black,fontSize:isNarrowScreen?14: 18),),
-                      TextButton(onPressed: ()=>Get.to(()=>LoginPage(),transition: Transition.fade), child: Text('Login.',style: getRegularStyle(color: ColorManager.blue,fontSize:isNarrowScreen?14: 18),))
+                      Text('Already have an account?',style: getRegularStyle(color: ColorManager.black,fontSize:isNarrowScreen?18.sp: 18),),
+                      TextButton(onPressed: ()=>Get.to(()=>LoginPage(),transition: Transition.fade), child: Text('Login.',style: getRegularStyle(color: ColorManager.blue,fontSize:isNarrowScreen?18.sp: 18),))
                     ],
                   ),
                   h100,

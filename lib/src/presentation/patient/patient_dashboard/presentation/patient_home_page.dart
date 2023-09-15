@@ -493,11 +493,11 @@ class _PatientHomePageState extends State<PatientHomePage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Drink water everyday.', style: getMediumStyle(color: Colors.black)),
+                Text('Drink water everyday.', style: getMediumStyle(color: Colors.black,fontSize: 16)),
                 h10,
                 Text(
                   'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
-                  style: getRegularStyle(color: Colors.black, fontSize: 16),
+                  style: getRegularStyle(color: Colors.black, fontSize: 14),
                 ),
               ],
             ),
@@ -526,8 +526,8 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent,) {
-    // final userBox = Hive.box<User>('session').values.toList();
-    // String firstName = userBox[0].firstName!;
+    final userBox = Hive.box<User>('session').values.toList();
+    String firstName = userBox[0].firstName!;
     final deviceSize = MediaQuery.of(context).size;
     const size = 60;
     print('Shrink Offset: $shrinkOffset');
@@ -535,7 +535,7 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     return Stack(
       fit: StackFit.expand,
       children: [
-        if(shrinkOffset<15)buildBackground(shrinkOffset, context, scaffoldKey,'User'),
+        if(shrinkOffset<15)buildBackground(shrinkOffset, context, scaffoldKey,firstName),
         if(shrinkOffset >= 160.0)buildAppBar(shrinkOffset,context),
 
       ],
@@ -613,7 +613,7 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                 children: [
                   h20,
                   Text('Good Morning,',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isWideScreen? 16:16.sp),),
-                  Text('User',style: getMediumStyle(color: ColorManager.black,fontSize: isWideScreen?24:28.sp),),
+                  Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: isWideScreen?24:28.sp),),
                 ],
               ),
               actions: [

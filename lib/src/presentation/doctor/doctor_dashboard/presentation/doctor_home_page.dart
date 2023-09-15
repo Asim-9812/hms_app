@@ -14,6 +14,7 @@ import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
 import 'package:medical_app/src/presentation/doctor/profile/presentation/profile_page.dart';
 
 import '../../../../core/resources/value_manager.dart';
+import '../../../login/domain/model/user.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../patient_profile/presentation/doctor_patient_profile_page.dart';
 
@@ -40,8 +41,8 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // final userBox = Hive.box<User>('session').values.toList();
-    String firstName = 'User';//userBox[0].firstName!;
+    final userBox = Hive.box<User>('session').values.toList();
+    String firstName = userBox[0].firstName!;
     return FadeIn(
       delay: Duration(milliseconds: 200),
       duration: Duration(milliseconds: 500),
@@ -154,7 +155,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
   Widget _overallStat() {
 
     return Container(
-      height: widget.isWideScreen? 260:200,
+      height: widget.isWideScreen? 240:180,
       width: double.infinity,
       child: ListView(
         scrollDirection: Axis.horizontal,
@@ -358,35 +359,48 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18),
+            padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8),
             width: double.infinity,
             decoration: BoxDecoration(
-                color: ColorManager.orange.withOpacity(0.4),
+                // color: ColorManager.orange.withOpacity(0.2),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10),
                 ),
-                border:Border.all(
-                    color: ColorManager.black.withOpacity(0.4)
-                )
+                // border:Border.all(
+                //     color: ColorManager.black.withOpacity(0.4)
+                // )
             ),
-            child: Text('My Circle',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('My Circle',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                InkWell(
+                  onTap: (){},
+                  child: Text('See more',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
+                ),
+              ],
+            ),
 
           ),
           Container(
-              decoration: BoxDecoration(
-                  border: Border.symmetric(
-                      vertical: BorderSide(
-                          color: ColorManager.black.withOpacity(0.5)
-                      )
-                  )
-              ),
-              height: 210,
+              // decoration: BoxDecoration(
+              //     border: Border.symmetric(
+              //         vertical: BorderSide(
+              //             color: ColorManager.black.withOpacity(0.5)
+              //         ),
+              //         horizontal: BorderSide(
+              //             color: ColorManager.black.withOpacity(0.5)
+              //         )
+              //     ),
+              // ),
+              height: 180,
               width: double.infinity,
               child: ListView.builder(
                 itemCount:7,
+                physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(vertical: 12.h),
+                padding: EdgeInsets.symmetric(vertical: 8.h),
                 itemBuilder: (context , i){
                   return InkWell(
                     onTap: ()=>Get.to(()=>DocProfilePage()),
@@ -422,25 +436,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
               )
 
           ),
-          InkWell(
-            onTap: (){},
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: ColorManager.orange.withOpacity(0.4),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                  border:Border.all(
-                      color: ColorManager.black.withOpacity(0.4)
-                  )
-              ),
-              child: Center(child: Text('See more',style: getMediumStyle(color: ColorManager.black,fontSize: 24),)),
 
-            ),
-          ),
         ],
       ),
     );
@@ -457,10 +453,10 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18),
+            padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 8),
             width: double.infinity,
             decoration: BoxDecoration(
-                color: ColorManager.primary,
+                color: ColorManager.primary.withOpacity(0.8),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10),
@@ -469,7 +465,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('My Tasks',style: getMediumStyle(color: ColorManager.white,fontSize: 24),),
+                Text('My Tasks',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
                 FaIcon(Icons.add,color: ColorManager.white,),
               ],
             ),
@@ -535,19 +531,23 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
           InkWell(
             onTap: (){},
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12),
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: ColorManager.primary,
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(10),
-                    bottomLeft: Radius.circular(10),
-                  )
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
+                ),
+                border: Border.all(
+                  color: ColorManager.black.withOpacity(0.5),
+
+                ),
               ),
               child: Center(
-                  child: Text('See more',style: getMediumStyle(color: ColorManager.white,fontSize: 24),)),
+                child: Text('See more', style: getMediumStyle(color: ColorManager.black, fontSize: 16)),
+              ),
+            )
 
-            ),
           ),
         ],
       ),
@@ -570,7 +570,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18),
+            padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 16),
             width: double.infinity,
             decoration: BoxDecoration(
                 color: ColorManager.blue.withOpacity(0.8),
@@ -579,7 +579,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                   topRight: Radius.circular(10),
                 )
             ),
-            child: Text('My Appointments',style: getMediumStyle(color: ColorManager.white,fontSize: 24),),
+            child: Text('My Appointments',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
 
           ),
           Container(
@@ -680,14 +680,16 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
               padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12),
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: ColorManager.blue.withOpacity(0.8),
                   borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(10),
                     bottomLeft: Radius.circular(10),
-                  )
+                  ),
+                border: Border.all(
+                  color: ColorManager.black.withOpacity(0.5)
+                )
               ),
               child: Center(
-                  child: Text('See more',style: getMediumStyle(color: ColorManager.white,fontSize: 24),)),
+                  child: Text('See more',style: getMediumStyle(color: ColorManager.black,fontSize: 16),)),
 
             ),
           ),
@@ -722,7 +724,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 18.w),
-          child: Text('My Patients',style: getMediumStyle(color: ColorManager.black),),
+          child: Text('My Patients',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
         ),
         h20,
         SingleChildScrollView(

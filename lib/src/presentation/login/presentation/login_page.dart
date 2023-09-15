@@ -36,7 +36,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   // List<String> accountType = ['Merchant','Organization','Professional', 'Patient'];
   // String selectedValue = 'Professional';
   bool _obscureText = true ;
-  int selectedOption = 0;
+  int selectedOption = 1;
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
@@ -165,7 +165,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   Widget _buildBody2(bool isWideScreen,bool isNarrowScreen) {
-    final fontSize = isWideScreen ? 14.0 : 14.sp;
+    final fontSize = isWideScreen ? 18.0 : 18.sp;
+    final fontSize2 = isWideScreen ? 14.0 : 14.sp;
     final iconSize = isWideScreen ? 20.0 : 20.sp;
 
     return SlideInUp(
@@ -227,7 +228,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               h10,
                               Text(
                                 'Organization',
-                                style: getRegularStyle(color: selectedOption == 1 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
+                                style: getRegularStyle(color: selectedOption == 1 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize2),
                               )
                             ],
                           ),
@@ -263,7 +264,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               h10,
                               Text(
                                 'Doctor',
-                                style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
+                                style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize2),
                               )
                             ],
                           ),
@@ -299,7 +300,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               h10,
                               Text(
                                 'Patient',
-                                style: getRegularStyle(color: selectedOption == 4 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
+                                style: getRegularStyle(color: selectedOption == 4 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize2),
                               )
                             ],
                           ),
@@ -491,7 +492,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       'Sign In',
                       style: getMediumStyle(
                           color: ColorManager.white,
-                          fontSize: 14),
+                          fontSize: 18),
                     ),
                   ),
 

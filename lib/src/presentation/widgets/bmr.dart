@@ -29,6 +29,7 @@ class BMRState extends State<BMR> {
   double result = 0.0;
   int category = 0;
   int unit =1;
+  bool disableValidate = true;
 
   double _calculateHeight(double y){
     double res = 10 - (y * 10).toPrecision(1);
@@ -325,26 +326,12 @@ class BMRState extends State<BMR> {
                               Text('Age',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
                               h10,
                               Container(
-                                margin: EdgeInsets.symmetric(horizontal: 18.w),
-                                decoration: BoxDecoration(
-                                    color: ageValid
-                                        ? ColorManager.dotGrey.withOpacity(0.2)
-                                        : Colors.red.withOpacity(0.2),
-                                    border: Border.all(
-                                      color: ageValid
-                                          ? ColorManager.dotGrey.withOpacity(0.5)
-                                          : Colors.red.withOpacity(0.5),
-                                    )
-                                ),
-                                padding:EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h) ,
+                                padding: EdgeInsets.symmetric(horizontal: 18.w),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Container(
-                                      width: 50.w,
+                                    Expanded(
                                       child: TextFormField(
-                                        controller: ageController,
+                                        autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
                                         validator: (value){
                                           if(value!.isEmpty){
                                             return 'Required';
@@ -364,21 +351,19 @@ class BMRState extends State<BMR> {
                                             return null;
                                           }
                                         },
-                                        style: getRegularStyle(color: ColorManager.black,fontSize: 18),
-                                        keyboardType: TextInputType.numberWithOptions(decimal: true),
+                                        controller: ageController,
+                                        keyboardType: TextInputType.phone,
+                                        style: getMediumStyle(color: ColorManager.black),
                                         decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.only(left: 8.w,top: 24.h),
-                                            border: UnderlineInputBorder()
+                                            filled: true,
+                                            fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                                            border: OutlineInputBorder(
+                                            )
                                         ),
                                       ),
                                     ),
-                                    Container(
-                                      width: 70.w,
-                                      child: Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: Text('yrs old',style: getRegularStyle(color: ColorManager.black,fontSize: 20),)),
-                                    ),
-
+                                    w10,
+                                    Text('yrs old')
                                   ],
                                 ),
                               ),
@@ -386,26 +371,12 @@ class BMRState extends State<BMR> {
                               Text('Weight',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
                               h10,
                               Container(
-                                margin: EdgeInsets.symmetric(horizontal: 18.w),
-                                decoration: BoxDecoration(
-                                    color: weightValid
-                                        ? ColorManager.dotGrey.withOpacity(0.2)
-                                        : Colors.red.withOpacity(0.2),
-                                    border: Border.all(
-                                      color: weightValid
-                                          ? ColorManager.dotGrey.withOpacity(0.5)
-                                          : Colors.red.withOpacity(0.5),
-                                    )
-                                ),
-                                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
+                                padding: EdgeInsets.symmetric(horizontal: 18.w),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Container(
-                                      width: 50.w,
+                                    Expanded(
                                       child: TextFormField(
-                                        controller: weightController,
+                                        autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
                                         validator: (value) {
                                           if (value!.isEmpty) {
                                             return 'Required';
@@ -423,25 +394,19 @@ class BMRState extends State<BMR> {
                                             return null;
                                           }
                                         },
-                                        style: getRegularStyle(color: ColorManager.black, fontSize: 18),
+                                        controller: weightController,
                                         keyboardType: TextInputType.numberWithOptions(decimal: true),
+                                        style: getMediumStyle(color: ColorManager.black),
                                         decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.only(left: 8.w, top: 24.h),
-                                          border: UnderlineInputBorder(),
+                                            filled: true,
+                                            fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                                            border: OutlineInputBorder(
+                                            )
                                         ),
                                       ),
                                     ),
-                                    Container(
-                                      width: 70.w,
-                                      child: Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Text(
-                                          'in KG',
-                                          style: getRegularStyle(
-                                              color: ColorManager.black, fontSize: 20),
-                                        ),
-                                      ),
-                                    ),
+                                    w10,
+                                    Text('in Kgs')
                                   ],
                                 ),
                               ),
@@ -504,18 +469,20 @@ class BMRState extends State<BMR> {
                         decoration: BoxDecoration(
                             color: ColorManager.primary,
                             border: BorderDirectional(
-                                start: BorderSide(
-                                    color: ColorManager.primaryDark
-                                ),
-                                bottom: BorderSide(
-                                    color: ColorManager.primaryDark
-                                )
+                              start: BorderSide(
+                                color: ColorManager.primaryDark,
+                              ),
+                              bottom: BorderSide(
+                                  color: ColorManager.primaryDark
+                              ),
+
                             )
                         ),
                         child: Container(
                           color: ColorManager.white,
                           child: Stack(
                             children: [
+
                               Align(
                                 alignment: Alignment.bottomLeft,
                                 child:  Container(
@@ -551,33 +518,28 @@ class BMRState extends State<BMR> {
                                 ),
                               ),
                               Align(
-                                alignment: Alignment(0, y),
+                                alignment: Alignment(0, y*1.03),
                                 child: Container(
                                   height: 100,
                                   child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Container(
-                                          color: ColorManager.primary,
-                                          height: 50,
-                                          width: 100,
-                                          child: Center(
-                                            child: Text(
-                                              '${unit ==1 ? heightCM.toPrecision(1):_convertCmToFeetAndInches(heightCM)}',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 20,
-                                              ),
-                                            ),
+                                      Container(
+                                        color: ColorManager.primary,
+                                        height: 50,
+                                        width: 70,
+                                        child: Center(
+                                          child: Text(unit ==1 ?
+                                          '${ heightCM.toPrecision(1)} cm':'${_convertCmToFeetAndInches(heightCM).$1} ft' ,
+                                            style: getRegularStyle(color: ColorManager.white),
                                           ),
                                         ),
                                       ),
                                       Container(
-                                        height: 2,
+                                        height: 0.5,
                                         width: double.infinity,
-                                        color: Colors.black,
+                                        color: ColorManager.primaryDark,
                                       ),
                                     ],
                                   ),

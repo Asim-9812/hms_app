@@ -11,10 +11,10 @@ import 'package:medical_app/src/presentation/doctor/doctor_dashboard/presentatio
 import 'package:medical_app/src/presentation/doctor/doctor_utilities/presentation/doctor_utilities.dart';
 import 'package:medical_app/src/presentation/doctor/documents/presentation/document_page.dart';
 import 'package:medical_app/src/presentation/organization/doctor_statistics/presentation/doctor_stat_page.dart';
-import 'package:medical_app/src/presentation/organization/org_settings/presentation/org_settings.dart';
 import 'package:medical_app/src/presentation/organization/organization_dashboard/presentation/org_homepage.dart';
 import 'package:medical_app/src/presentation/organization/patient_reports/presentation/report_page_org.dart';
 import 'package:medical_app/src/presentation/patient_registration/presentation/patient_registration.dart';
+import 'package:medical_app/src/presentation/settings/settings_global.dart';
 import 'package:medical_app/src/test/test1.dart';
 import 'package:medical_app/src/test/backup.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
@@ -128,7 +128,7 @@ class _AnimatedBarExampleState extends State<OrgMainPage> {
           OrgHomePage(isWideScreen,isNarrowScreen),
           OrgPatientReports(),
           DoctorReportsPage(isWideScreen, isNarrowScreen),
-          OrgSettings(isWideScreen,isNarrowScreen),
+          Settings(isWideScreen,isNarrowScreen),
         ],
       ),
     );

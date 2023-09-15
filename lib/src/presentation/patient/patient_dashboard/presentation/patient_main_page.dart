@@ -13,8 +13,8 @@ import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import '../../../settings/settings_global.dart';
 import '../../documents/presentation/document_page.dart';
-import '../../settings/presentation/settings_page.dart';
 import 'patient_home_page.dart';
 import '../../scan/presentation/qr_scan.dart';
 import '../../utilities/presentation/patient_utilities.dart';
@@ -121,7 +121,7 @@ class _AnimatedBarExampleState extends State<PatientMainPage> {
           PatientHomePage(isWideScreen,isNarrowScreen),
           PatientDocumentPage(isWideScreen,isNarrowScreen),
           PatientUtilitiesPage(isWideScreen,isNarrowScreen),
-          SettingsPage(isWideScreen,isNarrowScreen)
+          Settings(isWideScreen,isNarrowScreen)
         ],
       ),
     );

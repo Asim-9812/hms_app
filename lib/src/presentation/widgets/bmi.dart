@@ -559,7 +559,7 @@ class BMIState extends State<BMI> {
                                 child: Container(
                                   height: 100,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       Container(
@@ -574,7 +574,7 @@ class BMIState extends State<BMI> {
                                         ),
                                       ),
                                       Container(
-                                        height: 2,
+                                        height: 0.5,
                                         width: double.infinity,
                                         color: ColorManager.primaryDark,
                                       ),

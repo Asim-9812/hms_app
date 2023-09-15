@@ -81,7 +81,7 @@ class _PatientDocumentPageState extends State<DoctorDocumentPage> {
     bool isNarrowScreen = screenSize.width < 380;
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+      padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 8.h),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -93,7 +93,7 @@ class _PatientDocumentPageState extends State<DoctorDocumentPage> {
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: widget.isWideScreen? 3: isNarrowScreen?1: 2,
+                crossAxisCount: widget.isWideScreen? 4: isNarrowScreen?2: 3,
                 crossAxisSpacing: widget.isWideScreen?8:8.w,
                 mainAxisSpacing: widget.isWideScreen?8: 8.h,
                 childAspectRatio: widget.isWideScreen? 14/11:14/10
@@ -140,7 +140,7 @@ class _PatientDocumentPageState extends State<DoctorDocumentPage> {
         splashColor: ColorManager.blue.withOpacity(0.2),
         splashFactory: InkSplash.splashFactory,
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,18 +160,18 @@ class _PatientDocumentPageState extends State<DoctorDocumentPage> {
 
                 ],
               ),
-              FaIcon(Icons.folder,color: ColorManager.blue.withOpacity(0.8),size: 40,),
+              FaIcon(Icons.folder,color: ColorManager.blue.withOpacity(0.8),size: 20,),
               SizedBox(
                 height: 5,
               ),
-              Text('$folderName',style: getRegularStyle(color: ColorManager.blueText,fontSize: 18),),
+              Text('$folderName',style: getRegularStyle(color: ColorManager.blueText,fontSize: 12),),
               SizedBox(
                 height: 5,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('$fileNumbers files',style: getRegularStyle(color: ColorManager.blueText.withOpacity(0.5),fontSize: 14),),
+                  Text('$fileNumbers files',style: getRegularStyle(color: ColorManager.blueText.withOpacity(0.5),fontSize: 8),),
                   if(isLocked) FaIcon(CupertinoIcons.lock,color: ColorManager.iconGrey,size: 16,)
                 ],
               ),

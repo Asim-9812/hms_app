@@ -346,7 +346,7 @@ class _PatientUtilitiesPageState extends State<PatientUtilitiesPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(caloriesBurned.toString(),style: getRegularStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 20 :20.sp),),
+                            Text(caloriesBurned.toPrecision(1).toString(),style: getRegularStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 20 :20.sp),),
                             Text('Calories\n burned',style: getRegularStyle(color: ColorManager.black.withOpacity(0.5),fontSize: widget.isWideScreen? 12 :12.sp),)
                           ],
                         ),

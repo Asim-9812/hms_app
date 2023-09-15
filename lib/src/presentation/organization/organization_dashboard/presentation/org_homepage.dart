@@ -463,11 +463,11 @@ class _OrgHomePageState extends State<OrgHomePage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Drink water everyday.', style: getMediumStyle(color: Colors.black,fontSize: 20)),
+                Text('Drink water everyday.', style: getMediumStyle(color: Colors.black,fontSize: 16)),
                 h10,
                 Text(
                   'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
-                  style: getRegularStyle(color: Colors.black, fontSize: 16),
+                  style: getRegularStyle(color: Colors.black, fontSize: 12),
                 ),
               ],
             ),

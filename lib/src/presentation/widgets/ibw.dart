@@ -378,18 +378,20 @@ class IBWState extends State<IBW> {
                         decoration: BoxDecoration(
                             color: ColorManager.primary,
                             border: BorderDirectional(
-                                start: BorderSide(
-                                    color: ColorManager.primaryDark
-                                ),
-                                bottom: BorderSide(
-                                    color: ColorManager.primaryDark
-                                )
+                              start: BorderSide(
+                                color: ColorManager.primaryDark,
+                              ),
+                              bottom: BorderSide(
+                                  color: ColorManager.primaryDark
+                              ),
+
                             )
                         ),
                         child: Container(
                           color: ColorManager.white,
                           child: Stack(
                             children: [
+
                               Align(
                                 alignment: Alignment.bottomLeft,
                                 child:  Container(
@@ -425,28 +427,26 @@ class IBWState extends State<IBW> {
                                 ),
                               ),
                               Align(
-                                alignment: Alignment(0, y),
+                                alignment: Alignment(0, y*1.03),
                                 child: Container(
                                   height: 100,
                                   child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Container(
-                                          color: ColorManager.primary,
-                                          height: 50,
-                                          width: 100,
-                                          child: Center(
-                                            child: Text(unit ==1 ?
-                                            '${ heightCM.toPrecision(1)} cm':'${_convertCmToFeetAndInches(heightCM).$1} ft' ,
-                                              style: getRegularStyle(color: ColorManager.white),
-                                            ),
+                                      Container(
+                                        color: ColorManager.primary,
+                                        height: 50,
+                                        width: 70,
+                                        child: Center(
+                                          child: Text(unit ==1 ?
+                                          '${ heightCM.toPrecision(1)} cm':'${_convertCmToFeetAndInches(heightCM).$1} ft' ,
+                                            style: getRegularStyle(color: ColorManager.white),
                                           ),
                                         ),
                                       ),
                                       Container(
-                                        height: 2,
+                                        height: 0.5,
                                         width: double.infinity,
                                         color: ColorManager.primaryDark,
                                       ),
@@ -454,7 +454,6 @@ class IBWState extends State<IBW> {
                                   ),
                                 ),
                               )
-
                             ],
                           ),
                         ),

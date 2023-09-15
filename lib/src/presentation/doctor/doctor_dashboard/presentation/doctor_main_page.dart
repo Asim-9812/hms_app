@@ -19,10 +19,9 @@ import 'package:url_launcher/url_launcher_string.dart';
 import '../../../../test/test.dart';
 import '../../../patient/documents/presentation/document_page.dart';
 import '../../../patient/scan/presentation/qr_scan.dart';
-import '../../../patient/settings/presentation/settings_page.dart';
 import '../../../patient/utilities/presentation/patient_utilities.dart';
+import '../../../settings/settings_global.dart';
 import '../../patient_reports/presentation/report_page_doctor.dart';
-import '../../settings_doctor/settings_doctor.dart';
 
 
 
@@ -213,7 +212,7 @@ class _AnimatedBarExampleState extends State<DoctorMainPage> with SingleTickerPr
           DoctorDocumentPage(isWideScreen,isNarrowScreen),
           PatientReportPageDoctor(),
           DoctorUtilityPage(),
-          SettingsDoctor(isWideScreen, isNarrowScreen)
+          Settings(isWideScreen, isNarrowScreen)
         ],
       ),
     );

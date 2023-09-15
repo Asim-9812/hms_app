@@ -9,16 +9,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
-import '../../../core/resources/color_manager.dart';
-import '../../../core/resources/style_manager.dart';
-import '../../../core/resources/value_manager.dart';
-import '../../login/domain/service/login_service.dart';
-import '../../login/presentation/status_page.dart';
+import '../../core/resources/color_manager.dart';
+import '../../core/resources/style_manager.dart';
+import '../../core/resources/value_manager.dart';
+import '../login/domain/service/login_service.dart';
+import '../login/presentation/status_page.dart';
 
-class SettingsDoctor extends ConsumerWidget {
+class Settings extends ConsumerWidget {
   final bool isWideScreen;
   final bool isNarrowScreen;
-  SettingsDoctor(this.isWideScreen,this.isNarrowScreen);
+  Settings(this.isWideScreen,this.isNarrowScreen);
 
   @override
   Widget build(BuildContext context,ref) {
@@ -46,7 +46,6 @@ class SettingsDoctor extends ConsumerWidget {
                   Text('Account & Settings',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen?24.sp:isWideScreen?16: 24),),
                   h10,
                   _profileItems(title: 'Change Password', icon: FontAwesomeIcons.key, onTap: (){},trailing: true),
-                  _profileItems(title: 'Language', icon: Icons.sort_by_alpha, onTap: (){},trailing: true),
                   _profileItems(title: 'Permissions', icon: FontAwesomeIcons.universalAccess, onTap: (){},trailing: true),
                 ],
               ),
@@ -61,7 +60,6 @@ class SettingsDoctor extends ConsumerWidget {
                 children: [
                   Text('Help & Support',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen?24.sp: isWideScreen?16:24),),
                   h10,
-                  _profileItems(title: 'Emergency Support', icon: Icons.warning_amber, onTap: (){},trailing: true),
                   _profileItems(title: 'Help Center', icon: Icons.question_mark, onTap: (){},trailing: true),
                   _profileItems(title: 'Terms & Policies', icon: FontAwesomeIcons.book, onTap: (){},trailing: true),
                   h20,
@@ -84,26 +82,19 @@ class SettingsDoctor extends ConsumerWidget {
             h20,
             Container(
 
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('Version 1.0.0',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
-                  h10,
-                  Text('Developed by Search Technology',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
-                  h10,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FaIcon(FontAwesomeIcons.facebook),
-                      w12,
-                      FaIcon(FontAwesomeIcons.linkedin),
-                      w12,
-                      FaIcon(FontAwesomeIcons.twitter),
-                    ],
-                  )
-                ],
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('Version 1.0.0',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                    h10,
+                    Text('Developed by Search Technology',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
+                    h10,
+
+                  ],
+                ),
               ),
             ),
             h100,
