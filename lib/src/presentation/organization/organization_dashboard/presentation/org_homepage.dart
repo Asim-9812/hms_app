@@ -87,17 +87,17 @@ class _OrgHomePageState extends State<OrgHomePage> {
   Future<void> checkLocationPermission() async {
     _locationPermission = await Geolocator.requestPermission();
     if (_locationPermission == LocationPermission.denied) {
-      print('permission denied');
+      ('permission denied');
     } else if (_locationPermission == LocationPermission.deniedForever) {
-      print('permission denied');
+      ('permission denied');
     } else if (_locationPermission == LocationPermission.always ||
         _locationPermission == LocationPermission.whileInUse) {
-      print('permission given');
+      ('permission given');
 
       final _currentPosition = await Geolocator.getCurrentPosition();
 
       _userPosition = _currentPosition;
-      print(_userPosition);
+      (_userPosition);
     }
   }
 
@@ -509,7 +509,7 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     // String firstName = userBox[0].firstName!;
     final deviceSize = MediaQuery.of(context).size;
     const size = 60;
-    print('Shrink Offset: $shrinkOffset');
+    ('Shrink Offset: $shrinkOffset');
 
     return Stack(
       fit: StackFit.expand,

@@ -86,7 +86,7 @@ class UpdateProfile{
       };
 
       FormData formData = FormData.fromMap(data);
-      print(data);
+      (data);
       final response = await dio.put('${Api.userUpdate}', data: formData);
 
 
@@ -94,27 +94,27 @@ class UpdateProfile{
         String? profileImg = response.data['result']['profileImage'];
         String? signatureImg = response.data['result']['signatureImage'];
 
-        print(profileImg);
-        print(signatureImg);
+        (profileImg);
+        (signatureImg);
 
         final userBox = Hive.box<User>('session').values.toList();
 
         userBox[0].profileImage = profileImg??'';
         userBox[0].signatureImage = signatureImg??'';
 
-        print(userBox[0].firstName);
-        print(userBox[0].lastName);
-        print(userBox[0].profileImage);
-        print(userBox[0].signatureImage);
-        print(userBox[0].liscenceNo);
+        (userBox[0].firstName);
+        (userBox[0].lastName);
+        (userBox[0].profileImage);
+        (userBox[0].signatureImage);
+        (userBox[0].liscenceNo);
 
         return Right(response.data);
       } else {
-        print('print error : ${response.data}');
+        (' error : ${response.data}');
         return Left('Unable to register.');
       }
     } on DioException catch (e) {
-      print('${e.response}');
+      ('${e.response}');
       return Left('Something went wrong');
     }
   }

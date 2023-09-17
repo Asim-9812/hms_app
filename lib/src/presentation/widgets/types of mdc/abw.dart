@@ -398,7 +398,7 @@ class _BSAState extends State<ABW> {
     } else if(ft !=null && inch != null){
       cm = ((ft * 12) + inch)*2.54;
     }
-    print('cm : $cm');
+    ('cm : $cm');
 
     final ibw  = gender ==1 ? (50 +2.3*((cm/2.54)-60)):(45.5 +2.3*((cm/2.54)-60));
     final abw = ibw + 0.4 *(w-ibw);

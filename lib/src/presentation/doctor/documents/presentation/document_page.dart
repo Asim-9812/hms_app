@@ -74,7 +74,7 @@ class _PatientDocumentPageState extends State<DoctorDocumentPage> {
   Widget myFolders(BuildContext context){
     // Get the screen size
     final screenSize = MediaQuery.of(context).size;
-    print(screenSize);
+    (screenSize);
 
     // Check if width is greater than height
     bool isWideScreen = screenSize.width > 500;
@@ -152,7 +152,7 @@ class _PatientDocumentPageState extends State<DoctorDocumentPage> {
                   SizedBox(),
                   InkWell(
                       onTap: () async {
-                        print('pressed!!');
+                        ('pressed!!');
                         _showFolderDialog(context,isFolderLocked);
                       },
                       child: FaIcon(Icons.more_horiz,color: ColorManager.blue,size: 18,))

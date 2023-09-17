@@ -99,7 +99,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
 
       return dartz.Right(response.data);
     } on DioException catch (err) {
-      print(err.response);
+      (err.response);
       throw Exception('1. ${err.response!.data['message']}');
     }}
 
@@ -124,10 +124,10 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
           }
       );
 
-      print(response.data);
+      (response.data);
       return dartz.Right(response.data);
     } on DioException catch (err) {
-      print(err.response);
+      (err.response);
 
 
       throw Exception('2. ${err.response!.data['message']}');
@@ -162,10 +162,10 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
           }
       );
 
-      print(response.data);
+      (response.data);
       return dartz.Right(response.data);
     } on DioException catch (err) {
-      print(err.response);
+      (err.response);
 
 
       throw Exception('3. ${err.response!.data['message']}');
@@ -177,7 +177,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.registerDoctorModel);
+    (widget.registerDoctorModel);
     final schemeData = ref.watch(schemeList);
     return Scaffold(
       backgroundColor: ColorManager.white,
@@ -258,7 +258,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
                         ? null // Disable the button while posting data
                         : ()async{
                       final scaffoldMessage = ScaffoldMessenger.of(context);
-                      print(schemePlanName.toLowerCase());
+                      (schemePlanName.toLowerCase());
                       if(selectedScheme == null){
                         scaffoldMessage.showSnackBar(
                           SnackbarUtil.showFailureSnackbar(
@@ -388,7 +388,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
                                               }else if(selectedPayment ==2 ){
                                                 Navigator.pop(context);
                                                 payWithKhaltiInApp(productId: outputValue['result']['docID'], amount: amount, schemePlanId: schemePlanId, schemePlanName: schemePlanName);
-                                                print(selectedPayment);
+                                                (selectedPayment);
 
                                               } else {
                                                 final scaffoldMessage = ScaffoldMessenger.of(context);
@@ -464,7 +464,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
             });
 
             final scaffoldMessage = ScaffoldMessenger.of(context);
-            debugPrint(failure.toString());
+
             scaffoldMessage.showSnackBar(
               SnackbarUtil.showFailureSnackbar(
                 message: '${failure.toString()}',
@@ -486,7 +486,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
           }
       );
     }catch(e){
-      debugPrint('EXCEPTION');
+
 
     }
 
@@ -677,7 +677,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
     });
 
     final scaffoldMessage = ScaffoldMessenger.of(context);
-    debugPrint(failure.toString());
+
     scaffoldMessage.showSnackBar(
       SnackbarUtil.showFailureSnackbar(
         message: '${failure.toString()}',
@@ -760,7 +760,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
                                   schemePlanName = schemeMonth[index].schemeName!;
                                   amount =schemeMonth[index].price!.round();
                                 });
-                                print(schemePlanId);
+                                (schemePlanId);
                               },
                               schemeName: '${schemeMonth[index].schemeName}',
                               schemePrice: int.parse(schemeMonth[index].price!.round().toString()),
@@ -849,7 +849,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
                                   schemePlanName = schemeYear[index].schemeName!;
                                   amount =schemeYear[index].price!.round();
                                 });
-                                print(schemePlanId);
+                                (schemePlanId);
                               },
                               schemeName: '${schemeYear[index].schemeName}',
                               schemePrice: int.parse(schemeYear[index].price!.round().toString()),

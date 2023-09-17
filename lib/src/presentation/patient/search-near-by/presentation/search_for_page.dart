@@ -64,17 +64,17 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
     _locationPermission = await Geolocator.requestPermission();
     if (_locationPermission == LocationPermission.denied ||
         _locationPermission == LocationPermission.deniedForever) {
-      print('permission denied');
+      ('permission denied');
       _showPermissionDialog();
       setState(() {
         // Permission denied
       });
     } else if (_locationPermission == LocationPermission.always ||
         _locationPermission == LocationPermission.whileInUse) {
-      print('permission given');
+      ('permission given');
       final _currentPosition = await Geolocator.getCurrentPosition();
       _userPosition = _currentPosition;
-      print(_userPosition);
+      (_userPosition);
       setState(() {
         // Permission given
       });
@@ -125,7 +125,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(selectedOption);
+    (selectedOption);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: FadeIn(

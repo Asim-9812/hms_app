@@ -301,38 +301,38 @@ class _TeleMedicineState extends ConsumerState<TeleMedicine> {
                     setState(() {
                       isPostingData = true;
                     });
-                    print('id: 1');
-                    print('patientID: 1');
-                    print('firstName: ${_firstNameController.text.trim()}');
-                    print('lastName: ${_lastNameController.text.trim()}');
-                    print('DOB: ${selectedDOB}');
-                    print('imagePhoto: 1');
-                    print('countryID: $countryId');
-                    print('provinceID: $provinceId');
-                    print('districtID: $districtId');
-                    print('municipalityID: $municipalityId');
-                    print('ward: ${int.parse(_wardController.text.trim())}');
-                    print('localAddress: ${_addressController.text.trim()}');
-                    print('genderID: ${genderId == 0 ? 3 : genderId}');
-                    print('NID: ${int.parse(_nidController.text.trim())}');
-                    print('UHID: ${int.parse(_uhidController.text.trim())}');
-                    print('entryDate: ${DateTime.now().toString()}');
-                    print('flag: ""');
-                    print('consultDate: ${selectedDate}');
-                    print('patientVisitID: 1');
-                    print('costCategoryID: $costId');
-                    print('departmentID: $departmentId');
-                    print('referedByID: 0');
-                    print('TPID: 1');
-                    print('policyNo: ${_policyController.text.isEmpty?0:int.parse(_policyController.text)}');
-                    print('claimCode: 1');
-                    print('serviceCategoryID: 1');
-                    print('ledgerID: 1');
-                    print('imagePhotoUrl: $image');
-                    print('email: ${_emailController.text.trim()}');
-                    print('contact: ${int.parse(_mobileController.text.trim())}');
-                    print('entrydate1: ${DateTime.now().toString()}');
-                    print('doctorID: $doctorId');
+                    ('id: 1');
+                    ('patientID: 1');
+                    ('firstName: ${_firstNameController.text.trim()}');
+                    ('lastName: ${_lastNameController.text.trim()}');
+                    ('DOB: ${selectedDOB}');
+                    ('imagePhoto: 1');
+                    ('countryID: $countryId');
+                    ('provinceID: $provinceId');
+                    ('districtID: $districtId');
+                    ('municipalityID: $municipalityId');
+                    ('ward: ${int.parse(_wardController.text.trim())}');
+                    ('localAddress: ${_addressController.text.trim()}');
+                    ('genderID: ${genderId == 0 ? 3 : genderId}');
+                    ('NID: ${int.parse(_nidController.text.trim())}');
+                    ('UHID: ${int.parse(_uhidController.text.trim())}');
+                    ('entryDate: ${DateTime.now().toString()}');
+                    ('flag: ""');
+                    ('consultDate: ${selectedDate}');
+                    ('patientVisitID: 1');
+                    ('costCategoryID: $costId');
+                    ('departmentID: $departmentId');
+                    ('referedByID: 0');
+                    ('TPID: 1');
+                    ('policyNo: ${_policyController.text.isEmpty?0:int.parse(_policyController.text)}');
+                    ('claimCode: 1');
+                    ('serviceCategoryID: 1');
+                    ('ledgerID: 1');
+                    ('imagePhotoUrl: $image');
+                    ('email: ${_emailController.text.trim()}');
+                    ('contact: ${int.parse(_mobileController.text.trim())}');
+                    ('entrydate1: ${DateTime.now().toString()}');
+                    ('doctorID: $doctorId');
                     final response = await ref.read(patientRegistrationProvider).addRegistration(
                         id: 1,
                         patientID: 1,
@@ -451,7 +451,7 @@ class _TeleMedicineState extends ConsumerState<TeleMedicine> {
 
   Column _nameDetails(){
 
-    print(costId);
+    (costId);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -666,7 +666,7 @@ class _TeleMedicineState extends ConsumerState<TeleMedicine> {
                           orElse: () => CostCategoryModel(costCategoryID: 0, costCategoryType: '', isActive: false),
                         ).costCategoryID;
                       });
-                      print('$costId');
+                      ('$costId');
                     },
                   ),
                 ),

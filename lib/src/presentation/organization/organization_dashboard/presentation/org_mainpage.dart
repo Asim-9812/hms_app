@@ -4,24 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:medical_app/src/app/app.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
-import 'package:medical_app/src/core/resources/style_manager.dart';
-import 'package:medical_app/src/presentation/doctor/doctor_dashboard/presentation/doctor_home_page.dart';
-import 'package:medical_app/src/presentation/doctor/doctor_utilities/presentation/doctor_utilities.dart';
-import 'package:medical_app/src/presentation/doctor/documents/presentation/document_page.dart';
 import 'package:medical_app/src/presentation/organization/doctor_statistics/presentation/doctor_stat_page.dart';
 import 'package:medical_app/src/presentation/organization/organization_dashboard/presentation/org_homepage.dart';
 import 'package:medical_app/src/presentation/organization/patient_reports/presentation/report_page_org.dart';
 import 'package:medical_app/src/presentation/patient_registration/presentation/patient_registration.dart';
 import 'package:medical_app/src/presentation/settings/settings_global.dart';
-import 'package:medical_app/src/test/test1.dart';
-import 'package:medical_app/src/test/backup.dart';
+
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
-
-import '../../../../core/resources/value_manager.dart';
-import '../../../../test/test.dart';
 
 
 

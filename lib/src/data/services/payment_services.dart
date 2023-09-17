@@ -42,14 +42,14 @@ class PaymentSuccessfulService{
           }
       );
       if(response.statusCode == 200){
-        print(response.data);
+        (response.data);
         return Right(response.data);
       }else{
-        print(response.data);
+        (response.data);
         return Left('Something went wrong');
       }
     } on DioException catch(e){
-      print('$e');
+      ('$e');
       return Left('error');
     }
   }
@@ -77,14 +77,14 @@ class KhaltiPaymentServices{
         }
       );
       if(response.statusCode == 200){
-        print(response.data);
+        (response.data);
         return Right(response.data);
       }else{
-        print(response.data);
+        (response.data);
         return Left('Something went wrong');
       }
     } on DioException catch(e){
-      print('$e');
+      ('$e');
       return Left('error');
     }
   }
@@ -99,37 +99,37 @@ class KhaltiPaymentServices{
 const String kEsewaClientId = 'JB0BBQ4aD0UqIThFJwAKBgAXEUkEGQUBBAwdOgABHD4DChwUAB0R';
 const String kEsewaSecretKey = 'BhwIWQQADhIYSxILExMcAgFXFhcOBwAKBgAXEQ==';
 
-
-class Esewa{
-  final dio = Dio();
-  pay(){
-    try{
-      EsewaFlutterSdk.initPayment(
-          esewaConfig: EsewaConfig(
-            environment: Environment.test,
-            clientId: kEsewaClientId,
-            secretId: kEsewaSecretKey,
-          ),
-          esewaPayment: EsewaPayment(
-            productId: "ORG3080",
-            productName: "GOLD",
-            productPrice: "100",
-            callbackUrl: '',
-          ),
-          onPaymentSuccess: (EsewaPaymentSuccessResult result){
-            debugPrint('SUCCESS');
-          },
-          onPaymentFailure: (){
-            debugPrint('FAILURE');
-          },
-          onPaymentCancellation: (){
-            debugPrint('CANCELLED');
-          }
-      );
-    }catch(e){
-      debugPrint('EXCEPTION');
-    }
-  }
-
-
-}
+//
+// class Esewa{
+//   final dio = Dio();
+//   pay(){
+//     try{
+//       EsewaFlutterSdk.initPayment(
+//           esewaConfig: EsewaConfig(
+//             environment: Environment.test,
+//             clientId: kEsewaClientId,
+//             secretId: kEsewaSecretKey,
+//           ),
+//           esewaPayment: EsewaPayment(
+//             productId: "ORG3080",
+//             productName: "GOLD",
+//             productPrice: "100",
+//             callbackUrl: '',
+//           ),
+//           onPaymentSuccess: (EsewaPaymentSuccessResult result){
+//
+//           },
+//           onPaymentFailure: (){
+//
+//           },
+//           onPaymentCancellation: (){
+//
+//           }
+//       );
+//     }catch(e){
+//
+//     }
+//   }
+//
+//
+// }

@@ -6,16 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/data/model/registered_patient_model.dart';
 import 'package:medical_app/src/data/services/registered_patient_services.dart';
 import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
 import 'package:medical_app/src/presentation/organization/patient_reports/presentation/patient_profile_org.dart';
-import 'package:medical_app/src/presentation/patient_registration/presentation/patient_registration.dart';
-import 'package:medical_app/src/test/test.dart';
-
 import '../../../../core/resources/value_manager.dart';
 import '../../charts_graphs/patient_groups.dart';
 import '../../charts_graphs/total_patients.dart';

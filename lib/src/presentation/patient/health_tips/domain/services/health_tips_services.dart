@@ -8,20 +8,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medical_app/src/core/api.dart';
 import 'package:medical_app/src/data/model/registered_patient_model.dart';
 import 'package:medical_app/src/data/services/update_profile_service.dart';
+import 'package:medical_app/src/presentation/patient/health_tips/domain/model/health_tips_model.dart';
 
 
-final getPatientList = FutureProvider((ref) => RegisteredPatientService().getRegisteredPatients());
+final getHealthTipsList = FutureProvider((ref) => HealthTipServices().getHealthTips());
 
 
-class RegisteredPatientService{
+class HealthTipServices{
   final dio = Dio();
 
-  Future<List<RegisteredPatientModel>> getRegisteredPatients() async {
+  Future<List<HealthTipsModel>> getHealthTips() async {
     try{
-      final response = await dio.get('${Api.getRegisteredPatients}');
+      final response = await dio.get('${Api.getHealthTipsList}');
 
       final data = (response.data['result'] as List)
-          .map((e) => RegisteredPatientModel.fromJson(e))
+          .map((e) => HealthTipsModel.fromJson(e))
           .toList();
 
       return data;

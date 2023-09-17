@@ -5,7 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
-import 'package:medical_app/src/test/test2.dart';
+
 
 import '../../core/resources/string_manager.dart';
 import '../../core/resources/style_manager.dart';
@@ -145,7 +145,7 @@ class IBWState extends State<IBW> {
     double heightCM = _convertCM(height);
     double convertToCm = convertFeetAndInchesToCm(_convertCmToFeetAndInches(heightCM).$2,_convertCmToFeetAndInches(heightCM).$3);
     double size = isWideScreen? ((_calculateHeight(y).toPrecision(1) * 25)+40):((_calculateHeight(y).toPrecision(1) * 25)+40).sp;
-    print(size);
+    (size);
     // Get the screen size
 
     return GestureDetector(
@@ -177,7 +177,7 @@ class IBWState extends State<IBW> {
 
 
                       });
-                      // print(yValue > 0 ? 'downward' : 'upward');
+                      // (yValue > 0 ? 'downward' : 'upward');
                     }
                   },
                   child: Row(

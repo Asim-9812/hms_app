@@ -93,10 +93,10 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
           }
       );
 
-      print(response.data);
+      (response.data);
       return dartz.Right(response.data);
     } on DioException catch (err) {
-      print(err.response);
+      (err.response);
 
 
       throw Exception('Dio error: ${err.message}');
@@ -106,7 +106,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
 
   Future<dartz.Either<String, dynamic>> userRegisterOrganization() async {
     try {
-      print('${widget.password}');
+      ('${widget.password}');
       final response = await dio.post(
           Api.userRegister,
           data: {
@@ -131,10 +131,10 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
           }
       );
 
-      print(response.data);
+      (response.data);
       return dartz.Right(response.data);
     } on DioException catch (err) {
-      print(err.response);
+      (err.response);
 
 
       throw Exception('Dio error: ${err.message}');
@@ -147,7 +147,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
   @override
   Widget build(BuildContext context) {
 
-    print('output: ${widget.outputValue}');
+    ('output: ${widget.outputValue}');
     final schemeData = ref.watch(schemeList);
     return Scaffold(
       backgroundColor: ColorManager.white,
@@ -228,7 +228,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
                         ? null // Disable the button while posting data
                         : ()async{
                       final scaffoldMessage = ScaffoldMessenger.of(context);
-                      print(schemePlanName.toLowerCase());
+                      (schemePlanName.toLowerCase());
                     if(selectedScheme == null){
                       scaffoldMessage.showSnackBar(
                         SnackbarUtil.showFailureSnackbar(
@@ -355,7 +355,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
                                         }else if(selectedPayment ==2 ){
                                           Navigator.pop(context);
                                           payWithKhaltiInApp(productId: widget.outputValue['result']['orgId'], amount: amount, schemePlanId: schemePlanId, schemePlanName: schemePlanName);
-                                          print(selectedPayment);
+                                          (selectedPayment);
 
                                         } else {
                                           final scaffoldMessage = ScaffoldMessenger.of(context);
@@ -425,10 +425,10 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
             setState(() {
               isPostingData = false;
             });
-            print('$loadingString $loadingStatus');
+            ('$loadingString $loadingStatus');
 
             final scaffoldMessage = ScaffoldMessenger.of(context);
-            debugPrint(failure.toString());
+
             scaffoldMessage.showSnackBar(
               SnackbarUtil.showFailureSnackbar(
                 message: '${failure.toString()}',
@@ -450,7 +450,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
           }
       );
     }catch(e){
-      debugPrint('EXCEPTION');
+
     }
 
 
@@ -635,10 +635,10 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
     setState(() {
       isPostingData = false;
     });
-    print('$loadingString $loadingStatus');
+    ('$loadingString $loadingStatus');
 
     final scaffoldMessage = ScaffoldMessenger.of(context);
-    debugPrint(failure.toString());
+
     scaffoldMessage.showSnackBar(
       SnackbarUtil.showFailureSnackbar(
         message: '${failure.toString()}',
@@ -720,7 +720,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
                                   amount = schemeMonth[index].price!.round();
                                   selectedScheme = schemeMonth[index]; // Set the selectedScheme
                                 });
-                                print(schemePlanId);
+                                (schemePlanId);
                               },
                               schemeName: '${schemeMonth[index].schemeName}',
                               schemePrice: int.parse(schemeMonth[index].price!.round().toString()),
@@ -810,7 +810,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
                                   amount =schemeYear[index].price!.round();
                                   selectedScheme = schemeYear[index]; // Set the selectedScheme
                                 });
-                                print(schemePlanId);
+                                (schemePlanId);
                               },
                               schemeName: '${schemeYear[index].schemeName}',
                               schemePrice: int.parse(schemeYear[index].price!.round().toString()),

@@ -424,7 +424,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
 
   Column _nameDetails(){
 
-    print(costId);
+    (costId);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -639,7 +639,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                           orElse: () => CostCategoryModel(costCategoryID: 0, costCategoryType: '', isActive: false),
                         ).costCategoryID;
                       });
-                      print('$costId');
+                      ('$costId');
                     },
                   ),
                 ),

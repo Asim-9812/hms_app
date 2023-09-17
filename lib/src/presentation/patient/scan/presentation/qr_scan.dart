@@ -78,7 +78,7 @@ class _QRViewExampleState extends State<QRViewExample> {
           ),
         );
         setState(() {});
-        print('${barcode?.barcodes.first.rawValue ?? 'no barcode reader'}');
+        ('${barcode?.barcodes.first.rawValue ?? 'no barcode reader'}');
       } else {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(

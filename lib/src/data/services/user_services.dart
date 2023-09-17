@@ -30,7 +30,7 @@ class UserService{
 
       return User.fromJson(response.data['result']);
     } on DioException catch (err) {
-      print(err);
+      (err);
       throw Exception('Unable to fetch data');
     }
   }
@@ -48,7 +48,7 @@ class UserService{
         return data;
 
     } on DioException catch (err) {
-      print(err);
+      (err);
       throw Exception('Unable to fetch data');
     }
   }

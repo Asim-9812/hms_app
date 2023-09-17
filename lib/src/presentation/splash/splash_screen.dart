@@ -29,13 +29,13 @@ class _SplashViewState extends ConsumerState<SplashView> {
 
     final userBox = Hive.box<User>('session').values.toList();
     if(userBox.isEmpty){
-      print('empty');
+      
       setState(() {
         accountId = 0;
       });
     }
     else{
-      print('account id : ${userBox[0].typeID!}');
+      ('account id : ${userBox[0].typeID!}');
       setState(() {
         accountId = userBox[0].typeID!;
       });

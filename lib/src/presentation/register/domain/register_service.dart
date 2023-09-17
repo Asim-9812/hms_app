@@ -40,7 +40,7 @@ class RegisterService {
 
       return Right(response.data);
     } on DioException catch (err) {
-      print(err.response);
+      (err.response);
       throw Exception('Dio error: ${err.message}');
     }}
 
@@ -79,7 +79,7 @@ class RegisterService {
 
       return Right(response.data);
     } on DioException catch (err) {
-      print(err.response);
+      (err.response);
       throw Exception('Dio error: ${err.message}');
     }}
 
@@ -109,7 +109,7 @@ class RegisterService {
           }
       );
 
-      print(response.data['result']['id']);
+      (response.data['result']['id']);
       
       if(response.data['result']['id']==0){
         return left('Username already exist');
@@ -122,7 +122,7 @@ class RegisterService {
 
 
     } on DioException catch (err) {
-      print(err.response);
+      (err.response);
       return Left('Something went wrong');
     }}
 

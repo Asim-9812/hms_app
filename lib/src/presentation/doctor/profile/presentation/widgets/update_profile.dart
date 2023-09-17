@@ -82,7 +82,7 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
     _fillForm();
 
     genderId = widget.user.genderID ;
-    print('gender $genderId');
+    ('gender $genderId');
 
     setState(() {
       selectedGender = genderId == 0 ? 'Select Gender' : genderId == 1? 'Male' : genderId == 2 ? 'Female':'Others';

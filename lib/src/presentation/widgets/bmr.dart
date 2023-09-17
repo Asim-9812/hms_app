@@ -5,7 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
-import 'package:medical_app/src/test/test2.dart';
+
 
 import '../../core/resources/style_manager.dart';
 import '../../core/resources/value_manager.dart';
@@ -53,7 +53,7 @@ class BMRState extends State<BMR> {
         result = bmr;
         isLoading = false;
       });
-      print(bmr.toPrecision(1));
+      (bmr.toPrecision(1));
       return bmr.toPrecision(1);
     } else{
       double bmr = 10 * w + 6.25 * h- 5 * a - 161;
@@ -61,7 +61,7 @@ class BMRState extends State<BMR> {
         result = bmr;
         isLoading = false;
       });
-      print(bmr.toPrecision(1));
+      (bmr.toPrecision(1));
       return bmr.toPrecision(1);
     }
 
@@ -194,7 +194,7 @@ class BMRState extends State<BMR> {
     double heightCM = _convertCM(height);
     double convertToCm = convertFeetAndInchesToCm(_convertCmToFeetAndInches(heightCM).$2,_convertCmToFeetAndInches(heightCM).$3);
     double size = isWideScreen? ((_calculateHeight(y).toPrecision(1) * 25)+40):((_calculateHeight(y).toPrecision(1) * 25)+40).sp;
-    print(size);
+    (size);
     // Get the screen size
 
     return GestureDetector(
@@ -226,7 +226,7 @@ class BMRState extends State<BMR> {
 
 
                       });
-                      // print(yValue > 0 ? 'downward' : 'upward');
+                      // (yValue > 0 ? 'downward' : 'upward');
                     }
                   },
                   child: Row(

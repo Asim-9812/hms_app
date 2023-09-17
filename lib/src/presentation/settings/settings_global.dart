@@ -69,7 +69,7 @@ class Settings extends ConsumerWidget {
                       icon: Icons.login_outlined,
                       onTap: () {
                         ref.read(userProvider.notifier).userLogout();
-                        print('logout');
+                        ('logout');
                         Get.offAll(() => StatusPage(accountId: 0,));
                       }
                   ),

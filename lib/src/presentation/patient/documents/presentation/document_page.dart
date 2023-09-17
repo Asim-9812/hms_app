@@ -144,7 +144,7 @@ class _PatientDocumentPageState extends State<PatientDocumentPage> {
                   SizedBox(),
                   InkWell(
                       onTap: () async {
-                        print('pressed!!');
+                        ('pressed!!');
                         _showFolderDialog(context,isFolderLocked);
                       },
                       child: FaIcon(Icons.more_horiz,color: ColorManager.blue,size: 18,))

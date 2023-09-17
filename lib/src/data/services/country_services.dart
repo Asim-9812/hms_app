@@ -22,7 +22,7 @@ class CountryService{
           .toList();
       return data;
     } on DioException catch (err) {
-      print(err.response);
+      (err.response);
       throw Exception('Unable to fetch data');
     }
   }
@@ -31,7 +31,7 @@ class CountryService{
   Future<List<ProvinceModel>> getProvince({
     required int countryId
 }) async {
-    print('$countryId');
+    ('$countryId');
     try {
       final response = await dio.get('${Api.getProvince}$countryId',);
 
@@ -40,7 +40,7 @@ class CountryService{
           .toList();
       return data;
     } on DioException catch (err) {
-      print(err.response);
+      (err.response);
       throw Exception('Unable to fetch data');
     }
   }
@@ -56,7 +56,7 @@ class CountryService{
           .toList();
       return data;
     } on DioException catch (err) {
-      print(err.response);
+      (err.response);
       throw Exception('Unable to fetch data');
     }
   }
@@ -74,7 +74,7 @@ class CountryService{
           .toList();
       return data;
     } on DioException catch (err) {
-      print(err);
+      (err);
       throw Exception('Unable to fetch data');
     }
   }

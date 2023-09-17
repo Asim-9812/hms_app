@@ -110,11 +110,11 @@ class _AddDocumentPageState extends State<AddDocDoctor> {
 
 
             for(var i=0; i<fileList.length; i++){
-              print(fileList[i].name);
-              print(fileList[i].bytes);
-              print(fileList[i].size);
-              print(fileList[i].extension);
-              print(fileList[i].path);
+              (fileList[i].name);
+              (fileList[i].bytes);
+              (fileList[i].size);
+              (fileList[i].extension);
+              (fileList[i].path);
             }
             _showDialogSaveFolder(withNewFolder: withNewFolder);
 

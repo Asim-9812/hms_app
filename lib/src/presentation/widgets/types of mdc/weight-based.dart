@@ -261,7 +261,7 @@ class _WBDState extends State<WBD> {
     bool isNarrowScreen = screenSize.width < 380;
     final dose = w * d;
     final total = dose * f;
-    print('$dose , $total');
+    ('$dose , $total');
     return showDialog(
         context: context,
         builder: (context){

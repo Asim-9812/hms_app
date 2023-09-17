@@ -16,8 +16,7 @@ import 'package:medical_app/src/presentation/login/domain/model/user.dart';
 import 'package:medical_app/src/presentation/login/presentation/status_page.dart';
 import 'package:medical_app/src/presentation/organization/organization_dashboard/presentation/org_mainpage.dart';
 import 'package:medical_app/src/presentation/register/presentation/register.dart';
-import 'package:medical_app/src/test/test2.dart';
-import '../../../test/test.dart';
+
 import '../../common/snackbar.dart';
 import '../../doctor/profile/presentation/widgets/update_profile.dart';
 import '../../organization/organization_dashboard/presentation/org_homepage.dart';
@@ -93,7 +92,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     // Get the screen size
     final screenSize = MediaQuery.of(context).size;
-    print(screenSize);
+    (screenSize);
 
     // Check if width is greater than height
     bool isWideScreen = screenSize.width > 500;
@@ -212,7 +211,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             children: [
                               Container(
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: selectedOption == 2 ? ColorManager.primaryDark : ColorManager.dotGrey),
+                                  border: Border.all(color: selectedOption == 1 ? ColorManager.primaryDark : ColorManager.dotGrey),
                                   shape: BoxShape.circle,
                                   color: selectedOption == 1 ? ColorManager.primary : Colors.transparent,
                                 ),

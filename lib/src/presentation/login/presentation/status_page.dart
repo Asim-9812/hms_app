@@ -16,19 +16,15 @@ class StatusPage extends ConsumerWidget {
     final auth = ref.watch(userProvider);
     if(auth.isNotEmpty){
       if(auth[0].typeID == 1 && accountId == 1){
-        print('merchant');
         return const OrgMainPage();
       }
       else if(auth[0].typeID == 2 && accountId == 2){
-        print('org');
         return const OrgMainPage();
       }
       else if(auth[0].typeID == 3 && accountId == 3){
-        print('doctor');
         return DoctorMainPage();
       }
       else if(auth[0].typeID == 4 && accountId == 4){
-        print('patient');
         return const PatientMainPage();
       }
       else{

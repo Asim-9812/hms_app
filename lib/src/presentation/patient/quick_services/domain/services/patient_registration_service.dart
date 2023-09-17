@@ -96,12 +96,12 @@ class PatientRegistration{
         return Right(response.data);
       }
       else {
-        print(response);
+        (response);
         return Left('Unable to register.');
       }
 
     }on DioException catch(e){
-      print('$e');
+      ('$e');
       return Left('Something went wrong');
     }
   }

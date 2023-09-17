@@ -15,7 +15,7 @@ class SomeOtherClass extends StatelessWidget {
   void useOutputValue() {
 
     // Use the outputValue here
-    print(outputValue);
+    (outputValue);
   }
 
   @override

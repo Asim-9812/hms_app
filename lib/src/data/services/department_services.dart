@@ -21,7 +21,7 @@ class DepartmentServices{
           .toList();
       return data;
     } on DioException catch (err) {
-      print(err);
+      (err);
       throw Exception('Unable to fetch data');
     }
   }

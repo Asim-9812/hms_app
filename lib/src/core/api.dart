@@ -49,4 +49,7 @@ class Api{
    static const getDoctorDepartment = '$baseUrl/api/DoctorDepartment/GetDepartment';
    static const getDoctorList = '$baseUrl/api/DoctorRegistration/Getlist';
 
+   /// Health tips...
+   static const getHealthTipsList = '$baseUrl/api/HealthTips/GetList';
+
 }

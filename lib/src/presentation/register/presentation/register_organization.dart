@@ -93,13 +93,13 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
           }
       );
 
-      print(response.data);
+      (response.data);
       setState(() {
         outputValue = response.data;
       });
       return Right(response.data);
     } on DioException catch (err) {
-      print(err.response);
+      (err.response);
 
 
       throw Exception('${err.response!.data['message']}');
@@ -443,8 +443,8 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
                   setState(() {
                     isPostingData = true; // Show loading spinner
                   });
-                  print('organization');
-                  print('natureId');
+                  ('organization');
+                  ('natureId');
                   await orgRegister(
                   orgName: _firstNameController.text.trim(),
                   pan: int.parse(_panController.text.trim()),
@@ -471,7 +471,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
 
                     }
                   }).catchError((e){
-                    print('$e');
+                    ('$e');
                     scaffoldMessage.showSnackBar(
                       SnackbarUtil.showFailureSnackbar(
                           message: '$e',

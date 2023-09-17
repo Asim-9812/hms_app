@@ -29,7 +29,7 @@ class _DoctorsListState extends State<DoctorsList> {
   Widget build(BuildContext context) {
     // Get the screen size
     final screenSize = MediaQuery.of(context).size;
-    print(screenSize);
+    (screenSize);
 
     // Check if width is greater than height
     bool isWideScreen = screenSize.width > 500;

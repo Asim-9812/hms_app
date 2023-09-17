@@ -20,7 +20,7 @@ final dio = Dio();
           .toList();
       return data;
     } on DioException catch (err) {
-      print(err.response);
+      (err.response);
       throw Exception('Unable to fetch data');
     }
 

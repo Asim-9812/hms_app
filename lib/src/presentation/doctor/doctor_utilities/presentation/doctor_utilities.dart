@@ -8,7 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:medical_app/src/presentation/widgets/bmi.dart';
 import 'package:medical_app/src/presentation/widgets/ibw.dart';
-import 'package:medical_app/src/test/test.dart';
+
 
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';

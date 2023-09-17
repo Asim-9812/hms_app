@@ -31,7 +31,7 @@ class _SugarState extends State<Sugar> {
 
     // Get the screen size
     final screenSize = MediaQuery.of(context).size;
-    print(screenSize);
+    (screenSize);
 
     // Check if width is greater than height
     bool isWideScreen = screenSize.width > 500;

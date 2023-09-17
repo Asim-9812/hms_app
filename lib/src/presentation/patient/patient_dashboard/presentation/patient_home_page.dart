@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:medical_app/src/presentation/patient/health_tips/presentation/health_tips_list.dart';
 import 'package:medical_app/src/presentation/patient/personal_services/lab_reports/lab_reports.dart';
 import 'package:medical_app/src/presentation/patient/personal_services/mri/mri.dart';
 import 'package:medical_app/src/presentation/patient/personal_services/sugar/sugar.dart';
@@ -20,6 +21,7 @@ import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../notification/presentation/notification_page.dart';
+import '../../health_tips/presentation/health_tips.dart';
 import '../../personal_services/bloodpressure/bp.dart';
 import '../../personal_services/ct_scan/ct_scan.dart';
 import '../../personal_services/discharge_summary/discharge_summary.dart';
@@ -71,21 +73,21 @@ class _PatientHomePageState extends State<PatientHomePage> {
     _locationPermission = await Geolocator.requestPermission();
     if (_locationPermission == LocationPermission.denied) {
 
-      print('permission denied');
+      ('permission denied');
 
     } else if (_locationPermission == LocationPermission.deniedForever) {
-      print('permission denied');
+      ('permission denied');
 
 
     } else if (_locationPermission == LocationPermission.always ||
         _locationPermission == LocationPermission.whileInUse) {
 
-      print('permission given');
+      ('permission given');
 
       final _currentPosition= await Geolocator.getCurrentPosition();
 
       _userPosition = _currentPosition;
-      print(_userPosition);
+      (_userPosition);
 
     }
   }
@@ -103,31 +105,31 @@ class _PatientHomePageState extends State<PatientHomePage> {
 
       if (ratio >= 0.3 && ratio <= 0.45) {
         // 3:8 ratio
-        print("3:8 ratio: Width: $width, Height: $height, Ratio: $ratio");
+        ("3:8 ratio: Width: $width, Height: $height, Ratio: $ratio");
         return 180.0;
       } else if (ratio <= 0.5 && ratio >0.45) {
         // 7:10 ratio
-        print("7:10 ratio: Width: $width, Height: $height, Ratio: $ratio");
+        ("7:10 ratio: Width: $width, Height: $height, Ratio: $ratio");
         return 200.0;
       } else if (ratio >= 0.6 && ratio < 0.7) {
         // 7:10 ratio
-        print("7:10 ratio: Width: $width, Height: $height, Ratio: $ratio");
+        ("7:10 ratio: Width: $width, Height: $height, Ratio: $ratio");
         return 270.0;
       } else if (ratio >= 0.7 && ratio <= 0.8) {
         // 7:10 ratio
-        print("7:10 ratio: Width: $width, Height: $height, Ratio: $ratio");
+        ("7:10 ratio: Width: $width, Height: $height, Ratio: $ratio");
         return 280.0;
       } else if (ratio > 1.49 && ratio < 1.51) {
         // 12:8 ratio
-        print("12:8 ratio: Width: $width, Height: $height, Ratio: $ratio");
+        ("12:8 ratio: Width: $width, Height: $height, Ratio: $ratio");
         return 270.0;
       } else if (ratio >= 1.6) {
         // 12:8 ratio
-        print("12:8 ratio: Width: $width, Height: $height, Ratio: $ratio");
+        ("12:8 ratio: Width: $width, Height: $height, Ratio: $ratio");
         return 280.0;
       }else {
         // Default value if none of the resolutions match
-        print("Default: Width: $width, Height: $height, Ratio: $ratio");
+        ("Default: Width: $width, Height: $height, Ratio: $ratio");
         return 200.0;
       }
     }
@@ -486,23 +488,8 @@ class _PatientHomePageState extends State<PatientHomePage> {
         children: [
           Text('Health Tips',style: getMediumStyle(color: ColorManager.black,fontSize:isWideScreen?20: 20.sp),),
           h20,
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
-            color: ColorManager.dotGrey.withOpacity(0.2),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Drink water everyday.', style: getMediumStyle(color: Colors.black,fontSize: 16)),
-                h10,
-                Text(
-                  'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
-                  style: getRegularStyle(color: Colors.black, fontSize: 14),
-                ),
-              ],
-            ),
-          ),
-          h10,
+          HealthTipsList(),
+
         ],
       ),
     );
@@ -530,7 +517,7 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     String firstName = userBox[0].firstName!;
     final deviceSize = MediaQuery.of(context).size;
     const size = 60;
-    print('Shrink Offset: $shrinkOffset');
+    ('Shrink Offset: $shrinkOffset');
 
     return Stack(
       fit: StackFit.expand,

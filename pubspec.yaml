@@ -169,8 +169,6 @@ dependencies:
 
   linear_progress_bar: ^1.1.0
 
-  draggable_resizer: ^0.0.2
-
   khalti_flutter: ^3.0.0
 
   lottie: ^2.5.0

@@ -39,7 +39,7 @@ class LoginProvider{
                   final token = response.data["result"]["token"];
                   Box tokenBox = Hive.box<String>('tokenBox');
                   tokenBox.put('accessToken', token);
-                  print(response.data);
+                  (response.data);
                   return Right(response.data);
 
 
@@ -47,7 +47,7 @@ class LoginProvider{
 
               }
             else{
-              print(response.data);
+              (response.data);
               return Left('Invalid Credential');
             }
 
@@ -66,18 +66,25 @@ class LoginProvider{
 
             if(response.statusCode == 200 && response.data["result"]["userID"] != null){
 
-              if(response.data["result"]["typeID"] == accountId){
+              if (response.data["result"]["typeID"] == 2 && accountId ==1){
                 final token = response.data["result"]["token"];
                 Box tokenBox = Hive.box<String>('tokenBox');
                 tokenBox.put('accessToken', token);
-                print(response.data);
+                (response.data);
+                return Right(response.data);
+              }
+              else if(response.data["result"]["typeID"] == accountId){
+                final token = response.data["result"]["token"];
+                Box tokenBox = Hive.box<String>('tokenBox');
+                tokenBox.put('accessToken', token);
+                (response.data);
                 return Right(response.data);
               }else{
                 return Left('Account Type doesn\'t match');
               }
 
             }else{
-              print(response.data);
+              (response.data);
               return Left('Invalid Credential');
             }
           }
@@ -85,7 +92,7 @@ class LoginProvider{
 
 
       } on DioException catch(err){
-        print(err);
+        (err);
         return Left('Something went wrong');
       }
     }else{
@@ -100,9 +107,9 @@ class UserProvider extends StateNotifier<List<User>>{
   UserProvider(super._state);
 
   Future<String> getUserInfo({required Map<String,dynamic> response}) async{
-    print('User provider: $response');
+    ('User provider: $response');
     final newUser = User.fromJson(response["result"]);
-    print(newUser);
+    (newUser);
 
     if(Hive.box<User>('session').isEmpty){
       Hive.box<User>('session').add(newUser);

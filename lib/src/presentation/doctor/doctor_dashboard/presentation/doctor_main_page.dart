@@ -10,13 +10,12 @@ import 'package:medical_app/src/presentation/doctor/doctor_dashboard/presentatio
 import 'package:medical_app/src/presentation/doctor/doctor_utilities/presentation/doctor_utilities.dart';
 import 'package:medical_app/src/presentation/doctor/documents/presentation/document_page.dart';
 import 'package:medical_app/src/presentation/patient_registration/presentation/patient_registration.dart';
-import 'package:medical_app/src/test/test1.dart';
-import 'package:medical_app/src/test/backup.dart';
+
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import '../../../../test/test.dart';
+
 import '../../../patient/documents/presentation/document_page.dart';
 import '../../../patient/scan/presentation/qr_scan.dart';
 import '../../../patient/utilities/presentation/patient_utilities.dart';

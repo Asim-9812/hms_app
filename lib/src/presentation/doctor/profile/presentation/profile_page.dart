@@ -34,7 +34,7 @@ class DocProfilePage extends ConsumerWidget {
     bool isNarrowScreen = screenSize.width < 380;
     return userInfo.when(
         data: (data){
-          print(data.liscenceNo);
+          (data.liscenceNo);
          return  Scaffold(
              backgroundColor: ColorManager.white.withOpacity(0.99),
              appBar: AppBar(
