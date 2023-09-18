@@ -38,6 +38,10 @@ class Api{
    static const getRegisteredPatients = '$baseUrl/api/Patient/Getlist';
    static const getCostCategory = '$baseUrl/api/CostCategory/Getlist';
 
+   /// Patient report...
+
+   static const getPatientReport = '$baseUrl/api/Report/GetList';
+
 
    /// Country details...
    static const getCountry = '$baseUrl/api/Country/GetList';
@@ -46,6 +50,7 @@ class Api{
    static const getMunicipality = '$baseUrl/api/Municipality/GetListMunicipalityByDistrictId/';
 
    /// Department & doctors...
+   static const getDepartmentList = '$baseUrl/api/Department/GetList';
    static const getDoctorDepartment = '$baseUrl/api/DoctorDepartment/GetDepartment';
    static const getDoctorList = '$baseUrl/api/DoctorRegistration/Getlist';
 

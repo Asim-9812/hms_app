@@ -12,6 +12,7 @@ import 'package:medical_app/src/data/model/registered_patient_model.dart';
 import 'package:medical_app/src/data/services/registered_patient_services.dart';
 import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
 import 'package:medical_app/src/presentation/organization/patient_reports/presentation/patient_profile_org.dart';
+import 'package:medical_app/src/presentation/organization/patient_reports/presentation/patient_report.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../charts_graphs/patient_groups.dart';
 import '../../charts_graphs/total_patients.dart';
@@ -431,6 +432,29 @@ class _OrgPatientReportsState extends ConsumerState<OrgPatientReports> {
 
                     ),
                   ),
+                  h10,
+                  InkWell(
+                    onTap: ()=>Get.to(()=>PatientReports()),
+                    child: Container(
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: ColorManager.dotGrey.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: ColorManager.black.withOpacity(0.5)
+                        )
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 24.w,vertical: 8.h),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('Patient Reports',style: getMediumStyle(color:ColorManager.black,fontSize: 20),),
+                          Icon(Icons.chevron_right,color: ColorManager.black,)
+                        ],
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -445,61 +469,103 @@ class _OrgPatientReportsState extends ConsumerState<OrgPatientReports> {
 
             patientList.when(
                 data: (data){
-                  final displayedPatients = getDisplayedPatients(patientList: data);
-                  return SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      border: TableBorder.all(
-                        color: ColorManager.black.withOpacity(0.3),
-                      ),
-                      headingRowColor: MaterialStateColor.resolveWith((states) => ColorManager.primary),
-                      headingTextStyle: getMediumStyle(color: ColorManager.white,fontSize: 18),
-                      columns: [
-                        DataColumn(label: Text('S.N.')),
-                        DataColumn(label: Text('Name')),
-                        DataColumn(label: Text('Age')),
-                        DataColumn(label: Text('Gender')),
-                        DataColumn(label: Text('Contact')),
-                        DataColumn(label: Text('Address')),
-                        DataColumn(label: Text('Entry Date')),
-                        DataColumn(label: Text('Action')),
-                      ],
-                      rows: displayedPatients
-                          .asMap()
-                          .entries
-                          .map((entry) {
-                        final index = entry.key + 1 + currentPage * itemsPerPage;
-                        final patient = entry.value;
-                        final age = DateTime
-                            .now()
-                            .year - patient.dob!
-                            .year;
-                        final gender = patient.genderID == 1
-                            ? 'M'
-                            : (patient.genderID == 2 ? 'F' : 'O');
-
-                        return DataRow(
-                          cells: [
-                            DataCell(Text(index.toString())),
-                            DataCell(
-                                Text('${patient.firstName} ${patient.lastName}')),
-                            DataCell(Text(age.toString())),
-                            DataCell(Text(gender)),
-                            DataCell(Text(patient.contact ?? '-')),
-                            DataCell(Text(patient.localAddress ?? '-')),
-                            DataCell(Text(patient.entryDate.toString())),
-                            DataCell(
-                                IconButton(onPressed: (){
-
-                                  _showDetails(patient: patient);
-
-                                },icon: FaIcon(CupertinoIcons.eye_fill,color: ColorManager.primaryOpacity80,))
+                  if(data.isEmpty){
+                    return Container(
+                      width: double.infinity,
+                      height: 400,
+                      child: Column(
+                        children: [
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: DataTable(
+                              border: TableBorder.all(
+                                color: ColorManager.black.withOpacity(0.3),
+                              ),
+                              headingRowColor: MaterialStateColor.resolveWith((states) => ColorManager.primary),
+                              headingTextStyle: getMediumStyle(color: ColorManager.white,fontSize: 18),
+                              columns: [
+                                DataColumn(label: Text('S.N.')),
+                                DataColumn(label: Text('Name')),
+                                DataColumn(label: Text('Age')),
+                                DataColumn(label: Text('Gender')),
+                                DataColumn(label: Text('Contact')),
+                                DataColumn(label: Text('Address')),
+                                DataColumn(label: Text('Entry Date')),
+                                DataColumn(label: Text('Action')),
+                              ],
+                              rows: [],
                             ),
-                          ],
-                        );
-                      }).toList(),
-                    ),
-                  );
+                          ),
+                          Container(
+                            height: 300,
+                            width: double.infinity,
+                            child: Center(
+                              child: Text('No Records',textAlign: TextAlign.center,style: getRegularStyle(color: ColorManager.black),),
+                            ),
+                          ),
+
+                        ],
+                      ),
+                    );
+                  }
+                  else{
+                    final displayedPatients = getDisplayedPatients(patientList: data);
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        border: TableBorder.all(
+                          color: ColorManager.black.withOpacity(0.3),
+                        ),
+                        headingRowColor: MaterialStateColor.resolveWith((states) => ColorManager.primary),
+                        headingTextStyle: getMediumStyle(color: ColorManager.white,fontSize: 18),
+                        columns: [
+                          DataColumn(label: Text('S.N.')),
+                          DataColumn(label: Text('Name')),
+                          DataColumn(label: Text('Age')),
+                          DataColumn(label: Text('Gender')),
+                          DataColumn(label: Text('Contact')),
+                          DataColumn(label: Text('Address')),
+                          DataColumn(label: Text('Entry Date')),
+                          DataColumn(label: Text('Action')),
+                        ],
+                        rows: displayedPatients
+                            .asMap()
+                            .entries
+                            .map((entry) {
+                          final index = entry.key + 1 + currentPage * itemsPerPage;
+                          final patient = entry.value;
+                          final age = DateTime
+                              .now()
+                              .year - patient.dob!
+                              .year;
+                          final gender = patient.genderID == 1
+                              ? 'M'
+                              : (patient.genderID == 2 ? 'F' : 'O');
+
+                          return DataRow(
+                            cells: [
+                              DataCell(Text(index.toString())),
+                              DataCell(
+                                  Text('${patient.firstName} ${patient.lastName}')),
+                              DataCell(Text(age.toString())),
+                              DataCell(Text(gender)),
+                              DataCell(Text(patient.contact ?? '-')),
+                              DataCell(Text(patient.localAddress ?? '-')),
+                              DataCell(Text(patient.entryDate.toString())),
+                              DataCell(
+                                  IconButton(onPressed: (){
+
+                                    _showDetails(patient: patient);
+
+                                  },icon: FaIcon(CupertinoIcons.eye_fill,color: ColorManager.primaryOpacity80,))
+                              ),
+                            ],
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  }
+
                 },
                 error: (error,stack)=>Container(
                   width: double.infinity,

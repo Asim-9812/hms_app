@@ -20,7 +20,7 @@ import 'package:medical_app/src/presentation/register/presentation/register.dart
 import '../../common/snackbar.dart';
 import '../../doctor/profile/presentation/widgets/update_profile.dart';
 import '../../organization/organization_dashboard/presentation/org_homepage.dart';
-import '../../organization/patient_reports/presentation/report_page_org.dart';
+import '../../organization/patient_reports/presentation/patients_lists.dart';
 import '../../patient/patient_dashboard/presentation/patient_main_page.dart';
 import '../domain/service/login_service.dart';
 

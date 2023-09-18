@@ -14,11 +14,9 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:medical_app/src/data/model/registered_patient_model.dart';
-import 'package:medical_app/src/data/services/registered_patient_services.dart';
 import 'package:medical_app/src/data/services/user_services.dart';
 import 'package:medical_app/src/presentation/organization/doctor_statistics/presentation/doctor_stat_page.dart';
 import 'package:medical_app/src/presentation/organization/org_profile/presentation/org_profile_page.dart';
-import 'package:medical_app/src/presentation/patient/quick_services/presentation/telemedicine.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import '../../../../core/resources/color_manager.dart';
@@ -116,8 +114,8 @@ class _OrgHomePageState extends State<OrgHomePage> {
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-    // final userBox = Hive.box<User>('session').values.toList();
-    String firstName = 'User' ;//userBox[0].firstName!;
+    final userBox = Hive.box<User>('session').values.toList();
+    String firstName = userBox[0].firstName!;
 
 
 

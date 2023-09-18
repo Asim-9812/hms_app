@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/presentation/organization/doctor_statistics/presentation/doctor_stat_page.dart';
 import 'package:medical_app/src/presentation/organization/organization_dashboard/presentation/org_homepage.dart';
-import 'package:medical_app/src/presentation/organization/patient_reports/presentation/report_page_org.dart';
+import 'package:medical_app/src/presentation/organization/patient_reports/presentation/patients_lists.dart';
 import 'package:medical_app/src/presentation/patient_registration/presentation/patient_registration.dart';
 import 'package:medical_app/src/presentation/settings/settings_global.dart';
 
