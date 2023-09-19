@@ -29,6 +29,18 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
   int currentPage = 0;
   int itemsPerPage = 5;
   final formKey = GlobalKey<FormState>();
+  GlobalKey<DropdownSearchState<String>> dropdownSearchKey = GlobalKey();
+  String resetList = '';
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    dateFrom.text = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 7)));
+    dateTo.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+  }
 
 
   List<PatientReportModel> getDisplayedPatients({
@@ -59,7 +71,7 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
   Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: controller == dateFrom? DateTime.parse(dateFrom.text): DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime.now(),
     );
@@ -89,13 +101,14 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
                       child: AbsorbPointer(
                         absorbing: true, // Disable input
                         child: TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value){
                             if(value!.isEmpty){
                               return '';
                             }
                             else if(dateTo.text.isNotEmpty){
                               if(DateTime.parse(value).isAfter(DateTime.parse(dateTo.text))){
-                                return '';
+                                return 'Greater than To Date';
                               }
                             }
                             return null;
@@ -126,6 +139,7 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
                       child: AbsorbPointer(
                         absorbing: true, // Disable input
                         child: TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value){
                             if(value!.isEmpty){
                               return '';
@@ -161,7 +175,11 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
                     return SizedBox();
                   }
                   else{
+                    setState(() {
+                      resetList = data[0].departmentName;
+                    });
                     return DropdownSearch<String>(
+                      key: dropdownSearchKey,
                       items: data.map((e) => e.departmentName).toList(),
                       dropdownDecoratorProps: DropDownDecoratorProps(
                         dropdownSearchDecoration: InputDecoration(
@@ -215,53 +233,77 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
                 )
             ),
             h20,
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ColorManager.blue
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorManager.blue
 
-              ),
-                onPressed: ()async{
-                  formKey.currentState!.validate();
-                  final scaffoldMessage = ScaffoldMessenger.of(context);
-                  if(dateFrom.text.isEmpty || dateTo.text.isEmpty){
-                    scaffoldMessage.showSnackBar(
-                      SnackbarUtil.showFailureSnackbar(
-                        message: 'Date is Required',
-                        duration: const Duration(milliseconds: 1200),
-                      ),
-                    );
-                  }
-                  else if(DateTime.parse(dateFrom.text).isAfter(DateTime.parse(dateTo.text))){
-                  scaffoldMessage.showSnackBar(
-                    SnackbarUtil.showFailureSnackbar(
-                      message: 'From date is after To date',
-                      duration: const Duration(milliseconds: 1200),
-                    ),
-                  );
-                }
-                else{
-                  final response = await PatientReportServices().getReportList(
-                      fromDate: dateFrom.text,
-                      toDate: dateTo.text,
-                      departmentId: departmentId.toString()
-                  );
-                  if(response.isEmpty){
+                  ),
+                    onPressed: ()async{
+                      formKey.currentState!.validate();
+                      final scaffoldMessage = ScaffoldMessenger.of(context);
+                      if(dateFrom.text.isEmpty || dateTo.text.isEmpty){
+                        scaffoldMessage.showSnackBar(
+                          SnackbarUtil.showFailureSnackbar(
+                            message: 'Date is Required',
+                            duration: const Duration(milliseconds: 1200),
+                          ),
+                        );
+                      }
+                      else if(DateTime.parse(dateFrom.text).isAfter(DateTime.parse(dateTo.text))){
+                      scaffoldMessage.showSnackBar(
+                        SnackbarUtil.showFailureSnackbar(
+                          message: 'From date is after To date',
+                          duration: const Duration(milliseconds: 1200),
+                        ),
+                      );
+                    }
+                    else{
+                      final response = await PatientReportServices().getReportList(
+                          fromDate: dateFrom.text,
+                          toDate: dateTo.text,
+                          departmentId: departmentId.toString()
+                      );
+                      if(response.isEmpty){
 
 
-                    scaffoldMessage.showSnackBar(
-                      SnackbarUtil.showFailureSnackbar(
-                        message: 'No Data Available',
-                        duration: const Duration(milliseconds: 1200),
-                      ),
-                    );
-                  }
-                  setState(() {
-                    reportList = response;
-                  });
-                }
+                        scaffoldMessage.showSnackBar(
+                          SnackbarUtil.showFailureSnackbar(
+                            message: 'No Data Available',
+                            duration: const Duration(milliseconds: 1200),
+                          ),
+                        );
+                      }
+                      setState(() {
+                        reportList = response;
+                      });
+                    }
 
-                },
-                child: Text('Submit')
+                    },
+                    child: Text('Search')
+                ),
+                w20,
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    backgroundColor: ColorManager.dotGrey.withOpacity(0.7)
+
+                  ),
+                    onPressed: ()async{
+                      setState(() {
+                        reportList = [];
+                        dateFrom.text = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 7)));
+                        dateTo.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                        dropdownSearchKey.currentState!.changeSelectedItem(resetList);
+
+                      });
+
+                    },
+                    child: Text('Clear',style: TextStyle(color: ColorManager.black),)
+                ),
+              ],
             ),
             h20,
             if(reportList.isNotEmpty)

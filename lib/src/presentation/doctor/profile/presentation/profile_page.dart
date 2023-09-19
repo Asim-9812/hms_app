@@ -41,10 +41,8 @@ class DocProfilePage extends ConsumerWidget {
                elevation: 1,
                backgroundColor: ColorManager.white,
                leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
-               title: Text('Profile',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 24.sp:28),),
-               actions: [
-                 IconButton(onPressed: ()=>Get.to(()=>UpdateDocProfile(isWideScreen, isNarrowScreen,data)), icon: Icon(Icons.edit_note_outlined,color: ColorManager.primary,size: 30,))
-               ],
+               title: Text('Profile',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 20.sp:24),),
+
 
              ),
              body: Column(
@@ -398,7 +396,16 @@ class DocProfilePage extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${user.firstName} ${user.lastName}',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 32.sp:32),),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text('${user.firstName} ${user.lastName}',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 32.sp:32),),
+                          w10,
+                          InkWell(
+                              onTap: ()=>Get.to(()=>UpdateDocProfile(isWideScreen, isNarrowScreen,user )),
+                              child: Icon(Icons.edit,color: ColorManager.primary,size: 24,))
+                        ],
+                      ),
                       h10,
                       Text('Specialization',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?18.sp:18),),
                     ],

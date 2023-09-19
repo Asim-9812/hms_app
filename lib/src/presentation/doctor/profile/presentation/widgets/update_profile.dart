@@ -180,106 +180,132 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
         elevation: 1,
         backgroundColor: ColorManager.white,
         leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
-        title: Text('Update your Profile',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen? 24.sp:28),),
+        title: Text('Update your Profile',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen? 20.sp:24),),
 
       ),
       bottomNavigationBar: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50.w,vertical: 20.h),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              elevation: 10,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)
-              ),
-              backgroundColor: ColorManager.primaryDark,
-              fixedSize: Size.fromHeight(widget.isNarrowScreen?40.h:40)
-          ),
-          onPressed: isPostingData ? null :()async{
-            final now = DateTime.now();
-            final scaffoldMessage = ScaffoldMessenger.of(context);
-            if (formKey.currentState!.validate()){
-              setState(() {
-                isPostingData = true;
-              });
-
-              final response = await ref.read(userUpdateProvider).updateUser(
-                  ID: widget.user.id!,
-                  userID: widget.user.userID!,
-                  typeID: 3,
-                  referredID: 0,
-                  parentID: 0,
-                  firstName: _firstNameController.text.trim(),
-                  lastName: _lastNameController.text.trim(),
-                  password: '',
-                  countryID: countryId!,
-                  provinceID: provinceId!,
-                  districtID: districtId!,
-                  municipalityID: municipalityId!,
-                  wardNo: int.parse(_wardController.text),
-                  localAddress: _addressController.text.trim(),
-                  genderID: genderId == null? 3 :genderId!,
-                  contactNo: _mobileController.text.trim(),
-                  email: _emailController.text.trim(),
-                  roleID: 2,
-                  designation: 'A',
-                  joinedDate: DateFormat('yyyy-MM-dd').format(DateTime.parse(widget.user.joinedDate!)),
-                  validDate: DateFormat('yyyy-MM-dd').format(DateTime.parse(widget.user.validDate!)),
-                  signatureImage: 'signatureImage',
-                  profileImage: 'profileImage',
-                  isActive: true,
-                  entryDate: DateFormat('yyyy-MM-dd').format(DateTime.parse(widget.user.entryDate!)),
-                  PrefixSettingID: 1,
-                  token: 'token',
-                  flag: 'UPDATE',
-                  profileImageUrl: profileImg,
-                  signatureImageUrl: signatureImg,
-                  liscenceNo:int.parse(_licenseController.text)
-              );
-
-              if (response.isLeft()) {
-                final leftValue = response.fold(
-                      (left) => left,
-                      (right) => '', // Empty string here as we are only interested in the left value
-                );
-
-                scaffoldMessage.showSnackBar(
-                  SnackbarUtil.showFailureSnackbar(
-                    message: leftValue,
-                    duration: const Duration(milliseconds: 1400),
-                  ),
-                );
-                setState(() {
-                  isPostingData = false;
-                });
-              }
-              else {
-                scaffoldMessage.showSnackBar(
-                  SnackbarUtil.showSuccessSnackbar(
-                    message: 'Successfully Registered',
-                    duration: const Duration(milliseconds: 1400),
-                  ),
-                );
-
-                setState(() {
-                  isPostingData = false;
-                });
-                ref.refresh(userInfoProvider(widget.user.userID!));
-                Get.back();
-              }
-            }
-            else{
-              scaffoldMessage.showSnackBar(
-                SnackbarUtil.showFailureSnackbar(
-                  message: 'Please fill a valid form',
-                  duration: const Duration(milliseconds: 1400),
+        padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 20.h),
+        child: Row(
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)
+                    ),
+                    backgroundColor: ColorManager.primaryDark,
+                    fixedSize: Size.fromHeight(widget.isNarrowScreen?40.h:40)
                 ),
-              );
-              setState(() {
-                isPostingData = false;
-              });
-            }
-          },
-          child: isPostingData? SpinKitDualRing(color: ColorManager.white,size: widget.isNarrowScreen?12.sp: 12,):Text('Save'),
+                onPressed: isPostingData ? null :()async{
+                  final now = DateTime.now();
+                  final scaffoldMessage = ScaffoldMessenger.of(context);
+                  if (formKey.currentState!.validate()){
+                    setState(() {
+                      isPostingData = true;
+                    });
+
+                    final response = await ref.read(userUpdateProvider).updateUser(
+                        ID: widget.user.id!,
+                        userID: widget.user.userID!,
+                        typeID: 3,
+                        referredID: 0,
+                        parentID: 0,
+                        firstName: _firstNameController.text.trim(),
+                        lastName: _lastNameController.text.trim(),
+                        password: '',
+                        countryID: countryId!,
+                        provinceID: provinceId!,
+                        districtID: districtId!,
+                        municipalityID: municipalityId!,
+                        wardNo: int.parse(_wardController.text),
+                        localAddress: _addressController.text.trim(),
+                        genderID: genderId == null? 3 :genderId!,
+                        contactNo: _mobileController.text.trim(),
+                        email: _emailController.text.trim(),
+                        roleID: 2,
+                        designation: 'A',
+                        joinedDate: DateFormat('yyyy-MM-dd').format(DateTime.parse(widget.user.joinedDate!)),
+                        validDate: DateFormat('yyyy-MM-dd').format(DateTime.parse(widget.user.validDate!)),
+                        signatureImage: 'signatureImage',
+                        profileImage: 'profileImage',
+                        isActive: true,
+                        entryDate: DateFormat('yyyy-MM-dd').format(DateTime.parse(widget.user.entryDate!)),
+                        PrefixSettingID: 1,
+                        token: 'token',
+                        flag: 'UPDATE',
+                        profileImageUrl: profileImg,
+                        signatureImageUrl: signatureImg,
+                        liscenceNo:int.parse(_licenseController.text)
+                    );
+
+                    if (response.isLeft()) {
+                      final leftValue = response.fold(
+                            (left) => left,
+                            (right) => '', // Empty string here as we are only interested in the left value
+                      );
+
+                      scaffoldMessage.showSnackBar(
+                        SnackbarUtil.showFailureSnackbar(
+                          message: leftValue,
+                          duration: const Duration(milliseconds: 1400),
+                        ),
+                      );
+                      setState(() {
+                        isPostingData = false;
+                      });
+                    }
+                    else {
+                      scaffoldMessage.showSnackBar(
+                        SnackbarUtil.showSuccessSnackbar(
+                          message: 'Successfully Registered',
+                          duration: const Duration(milliseconds: 1400),
+                        ),
+                      );
+
+                      setState(() {
+                        isPostingData = false;
+                      });
+                      ref.refresh(userInfoProvider(widget.user.userID!));
+                      Get.back();
+                    }
+                  }
+                  else{
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showFailureSnackbar(
+                        message: 'Please fill the required field',
+                        duration: const Duration(milliseconds: 1400),
+                      ),
+                    );
+                    setState(() {
+                      isPostingData = false;
+                    });
+                  }
+                },
+                child: isPostingData? SpinKitDualRing(color: ColorManager.white,size: widget.isNarrowScreen?12.sp: 12,):Text('Save'),
+              ),
+            ),
+            w10,
+            Expanded(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    elevation: 1,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)
+                    ),
+                    backgroundColor: ColorManager.dotGrey,
+                    fixedSize: Size.fromHeight(widget.isNarrowScreen?40.h:40)
+                ),
+                onPressed: ()async{
+                  ref.invalidate(userUpdateProvider);
+                  setState(() {
+                    isPostingData = false;
+                  });
+                },
+                child: Text('Cancel',style: TextStyle(color: ColorManager.black),),
+              ),
+            ),
+          ],
         ),
       ),
       body: SingleChildScrollView(
@@ -455,36 +481,54 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Email',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
+                      Text('Gender',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                       h10,
                       Container(
                         height: 60,
                         width: 180.w,
-                        child: TextFormField(
-                          controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          autovalidateMode:
-                          AutovalidateMode.onUserInteraction,
+                        child: DropdownButtonFormField<String>(
+                          padding: EdgeInsets.zero,
+                          value: selectedGender,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Email is required';
-                            }
-                            if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                              return 'Please enter a valid email address';
+                            if (selectedGender == genderType[0]) {
+                              return 'Please select a Gender';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
-                              floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                              hintText: 'E-mail',
-                              hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                      color: ColorManager.black
-                                  )
-                              )
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
+                            ),
                           ),
+                          items: genderType
+                              .map(
+                                (String item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: getRegularStyle(
+                                  color: Colors.black,
+                                  fontSize: widget.isNarrowScreen ? 20.sp : 20,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          )
+                              .toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              selectedGender = value!;
+                              genderId = genderType.indexOf(value);
+                            });
+                          },
                         ),
                       ),
                     ],
@@ -567,55 +611,39 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                 ),
               ),
               h20,
-              Text('Gender',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
+
+              Text('Email',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
               h10,
               Container(
                 height: 60,
-                width: 400.w,
-                child: DropdownButtonFormField<String>(
-                  padding: EdgeInsets.zero,
-                  value: selectedGender,
+                child: TextFormField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  autovalidateMode:
+                  AutovalidateMode.onUserInteraction,
                   validator: (value) {
-                    if (selectedGender == genderType[0]) {
-                      return 'Please select a Gender';
+                    if (value!.isEmpty) {
+                      return 'Email is required';
+                    }
+                    if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                      return 'Please enter a valid email address';
                     }
                     return null;
                   },
                   decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
-                    ),
+                      floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                      hintText: 'E-mail',
+                      hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                              color: ColorManager.black
+                          )
+                      )
                   ),
-                  items: genderType
-                      .map(
-                        (String item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: getRegularStyle(
-                          color: Colors.black,
-                          fontSize: widget.isNarrowScreen ? 20.sp : 20,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  )
-                      .toList(),
-                  onChanged: (String? value) {
-                    setState(() {
-                      selectedGender = value!;
-                      genderId = genderType.indexOf(value);
-                    });
-                  },
                 ),
               ),
+
 
               h20,
               Row(

@@ -23,6 +23,7 @@ import 'package:medical_app/src/data/model/department_model.dart';
 import 'package:medical_app/src/data/provider/common_provider.dart';
 import 'package:medical_app/src/data/services/country_services.dart';
 import 'package:medical_app/src/data/services/department_services.dart';
+import 'package:medical_app/src/presentation/common/date_input_formatter.dart';
 import 'package:medical_app/src/presentation/login/domain/model/user.dart';
 import 'package:medical_app/src/presentation/patient/quick_services/domain/services/cost_category_services.dart';
 import 'package:medical_app/src/presentation/patient/quick_services/domain/services/patient_registration_service.dart';
@@ -51,7 +52,8 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
   DateTime? selectedDate;
 
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _panController = TextEditingController();
+  final TextEditingController _dobController = TextEditingController();
+  final TextEditingController _consultController = TextEditingController();
   final TextEditingController _nidController = TextEditingController();
   final TextEditingController _uhidController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
@@ -61,6 +63,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
   final TextEditingController _policyController = TextEditingController();
   final TextEditingController _wardController = TextEditingController();
   final TextEditingController _codeController = TextEditingController();
+  int imageSet = 1;
 
   List<Country> countries = [];
   int? countryId;
@@ -197,44 +200,27 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
 
 
 
-  Future<void> _selectDOB(BuildContext context) async {
+  Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDOB ?? DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime.now(),
+      initialDate: DateTime.now(),
+      firstDate:controller == _consultController? DateTime.now(): DateTime(1900),
+      lastDate:controller == _dobController?DateTime.now(): DateTime.now().add(Duration(days: 365)),
     );
-
-    if (picked != null && picked != selectedDOB) {
-      setState(() {
-        selectedDOB = picked;
-      });
-    }
+    if (picked != null && picked != DateTime.now())
+      controller.text = DateFormat('yyyy-MM-dd').format(picked);
   }
-
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate ?? DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2025),
-    );
-
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
-  }
-
-
 
 
 
   @override
   Widget build(BuildContext context) {
     final image = ref.watch(imageProvider);
+    if(image != null){
+      setState(() {
+        imageSet =1 ;
+      });
+    }
     if (costCategory.isEmpty) {
       // If costCategory is empty, show the loading spinner
       return Scaffold(
@@ -276,106 +262,71 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
             onPressed: isPostingData ? null :() async {
               final now = DateTime.now();
               final scaffoldMessage = ScaffoldMessenger.of(context);
-              if(image == null){
-                scaffoldMessage.showSnackBar(
-                  SnackbarUtil.showFailureSnackbar(
-                    message: 'Please provide a image',
-                    duration: const Duration(milliseconds: 1400),
-                  ),
-                );
-              }
-              else{
-                if(selectedDate== null || selectedDOB == null){
+              if (formKey.currentState!.validate()){
+
+                if(image == null){
+                  setState(() {
+                    imageSet = 2;
+                  });
                   scaffoldMessage.showSnackBar(
                     SnackbarUtil.showFailureSnackbar(
-                      message: 'Please fill in the date',
+                      message: 'Please provide a image',
                       duration: const Duration(milliseconds: 1400),
                     ),
                   );
-                }else if(selectedDate!.isBefore(now) || selectedDate!.day == now.day && selectedDate!.month == now.month && selectedDate!.year == now.year){
-                  scaffoldMessage.showSnackBar(
-                    SnackbarUtil.showFailureSnackbar(
-                      message: 'Appointment date is not valid.',
-                      duration: const Duration(milliseconds: 1400),
-                    ),
+                }
+                else{
+                  setState(() {
+                    isPostingData = true;
+                  });
+
+                  final response = await ref.read(patientRegistrationProvider).addRegistration(
+                      id: 1,
+                      patientID: 1,
+                      firstName: _firstNameController.text.trim(),
+                      lastName: _lastNameController.text.trim(),
+                      DOB: selectedDOB.toString(),
+                      imagePhoto: 1,
+                      countryID: countryId!,
+                      provinceID: provinceId!,
+                      districtID: districtId!,
+                      municipalityID: municipalityId!,
+                      ward: int.parse(_wardController.text),
+                      localAddress: _addressController.text.trim(),
+                      genderID: genderId == 0?3 :genderId,
+                      NID: int.parse(_nidController.text),
+                      UHID: int.parse(_uhidController.text),
+                      entryDate: DateTime.now().toString(),
+                      flag: '',
+                      consultDate: selectedDate.toString(),
+                      patientVisitID: 1,
+                      costCategoryID: costId!,
+                      departmentID: departmentId!,
+                      referedByID: 0,
+                      TPID: 1,
+                      policyNo:_policyController.text.isEmpty?0:int.parse(_policyController.text),
+                      claimCode: 1,
+                      serviceCategoryID: 1,
+                      ledgerID: 1,
+                      imagePhotoUrl: image,
+                      email: _emailController.text.trim(),
+                      contact: int.parse(_mobileController.text),
+                      entrydate1: DateTime.now().toString(),
+                      doctorID: doctorId!,
+                      code : _codeController.text.trim()
+
                   );
-                }else{
-                  if (formKey.currentState!.validate()){
-                    setState(() {
-                      isPostingData = true;
-                    });
 
-                    final response = await ref.read(patientRegistrationProvider).addRegistration(
-                        id: 1,
-                        patientID: 1,
-                        firstName: _firstNameController.text.trim(),
-                        lastName: _lastNameController.text.trim(),
-                        DOB: selectedDOB.toString(),
-                        imagePhoto: 1,
-                        countryID: countryId!,
-                        provinceID: provinceId!,
-                        districtID: districtId!,
-                        municipalityID: municipalityId!,
-                        ward: int.parse(_wardController.text),
-                        localAddress: _addressController.text.trim(),
-                        genderID: genderId == 0?3 :genderId,
-                        NID: int.parse(_nidController.text),
-                        UHID: int.parse(_uhidController.text),
-                        entryDate: DateTime.now().toString(),
-                        flag: '',
-                        consultDate: selectedDate.toString(),
-                        patientVisitID: 1,
-                        costCategoryID: costId!,
-                        departmentID: departmentId!,
-                        referedByID: 0,
-                        TPID: 1,
-                        policyNo:_policyController.text.isEmpty?0:int.parse(_policyController.text),
-                        claimCode: 1,
-                        serviceCategoryID: 1,
-                        ledgerID: 1,
-                        imagePhotoUrl: image,
-                        email: _emailController.text.trim(),
-                        contact: int.parse(_mobileController.text),
-                        entrydate1: DateTime.now().toString(),
-                        doctorID: doctorId!,
-                        code : _codeController.text.trim()
 
+                  if (response.isLeft()) {
+                    final leftValue = response.fold(
+                          (left) => left,
+                          (right) => '', // Empty string here as we are only interested in the left value
                     );
 
-
-                    if (response.isLeft()) {
-                      final leftValue = response.fold(
-                            (left) => left,
-                            (right) => '', // Empty string here as we are only interested in the left value
-                      );
-
-                      scaffoldMessage.showSnackBar(
-                        SnackbarUtil.showFailureSnackbar(
-                          message: leftValue,
-                          duration: const Duration(milliseconds: 1400),
-                        ),
-                      );
-                      setState(() {
-                        isPostingData = false;
-                      });
-                    }
-                    else {
-                      scaffoldMessage.showSnackBar(
-                        SnackbarUtil.showSuccessSnackbar(
-                          message: 'Successfully Registered',
-                          duration: const Duration(milliseconds: 1400),
-                        ),
-                      );
-                      setState(() {
-                        isPostingData = false;
-                      });
-                      Get.back();
-                    }
-                  }
-                  else{
                     scaffoldMessage.showSnackBar(
                       SnackbarUtil.showFailureSnackbar(
-                        message: 'Please fill a valid form',
+                        message: leftValue,
                         duration: const Duration(milliseconds: 1400),
                       ),
                     );
@@ -383,11 +334,36 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                       isPostingData = false;
                     });
                   }
+                  else {
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showSuccessSnackbar(
+                        message: 'Successfully Registered',
+                        duration: const Duration(milliseconds: 1400),
+                      ),
+                    );
+                    setState(() {
+                      isPostingData = false;
+                    });
+                    Get.back();
+                  }
+
                 }
 
               }
+              else{
+                scaffoldMessage.showSnackBar(
+                  SnackbarUtil.showFailureSnackbar(
+                    message: 'Please fill a valid form',
+                    duration: const Duration(milliseconds: 1400),
+                  ),
+                );
+                setState(() {
+                  isPostingData = false;
+                });
+              }
+
             },
-            child: isPostingData? SpinKitDualRing(color: ColorManager.white,size: widget.isNarrowScreen?12.sp: 12,):Text('Submit'),
+            child: isPostingData? SpinKitDualRing(color: ColorManager.white,size: widget.isNarrowScreen?12.sp: 12,):Text('Register'),
           ),
         ),
       ),
@@ -762,6 +738,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
         h20,
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -769,70 +746,142 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
               children: [
                 Text('DOB',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18 ),),
                 h10,
-                InkWell(
-                  onTap: () => _selectDOB(context),
-                  child: Container(
-                    height: 55,
-                    width: 180.w,
-                    margin: EdgeInsets.only(bottom: 5),
-                    padding: EdgeInsets.symmetric(horizontal: 12.w),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: ColorManager.black,
-                        width: 0.5,
+                Container(
+                  width: 180.w,
+                  height: 60,
+                  child: TextFormField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Dob is required';
+                      }
+
+                      // Create a regular expression pattern to match 'yyyy-MM-dd' format
+                      final pattern = r'^\d{4}-\d{2}-\d{2}$';
+                      final regex = RegExp(pattern);
+
+                      if (!regex.hasMatch(value)) {
+                        return 'Invalid Date';
+                      }
+
+                      // Split the date string into parts
+                      final dateParts = value.split('-');
+
+                      // Ensure there are three parts (year, month, day)
+                      if (dateParts.length != 3) {
+                        return 'Invalid Date';
+                      }
+
+                      final year = int.tryParse(dateParts[0]);
+                      final month = int.tryParse(dateParts[1]);
+                      final day = int.tryParse(dateParts[2]);
+
+                      if (year == null || month == null || day == null) {
+                        return 'Invalid Date';
+                      }
+
+                      // Check if the month is invalid
+                      if (month < 1 || month > 12) {
+                        return 'Invalid Month';
+                      }
+
+                      // Check if the day is invalid for the selected month
+                      if (day < 1 || day > DateTime(year, month + 1, 0).day) {
+                        return 'Day must be between 1 and ${DateTime(year, month, 0).day}';
+                      }
+
+                      // Get the current date
+                      final currentDate = DateTime.now();
+
+                      // Check if the selected date is in the future
+                      if (DateTime(year, month, day).isAfter(currentDate)) {
+                        return 'Date cannot be in the future';
+                      }
+
+                      print(value);
+
+                      return null;
+                    },
+
+
+
+
+
+
+
+
+
+                    inputFormatters: [
+                      DateInputFormatter()
+                    ],
+                    controller: _dobController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                              color: ColorManager.black.withOpacity(0.4)
+                          )
                       ),
-                    ),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        selectedDOB == null
-                            ? 'Pick a date'
-                            : DateFormat('yyyy-MM-dd').format(selectedDOB!),
-                        style: getRegularStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?20.sp:20),
+                      hintText: 'YYYY-MM-DD',
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.calendar_today,color: ColorManager.blue,),
+                        onPressed: () => _selectDate(context, _dobController),
                       ),
                     ),
                   ),
-                ),
+                )
               ],
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Moblie No.',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
+                Text('Gender',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                 h10,
                 Container(
                   height: 60,
                   width: 180.w,
-                  child: TextFormField(
-                    controller: _mobileController,
-                    keyboardType: TextInputType.phone,
+                  child: DropdownButtonFormField<String>(
+
+                    padding: EdgeInsets.zero,
+                    value: selectedGender,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value){
-                      if (value!.isEmpty) {
-                        return 'Mobile number is required';
-                      }
-                      if (value.length!=10) {
-                        return 'Enter a valid number';
-                      }
-
-                      if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                        return 'Please enter a valid Mobile Number';
+                      if(selectedGender == genderType[0]){
+                        return 'Please select a Gender';
                       }
                       return null;
                     },
                     decoration: InputDecoration(
-                      floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                      hintText: 'Mobile Number',
-                      hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
+                      filled: true,
+                      fillColor: Colors.white,
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ColorManager.black
-                          )
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
                       ),
                     ),
+                    items: genderType
+                        .map(
+                          (String item) => DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(
+                          item,
+                          style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    )
+                        .toList(),
+                    onChanged: (String? value) {
+                      setState(() {
+                        selectedGender = value!;
+                        genderId = genderType.indexOf(value);
+                      });
+                    },
                   ),
                 ),
               ],
@@ -840,51 +889,38 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
           ],
         ),
         h20,
-        Text('Gender',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
+        Text('Moblie No.',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
         h10,
         Container(
           height: 60,
-          width: 380.w,
-          child: DropdownButtonFormField<String>(
-
-            padding: EdgeInsets.zero,
-            value: selectedGender,
+          child: TextFormField(
+            controller: _mobileController,
+            keyboardType: TextInputType.phone,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value){
-              if(selectedGender == genderType[0]){
-                return 'Please select a Gender';
+              if (value!.isEmpty) {
+                return 'Mobile number is required';
+              }
+              if (value.length!=10) {
+                return 'Enter a valid number';
+              }
+
+              if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                return 'Please enter a valid Mobile Number';
               }
               return null;
             },
             decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.white,
+              floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+              hintText: 'Mobile Number',
+              hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(
+                      color: ColorManager.black
+                  )
               ),
             ),
-            items: genderType
-                .map(
-                  (String item) => DropdownMenuItem<String>(
-                value: item,
-                child: Text(
-                  item,
-                  style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            )
-                .toList(),
-            onChanged: (String? value) {
-              setState(() {
-                selectedGender = value!;
-                genderId = genderType.indexOf(value);
-              });
-            },
           ),
         ),
         h20,
@@ -892,7 +928,6 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
         h10,
         Container(
           height: 60,
-          width: 380.w,
           child: TextFormField(
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
@@ -1052,7 +1087,6 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
         h10,
         Container(
           height: 60,
-          width: 380.w,
           child: DropdownButtonFormField<String>(
             menuMaxHeight: widget.isWideScreen?200:400.h,
             autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -1105,7 +1139,6 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
         h10,
         Container(
           height: 60,
-          width: 380.w,
           child: DropdownButtonFormField<String>(
             menuMaxHeight: widget.isWideScreen?200:400.h,
             autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -1328,34 +1361,89 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 Text('Appointment Date',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                 h10,
                 Container(
+                  width: 180.w,
                   height: 60,
-                  width: 180,
-                  child: InkWell(
-                    onTap: () => _selectDate(context),
-                    child: Container(
-                      height: 55,
-                      width: 180,
-                      margin: EdgeInsets.only(bottom: 5),
-                      padding: EdgeInsets.symmetric(horizontal: 12.w),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: ColorManager.black,
-                          width: 0.5,
-                        ),
+                  child: TextFormField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Date is required';
+                      }
+
+                      // Create a regular expression pattern to match 'yyyy-MM-dd' format
+                      final pattern = r'^\d{4}-\d{2}-\d{2}$';
+                      final regex = RegExp(pattern);
+
+                      if (!regex.hasMatch(value)) {
+                        return 'Invalid Date';
+                      }
+
+                      // Split the date string into parts
+                      final dateParts = value.split('-');
+
+                      // Ensure there are three parts (year, month, day)
+                      if (dateParts.length != 3) {
+                        return 'Invalid Date';
+                      }
+
+                      final year = int.tryParse(dateParts[0]);
+                      final month = int.tryParse(dateParts[1]);
+                      final day = int.tryParse(dateParts[2]);
+
+                      if (year == null || month == null || day == null) {
+                        return 'Invalid Date';
+                      }
+
+                      // Check if the month is invalid
+                      if (month < 1 || month > 12) {
+                        return 'Invalid Month';
+                      }
+
+                      // Check if the day is invalid for the selected month
+                      if (day < 1 || day > DateTime(year, month + 1, 0).day) {
+                        return 'Day must be between 1 and ${DateTime(year, month, 0).day}';
+                      }
+
+                      // Get the current date
+                      final currentDate = DateTime.now();
+
+                      // Check if the selected date is in the future
+                      if (DateTime(year, month, day).isBefore(currentDate)) {
+                        return 'Date cannot be in the past';
+                      }
+
+                      print(value);
+
+                      return null;
+                    },
+
+
+
+
+
+
+
+
+
+                    inputFormatters: [
+                      DateInputFormatter()
+                    ],
+                    controller: _consultController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                              color: ColorManager.black.withOpacity(0.4)
+                          )
                       ),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          selectedDate == null
-                              ? 'Date for consultation'
-                              : DateFormat('yyyy-MM-dd').format(selectedDate!),
-                          style: getRegularStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?20.sp:20),
-                        ),
+                      hintText: 'YYYY-MM-DD',
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.calendar_today,color: ColorManager.blue,),
+                        onPressed: () => _selectDate(context, _consultController),
                       ),
                     ),
                   ),
-                ),
+                )
               ],
             ),
           ],
@@ -1452,12 +1540,72 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
           )
               :  DottedBorder(
             dashPattern: [16,6,16,4],
-            color: ColorManager.textGrey,
+            color:imageSet == 2 ? ColorManager.red: ColorManager.textGrey,
             radius: Radius.circular(20),
             borderType: BorderType.RRect,
             child: InkWell(
-              onTap: ()  {
-                ref.read(imageProvider.notifier).pickAnImage();
+              onTap: () async {
+                 await showModalBottomSheet(
+
+                   backgroundColor: ColorManager.white,
+                     context: context,
+                     builder: (context){
+                       return Container(
+                         height: 150,
+                         padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                         child: Row(
+                           mainAxisAlignment: MainAxisAlignment.spaceAround,
+                           crossAxisAlignment: CrossAxisAlignment.center,
+                           children: [
+                             Column(
+                               children: [
+                                 InkWell(
+                                   onTap : (){
+                                     ref.read(imageProvider.notifier).camera();
+                                     Navigator.pop(context);
+                                   },
+                                   child: Container(
+                                     decoration: BoxDecoration(
+                                       borderRadius: BorderRadius.circular(10),
+                                       border: Border.all(
+                                         color: ColorManager.black.withOpacity(0.5)
+                                       )
+                                     ),
+                                     padding: EdgeInsets.symmetric(horizontal: 30.w,vertical: 30.h),
+                                     child: Icon(FontAwesomeIcons.camera,color: ColorManager.black,),
+                                   ),
+                                 ),
+                                 h10,
+                                 Text('Camera',style: getRegularStyle(color: ColorManager.black,fontSize: 16),)
+                               ],
+                             ),
+                             Column(
+                               children: [
+                                 InkWell(
+                                   onTap:(){
+                                     ref.read(imageProvider.notifier).pickAnImage();
+                                     Navigator.pop(context);
+                                   },
+                                   child: Container(
+                                     decoration: BoxDecoration(
+                                       borderRadius: BorderRadius.circular(10),
+                                       border: Border.all(
+                                         color: ColorManager.black.withOpacity(0.5)
+                                       )
+                                     ),
+                                     padding: EdgeInsets.symmetric(horizontal: 30.w,vertical: 30.h),
+                                     child: Icon(FontAwesomeIcons.image,color: ColorManager.black,),
+                                   ),
+                                 ),
+                                 h10,
+                                 Text('Gallery',style: getRegularStyle(color: ColorManager.black,fontSize: 16),)
+                               ],
+                             ),
+                           ],
+                         ),
+                       );
+                     }
+                 );
               },
               child: Container(
                 height: 200,

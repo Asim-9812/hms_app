@@ -313,7 +313,7 @@ class _PatientHomePageState extends State<PatientHomePage> {
                                 ),
                               ),
                               child: Center(
-                                child: Text('Telemedicine',style: getMediumStyle(color: ColorManager.white,fontSize: fontSize),),
+                                child: Text('Online Consultation',style: getMediumStyle(color: ColorManager.white,fontSize: fontSize),),
                               ),
                             ),
                           ),

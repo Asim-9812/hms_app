@@ -134,10 +134,6 @@ class _PatientProfileOrgState extends State<PatientProfileOrg> {
     bool isWideScreen = screenSize.width > 500;
     bool isNarrowScreen = screenSize.width < 420;
 
-
-
-
-
     return Card(
       elevation: 3,
       shadowColor: ColorManager.textGrey.withOpacity(0.4),

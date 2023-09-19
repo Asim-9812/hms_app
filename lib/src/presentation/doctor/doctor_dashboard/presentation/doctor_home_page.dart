@@ -123,22 +123,18 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                 ),
                 h20,
                 _overallStat(),
-                h20,
-                _myCircle(),
+
                 h20,
                 _myTasks(),
 
                 h20,
                 _myAppointments(),
-                h20,
-                h20,
-                h20,
 
-                // FadeInUp(
-                //     duration: Duration(milliseconds: 700),
-                //     child: _buildCircle()),
-                // h10,
+                h20,
+                h20,
                 _patientTable(),
+                h20,
+                _myCircle(),
                 h20,
                 h20,
 

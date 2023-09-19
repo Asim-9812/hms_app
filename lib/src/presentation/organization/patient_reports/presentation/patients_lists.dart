@@ -86,7 +86,7 @@ class _OrgPatientReportsState extends ConsumerState<OrgPatientReports> {
             h20,
 
             Container(
-              height:isWideScreen? 360:320,
+              height:isWideScreen? 320:300,
               width: double.infinity,
               child: ListView(
                 scrollDirection: Axis.horizontal,
@@ -140,19 +140,19 @@ class _OrgPatientReportsState extends ConsumerState<OrgPatientReports> {
                           ],
                         ),
                         h20,
-                        Text('150 patients',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?44:44.sp),),
+                        Text('150 patients',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?34:34.sp),),
                         h10,
                         Text('Registered Today :',style: getRegularStyle(color: ColorManager.white,fontSize: isWideScreen?18:18.sp),),
                         h10,
-                        Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?40:40.sp),),
+                        Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?30:30.sp),),
                         h10,
                         Text('Last 7 days :',style: getRegularStyle(color: ColorManager.white,fontSize: isWideScreen?18:18.sp),),
                         h10,
-                        Text('30',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?40:40.sp),),
+                        Text('30',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?30:30.sp),),
                         h10,
                         Text('Last month :',style: getRegularStyle(color: ColorManager.white,fontSize: isWideScreen?18:18.sp),),
                         h10,
-                        Text('120',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?40:40.sp),),
+                        Text('120',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?30:30.sp),),
 
                       ],
                     ),
