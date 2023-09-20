@@ -157,6 +157,10 @@ class IBWState extends State<IBW> {
           title: Text('IBW Calculator'),
           centerTitle: true,
           titleTextStyle: getMediumStyle(color: ColorManager.white),
+          leading: IconButton(
+            onPressed: ()=>Get.back(),
+            icon: FaIcon(Icons.chevron_left,color: ColorManager.white,),
+          ),
         ),
         body: SingleChildScrollView(
           child: Column(

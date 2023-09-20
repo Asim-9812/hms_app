@@ -33,6 +33,7 @@ class MDC extends StatelessWidget {
         backgroundColor: ColorManager.white,
         leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
         title: Text('MDC',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 24.sp:28),),
+
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,

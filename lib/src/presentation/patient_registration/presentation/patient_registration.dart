@@ -71,31 +71,31 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
 
   List<ProvinceModel> provinces = [];
   int? provinceId;
-  String? selectedProvince;
+  String selectedProvince ='Select a Province';
 
   List<DistrictModel> districts = [];
   int? districtId;
-  String? selectedDistrict;
+  String selectedDistrict = 'Select a District';
 
 
   List<MunicipalityModel> municipalities = [];
   int? municipalityId;
-  String? selectedMunicipality;
+  String selectedMunicipality = 'Select a Municipality';
 
 
 
   List<CostCategoryModel> costCategory = [];
   int? costId ;
-  String? selectedCategory;
+  String selectedCategory = 'Select a Category';
 
 
   List<Department> departments = [];
   int? departmentId ;
-  String? selectedDepartment;
+  String selectedDepartment ='Select a Department';
 
   List<User> doctors = [];
   int? doctorId ;
-  String? selectedDoctor;
+  String selectedDoctor = 'Select a Doctor';
 
 
 
@@ -128,7 +128,6 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
     List<ProvinceModel> provinceList = await CountryService().getProvince(countryId: countryId!);
     setState(() {
       provinces = provinceList;
-      selectedProvince = provinces.isNotEmpty ? provinces[0].provinceName : 'Select a Province';
       provinceId = provinces.isNotEmpty ? provinces[0].provinceId : 0;
 
     });
@@ -143,7 +142,6 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
     List<DistrictModel> districtList = await CountryService().getDistrict(provinceId: provinceId!);
     setState(() {
       districts = districtList;
-      selectedDistrict = districts.isNotEmpty ? districts[0].districtName : 'Select a District';
       districtId = districts.isNotEmpty ? districts[0].districtId : 0;
     });
     _getMunicipality();
@@ -157,7 +155,6 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
     List<MunicipalityModel> municipalityList = await CountryService().getMunicipality(districtId: districtId!);
     setState(() {
       municipalities = municipalityList;
-      selectedMunicipality = municipalities.isNotEmpty ? municipalities[0].municipalityName : 'Select a Municipality';
       municipalityId = municipalities.isNotEmpty ? municipalities[0].municipalityId : 0;
     });
   }
@@ -168,7 +165,6 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
     setState(() {
       costCategory = costCategoryList;
       costId =costCategory.isNotEmpty ? costCategory[0].costCategoryID  : 0;
-      selectedCategory = costCategory.isNotEmpty ? costCategory[0].costCategoryType : 'Select a category';
 
     });
   }
@@ -180,8 +176,6 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
     setState(() {
       departments = departmentList;
       departmentId =departments.isNotEmpty ? departments[0].departmentId  : 0;
-      selectedDepartment = departments.isNotEmpty ? departments[0].departmentName : 'Select a Department';
-
     });
   }
 
@@ -192,8 +186,6 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
     setState(() {
       doctors = doctorList;
       doctorId =doctors.isNotEmpty ? doctors[0].id  : 0;
-      selectedDoctor = doctors.isNotEmpty ? 'Dr. ${doctors[0].firstName} ${doctors[0].lastName}' : 'Select a Doctor';
-
     });
   }
 
@@ -245,7 +237,8 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
             onPressed: ()=>Get.back(),
             icon: FaIcon(Icons.chevron_left,color: ColorManager.white,),
           ),
-          title: Text('Register',style: getMediumStyle(color: ColorManager.white),),
+          title: Text('Register',style: getMediumStyle(color: ColorManager.white,fontSize: 24),),
+          centerTitle: true,
         ),
         body: _buildRegistration(),
         bottomNavigationBar: Padding(
@@ -560,7 +553,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
         ),
         h20,
         Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
@@ -570,7 +563,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 Text('Cost Category',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                 h10,
                 Container(
-                  height: 60,
+                  height: 80,
                   width: 180.w,
                   child: DropdownButtonFormField<String>(
                     menuMaxHeight: widget.isWideScreen?200:400.h,
@@ -595,18 +588,21 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                         borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
                       ),
                     ),
-                    items: costCategory
+                    items: [DropdownMenuItem(
+                        value: 'Select a Category',
+                        child: Text('Select a Category',style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?18.sp:18),
+                          overflow: TextOverflow.ellipsis,)),...costCategory
                         .map(
                           (CostCategoryModel item) => DropdownMenuItem<String>(
                         value: item.costCategoryType,
                         child: Text(
                           item.costCategoryType,
-                          style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
+                          style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?18.sp:18),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     )
-                        .toList(),
+                        .toList()],
                     onChanged: (String? value) {
                       setState(() {
                         selectedCategory = value!;
@@ -622,7 +618,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
               ],
             ),
 
-            if(selectedCategory != 'General')
+            if(selectedCategory != 'General'&&selectedCategory != 'Select a Category')
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -630,7 +626,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                   Text('Policy No.',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                   h10,
                   Container(
-                    height: 60,
+                    height: 80,
                     width: 180.w,
                     child: TextFormField(
                       controller: _policyController,
@@ -748,7 +744,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 h10,
                 Container(
                   width: 180.w,
-                  height: 60,
+                  height: 80,
                   child: TextFormField(
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) {
@@ -839,7 +835,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 Text('Gender',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                 h10,
                 Container(
-                  height: 60,
+                  height: 80,
                   width: 180.w,
                   child: DropdownButtonFormField<String>(
 
@@ -967,7 +963,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 Text('Country',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                 h10,
                 Container(
-                  height: 60,
+                  height: 80,
                   width: 180.w,
                   child: DropdownButtonFormField<String>(
                     menuMaxHeight: widget.isWideScreen?200:400.h,
@@ -1028,7 +1024,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 Text('Province',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                 h10,
                 Container(
-                  height: 60,
+                  height: 80,
                   width: 180.w,
                   child: DropdownButtonFormField<String>(
                     menuMaxHeight: widget.isWideScreen?200:400.h,
@@ -1053,7 +1049,14 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                         borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
                       ),
                     ),
-                    items: provinces.where((element) => element.countryId == countryId)
+                    items: [DropdownMenuItem<String>(
+                      value: 'Select a Province',
+                      child: Text(
+                        'Select a Province',
+                        style: getRegularStyle(color: Colors.black),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),...provinces.where((element) => element.countryId == countryId)
                         .map(
                           (ProvinceModel item) => DropdownMenuItem<String>(
                         value: item.provinceName,
@@ -1064,7 +1067,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                         ),
                       ),
                     )
-                        .toList(),
+                        .toList()],
                     onChanged: (String? value) {
                       setState(() {
                         selectedProvince = value!;
@@ -1086,7 +1089,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
         Text('District',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
         h10,
         Container(
-          height: 60,
+          height: 80,
           child: DropdownButtonFormField<String>(
             menuMaxHeight: widget.isWideScreen?200:400.h,
             autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -1110,7 +1113,14 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
               ),
             ),
-            items:districts
+            items:[DropdownMenuItem<String>(
+              value: 'Select a District',
+              child: Text(
+                'Select a District',
+                style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),...districts
                 .map(
                   (DistrictModel item) => DropdownMenuItem<String>(
                 value: item.districtName,
@@ -1121,7 +1131,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 ),
               ),
             )
-                .toList(),
+                .toList()],
             onChanged: (String? value) {
               setState(() {
                 selectedDistrict = value!;
@@ -1138,7 +1148,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
         Text('Municipality',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
         h10,
         Container(
-          height: 60,
+          height: 80,
           child: DropdownButtonFormField<String>(
             menuMaxHeight: widget.isWideScreen?200:400.h,
             autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -1162,7 +1172,14 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
               ),
             ),
-            items:municipalities
+            items:[DropdownMenuItem<String>(
+              value: 'Select a Municipality',
+              child: Text(
+                'Select a Municipality',
+                style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),...municipalities
                 .map(
                   (MunicipalityModel item) => DropdownMenuItem<String>(
                 value: item.municipalityName,
@@ -1173,7 +1190,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 ),
               ),
             )
-                .toList(),
+                .toList()],
             onChanged: (String? value) {
               setState(() {
                 selectedMunicipality = value!;
@@ -1304,7 +1321,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 Text('Choose a department',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                 h10,
                 Container(
-                  height: 60,
+                  height: 80,
                   width: 180,
                   child: DropdownButtonFormField<String>(
                     menuMaxHeight: widget.isWideScreen?200:400.h,
@@ -1329,18 +1346,25 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                         borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
                       ),
                     ),
-                    items: departments
+                    items: [DropdownMenuItem<String>(
+                      value: 'Select a Department',
+                      child: Text(
+                        'Select a Department',
+                        style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?18.sp:18),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),...departments
                         .map(
                           (Department item) => DropdownMenuItem<String>(
                         value: item.departmentName,
                         child: Text(
                           item.departmentName,
-                          style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
+                          style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?18.sp:18),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     )
-                        .toList(),
+                        .toList()],
                     onChanged: (String? value) {
                       setState(() {
                         selectedDepartment = value!;
@@ -1418,13 +1442,6 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                     },
 
 
-
-
-
-
-
-
-
                     inputFormatters: [
                       DateInputFormatter()
                     ],
@@ -1452,7 +1469,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
         Text('Choose a doctor',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
         h10,
         Container(
-          height: 60,
+          height: 80,
           width: 380,
           child: DropdownButtonFormField<String>(
             menuMaxHeight: widget.isWideScreen?200:400.h,
@@ -1477,7 +1494,14 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
               ),
             ),
-            items: doctors
+            items: [DropdownMenuItem<String>(
+              value: 'Select a Doctor',
+              child: Text(
+                'Select a Doctor',
+                style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),...doctors
                 .map(
                   (User item) => DropdownMenuItem<String>(
                 value: 'Dr. ${item.firstName} ${item.lastName}',
@@ -1488,7 +1512,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 ),
               ),
             )
-                .toList(),
+                .toList()],
             onChanged: (String? value) {
               setState(() {
                 selectedDoctor = value!;

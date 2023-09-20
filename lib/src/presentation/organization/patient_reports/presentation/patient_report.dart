@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
@@ -24,13 +25,15 @@ class PatientReports extends ConsumerStatefulWidget {
 class _PatientReportsState extends ConsumerState<PatientReports> {
   TextEditingController dateFrom = TextEditingController();
   TextEditingController dateTo = TextEditingController();
-  int departmentId = 0;
+  int departmentId = -1;
   List<PatientReportModel> reportList = [];
   int currentPage = 0;
   int itemsPerPage = 5;
   final formKey = GlobalKey<FormState>();
   GlobalKey<DropdownSearchState<String>> dropdownSearchKey = GlobalKey();
   String resetList = '';
+  String selectedItem = 'Select a department';
+  bool validate = false;
 
 
 
@@ -85,15 +88,18 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Patient Reports'),
+        centerTitle: true,
+        leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.white,)),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 18.w),
-        child: Column(
-          children: [
-            h20,
-            Form(
-              key: formKey,
-              child: Row(
+        child: Form(
+          key: formKey,
+          child: Column(
+            children: [
+              h20,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: GestureDetector(
@@ -149,10 +155,10 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
                           controller: dateTo,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                color: ColorManager.black.withOpacity(0.4)
-                              )
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: ColorManager.black.withOpacity(0.4)
+                                )
                             ),
                             labelText: 'To',
                             labelStyle: getRegularStyle(color: ColorManager.blue),
@@ -167,188 +173,197 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
                   ),
                 ],
               ),
-            ),
-            h20,
-            departmentList.when(
-                data: (data){
-                  if(data.isEmpty){
-                    return SizedBox();
-                  }
-                  else{
-                    setState(() {
-                      resetList = data[0].departmentName;
-                    });
-                    return DropdownSearch<String>(
-                      key: dropdownSearchKey,
-                      items: data.map((e) => e.departmentName).toList(),
-                      dropdownDecoratorProps: DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: ColorManager.black.withOpacity(0.5)
-                            ),
-                            borderRadius: BorderRadius.circular(10)
-                          ),
-                          labelText: "Department",
-                          labelStyle: getRegularStyle(color: ColorManager.blue)
-                        ),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          departmentId = data.firstWhere((element) => element.departmentName.contains(value!)).departmentId;
-                        });
-                      },
-
-
-                      selectedItem: data[0].departmentName,
-                      popupProps: const PopupProps<String>.menu(
-
-                        showSearchBox: true,
-                        fit: FlexFit.loose,
-                        constraints: BoxConstraints(maxHeight: 350),
-                        showSelectedItems: true,
-                        searchFieldProps: TextFieldProps(
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                    );
-                    ;
-
-                  }
-                },
-                error: (error,stack)=>Center(child: Text('$error'),),
-                loading: ()=>Container(
-                  width: double.infinity,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: ColorManager.black.withOpacity(0.5)
-                    )
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 12.w),
-                  child: Text('Departments'),
-                )
-            ),
-            h20,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ColorManager.blue
-
-                  ),
-                    onPressed: ()async{
-                      formKey.currentState!.validate();
-                      final scaffoldMessage = ScaffoldMessenger.of(context);
-                      if(dateFrom.text.isEmpty || dateTo.text.isEmpty){
-                        scaffoldMessage.showSnackBar(
-                          SnackbarUtil.showFailureSnackbar(
-                            message: 'Date is Required',
-                            duration: const Duration(milliseconds: 1200),
-                          ),
-                        );
-                      }
-                      else if(DateTime.parse(dateFrom.text).isAfter(DateTime.parse(dateTo.text))){
-                      scaffoldMessage.showSnackBar(
-                        SnackbarUtil.showFailureSnackbar(
-                          message: 'From date is after To date',
-                          duration: const Duration(milliseconds: 1200),
-                        ),
-                      );
+              h20,
+              departmentList.when(
+                  data: (data){
+                    if(data.isEmpty){
+                      return SizedBox();
                     }
                     else{
-                      final response = await PatientReportServices().getReportList(
-                          fromDate: dateFrom.text,
-                          toDate: dateTo.text,
-                          departmentId: departmentId.toString()
-                      );
-                      if(response.isEmpty){
+                      setState(() {
+                        resetList = 'Select a department';
+                      });
+                      return DropdownSearch<String>(
 
-
-                        scaffoldMessage.showSnackBar(
-                          SnackbarUtil.showFailureSnackbar(
-                            message: 'No Data Available',
-                            duration: const Duration(milliseconds: 1200),
+                        items: ['Select a department',...data.map((e) => e.departmentName).toList()],
+                        dropdownDecoratorProps: DropDownDecoratorProps(
+                          dropdownSearchDecoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color:  ColorManager.accentGreen.withOpacity(0.5)
+                                  ),
+                                  borderRadius: BorderRadius.circular(10)
+                              ),
+                              labelText: "Department",
+                              labelStyle: getRegularStyle(color: ColorManager.blue)
                           ),
-                        );
-                      }
-                      setState(() {
-                        reportList = response;
-                      });
-                    }
-
-                    },
-                    child: Text('Search')
-                ),
-                w20,
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    backgroundColor: ColorManager.dotGrey.withOpacity(0.7)
-
-                  ),
-                    onPressed: ()async{
-                      setState(() {
-                        reportList = [];
-                        dateFrom.text = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 7)));
-                        dateTo.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
-                        dropdownSearchKey.currentState!.changeSelectedItem(resetList);
-
-                      });
-
-                    },
-                    child: Text('Clear',style: TextStyle(color: ColorManager.black),)
-                ),
-              ],
-            ),
-            h20,
-            if(reportList.isNotEmpty)
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  border: TableBorder.all(
-                    color: ColorManager.black.withOpacity(0.3),
-                  ),
-                  headingRowColor: MaterialStateColor.resolveWith((states) => ColorManager.blue),
-                  headingTextStyle: getMediumStyle(color: ColorManager.white,fontSize: 18),
-                  columns: [
-                    DataColumn(label: Text('S.N.')),
-                    DataColumn(label: Text('Name')),
-                    DataColumn(label: Text('Information')),
-                    DataColumn(label: Text('Department')),
-                    DataColumn(label: Text('Entry Date')),
-                    DataColumn(label: Text('Action')),
-                  ],
-                  rows: reportList
-                      .asMap()
-                      .entries
-                      .map((entry) {
-                    final index = entry.key + 1 + currentPage * itemsPerPage;
-                    final patient = entry.value;
-
-                    return DataRow(
-                      cells: [
-                        DataCell(Text(index.toString())),
-                        DataCell(
-                            Text('${patient.fullName}')),
-                        DataCell(Text('${patient.patientinfo}')),
-                        DataCell(Text('${patient.departmentName}')),
-                        DataCell(Text(patient.entrydate.toString())),
-                        DataCell(
-                            IconButton(onPressed: (){ },
-                                icon: FaIcon(CupertinoIcons.eye_fill,color: ColorManager.blue,))
                         ),
-                      ],
-                    );
-                  }).toList(),
-                ),
-              )
+                        onChanged: (value) {
+                          setState(() {
+                            selectedItem = value!;
+                          });
+                          final selected = data.firstWhereOrNull((element) => element.departmentName.contains(value!));
+                          if(selected != null){
+                            setState(() {
+                              departmentId = selected.departmentId;
 
-          ],
+                            });
+                          }
+                          else{
+                            setState(() {
+                              departmentId = -1;
+                            });
+                          }
+
+                        },
+                        validator: (value){
+                          if(departmentId == -1){
+                            return 'Select a department';
+                          }
+                          return null;
+                        },
+                        autoValidateMode: AutovalidateMode.onUserInteraction,
+
+
+                        selectedItem: selectedItem,
+                        popupProps: const PopupProps<String>.menu(
+
+                          showSearchBox: true,
+                          fit: FlexFit.loose,
+                          constraints: BoxConstraints(maxHeight: 350),
+                          showSelectedItems: true,
+                          searchFieldProps: TextFieldProps(
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      );
+                      ;
+
+                    }
+                  },
+                  error: (error,stack)=>Center(child: Text('$error'),),
+                  loading: ()=>Container(
+                    width: double.infinity,
+                    height: 50,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                            color: ColorManager.black.withOpacity(0.5)
+                        )
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 12.w),
+                    child: Text('Departments'),
+                  )
+              ),
+              h20,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: ColorManager.blue
+
+                      ),
+                      onPressed: ()async{
+
+                        final scaffoldMessage = ScaffoldMessenger.of(context);
+
+                        if(formKey.currentState!.validate()){
+                            final response = await PatientReportServices().getReportList(
+                                fromDate: dateFrom.text,
+                                toDate: dateTo.text,
+                                departmentId: departmentId.toString()
+                            );
+                            if(response.isEmpty){
+
+
+                              scaffoldMessage.showSnackBar(
+                                SnackbarUtil.showFailureSnackbar(
+                                  message: 'No Data Available',
+                                  duration: const Duration(milliseconds: 1200),
+                                ),
+                              );
+                            }
+                            setState(() {
+                              reportList = response;
+                            });
+
+
+                        }
+
+
+                      },
+                      child: Text('Search')
+                  ),
+                  w20,
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          backgroundColor: ColorManager.dotGrey.withOpacity(0.7)
+
+                      ),
+                      onPressed: ()async{
+                        setState(() {
+                          reportList = [];
+                          dateFrom.text = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 7)));
+                          dateTo.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                          selectedItem = 'Select a department';
+                          departmentId = -1 ;
+
+                        });
+
+                      },
+                      child: Text('Clear',style: TextStyle(color: ColorManager.black),)
+                  ),
+                ],
+              ),
+              h20,
+              if(reportList.isNotEmpty)
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    border: TableBorder.all(
+                      color: ColorManager.black.withOpacity(0.3),
+                    ),
+                    headingRowColor: MaterialStateColor.resolveWith((states) => ColorManager.blue),
+                    headingTextStyle: getMediumStyle(color: ColorManager.white,fontSize: 18),
+                    columns: [
+                      DataColumn(label: Text('S.N.')),
+                      DataColumn(label: Text('Name')),
+                      DataColumn(label: Text('Information')),
+                      DataColumn(label: Text('Department')),
+                      DataColumn(label: Text('Entry Date')),
+                      DataColumn(label: Text('Action')),
+                    ],
+                    rows: reportList
+                        .asMap()
+                        .entries
+                        .map((entry) {
+                      final index = entry.key + 1 + currentPage * itemsPerPage;
+                      final patient = entry.value;
+
+                      return DataRow(
+                        cells: [
+                          DataCell(Text(index.toString())),
+                          DataCell(
+                              Text('${patient.fullName}')),
+                          DataCell(Text('${patient.patientinfo}')),
+                          DataCell(Text('${patient.departmentName}')),
+                          DataCell(Text(patient.entrydate.toString())),
+                          DataCell(
+                              IconButton(onPressed: (){ },
+                                  icon: FaIcon(CupertinoIcons.eye_fill,color: ColorManager.blue,))
+                          ),
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                )
+
+            ],
+          ),
         ),
       ),
     );

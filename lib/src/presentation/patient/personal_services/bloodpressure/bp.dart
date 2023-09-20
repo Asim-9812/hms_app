@@ -45,9 +45,8 @@ class _BPState extends State<BP> {
         backgroundColor: ColorManager.white,
         elevation: 1,
         title: Text('BP',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
-        iconTheme: IconThemeData(
-          color: ColorManager.black
-        ),
+          leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
+        centerTitle: true,
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 18.w),

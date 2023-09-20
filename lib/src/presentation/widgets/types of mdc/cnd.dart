@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 import '../../../core/resources/color_manager.dart';
@@ -45,6 +46,10 @@ class _CNDState extends State<CND> {
           title: Text('CND Based Dosage'),
           titleTextStyle: getMediumStyle(color: ColorManager.white),
           centerTitle: true,
+          leading: IconButton(
+            onPressed: ()=>Get.back(),
+            icon: FaIcon(Icons.chevron_left,color: ColorManager.white,),
+          ),
         ),
         body: Container(
           padding: EdgeInsets.symmetric(horizontal: 18.w),

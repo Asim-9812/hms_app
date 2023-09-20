@@ -243,6 +243,10 @@ class BMIState extends State<BMI> {
           title: Text('BMI Calculator'),
           titleTextStyle: getMediumStyle(color: ColorManager.white),
           centerTitle: true,
+          leading: IconButton(
+            onPressed: ()=>Get.back(),
+            icon: FaIcon(Icons.chevron_left,color: ColorManager.white,),
+          ),
         ),
         body: SingleChildScrollView(
           child: Column(

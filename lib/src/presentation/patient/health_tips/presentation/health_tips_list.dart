@@ -37,7 +37,7 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
               ListView.builder(
                 padding: EdgeInsets.zero,
                 shrinkWrap: true,
-                itemCount: 5,
+                itemCount: data.length,
                   itemBuilder: (context,index){
                   return Container(
                     margin: EdgeInsets.symmetric(vertical: 2.h),

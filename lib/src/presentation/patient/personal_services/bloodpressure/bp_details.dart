@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 
@@ -27,9 +28,8 @@ class _SugarTestDetailsState extends State<BPDetails> {
         backgroundColor: ColorManager.white,
         elevation: 1,
         title: Text('FILE-NAME',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
-        iconTheme: IconThemeData(
-            color: ColorManager.black
-        ),
+        leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Column(

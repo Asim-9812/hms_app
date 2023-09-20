@@ -181,6 +181,7 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
         backgroundColor: ColorManager.white,
         leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
         title: Text('Update your Profile',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen? 20.sp:24),),
+        centerTitle: true,
 
       ),
       bottomNavigationBar: Padding(
@@ -301,6 +302,7 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                   setState(() {
                     isPostingData = false;
                   });
+                  Get.back();
                 },
                 child: Text('Cancel',style: TextStyle(color: ColorManager.black),),
               ),
@@ -985,7 +987,7 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                       Align(
                         alignment: Alignment.topRight,
                         child: InkWell(
-                          onTap: ()=>ref.invalidate(imageProvider),
+                          onTap: ()=>ref.invalidate(imageProvider2),
                           child: Container(
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle,
@@ -1004,8 +1006,68 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                   radius: Radius.circular(20),
                   borderType: BorderType.RRect,
                   child: InkWell(
-                    onTap: ()  {
-                      ref.read(imageProvider2.notifier).pickAnImage();
+                    onTap: () async {
+                      await showModalBottomSheet(
+
+                          backgroundColor: ColorManager.white,
+                          context: context,
+                          builder: (context){
+                            return Container(
+                              height: 150,
+                              padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      InkWell(
+                                        onTap : (){
+                                          ref.read(imageProvider2.notifier).camera();
+                                          Navigator.pop(context);
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10),
+                                              border: Border.all(
+                                                  color: ColorManager.black.withOpacity(0.5)
+                                              )
+                                          ),
+                                          padding: EdgeInsets.symmetric(horizontal: 30.w,vertical: 30.h),
+                                          child: Icon(FontAwesomeIcons.camera,color: ColorManager.black,),
+                                        ),
+                                      ),
+                                      h10,
+                                      Text('Camera',style: getRegularStyle(color: ColorManager.black,fontSize: 16),)
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      InkWell(
+                                        onTap:(){
+                                          ref.read(imageProvider2.notifier).pickAnImage();
+                                          Navigator.pop(context);
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10),
+                                              border: Border.all(
+                                                  color: ColorManager.black.withOpacity(0.5)
+                                              )
+                                          ),
+                                          padding: EdgeInsets.symmetric(horizontal: 30.w,vertical: 30.h),
+                                          child: Icon(FontAwesomeIcons.image,color: ColorManager.black,),
+                                        ),
+                                      ),
+                                      h10,
+                                      Text('Gallery',style: getRegularStyle(color: ColorManager.black,fontSize: 16),)
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                      );
                     },
                     child: Container(
                       height: 200,

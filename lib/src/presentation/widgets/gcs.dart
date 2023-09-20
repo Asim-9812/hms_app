@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 
@@ -27,6 +29,10 @@ class _GcsTestScreenState extends State<GCS> {
         title: Text('GCS Score'),
         titleTextStyle: getMediumStyle(color: ColorManager.white),
         centerTitle: true,
+        leading: IconButton(
+          onPressed: ()=>Get.back(),
+          icon: FaIcon(Icons.chevron_left,color: ColorManager.white,),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

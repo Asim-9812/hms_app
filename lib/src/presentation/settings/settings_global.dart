@@ -27,8 +27,8 @@ class Settings extends ConsumerWidget {
       appBar: AppBar(
         elevation: 1,
         backgroundColor: ColorManager.white,
-        leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
         title: Text('Settings',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 24.sp:28),),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Column(

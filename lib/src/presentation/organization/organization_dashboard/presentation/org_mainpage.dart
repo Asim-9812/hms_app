@@ -56,7 +56,7 @@ class _AnimatedBarExampleState extends State<OrgMainPage> {
 
       floatingActionButton: selected == 1? FloatingActionButton(
           onPressed: ()=>Get.to(()=>PatientRegistrationForm(isWideScreen, isNarrowScreen)),
-        backgroundColor: ColorManager.blue,
+        backgroundColor: ColorManager.primary,
         child: FaIcon(Icons.person_add,color: ColorManager.white,),
       ):null,
 

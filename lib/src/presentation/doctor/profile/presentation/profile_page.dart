@@ -42,6 +42,7 @@ class DocProfilePage extends ConsumerWidget {
                backgroundColor: ColorManager.white,
                leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
                title: Text('Profile',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 20.sp:24),),
+               centerTitle: true,
 
 
              ),
@@ -396,21 +397,21 @@ class DocProfilePage extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text('${user.firstName} ${user.lastName}',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 32.sp:32),),
-                          w10,
-                          InkWell(
-                              onTap: ()=>Get.to(()=>UpdateDocProfile(isWideScreen, isNarrowScreen,user )),
-                              child: Icon(Icons.edit,color: ColorManager.primary,size: 24,))
-                        ],
-                      ),
+                      Text('${user.firstName} ${user.lastName}',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 32.sp:32),),
                       h10,
                       Text('Specialization',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?18.sp:18),),
                     ],
                   )
                 ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child:  Padding(
+                padding:EdgeInsets.only(bottom: 20),
+                child: InkWell(
+                    onTap: ()=>Get.to(()=>UpdateDocProfile(isWideScreen, isNarrowScreen,user )),
+                    child: FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primary,)),
               ),
             ),
           ],

@@ -2,6 +2,7 @@
 
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:nepali_date_picker/nepali_date_picker.dart' as picker;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -94,6 +95,10 @@ class _EDDState extends State<EDD> {
           title: Text('EDD Calculator'),
           centerTitle: true,
           titleTextStyle: getMediumStyle(color: ColorManager.white),
+          leading: IconButton(
+            onPressed: ()=>Get.back(),
+            icon: FaIcon(Icons.chevron_left,color: ColorManager.white,),
+          ),
 
         ),
         body: Padding(

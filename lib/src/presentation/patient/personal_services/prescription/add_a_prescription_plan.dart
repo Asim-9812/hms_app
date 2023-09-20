@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 
 import '../../../../core/resources/style_manager.dart';
@@ -33,9 +34,8 @@ class _AddPrescriptionPlanState extends State<AddPrescriptionPlan> {
           title: Text('Add a plan',style: getMediumStyle(color: ColorManager.black),),
           elevation: 1,
           backgroundColor: ColorManager.white,
-          iconTheme: IconThemeData(
-              color: ColorManager.black
-          ),
+          leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
+          centerTitle:true,
 
         ),
         body: Container(

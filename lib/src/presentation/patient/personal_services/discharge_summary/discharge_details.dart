@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
@@ -25,9 +26,8 @@ class _DischargeDetailsState extends State<DischargeDetails> {
         title: Text('Discharge Summary',style: getMediumStyle(color: ColorManager.black),),
         elevation: 1,
         backgroundColor: ColorManager.white,
-        iconTheme: IconThemeData(
-            color: ColorManager.black
-        ),
+       leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
+centerTitle:true,
       ),
       body: SingleChildScrollView(
         child: SingleChildScrollView(

@@ -43,9 +43,8 @@ class _SugarState extends State<Sugar> {
         backgroundColor: ColorManager.white,
         elevation: 1,
         title: Text('Sugar',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
-        iconTheme: IconThemeData(
-          color: ColorManager.black
-        ),
+        leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
+        centerTitle:true,
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 18.w),

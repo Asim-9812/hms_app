@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/string_manager.dart';
 
@@ -44,6 +45,10 @@ class _WBDState extends State<WBD> {
           title: Text('Weight Based Dosage'),
           titleTextStyle: getMediumStyle(color: ColorManager.white),
           centerTitle: true,
+          leading: IconButton(
+            onPressed: ()=>Get.back(),
+            icon: FaIcon(Icons.chevron_left,color: ColorManager.white,),
+          ),
         ),
         body: Container(
           padding: EdgeInsets.symmetric(horizontal: 18.w),

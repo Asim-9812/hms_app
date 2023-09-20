@@ -27,9 +27,8 @@ class Xray extends StatelessWidget {
         title: Text('X-RAY',style: getMediumStyle(color: ColorManager.black),),
         elevation: 1,
         backgroundColor: ColorManager.white,
-        iconTheme: IconThemeData(
-            color: ColorManager.black
-        ),
+       leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
+centerTitle:true,
       ),
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
