@@ -1132,3 +1132,23 @@ List<GlucoseInsulinData> dummyGlucoseInsulinData = [
   GlucoseInsulinData(DateTime(2023, 8, 10), 125.0, 8.0),
   // Add more data as needed
 ];
+
+
+
+List<Map<String, dynamic>> newPatientsData = [
+  {"date": "2023-09-01", "total": 15},
+  {"date": "2023-09-02", "total": 20},
+  {"date": "2023-09-03", "total": 12},
+  {"date": "2023-09-04", "total": 18},
+  {"date": "2023-09-05", "total": 25},
+];
+
+List<Map<String, dynamic>> followUpsData = [
+  {"date": "2023-09-01", "total": 5},
+  {"date": "2023-09-02", "total": 7},
+  {"date": "2023-09-03", "total": 3},
+  {"date": "2023-09-04", "total": 6},
+  {"date": "2023-09-05", "total": 8},
+];
+
+

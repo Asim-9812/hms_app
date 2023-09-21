@@ -43,27 +43,10 @@ class Settings extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Account & Settings',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen?24.sp:isWideScreen?16: 24),),
-                  h10,
                   _profileItems(title: 'Change Password', icon: FontAwesomeIcons.key, onTap: (){},trailing: true),
                   _profileItems(title: 'Permissions', icon: FontAwesomeIcons.universalAccess, onTap: (){},trailing: true),
-                ],
-              ),
-            ),
-            h20,
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Help & Support',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen?24.sp: isWideScreen?16:24),),
-                  h10,
                   _profileItems(title: 'Help Center', icon: Icons.question_mark, onTap: (){},trailing: true),
                   _profileItems(title: 'Terms & Policies', icon: FontAwesomeIcons.book, onTap: (){},trailing: true),
-                  h20,
-                  h20,
                   _profileItems(
                       title: 'Log out',
                       icon: Icons.login_outlined,
@@ -76,6 +59,8 @@ class Settings extends ConsumerWidget {
                 ],
               ),
             ),
+            h20,
+
 
             h20,
             h20,

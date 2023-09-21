@@ -186,6 +186,9 @@ dependencies:
   floating_action_bubble: ^1.1.4
 
 
+  multi_select_flutter: ^4.1.3
+
+
 
 
 

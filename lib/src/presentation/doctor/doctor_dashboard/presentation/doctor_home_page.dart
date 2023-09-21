@@ -12,6 +12,7 @@ import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
 import 'package:medical_app/src/presentation/doctor/profile/presentation/profile_page.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../../core/resources/value_manager.dart';
 import '../../../login/domain/model/user.dart';
@@ -31,7 +32,10 @@ class DoctorHomePage extends StatefulWidget {
 class _DoctorHomePageState extends State<DoctorHomePage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  List<Map<String, dynamic>> myCircle = closeCircle;
+  List<Map<String, dynamic>> myCircle = [{
+    "name": "Add a member",
+    "specializeIn": "",
+  },...closeCircle];
 
   List<Map<String, dynamic>> myPatients = patientList;
 
@@ -123,6 +127,8 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                 ),
                 h20,
                 _overallStat(),
+                h20,
+                _patientGraph(),
 
                 h20,
                 _myTasks(),
@@ -131,8 +137,6 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                 _myAppointments(),
 
                 h20,
-                h20,
-                _patientTable(),
                 h20,
                 _myCircle(),
                 h20,
@@ -211,11 +215,25 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                 Text('100',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?40:widget.isNarrowScreen?30.sp:40.sp),),
                 h10,
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('New Patients :',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:widget.isNarrowScreen?16.sp:18.sp),),
-                    w10,
-                    Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?40:widget.isNarrowScreen?30.sp:40.sp),),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('New Patients :',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:widget.isNarrowScreen?16.sp:18.sp),),
+                        w10,
+                        Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?40:widget.isNarrowScreen?30.sp:40.sp),),
+                      ],
+                    ),
+                    h10,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('Follow ups :',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:widget.isNarrowScreen?16.sp:18.sp),),
+                        w10,
+                        Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?40:widget.isNarrowScreen?30.sp:40.sp),),
+                      ],
+                    ),
                   ],
                 ),
 
@@ -321,13 +339,13 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                         ),
 
                         padding: EdgeInsets.symmetric(vertical: 8.w,horizontal: 10.w),
-                        child: FaIcon(FontAwesomeIcons.bedPulse,color: ColorManager.white,size: 20,)),
+                        child: FaIcon(FontAwesomeIcons.globe,color: ColorManager.white,size: 20,)),
                     w10,
-                    Text('Surgical Stats',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?24 :widget.isNarrowScreen?18.sp:24.sp),)
+                    Text('Online Stats',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?24 :widget.isNarrowScreen?18.sp:24.sp),)
                   ],
                 ),
                 h20,
-                Text('Total Operations :',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:widget.isNarrowScreen?16.sp:18.sp),),
+                Text('Online Consultation :',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:widget.isNarrowScreen?16.sp:18.sp),),
                 h10,
                 Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?40:widget.isNarrowScreen?30.sp:40.sp),),
                 h10,
@@ -380,16 +398,6 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
 
           ),
           Container(
-              // decoration: BoxDecoration(
-              //     border: Border.symmetric(
-              //         vertical: BorderSide(
-              //             color: ColorManager.black.withOpacity(0.5)
-              //         ),
-              //         horizontal: BorderSide(
-              //             color: ColorManager.black.withOpacity(0.5)
-              //         )
-              //     ),
-              // ),
               height: 180,
               width: double.infinity,
               child: ListView.builder(
@@ -399,7 +407,8 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                 padding: EdgeInsets.symmetric(vertical: 8.h),
                 itemBuilder: (context , i){
                   return InkWell(
-                    onTap: ()=>Get.to(()=>DocProfilePage()),
+                    onTap: (){},
+                        //()=>Get.to(()=>DocProfilePage()),
                     child: Container(
                       decoration: BoxDecoration(
                           color: ColorManager.dotGrey.withOpacity(0.1),
@@ -415,9 +424,9 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           CircleAvatar(
-                            backgroundColor: ColorManager.black,
+                            backgroundColor: i==0?Colors.transparent: ColorManager.black,
                             radius: 30.r,
-                            child: Icon(Icons.person,color: ColorManager.white,),
+                            child: i ==0? Icon(Icons.person_add,color: Colors.grey,size: 40,):Icon(Icons.person,color: ColorManager.white,),
                           ),
                           h20,
                           Text('${myCircle[i]['name']}',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
@@ -434,6 +443,49 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
           ),
 
         ],
+      ),
+    );
+  }
+
+
+  Widget _patientGraph(){
+    return Container(
+      height: 300.h,
+      padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 8.h),
+      margin: EdgeInsets.symmetric(horizontal: 18.w),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: ColorManager.black.withOpacity(0.5)
+        )
+      ),
+      child: SfCartesianChart(
+        zoomPanBehavior: ZoomPanBehavior(
+          enablePinching: true,
+          enablePanning: true,
+          zoomMode: ZoomMode.xy,
+        ),
+        legend: Legend(
+          isVisible: true,
+          position: LegendPosition.top
+        ),
+        title: ChartTitle(text: 'Patient Stats',alignment:ChartAlignment.near ),
+        primaryXAxis: CategoryAxis(),
+        series: <ChartSeries>[
+          LineSeries<Map<String, dynamic>, String>(
+            dataSource: newPatientsData,
+            xValueMapper: (Map<String, dynamic> data, _) => data['date']!,
+            yValueMapper: (Map<String, dynamic> data, _) => double.parse(data['total']!.toString()),
+            name: 'New Patients',
+          ),
+          LineSeries<Map<String, dynamic>, String>(
+            dataSource: followUpsData,
+            xValueMapper: (Map<String, dynamic> data, _) => data['date']!,
+            yValueMapper: (Map<String, dynamic> data, _) => double.parse(data['total']!.toString()),
+            name: 'Follow-ups',
+          ),
+        ],
+        tooltipBehavior: TooltipBehavior(enable: true),
       ),
     );
   }
@@ -693,88 +745,6 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
       ),
     );
   }
-
-
-  Widget _patientTable(){
-
-    int startIndex = currentPage * rowsPerPage;
-    int endIndex = (currentPage + 1) * rowsPerPage;
-
-    List<DataRow> rows = patientList.sublist(startIndex, endIndex).map((patient) {
-      return DataRow(cells: [
-        DataCell(Text((startIndex + patientList.indexOf(patient) + 1).toString())), // Serial Number (S.N.)
-        DataCell(Text(patient['name'])),
-        DataCell(Text(patient['address'])),
-        DataCell(Text(patient['contact'])),
-        DataCell(Text(patient['department'])),
-        DataCell(Text(patient['gender'])),
-        DataCell(IconButton(
-          icon: Icon(Icons.remove_red_eye),
-          onPressed: ()=>Get.to(()=>DocPatientProfile()),
-        )),
-      ]);
-    }).toList();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 18.w),
-          child: Text('My Patients',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
-        ),
-        h20,
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            headingTextStyle: getMediumStyle(color: ColorManager.white,fontSize: 20),
-            headingRowColor: MaterialStateColor.resolveWith((states) => ColorManager.primary),
-            columns: [
-              DataColumn(label: Text('S.N.')),
-              DataColumn(label: Text('Name')),
-              DataColumn(label: Text('Address')),
-              DataColumn(label: Text('Contact')),
-              DataColumn(label: Text('Department')),
-              DataColumn(label: Text('Gender')),
-              DataColumn(label: Text('Action')),
-            ],
-            rows: rows,
-          ),
-        ),
-        h10,
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              icon: Icon(Icons.navigate_before),
-              onPressed: () {
-                if (currentPage > 0) {
-                  setState(() {
-                    currentPage--;
-                  });
-                }
-              },
-            ),
-            Text('Page ${currentPage + 1}'),
-            IconButton(
-              icon: Icon(Icons.navigate_next),
-              onPressed: () {
-                if (endIndex < patientList.length) {
-                  setState(() {
-                    currentPage++;
-                  });
-                }
-              },
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-
-
-
-
 
 }
 

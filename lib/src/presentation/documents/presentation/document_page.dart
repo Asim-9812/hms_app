@@ -10,20 +10,20 @@ import 'package:intl/intl.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 
-import '../../../../core/resources/value_manager.dart';
+import '../../../core/resources/value_manager.dart';
 import '../add_documents/presentation/add_document_page.dart';
 import '../search_documents/presentation/search_document_page.dart';
 
-class PatientDocumentPage extends StatefulWidget {
+class DocumentPage extends StatefulWidget {
   final bool isWideScreen;
   final bool isNarrowScreen;
-  PatientDocumentPage(this.isWideScreen,this.isNarrowScreen);
+  DocumentPage(this.isWideScreen,this.isNarrowScreen);
 
   @override
-  State<PatientDocumentPage> createState() => _PatientDocumentPageState();
+  State<DocumentPage> createState() => _PatientDocumentPageState();
 }
 
-class _PatientDocumentPageState extends State<PatientDocumentPage> {
+class _PatientDocumentPageState extends State<DocumentPage> {
   bool isFolderLocked = false;
   @override
   Widget build(BuildContext context) {
@@ -39,9 +39,9 @@ class _PatientDocumentPageState extends State<PatientDocumentPage> {
           title: Text('Documents',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
           actions: [
             IconButton(
-              onPressed: ()=>Get.to(()=>AddDocPatient(),transition: Transition.rightToLeftWithFade,duration: Duration(milliseconds: 500))
+              onPressed: ()=>Get.to(()=>AddDocuments(),transition: Transition.rightToLeftWithFade,duration: Duration(milliseconds: 500))
               , icon: FaIcon(Icons.add),color: Colors.blue,),
-            IconButton(onPressed: ()=>Get.to(()=>SearchDocPatient(),transition:Transition.rightToLeftWithFade)
+            IconButton(onPressed: ()=>Get.to(()=>SearchDocuments(),transition:Transition.rightToLeftWithFade)
               , icon: FaIcon(Icons.search),color: Colors.blue,),
           ],
         ),
@@ -72,8 +72,16 @@ class _PatientDocumentPageState extends State<PatientDocumentPage> {
 
   /// Folder Container...
   Widget myFolders(BuildContext context){
+    // Get the screen size
+    final screenSize = MediaQuery.of(context).size;
+    (screenSize);
+
+    // Check if width is greater than height
+    bool isWideScreen = screenSize.width > 500;
+    bool isNarrowScreen = screenSize.width < 380;
+
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+      padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 8.h),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -85,7 +93,7 @@ class _PatientDocumentPageState extends State<PatientDocumentPage> {
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: widget.isWideScreen? 3: widget.isNarrowScreen?1: 2,
+                crossAxisCount: widget.isWideScreen? 4: isNarrowScreen?2: 3,
                 crossAxisSpacing: widget.isWideScreen?8:8.w,
                 mainAxisSpacing: widget.isWideScreen?8: 8.h,
                 childAspectRatio: widget.isWideScreen? 14/11:14/10
@@ -109,7 +117,7 @@ class _PatientDocumentPageState extends State<PatientDocumentPage> {
     required int fileNumbers,
     required VoidCallback onTap,
     bool? isLocked,
-}) {
+  }) {
     if(isLocked == null){
       isLocked = false;
     }
@@ -132,7 +140,7 @@ class _PatientDocumentPageState extends State<PatientDocumentPage> {
         splashColor: ColorManager.blue.withOpacity(0.2),
         splashFactory: InkSplash.splashFactory,
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,18 +160,18 @@ class _PatientDocumentPageState extends State<PatientDocumentPage> {
 
                 ],
               ),
-              FaIcon(Icons.folder,color: ColorManager.blue.withOpacity(0.8),size: 40,),
+              FaIcon(Icons.folder,color: ColorManager.blue.withOpacity(0.8),size: 20,),
               SizedBox(
                 height: 5,
               ),
-              Text('$folderName',style: getRegularStyle(color: ColorManager.blueText,fontSize: 18),),
+              Text('$folderName',style: getRegularStyle(color: ColorManager.blueText,fontSize: 12),),
               SizedBox(
                 height: 5,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('$fileNumbers files',style: getRegularStyle(color: ColorManager.blueText.withOpacity(0.5),fontSize: 14),),
+                  Text('$fileNumbers files',style: getRegularStyle(color: ColorManager.blueText.withOpacity(0.5),fontSize: 8),),
                   if(isLocked) FaIcon(CupertinoIcons.lock,color: ColorManager.iconGrey,size: 16,)
                 ],
               ),
@@ -181,7 +189,7 @@ class _PatientDocumentPageState extends State<PatientDocumentPage> {
     required IconData icon,
     required String name,
     required VoidCallback onTap
-}) {
+  }) {
     return ListTile(
       onTap: onTap,
       leading: FaIcon(icon,color: ColorManager.blue.withOpacity(0.5),),

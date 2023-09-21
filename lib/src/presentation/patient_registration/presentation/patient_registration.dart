@@ -193,14 +193,27 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
 
 
   Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate:controller == _consultController? DateTime.now(): DateTime(1900),
-      lastDate:controller == _dobController?DateTime.now(): DateTime.now().add(Duration(days: 365)),
-    );
-    if (picked != null && picked != DateTime.now())
-      controller.text = DateFormat('yyyy-MM-dd').format(picked);
+    if(controller == _dobController){
+      final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: _dobController.text.isNotEmpty? DateTime.parse(_dobController.text):DateTime.now(),
+        firstDate:DateTime(1900),
+        lastDate:DateTime.now(),
+      );
+      if (picked != null && picked != DateTime.now())
+        controller.text = DateFormat('yyyy-MM-dd').format(picked);
+    }
+    else{
+      final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: _consultController.text.isNotEmpty? DateTime.parse(_consultController.text):DateTime.now(),
+        firstDate:DateTime.now(),
+        lastDate:DateTime.now().add(Duration(days: 30)),
+      );
+      if (picked != null && picked != DateTime.now())
+        controller.text = DateFormat('yyyy-MM-dd').format(picked);
+    }
+
   }
 
 
@@ -798,14 +811,6 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
 
                       return null;
                     },
-
-
-
-
-
-
-
-
 
                     inputFormatters: [
                       DateInputFormatter()

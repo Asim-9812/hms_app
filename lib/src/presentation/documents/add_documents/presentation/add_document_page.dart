@@ -10,18 +10,19 @@ import 'package:get/get.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../../core/resources/color_manager.dart';
-import '../../../../../core/resources/style_manager.dart';
-import '../../../../../core/resources/value_manager.dart';
+import '../../../../core/resources/color_manager.dart';
+import '../../../../core/resources/style_manager.dart';
+import '../../../../core/resources/value_manager.dart';
 
-class AddDocPatient extends StatefulWidget {
-  const AddDocPatient({super.key});
+
+class AddDocuments extends StatefulWidget {
+  const AddDocuments({super.key});
 
   @override
-  State<AddDocPatient> createState() => _AddDocPatientState();
+  State<AddDocuments> createState() => _AddDocumentPageState();
 }
 
-class _AddDocPatientState extends State<AddDocPatient> {
+class _AddDocumentPageState extends State<AddDocuments> {
 
 
   @override

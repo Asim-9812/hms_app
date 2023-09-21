@@ -6,8 +6,8 @@ import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
+import '../../../documents/presentation/document_page.dart';
 import '../../../settings/settings_global.dart';
-import '../../documents/presentation/document_page.dart';
 import 'patient_home_page.dart';
 import '../../scan/presentation/qr_scan.dart';
 import '../../utilities/presentation/patient_utilities.dart';
@@ -112,7 +112,7 @@ class _AnimatedBarExampleState extends State<PatientMainPage> {
         controller: controller,
         children: [
           PatientHomePage(isWideScreen,isNarrowScreen),
-          PatientDocumentPage(isWideScreen,isNarrowScreen),
+          DocumentPage(isWideScreen,isNarrowScreen),
           PatientUtilitiesPage(isWideScreen,isNarrowScreen),
           Settings(isWideScreen,isNarrowScreen)
         ],

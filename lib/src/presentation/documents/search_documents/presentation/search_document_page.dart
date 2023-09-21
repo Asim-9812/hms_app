@@ -7,18 +7,19 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../../core/resources/color_manager.dart';
-import '../../../../../core/resources/style_manager.dart';
-import '../../../../../core/resources/value_manager.dart';
+import '../../../../core/resources/color_manager.dart';
+import '../../../../core/resources/style_manager.dart';
+import '../../../../core/resources/value_manager.dart';
 
-class SearchDocPatient extends StatefulWidget {
-  const SearchDocPatient({super.key});
+
+class SearchDocuments extends StatefulWidget {
+  const SearchDocuments({super.key});
 
   @override
-  State<SearchDocPatient> createState() => _SearchDocPatientState();
+  State<SearchDocuments> createState() => _SearchDocumentsState();
 }
 
-class _SearchDocPatientState extends State<SearchDocPatient> {
+class _SearchDocumentsState extends State<SearchDocuments> {
 
 
 

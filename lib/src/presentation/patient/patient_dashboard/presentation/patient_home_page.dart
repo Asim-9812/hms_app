@@ -16,11 +16,13 @@ import 'package:medical_app/src/presentation/patient/personal_services/sugar/sug
 import 'package:medical_app/src/presentation/patient/personal_services/usg/usg.dart';
 import 'package:medical_app/src/presentation/patient/personal_services/xray/xray.dart';
 import 'package:medical_app/src/presentation/patient/quick_services/presentation/telemedicine.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../notification/presentation/notification_page.dart';
+import '../../health_tips/domain/model/health_tips_dummy_tags.dart';
 import '../../health_tips/presentation/health_tips.dart';
 import '../../personal_services/bloodpressure/bp.dart';
 import '../../personal_services/ct_scan/ct_scan.dart';
@@ -55,6 +57,36 @@ class _PatientHomePageState extends State<PatientHomePage> {
     super.initState();
     checkGeolocationStatus();
   }
+
+  /// health tags...
+
+  List<Map<String, String>> selectedTags = [];
+
+  void _showMultiSelect(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (ctx) {
+        return  MultiSelectDialog(
+          title: Text('Choose Health Tips'),
+          listType: MultiSelectListType.CHIP,
+          selectedColor: ColorManager.primary,
+          separateSelectedItems: true,
+          selectedItemsTextStyle: getRegularStyle(color: ColorManager.white,fontSize: 16),
+          itemsTextStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
+          items: dummyHealthTipData.map((tag) => MultiSelectItem<Map<String, String>>(tag, tag["tag"]!))
+              .toList(),
+          initialValue: selectedTags,
+          onConfirm: (values) {
+            setState(() {
+              selectedTags = values;
+            });
+            print(selectedTags);
+          },
+        );
+      },
+    );
+  }
+
 
   ///geolocator settings...
 
@@ -169,13 +201,16 @@ class _PatientHomePageState extends State<PatientHomePage> {
           FadeInUp(
               duration: Duration(milliseconds: 800),
               child: buildQuickServices(widget.isWideScreen)),
+          h10,
           FadeInUp(
               duration: Duration(milliseconds: 1000),
-              child: buildPersonalServices(widget.isWideScreen)),
-
+              child: _buildHealthTips(widget.isWideScreen)),
+          h10,
           FadeInUp(
               duration: Duration(milliseconds: 1200),
-              child: _buildHealthTips(widget.isWideScreen)),
+              child: buildPersonalServices(widget.isWideScreen)),
+
+
 
           SizedBox(
             height: 300.h,
@@ -486,8 +521,16 @@ class _PatientHomePageState extends State<PatientHomePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Health Tips',style: getMediumStyle(color: ColorManager.black,fontSize:isWideScreen?20: 20.sp),),
-          h20,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Health Tips',style: getMediumStyle(color: ColorManager.black,fontSize:isWideScreen?20: 20.sp),),
+              IconButton(onPressed: (){
+                _showMultiSelect(context);
+              }, icon: FaIcon(Icons.add,color: ColorManager.black,))
+            ],
+          ),
+          h10,
           HealthTipsList(),
 
         ],

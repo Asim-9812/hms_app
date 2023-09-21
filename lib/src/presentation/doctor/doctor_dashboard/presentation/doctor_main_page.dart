@@ -4,21 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:medical_app/src/app/app.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/presentation/doctor/doctor_dashboard/presentation/doctor_home_page.dart';
 import 'package:medical_app/src/presentation/doctor/doctor_utilities/presentation/doctor_utilities.dart';
-import 'package:medical_app/src/presentation/doctor/documents/presentation/document_page.dart';
+import 'package:medical_app/src/presentation/documents/presentation/document_page.dart';
 import 'package:medical_app/src/presentation/patient_registration/presentation/patient_registration.dart';
 
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
-
-import '../../../patient/documents/presentation/document_page.dart';
-import '../../../patient/scan/presentation/qr_scan.dart';
-import '../../../patient/utilities/presentation/patient_utilities.dart';
 import '../../../settings/settings_global.dart';
 import '../../patient_reports/presentation/report_page_doctor.dart';
 
@@ -208,7 +201,7 @@ class _AnimatedBarExampleState extends State<DoctorMainPage> with SingleTickerPr
         controller: controller,
         children: [
           DoctorHomePage(isWideScreen,isNarrowScreen),
-          DoctorDocumentPage(isWideScreen,isNarrowScreen),
+          DocumentPage(isWideScreen,isNarrowScreen),
           PatientReportPageDoctor(),
           DoctorUtilityPage(),
           Settings(isWideScreen, isNarrowScreen)
