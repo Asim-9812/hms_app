@@ -101,6 +101,9 @@ class User extends HiveObject {
   @HiveField(31)
   String? code;
 
+  @HiveField(32)
+  String? username;
+
   User({
     this.id,
     this.userID,
@@ -134,6 +137,7 @@ class User extends HiveObject {
     this.liscenceNo,
     this.flag,
     this.code,
+    this.username,
   });
 
 
@@ -171,6 +175,7 @@ class User extends HiveObject {
       liscenceNo: json['liscenceNo'] as int?,
       flag: json['flag'] as String?,
       code: json['code'] as String?,
+      username: json['userName'] as String?,
     );
   }
 
@@ -207,7 +212,8 @@ class User extends HiveObject {
       'natureID': natureID,
       'liscenceNo': liscenceNo,
       'flag': flag,
-      'code': flag,
+      'code': code,
+      'userName': username,
     };
   }
 
@@ -246,6 +252,7 @@ class User extends HiveObject {
       liscenceNo: null,
       flag: null,
       code: null,
+      username: null,
     );
   }
 }

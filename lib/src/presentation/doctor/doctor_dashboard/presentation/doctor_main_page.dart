@@ -12,6 +12,7 @@ import 'package:medical_app/src/presentation/patient_registration/presentation/p
 
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
+import '../../../common/snackbar.dart';
 import '../../../settings/settings_global.dart';
 import '../../patient_reports/presentation/report_page_doctor.dart';
 
@@ -139,63 +140,20 @@ class _AnimatedBarExampleState extends State<DoctorMainPage> with SingleTickerPr
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
 
         //Init Floating Action Bubble
-        floatingActionButton: FloatingActionBubble(
-          // Menu items
-          items: <Bubble>[
+        floatingActionButton: FloatingActionButton(
+            onPressed: (){
+              final scaffoldMessage = ScaffoldMessenger.of(context);
+              scaffoldMessage.showSnackBar(
+                  SnackbarUtil.showSuccessSnackbar(
+                      message: 'Coming Soon',
+                      duration: const Duration(milliseconds: 1200)
+                  )
+              );
+            },
+          backgroundColor: ColorManager.primary,
+          child: FaIcon(CupertinoIcons.chat_bubble_2_fill,color: ColorManager.white,),
 
-
-            // Floating action menu item
-            Bubble(
-              title:'Add a patient',
-              iconColor :Colors.white,
-              bubbleColor : ColorManager.primary,
-              icon:Icons.person_add,
-              titleStyle:TextStyle(fontSize: 16 , color: Colors.white),
-              onPress: () {
-                Get.to(()=>PatientRegistrationForm(isWideScreen, isNarrowScreen));
-                _animationController.reverse();
-                setState(() {
-                  set = !set;
-                });
-              },
             ),
-            //Floating action menu item
-            Bubble(
-              title:"Chat",
-              iconColor :Colors.white,
-              bubbleColor : ColorManager.primary,
-              icon:CupertinoIcons.bubble_left_bubble_right_fill,
-              titleStyle:TextStyle(fontSize: 16 , color: Colors.white),
-              onPress: () {
-                _animationController.reverse();
-                setState(() {
-                  set = !set;
-                });
-              },
-            ),
-          ],
-
-          // animation controller
-          animation: _animation,
-
-          // On pressed change animation state
-          onPress: ()
-          {
-            _animationController.isCompleted
-                ? _animationController.reverse()
-                : _animationController.forward();
-            setState(() {
-              set=!set;
-            });
-          },
-
-          // Floating Action button Icon color
-          iconColor: ColorManager.white,
-
-          // Flaoting Action button Icon
-          iconData: !set? Icons.menu : CupertinoIcons.xmark,
-          backGroundColor: ColorManager.primary,
-        ),
       body: PageView(
         physics: NeverScrollableScrollPhysics(),
         controller: controller,

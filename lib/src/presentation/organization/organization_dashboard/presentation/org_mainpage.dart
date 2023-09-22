@@ -50,15 +50,6 @@ class _AnimatedBarExampleState extends State<OrgMainPage> {
     return Scaffold(
       extendBody: true, //to make floating action button notch transparent
 
-      //to avoid the floating action button overlapping behavior,
-      // when a soft keyboard is displayed
-      // resizeToAvoidBottomInset: false,
-
-      floatingActionButton: selected == 1? FloatingActionButton(
-          onPressed: ()=>Get.to(()=>PatientRegistrationForm(isWideScreen, isNarrowScreen)),
-        backgroundColor: ColorManager.primary,
-        child: FaIcon(Icons.person_add,color: ColorManager.white,),
-      ):null,
 
       bottomNavigationBar: StylishBottomBar(
         option: AnimatedBarOptions(

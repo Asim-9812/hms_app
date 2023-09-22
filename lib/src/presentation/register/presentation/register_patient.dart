@@ -36,7 +36,6 @@ class _RegisterPatientState extends ConsumerState<RegisterPatient> {
   final TextEditingController _passConfirmController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _licenseController = TextEditingController();
   final TextEditingController _mobileController = TextEditingController();
 
   bool _obscureText = true ;

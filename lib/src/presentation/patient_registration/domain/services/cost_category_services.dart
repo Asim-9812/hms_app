@@ -1,10 +1,8 @@
 
 
-
 import 'package:dio/dio.dart';
-import 'package:medical_app/src/presentation/patient/quick_services/domain/model/cost_category_model.dart';
-
-import '../../../../../core/api.dart';
+import '../../../../core/api.dart';
+import '../model/cost_category_model.dart';
 
 class CostCategoryServices{
 

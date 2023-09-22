@@ -47,7 +47,9 @@ class Api{
    static const getCountry = '$baseUrl/api/Country/GetList';
    static const getProvince = '$baseUrl/api/Province/GetListProvinceByCountryId/';
    static const getDistrict = '$baseUrl/api/District/GetListDistrictByProvinceId/';
+   static const getAllDistrict = '$baseUrl/api/District/GetList';
    static const getMunicipality = '$baseUrl/api/Municipality/GetListMunicipalityByDistrictId/';
+   static const getAllMunicipality = '$baseUrl/api/Municipality/GetList';
 
    /// Department & doctors...
    static const getDepartmentList = '$baseUrl/api/Department/GetList';

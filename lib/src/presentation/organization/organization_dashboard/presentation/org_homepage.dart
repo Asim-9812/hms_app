@@ -26,7 +26,6 @@ import '../../../../dummy_datas/dummy_datas.dart';
 
 import '../../../login/domain/model/user.dart';
 import '../../../notification/presentation/notification_page.dart';
-import '../../../patient/quick_services/presentation/e_ticket.dart';
 import '../../charts_graphs/doctor_charts.dart';
 import '../../charts_graphs/financial_charts.dart';
 

@@ -15,13 +15,14 @@ import 'package:medical_app/src/presentation/patient/personal_services/mri/mri.d
 import 'package:medical_app/src/presentation/patient/personal_services/sugar/sugar.dart';
 import 'package:medical_app/src/presentation/patient/personal_services/usg/usg.dart';
 import 'package:medical_app/src/presentation/patient/personal_services/xray/xray.dart';
-import 'package:medical_app/src/presentation/patient/quick_services/presentation/telemedicine.dart';
+import 'package:medical_app/src/presentation/patient_registration/domain/services/patient_registration_service.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../notification/presentation/notification_page.dart';
+import '../../../patient_registration/presentation/patient_registration.dart';
 import '../../health_tips/domain/model/health_tips_dummy_tags.dart';
 import '../../health_tips/presentation/health_tips.dart';
 import '../../personal_services/bloodpressure/bp.dart';
@@ -29,7 +30,6 @@ import '../../personal_services/ct_scan/ct_scan.dart';
 import '../../personal_services/discharge_summary/discharge_summary.dart';
 import '../../personal_services/prescription/prescription.dart';
 import '../../profile/presentation/profile_page.dart';
-import '../../quick_services/presentation/e_ticket.dart';
 import '../../search-near-by/presentation/search_for_page.dart';
 
 
@@ -251,7 +251,7 @@ class _PatientHomePageState extends State<PatientHomePage> {
               children: [
 
                 InkWell(
-                  onTap: ()=>Get.to(()=>ETicket(widget.isWideScreen,widget.isNarrowScreen)),
+                  onTap: ()=>Get.to(()=>PatientRegistrationForm(widget.isWideScreen,widget.isNarrowScreen)),
                   child: Container(
                     height: height,
                     width: width,
@@ -287,42 +287,45 @@ class _PatientHomePageState extends State<PatientHomePage> {
                   ),
                 ),
                 w10,
-                Container(
-                  height: height,
-                  width: width,
-                  decoration: BoxDecoration(
-                      borderRadius:BorderRadius.circular(10),
-                      color: ColorManager.yellowFellow
-                  ),
-                  child: Stack(
-                    children: [
-                      Center(child: Image.asset('assets/images/call.png')),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 20.h),
-                          child: Container(
-                            height: 25,
-                            width: 90,
-                            decoration: BoxDecoration(
-                              color: ColorManager.textGrey.withOpacity(0.7),
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  bottomLeft: Radius.circular(10)
+                InkWell(
+                  onTap: ()=>Get.to(()=>PatientRegistrationForm(widget.isWideScreen,widget.isNarrowScreen)),
+                  child: Container(
+                    height: height,
+                    width: width,
+                    decoration: BoxDecoration(
+                        borderRadius:BorderRadius.circular(10),
+                        color: ColorManager.yellowFellow
+                    ),
+                    child: Stack(
+                      children: [
+                        Center(child: Image.asset('assets/images/call.png')),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 20.h),
+                            child: Container(
+                              height: 25,
+                              width: 120,
+                              decoration: BoxDecoration(
+                                color: ColorManager.textGrey.withOpacity(0.7),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10)
+                                ),
+                              ),
+                              child: Center(
+                                child: Text('Online Consultation',style: getMediumStyle(color: ColorManager.white,fontSize: fontSize),),
                               ),
                             ),
-                            child: Center(
-                              child: Text('Call for test',style: getMediumStyle(color: ColorManager.white,fontSize: fontSize),),
-                            ),
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 w10,
                 InkWell(
-                  onTap: ()=>Get.to(()=>TeleMedicine(widget.isWideScreen,widget.isNarrowScreen)),
+                  onTap: (){},
                   child: Container(
                     height: height,
                     width: width,
@@ -348,7 +351,7 @@ class _PatientHomePageState extends State<PatientHomePage> {
                                 ),
                               ),
                               child: Center(
-                                child: Text('Online Consultation',style: getMediumStyle(color: ColorManager.white,fontSize: fontSize),),
+                                child: Text('Second Opinion',style: getMediumStyle(color: ColorManager.white,fontSize: fontSize),),
                               ),
                             ),
                           ),
@@ -557,7 +560,7 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent,) {
     final userBox = Hive.box<User>('session').values.toList();
-    String firstName = userBox[0].firstName!;
+    String firstName = 'User'; //userBox[0].username!;
     final deviceSize = MediaQuery.of(context).size;
     const size = 60;
     ('Shrink Offset: $shrinkOffset');

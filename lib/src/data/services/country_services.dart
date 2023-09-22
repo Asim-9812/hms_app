@@ -61,6 +61,36 @@ class CountryService{
     }
   }
 
+  Future<List<DistrictModel>> getAllDistrict() async {
+    try {
+      final response = await dio.get(Api.getAllDistrict);
+
+      final data = (response.data['result'] as List)
+          .map((e) => DistrictModel.fromJson(e))
+          .toList();
+      return data;
+    } on DioException catch (err) {
+      (err.response);
+      throw Exception('Unable to fetch data');
+    }
+  }
+
+  Future<List<MunicipalityModel>> getAllMunicipality() async {
+    dio.options.headers['Authorization'] = Api.bearerToken;
+    try {
+      final response = await dio.get(Api.getAllMunicipality);
+
+      final data = (response.data['result'] as List)
+          .map((e) => MunicipalityModel.fromJson(e))
+          .toList();
+      return data;
+    } on DioException catch (err) {
+      (err.response);
+      throw Exception('Unable to fetch data');
+    }
+  }
+
+
 
   Future<List<MunicipalityModel>> getMunicipality({
     required int districtId
