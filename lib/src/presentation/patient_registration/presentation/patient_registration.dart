@@ -277,7 +277,8 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 backgroundColor: ColorManager.primaryDark,
                 fixedSize: Size.fromHeight(widget.isNarrowScreen?40.h:40)
             ),
-            onPressed: isPostingData ? null :() async {
+            onPressed:
+            isPostingData ? null :() async {
               final now = DateTime.now();
               final scaffoldMessage = ScaffoldMessenger.of(context);
               if (formKey.currentState!.validate()){
@@ -401,6 +402,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _nameDetails(),
+              h20,
               h20,
               _register(),
               h100,
@@ -1007,7 +1009,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
             )
           ],
         ),
-        h10,
+        h20,
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1088,7 +1090,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
             ),
           ],
         ),
-        h20,
+
 
         // Row(
         //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1239,6 +1241,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
             )
           ],
         ),
+        h20,
         h20,
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
