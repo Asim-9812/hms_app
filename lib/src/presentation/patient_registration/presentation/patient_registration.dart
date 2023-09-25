@@ -44,7 +44,7 @@ class PatientRegistrationForm extends ConsumerStatefulWidget {
 }
 
 class _ETicketState extends ConsumerState<PatientRegistrationForm> {
-  List<String> genderType = ['Select Gender','Male', 'Female', 'Other'];
+  List<String> genderType = ['Select Gender','Male', 'Female', 'Preferred not to tell'];
   List<String> accountType = ['Self', 'Other'];
   List<String> idType = ['PID', 'NID','UID'];
   List<String> addressList = [];
@@ -402,8 +402,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _nameDetails(),
-              h20,
-              h20,
+
               _register(),
               h100,
 
@@ -633,8 +632,8 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                     return 'Age is required';
                   }
 
-                  if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                    return 'Please enter a valid age';
+                  if (!value.contains(RegExp(r'^\d+$'))) {
+                    return 'Invalid age';
                   }
                   return null;
                 },
@@ -909,7 +908,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('Address & Street',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
+                  Text('Address',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                   h10,
                   DropdownSearch<String>(
 
@@ -1033,8 +1032,8 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                         return 'Ward no. is required';
                       }
 
-                      if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                        return 'Please enter a valid Ward no.';
+                      if (!value.contains(RegExp(r'^\d+$'))) {
+                        return 'Invalid ward no';
                       }
                       return null;
                     },
@@ -1059,7 +1058,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Local Address',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
+                  Text('Street',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                   h10,
                   TextFormField(
                     controller: _addressController,
@@ -1230,20 +1229,6 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Department Details',style: getMediumStyle(color: ColorManager.black,fontSize: 22),),
-            Container(
-              width: 210,
-              child: Divider(
-                thickness: 0.5,
-                color: ColorManager.black.withOpacity(0.5),
-              ),
-            )
-          ],
-        ),
-        h20,
         h20,
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
