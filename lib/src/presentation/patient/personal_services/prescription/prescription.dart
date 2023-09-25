@@ -15,8 +15,12 @@ import 'add_a_prescription_plan.dart';
 class Prescriptions extends StatelessWidget {
   const Prescriptions({super.key});
 
+
+
   @override
   Widget build(BuildContext context) {
+    GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
     // Get the screen size
     final screenSize = MediaQuery.of(context).size;
 
@@ -24,6 +28,7 @@ class Prescriptions extends StatelessWidget {
     bool isWideScreen = screenSize.width > 500;
     bool isNarrowScreen = screenSize.width < 380;
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: ColorManager.white,
       appBar: AppBar(
         title: Text('Prescriptions',style: getMediumStyle(color: ColorManager.black),),
@@ -31,6 +36,13 @@ class Prescriptions extends StatelessWidget {
         backgroundColor: ColorManager.white,
         leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
         centerTitle:true,
+        actions:[
+          IconButton(
+              onPressed:(){
+                scaffoldKey.currentState!.openEndDrawer();
+              },
+              icon: Icon(Icons.menu,color: ColorManager.black,))
+        ]
         
       ),
       endDrawer: Drawer(

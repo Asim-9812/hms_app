@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:medical_app/src/presentation/patient/health_tips/data/tagList_provider.dart';
 import 'package:medical_app/src/presentation/patient/health_tips/presentation/health_tips_list.dart';
 import 'package:medical_app/src/presentation/patient/personal_services/lab_reports/lab_reports.dart';
 import 'package:medical_app/src/presentation/patient/personal_services/mri/mri.dart';
@@ -24,6 +25,8 @@ import '../../../login/domain/model/user.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../../patient_registration/presentation/patient_registration.dart';
 import '../../health_tips/domain/model/health_tips_dummy_tags.dart';
+import '../../health_tips/domain/model/health_tips_model.dart';
+import '../../health_tips/domain/services/health_tips_services.dart';
 import '../../health_tips/presentation/health_tips.dart';
 import '../../personal_services/bloodpressure/bp.dart';
 import '../../personal_services/ct_scan/ct_scan.dart';
@@ -34,16 +37,16 @@ import '../../search-near-by/presentation/search_for_page.dart';
 
 
 
-class PatientHomePage extends StatefulWidget {
+class PatientHomePage extends ConsumerStatefulWidget {
   final bool isWideScreen;
   final bool isNarrowScreen;
   PatientHomePage(this.isWideScreen,this.isNarrowScreen);
 
   @override
-  State<PatientHomePage> createState() => _PatientHomePageState();
+  ConsumerState<PatientHomePage> createState() => _PatientHomePageState();
 }
 
-class _PatientHomePageState extends State<PatientHomePage> {
+class _PatientHomePageState extends ConsumerState<PatientHomePage> {
 
   bool? _geolocationStatus;
   LocationPermission? _locationPermission;
@@ -60,32 +63,50 @@ class _PatientHomePageState extends State<PatientHomePage> {
 
   /// health tags...
 
-  List<Map<String, String>> selectedTags = [];
+  List<HealthTipsModel> selectedTags = [];
 
   void _showMultiSelect(BuildContext context) async {
+    final tagList = await HealthTipServices().getHealthTips();
+    Set<String> addedTypes = Set<String>();
+    List<HealthTipsModel> uniqueTagList = [];
+
+    for (var tag in tagList) {
+      if (!addedTypes.contains(tag.type)) {
+        uniqueTagList.add(tag);
+        addedTypes.add(tag.type!);
+      }
+    }
+
+    // Create a copy of selectedTags with the same reference as uniqueTagList
+    List<HealthTipsModel> initialSelectedTags =
+    selectedTags.map((tag) => uniqueTagList.firstWhere((t) => t.type == tag.type)).toList();
+
     await showDialog(
       context: context,
       builder: (ctx) {
-        return  MultiSelectDialog(
+        return MultiSelectDialog(
           title: Text('Choose Health Tips'),
           listType: MultiSelectListType.CHIP,
           selectedColor: ColorManager.primary,
           separateSelectedItems: true,
-          selectedItemsTextStyle: getRegularStyle(color: ColorManager.white,fontSize: 16),
-          itemsTextStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
-          items: dummyHealthTipData.map((tag) => MultiSelectItem<Map<String, String>>(tag, tag["tag"]!))
+          selectedItemsTextStyle: getRegularStyle(color: ColorManager.white, fontSize: 16),
+          itemsTextStyle: getRegularStyle(color: ColorManager.black, fontSize: 16),
+          items: uniqueTagList
+              .map((tag) => MultiSelectItem<HealthTipsModel>(tag, tag.type!))
               .toList(),
-          initialValue: selectedTags,
+          initialValue: initialSelectedTags, // Use initialSelectedTags here
           onConfirm: (values) {
             setState(() {
-              selectedTags = values;
+              selectedTags = values.map((tag) => tag).toList(); // Store selected items
             });
+            ref.read(tagListProvider.notifier).updateTagList(selectedTags);
             print(selectedTags);
           },
         );
       },
     );
   }
+
 
 
   ///geolocator settings...
@@ -622,74 +643,76 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
         color: Colors.transparent,
       ),
       padding: EdgeInsets.symmetric(horizontal: isWideScreen?18: 18.w,vertical: 12.h),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          h20,
-          Container(
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            h20,
+            Container(
 
-            child: AppBar(
-              toolbarHeight: isWideScreen? 100:70.h,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              leading: InkWell(
-                onTap: ()=>Get.to(()=>ProfilePage(),transition: Transition.fade),
-                child: CircleAvatar(
-                  backgroundColor: ColorManager.black,
-                  radius: isWideScreen? 30:20.sp,
-                  child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
-                ),
-              ),
-              title: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  h20,
-                  Text('Good Morning,',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isWideScreen? 16:16.sp),),
-                  Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: isWideScreen?24:28.sp),),
-                ],
-              ),
-              actions: [
-                InkWell(
-                    onTap:()=>Get.to(()=>NotificationPage()),
-                    child: Icon(Icons.notifications_none_outlined,color: ColorManager.black,size: isWideScreen? 30:28.sp,))
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          InkWell(
-            onTap: ()=>Get.to(()=>SearchNearByPage(isNarrowScreen,isWideScreen),transition: Transition.fadeIn),
-            splashColor: ColorManager.primary.withOpacity(0.4),
-            child: Container(
-              height: 50.h,
-              padding: EdgeInsets.symmetric(horizontal: 18.w),
-              decoration: BoxDecoration(
-                  color: ColorManager.searchColor.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                      color:ColorManager.searchColor,
-                      width: 1
-                  )
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.search,color: ColorManager.iconGrey,),
-                      w10,
-                      Text('Search for nearby...',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isWideScreen?15:15.sp),),
-                    ],
+              child: AppBar(
+                toolbarHeight: isWideScreen? 100:70.h,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                leading: InkWell(
+                  onTap: ()=>Get.to(()=>ProfilePage(),transition: Transition.fade),
+                  child: CircleAvatar(
+                    backgroundColor: ColorManager.black,
+                    radius: isWideScreen? 30:20.sp,
+                    child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
                   ),
-                  SizedBox()
+                ),
+                title: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    h20,
+                    Text('Good Morning,',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isWideScreen? 16:16.sp),),
+                    Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: isWideScreen?24:28.sp),),
+                  ],
+                ),
+                actions: [
+                  InkWell(
+                      onTap:()=>Get.to(()=>NotificationPage()),
+                      child: Icon(Icons.notifications_none_outlined,color: ColorManager.black,size: isWideScreen? 30:28.sp,))
                 ],
-              )
+              ),
             ),
-          ),
-        ],
+            SizedBox(
+              height: 10,
+            ),
+            InkWell(
+              onTap: ()=>Get.to(()=>SearchNearByPage(isNarrowScreen,isWideScreen),transition: Transition.fadeIn),
+              splashColor: ColorManager.primary.withOpacity(0.4),
+              child: Container(
+                height: 50.h,
+                padding: EdgeInsets.symmetric(horizontal: 18.w),
+                decoration: BoxDecoration(
+                    color: ColorManager.searchColor.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color:ColorManager.searchColor,
+                        width: 1
+                    )
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.search,color: ColorManager.iconGrey,),
+                        w10,
+                        Text('Search for nearby...',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isWideScreen?15:15.sp),),
+                      ],
+                    ),
+                    SizedBox()
+                  ],
+                )
+              ),
+            ),
+          ],
+        ),
       ),
     ),
   );

@@ -4,14 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
+import 'package:medical_app/src/presentation/patient/health_tips/data/tagList_provider.dart';
 import 'package:medical_app/src/presentation/patient/health_tips/domain/services/health_tips_services.dart';
 
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/value_manager.dart';
+import '../domain/model/health_tips_model.dart';
 import 'health_tips.dart';
 
 class HealthTipsList extends ConsumerStatefulWidget {
-  const HealthTipsList({super.key});
+
 
   @override
   ConsumerState<HealthTipsList> createState() => _HealthTipsState();
@@ -23,10 +25,16 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
 
   @override
   Widget build(BuildContext context) {
+
     final getHealthTips = ref.watch(getHealthTipsList);
+    final tagList = ref.watch(tagListProvider).filteredList;
 
     return getHealthTips.when(
       data: (data) {
+        final updatedList =tagList.isEmpty
+            ? data
+            : data.where((tips) => tagList.any((tag) => tag.type == tips.type)).toList();
+        ;
         return Column(
           children: [
             CarouselSlider(
@@ -47,7 +55,7 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
                   });
                 },
               ),
-              items: data.map((tips) {
+              items: updatedList.take(5).map((tips) {
                 return Container(
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
@@ -63,7 +71,7 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
                       h10,
                       Text(
                         tips.description ?? '',
-                        style: getRegularStyle(color: Colors.black, fontSize: 18),
+                        style: getRegularStyle(color: Colors.black, fontSize: 18,),maxLines: 1,
                       ),
                     ],
                   ),
@@ -73,7 +81,7 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
             h10,
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: data.asMap().entries.map((entry) {
+              children: updatedList.asMap().entries.take(5).map((entry) {
                 final int index = entry.key;
                 return GestureDetector(
                   onTap: () {

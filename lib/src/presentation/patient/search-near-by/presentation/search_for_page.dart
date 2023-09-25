@@ -266,7 +266,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
                               h10,
                               Text(
                                 'Hospital',
-                                style: getRegularStyle(color: selectedOption == 0 ? ColorManager.black : ColorManager.textGrey, fontSize: 16.sp),
+                                style: getRegularStyle(color: selectedOption == 0 ? ColorManager.black : ColorManager.textGrey, fontSize: 12.sp),
                               )
                             ],
                           ),
@@ -302,7 +302,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
                               h10,
                               Text(
                                 'Doctor',
-                                style: getRegularStyle(color: selectedOption == 1 ? ColorManager.black : ColorManager.textGrey, fontSize: 16.sp),
+                                style: getRegularStyle(color: selectedOption == 1 ? ColorManager.black : ColorManager.textGrey, fontSize: 12.sp),
                               )
                             ],
                           ),
@@ -344,7 +344,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
                               h10,
                               Text(
                                 'Ambulance',
-                                style: getRegularStyle(color: selectedOption == 2 ? ColorManager.black : ColorManager.textGrey, fontSize: 16.sp),
+                                style: getRegularStyle(color: selectedOption == 2 ? ColorManager.black : ColorManager.textGrey, fontSize: 12.sp),
                               )
                             ],
                           ),
@@ -380,7 +380,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
                               h10,
                               Text(
                                 'Clinic',
-                                style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: 16.sp),
+                                style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: 12.sp),
                               )
                             ],
                           ),
@@ -423,7 +423,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
                           h10,
                           Text(
                             'Hospital',
-                            style: getRegularStyle(color: selectedOption == 0 ? ColorManager.black : ColorManager.textGrey, fontSize: widget.isWideScreen?16:16.sp),
+                            style: getRegularStyle(color: selectedOption == 0 ? ColorManager.black : ColorManager.textGrey, fontSize: widget.isWideScreen?12:12.sp),
                           )
                         ],
                       ),
@@ -459,7 +459,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
                           h10,
                           Text(
                             'Doctor',
-                            style: getRegularStyle(color: selectedOption == 1 ? ColorManager.black : ColorManager.textGrey, fontSize: widget.isWideScreen?16:16.sp),
+                            style: getRegularStyle(color: selectedOption == 1 ? ColorManager.black : ColorManager.textGrey, fontSize: widget.isWideScreen?12:12.sp),
                           )
                         ],
                       ),
@@ -495,7 +495,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
                           h10,
                           Text(
                             'Ambulance',
-                            style: getRegularStyle(color: selectedOption == 2 ? ColorManager.black : ColorManager.textGrey, fontSize: widget.isWideScreen?16:16.sp),
+                            style: getRegularStyle(color: selectedOption == 2 ? ColorManager.black : ColorManager.textGrey, fontSize: widget.isWideScreen?12:12.sp),
                           )
                         ],
                       ),
@@ -531,7 +531,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
                           h10,
                           Text(
                             'Clinic',
-                            style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: widget.isWideScreen?16:16.sp),
+                            style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: widget.isWideScreen?12:12.sp),
                           )
                         ],
                       ),

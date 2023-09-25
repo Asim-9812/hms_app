@@ -119,8 +119,8 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
 
     _getCountry();
     _getCostCategory();
-    _getDepartment();
-    _getDoctors();
+    // _getDepartment();
+    // _getDoctors();
     _getAllAddress();
 
   }
@@ -142,45 +142,45 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
       selectedCountry = countries.isNotEmpty ? countries[0].countryName : 'Select a country';
       countryId = countries.isNotEmpty ? countries[0].countryId : 0;
     });
-    _getProvince();
+    // _getProvince();
   }
-
-  /// fetch province list...
-  void _getProvince() async {
-    List<ProvinceModel> provinceList = await CountryService().getProvince(countryId: countryId!);
-    setState(() {
-      provinces = provinceList;
-      provinceId = provinces.isNotEmpty ? provinces[0].provinceId : 0;
-
-    });
-    _getDistrict();
-  }
-
-
-  /// fetch district list...
-
-  void _getDistrict() async {
-
-    List<DistrictModel> districtList = await CountryService().getDistrict(provinceId: provinceId!);
-    setState(() {
-      districts = districtList;
-      districtId = districts.isNotEmpty ? districts[0].districtId : 0;
-    });
-    _getMunicipality();
-  }
-
-
-  /// fetch municipality list...
-
-  void _getMunicipality() async {
-
-    List<MunicipalityModel> municipalityList = await CountryService().getMunicipality(districtId: districtId!);
-    setState(() {
-      municipalities = municipalityList;
-      municipalityId = municipalities.isNotEmpty ? municipalities[0].municipalityId : 0;
-    });
-  }
-
+  //
+  // /// fetch province list...
+  // void _getProvince() async {
+  //   List<ProvinceModel> provinceList = await CountryService().getProvince(countryId: countryId!);
+  //   setState(() {
+  //     provinces = provinceList;
+  //     provinceId = provinces.isNotEmpty ? provinces[0].provinceId : 0;
+  //
+  //   });
+  //   _getDistrict();
+  // }
+  //
+  //
+  // /// fetch district list...
+  //
+  // void _getDistrict() async {
+  //
+  //   List<DistrictModel> districtList = await CountryService().getDistrict(provinceId: provinceId!);
+  //   setState(() {
+  //     districts = districtList;
+  //     districtId = districts.isNotEmpty ? districts[0].districtId : 0;
+  //   });
+  //   _getMunicipality();
+  // }
+  //
+  //
+  // /// fetch municipality list...
+  //
+  // void _getMunicipality() async {
+  //
+  //   List<MunicipalityModel> municipalityList = await CountryService().getMunicipality(districtId: districtId!);
+  //   setState(() {
+  //     municipalities = municipalityList;
+  //     municipalityId = municipalities.isNotEmpty ? municipalities[0].municipalityId : 0;
+  //   });
+  // }
+  //
   ///fetch cost category list...
   void _getCostCategory() async {
     List<CostCategoryModel> costCategoryList = await CostCategoryServices().getCostCategoryList();
@@ -191,27 +191,27 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
     });
   }
 
-
-  ///fetch department list...
-  void _getDepartment() async {
-    List<Department> departmentList = await DepartmentServices().getDoctorDepartments();
-    setState(() {
-      departments = departmentList;
-      departmentId =departments.isNotEmpty ? departments[0].departmentId  : 0;
-    });
-  }
-
-
-  ///fetch all doctor list...
-  void _getDoctors() async {
-    List<User> doctorList = await UserService().getDoctors();
-    setState(() {
-      doctors = doctorList;
-      doctorId =doctors.isNotEmpty ? doctors[0].id  : 0;
-    });
-  }
-
-
+  //
+  // ///fetch department list...
+  // void _getDepartment() async {
+  //   List<Department> departmentList = await DepartmentServices().getDoctorDepartments();
+  //   setState(() {
+  //     departments = departmentList;
+  //     departmentId =departments.isNotEmpty ? departments[0].departmentId  : 0;
+  //   });
+  // }
+  //
+  //
+  // ///fetch all doctor list...
+  // void _getDoctors() async {
+  //   List<User> doctorList = await UserService().getDoctors();
+  //   setState(() {
+  //     doctors = doctorList;
+  //     doctorId =doctors.isNotEmpty ? doctors[0].id  : 0;
+  //   });
+  // }
+  //
+  //
 
 
 
@@ -540,7 +540,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value){
                       if (value!.isEmpty) {
-                        return 'Required';
+                        return 'Id is required';
                       }
                       if (value.length !=3) {
                         return 'Invalid Code';
@@ -549,7 +549,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                         return 'Do not enter spaces';
                       }
                       if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                        return 'Invalid';
+                        return 'Invalid ID';
                       }
                       return null;
                     },
