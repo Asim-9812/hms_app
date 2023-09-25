@@ -55,7 +55,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
   String selectedId = 'PID';
   String selectedAccount = 'Self';
   int genderId = 0;
-  int ageId = 0;
+  int ageId = 1;
   int accountId = 0;
   int intId = 0;
   final formKey = GlobalKey<FormState>();
@@ -537,22 +537,6 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                   h10,
                   TextFormField(
                     controller: _codeController,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value){
-                      if (value!.isEmpty) {
-                        return 'Id is required';
-                      }
-                      if (value.length !=3) {
-                        return 'Invalid Code';
-                      }
-                      if (value.contains(' ')) {
-                        return 'Do not enter spaces';
-                      }
-                      if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                        return 'Invalid ID';
-                      }
-                      return null;
-                    },
                     decoration: InputDecoration(
                         floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
                         hintText: 'Patient ID',
@@ -701,28 +685,46 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 onChanged: (String? value) {
                   setState(() {
                     selectedAge = value!;
-                    ageId = ageType.indexOf(value);
+                    ageId = ageType.indexOf(value)+1;
+                    _ageController2.clear();
                   });
+                  print(ageId);
                 },
               ),
             ),
             w10,
             Expanded(
               child: AbsorbPointer(
-                absorbing: ageId + 1 >= ageType.length,
+                absorbing: ageId  >= ageType.length,
                 child: TextFormField(
                   controller: _ageController2,
                   keyboardType: TextInputType.phone,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (value){
-                    if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value!)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                      return 'Please enter a valid age';
+                  validator:(value){
+                    if(ageId >= ageType.length){
+                      return null;
                     }
+                    if(value!.isEmpty){
+                      return null;
+                    }
+                    if (!value.contains(RegExp(r'^\d+$'))) {
+                      return 'Please enter a valid number';
+                    }
+                    else if(ageId == 1 && int.parse(value) >=13){
+                      return 'Invalid month';
+                    }
+                    else if(ageId == 2 && int.parse(value) >=33){
+                      return 'Invalid day';
+                    }
+                    else if(ageId == 3 && int.parse(value) >=25){
+                      return 'Invalid hour';
+                    }
+
                     return null;
                   },
                   decoration: InputDecoration(
                     floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                    labelText: ageId + 1 >= ageType.length ? '-----' : ageType[ageId + 1],
+                    labelText: ageId  >= ageType.length ? '-----' : ageType[ageId ],
                     labelStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -907,7 +909,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('Street',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
+                  Text('Address & Street',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                   h10,
                   DropdownSearch<String>(
 
