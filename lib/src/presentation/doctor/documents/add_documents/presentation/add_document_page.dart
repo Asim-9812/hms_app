@@ -40,7 +40,7 @@ class _AddDocumentPageState extends State<AddDocuments> {
 
   final formKey = GlobalKey<FormState>();
 
-  File? file;
+  PlatformFile? file;
 
 
 
@@ -591,7 +591,9 @@ class _AddDocumentPageState extends State<AddDocuments> {
                 );
 
                 if (result != null) {
-
+                  setState(() {
+                    file = result.files.first;
+                  });
 
                 } else {
                   // User canceled the picker
@@ -606,18 +608,10 @@ class _AddDocumentPageState extends State<AddDocuments> {
                 );
 
                 if (result != null) {
-                  List<PlatformFile> fileList = result.files;
 
-
-
-                  for(var i=0; i<fileList.length; i++){
-                    (fileList[i].name);
-                    (fileList[i].bytes);
-                    (fileList[i].size);
-                    (fileList[i].extension);
-                    (fileList[i].path);
-                  }
-
+                  setState(() {
+                    file = result.files.first;
+                  });
                 } else {
                   // User canceled the picker
                 }
@@ -635,7 +629,7 @@ class _AddDocumentPageState extends State<AddDocuments> {
                 children: [
                   FaIcon(CupertinoIcons.arrow_down_doc,color: ColorManager.blueText,size: 40,),
                   h10,
-                  Text('Browse for files',style: getMediumStyle(color: ColorManager.blueText,fontSize: 18),),
+                  Text(file == null ? 'Browse for files':'${file!.path}',style: getMediumStyle(color: ColorManager.blueText,fontSize: 18),),
 
                 ],
               ),
