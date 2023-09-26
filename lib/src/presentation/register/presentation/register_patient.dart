@@ -250,7 +250,7 @@ class _RegisterPatientState extends ConsumerState<RegisterPatient> {
                 return 'Enter a valid number';
               }
 
-              if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+              if (!value.contains(RegExp(r'^\d+$'))) {
                 return 'Please enter a valid Mobile Number';
               }
               return null;

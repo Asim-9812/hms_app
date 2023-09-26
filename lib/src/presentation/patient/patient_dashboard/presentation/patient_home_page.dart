@@ -624,10 +624,6 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
             InkWell(
                 onTap: ()=>Get.to(()=>SearchNearByPage(isNarrowScreen,isWideScreen),transition: Transition.fadeIn),
                 child: Icon(Icons.search,color: ColorManager.black,size: 20,)),
-            w20,
-            InkWell(
-                onTap: ()=>Get.to(()=>NotificationPage()),
-                child: Icon(Icons.notifications_none_outlined,color: ColorManager.black,size: 20,)),
           ],
         ),
       ),
@@ -671,11 +667,7 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                     Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: isWideScreen?24:28.sp),),
                   ],
                 ),
-                actions: [
-                  InkWell(
-                      onTap:()=>Get.to(()=>NotificationPage()),
-                      child: Icon(Icons.notifications_none_outlined,color: ColorManager.black,size: isWideScreen? 30:28.sp,))
-                ],
+
               ),
             ),
             SizedBox(

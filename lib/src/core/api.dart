@@ -1,7 +1,6 @@
 
 
 
-
 class Api{
 
    static const bearerToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiZjZhNTdmNC1iN2JmLTQzYmItODgzNy0yY2NiZDE4NDM5ODIiLCJ2YWxpZCI6IjEiLCJ1c2VyaWQiOiJET0MwMDAxIiwiZXhwIjoxNzIxMjc3NDc0LCJpc3MiOiJsb2NhbGhvc3QiLCJhdWQiOiJXZWxjb21lIn0.o7_teFlpwxmG7EOBO9eL46bfOwLySS6Qyc1Yj8ZgcyI';
@@ -59,4 +58,12 @@ class Api{
    /// Health tips...
    static const getHealthTipsList = '$baseUrl/api/HealthTips/GetList';
 
+   /// Doctor Documents...
+   static const getDocumentType = '$baseUrl/api/DocumentType/GetList';
+   static const getFolders = '$baseUrl/api/DoctorDocument/FolderList/';
+   static const getDocuments = '$baseUrl/api/DoctorDocument/GetDocuList/';
+   static const delDocuments = '$baseUrl/api/DoctorDocument/DeleteDocument/';
+
 }
+
+

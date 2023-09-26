@@ -7,9 +7,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/resources/color_manager.dart';
-import '../../../../core/resources/style_manager.dart';
-import '../../../../core/resources/value_manager.dart';
+import '../../../../../core/resources/color_manager.dart';
+import '../../../../../core/resources/style_manager.dart';
+import '../../../../../core/resources/value_manager.dart';
+
 
 
 class SearchDocuments extends StatefulWidget {
@@ -131,7 +132,6 @@ class _SearchDocumentsState extends State<SearchDocuments> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10)
         ),
-        tileColor: ColorManager.white,
         onTap: onTap,
         contentPadding: EdgeInsets.zero,
         leading: Card(

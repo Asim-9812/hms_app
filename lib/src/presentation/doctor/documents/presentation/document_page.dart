@@ -1,32 +1,55 @@
 
 
+import 'dart:async';
+
 import 'package:animate_do/animate_do.dart';
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
+import 'package:medical_app/src/presentation/doctor/documents/domain/services/document_services.dart';
+import 'package:medical_app/src/presentation/doctor/documents/presentation/folder_page.dart';
+import 'package:medical_app/src/presentation/doctor/documents/presentation/pdfView.dart';
 
-import '../../../core/resources/value_manager.dart';
+import '../../../../core/api.dart';
+import '../../../../core/pdf_api.dart';
+import '../../../../core/resources/value_manager.dart';
+import '../../../common/snackbar.dart';
+import '../../../login/domain/model/user.dart';
 import '../add_documents/presentation/add_document_page.dart';
+import '../domain/model/document_model.dart';
 import '../search_documents/presentation/search_document_page.dart';
 
-class DocumentPage extends StatefulWidget {
+class DocumentPage extends ConsumerStatefulWidget {
   final bool isWideScreen;
   final bool isNarrowScreen;
   DocumentPage(this.isWideScreen,this.isNarrowScreen);
 
   @override
-  State<DocumentPage> createState() => _PatientDocumentPageState();
+  ConsumerState<DocumentPage> createState() => _PatientDocumentPageState();
 }
 
-class _PatientDocumentPageState extends State<DocumentPage> {
+class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
   bool isFolderLocked = false;
+  List<DocumentModel> docList = [];
+  int? pages;
+  bool? isReady;
+
+
+
+
   @override
   Widget build(BuildContext context) {
+
     return FadeIn(
       duration: Duration(milliseconds: 700),
       child: Scaffold(
@@ -79,6 +102,11 @@ class _PatientDocumentPageState extends State<DocumentPage> {
     // Check if width is greater than height
     bool isWideScreen = screenSize.width > 500;
     bool isNarrowScreen = screenSize.width < 380;
+    final userBox = Hive.box<User>('session').values.toList();
+    final docId = userBox[0].userID;
+    final folderList = ref.watch(folderProvider(docId!));
+    final documentList = ref.watch(documentProvider(docId));
+
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 8.h),
@@ -89,22 +117,48 @@ class _PatientDocumentPageState extends State<DocumentPage> {
         children: [
           Text('My Folders',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
           h20,
-          GridView(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: widget.isWideScreen? 4: isNarrowScreen?2: 3,
-                crossAxisSpacing: widget.isWideScreen?8:8.w,
-                mainAxisSpacing: widget.isWideScreen?8: 8.h,
-                childAspectRatio: widget.isWideScreen? 14/11:14/10
-            ),
-            children: [
-              buildFolderBody(context,folderName: 'Academics', fileNumbers: 5, onTap: (){},isLocked:isFolderLocked),
-              buildFolderBody(context,folderName: 'Certificates', fileNumbers: 2, onTap: (){},isLocked: isFolderLocked),
-              buildFolderBody(context,folderName: 'Reports', fileNumbers: 6, onTap: (){},isLocked: isFolderLocked),
+          folderList.when(
+              data: (data){
+                if(data.isEmpty){
+                  return Text('No folders.',style:getRegularStyle(color: ColorManager.black,fontSize: 20));
+                }
+                else{
+                  return documentList.when(
+                      data: (documents){
+                        return GridView.builder(
+                          itemCount: data.length,
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: widget.isWideScreen? 4: isNarrowScreen?2: 3,
+                              crossAxisSpacing: widget.isWideScreen?8:8.w,
+                              mainAxisSpacing: widget.isWideScreen?8: 8.h,
+                              childAspectRatio: widget.isWideScreen? 14/11:14/10
+                          ),
+                          itemBuilder: (BuildContext context, int index) {
+                            final numberOfDocs = documents.where((doc) => doc.folderName == data[index].folderName).length;
+                            return buildFolderBody(
+                                context,
+                                folderName: data[index].folderName,
+                                fileNumbers: numberOfDocs,
+                                onTap: (){
+                                  final list = documents.where((element) => element.folderName == data[index].folderName ).toList();
+                                  Get.to(()=>FolderPage(docId: docId, folderName: data[index].folderName, files: list));
+                                });
+                          },
 
-            ],
+                        );
+                      },
+                      error: (error,stack)=>Center(child: Text('File: $error')),
+                      loading: ()=>SizedBox()
+                  );
+
+                }
+              },
+              error: (error,stack)=>Center(child: Text('$error'),),
+              loading: ()=>Center(child: SpinKitDualRing(color: ColorManager.blue,lineWidth: 20),)
           ),
+          h20,
         ],
       ),
     );
@@ -245,27 +299,81 @@ class _PatientDocumentPageState extends State<DocumentPage> {
   /* file widgets...*/
 
   Widget buildFile(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 18.w),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
+    final userBox = Hive.box<User>('session').values.toList();
+    final docId = userBox[0].userID;
+    final documentList = ref.watch(documentProvider(docId!));
+    return documentList.when(
+        data: (data){
+          if(data.isEmpty){
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: 18.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Recent Files',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
+                  Divider(
+                    thickness: 0.5,
+                    color: ColorManager.black.withOpacity(0.8),
+                  ),
+                  Center(
+                    child: Text('No files',style: getMediumStyle(color: ColorManager.black),),
+                  ),
+                ],
+              ),
+            );
+          }
+          else{
+            return Padding(
+              padding:EdgeInsets.symmetric(horizontal: 18.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Recent Files',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
+                  Divider(
+                    thickness: 0.5,
+                    color: ColorManager.black.withOpacity(0.8),
+                  ),
+                  ListView.builder(
+                    itemCount: data.length > 5 ? 5 : data.length,
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (BuildContext context, int index) {
+                      return _fileTile(context,
+                        docId: docId,
+                        documentId:data[index].documentID! ,
+                        typeId: data[index].documentTypeID!,
+                        fileName: data[index].documentTitle!,
+                        description: data[index].documentDescription?? 'No description',
+                        onTap: ()async{
+                          if(data[index].documentTypeID == 2){
+                            final image = Image.network('${Api.baseUrl}/${data[index].doctorAttachment}').image;
+                            showImageViewer(context, image, onViewerDismissed: () {
+                              print("dismissed");
+                            });
+                          }
+                          else{
+                            final String path = '${Api.baseUrl}/${data[index].doctorAttachment}';
+                            final file = await PDFApi.loadNetwork(path);
+                            Get.to(()=>PDFViewerPage(file: file,title:data[index].documentTitle! ,));
 
-          children: [
-            Text('Recent Files',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
-            Divider(
-              thickness: 0.5,
-              color: ColorManager.black.withOpacity(0.8),
-            ),
-            _fileTile(context, fileName: 'File.docx', onTap: (){}, dateTime: DateTime.now()),
-            _fileTile(context, fileName: 'Image.jpg', onTap: (){}, dateTime: DateTime.now()),
-            _fileTile(context, fileName: 'File 2.docx', onTap: (){}, dateTime: DateTime.now()),
-            _fileTile(context, fileName: 'File 2.docx', onTap: (){}, dateTime: DateTime.now()),
-            h100,
+                          }
+                        },
+                      );
+                    },
 
-          ],
-        ));
+                  ),
+                ],
+              ),
+            );
+          }
+        },
+        error: (error,stack)=>Center(child: Text('$error'),),
+        loading: ()=>SizedBox()
+    );
+
+
+
   }
 
 
@@ -274,12 +382,15 @@ class _PatientDocumentPageState extends State<DocumentPage> {
   Widget _fileTile (BuildContext context,{
     required String fileName,
     required VoidCallback onTap,
-    required DateTime dateTime,
+    required String description,
+    required int typeId,
+    required int documentId,
+    required String docId,
   }) {
     return ListTile(
 
       onLongPress: () async {
-        _showFileDialog(context);
+        _showFileDialog(context,documentId.toString(),docId);
       },
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
@@ -290,14 +401,14 @@ class _PatientDocumentPageState extends State<DocumentPage> {
         ),
 
         child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-            child: FaIcon(FontAwesomeIcons.fileLines,color: ColorManager.blueText.withOpacity(0.5),)),
+            padding: EdgeInsets.symmetric(horizontal: typeId == 2 ? 12.w:18.w,vertical: 12.h),
+            child: FaIcon(typeId == 2 ? FontAwesomeIcons.images:FontAwesomeIcons.fileLines,color: ColorManager.blueText.withOpacity(0.5),)),
       ),
       title: Text('$fileName',style: getRegularStyle(color: ColorManager.black),),
-      subtitle: Text('${DateFormat('dd/MM/yyyy hh:mm a').format(dateTime)}',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 10),),
+      subtitle: Text('${description}',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 10),),
       trailing: IconButton(
         onPressed: () async {
-          _showFileDialog(context);
+          _showFileDialog(context,documentId.toString(),docId);
         },
         icon: FaIcon(Icons.more_horiz,color: ColorManager.iconGrey,),
       ),
@@ -305,7 +416,7 @@ class _PatientDocumentPageState extends State<DocumentPage> {
   }
 
   /// file menu...
-  Future<void> _showFileDialog(BuildContext context) {
+  Future<void> _showFileDialog(BuildContext context,String documentId,String docId) {
     return showDialog(
         context: context,
         builder: (context){
@@ -326,9 +437,39 @@ class _PatientDocumentPageState extends State<DocumentPage> {
                     thickness: 0.5,
                     color: ColorManager.black,
                   ),
-                  _folderCustomize(icon: Icons.drive_file_move_rounded, name: 'Move', onTap: (){}),
-                  _folderCustomize(icon: Icons.copy_rounded, name: 'Copy', onTap: (){}),
-                  _folderCustomize(icon: Icons.delete_outline, name: 'Delete', onTap: (){}),
+                  _folderCustomize(icon: Icons.delete_outline, name: 'Delete',
+                      onTap: ()async{
+                        final scaffoldMessage = ScaffoldMessenger.of(context);
+                    final response = await DoctorDocumentServices().delDocument(documentId: documentId);
+                    if(response.isLeft()){
+                      final left = response.fold(
+                              (l) => l,
+                              (r) => null
+                      );
+                      scaffoldMessage.showSnackBar(
+                          SnackbarUtil.showFailureSnackbar(
+                              message: '$left',
+                              duration: const Duration(milliseconds: 1200)
+                          )
+                      );
+                      Navigator.pop(context);
+                    }
+                    else{
+                      if(response.isLeft()){
+
+                        scaffoldMessage.showSnackBar(
+                            SnackbarUtil.showSuccessSnackbar(
+                                message: 'Successful',
+                                duration: const Duration(milliseconds: 1200)
+                            )
+                        );
+                        ref.refresh(documentProvider(docId));
+                        ref.refresh(folderProvider(docId));
+                        Navigator.pop(context);
+                      }
+                    }
+                      }
+                  ),
 
                 ],
               ),

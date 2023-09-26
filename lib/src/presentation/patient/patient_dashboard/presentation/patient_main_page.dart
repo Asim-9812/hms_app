@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
-import '../../../documents/presentation/document_page.dart';
+import '../../../notification/presentation/notification_page.dart';
 import '../../../settings/settings_global.dart';
 import 'patient_home_page.dart';
 import '../../scan/presentation/qr_scan.dart';
@@ -68,20 +68,20 @@ class _AnimatedBarExampleState extends State<PatientMainPage> {
             title:  Text('Home'),
           ),
           BottomBarItem(
-            icon:  FaIcon(Icons.file_copy,size: isWideScreen?24:24.sp,),
-            // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
-            selectedColor: ColorManager.primary,
-            // unSelectedColor: Colors.purple,
-            // backgroundColor: Colors.orange,
-            title:  Text('Documents'),
-          ),
-          BottomBarItem(
             icon:  FaIcon(Icons.grid_view_outlined,size: isWideScreen?24:24.sp,),
             // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
             selectedColor: ColorManager.primary,
             // unSelectedColor: Colors.purple,
             // backgroundColor: Colors.orange,
             title:  Text('Utilities'),
+          ),
+          BottomBarItem(
+            icon:  FaIcon(Icons.notifications,size: isWideScreen?24:24.sp,),
+            // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
+            selectedColor: ColorManager.primary,
+            // unSelectedColor: Colors.purple,
+            // backgroundColor: Colors.orange,
+            title:  Text('Notifications'),
           ),
           BottomBarItem(
             icon:  FaIcon(Icons.menu,size: isWideScreen?24:24.sp,),
@@ -112,8 +112,8 @@ class _AnimatedBarExampleState extends State<PatientMainPage> {
         controller: controller,
         children: [
           PatientHomePage(isWideScreen,isNarrowScreen),
-          DocumentPage(isWideScreen,isNarrowScreen),
           PatientUtilitiesPage(isWideScreen,isNarrowScreen),
+          NotificationPage(),
           Settings(isWideScreen,isNarrowScreen)
         ],
       ),
