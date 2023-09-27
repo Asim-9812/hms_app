@@ -63,7 +63,7 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
           actions: [
             IconButton(
               onPressed: ()=>Get.to(()=>AddDocuments(),transition: Transition.rightToLeftWithFade,duration: Duration(milliseconds: 500))
-              , icon: FaIcon(Icons.add),color: Colors.blue,),
+              , icon: FaIcon(CupertinoIcons.add_circled,size: 28,),color: Colors.blue,),
             IconButton(onPressed: ()=>Get.to(()=>SearchDocuments(),transition:Transition.rightToLeftWithFade)
               , icon: FaIcon(Icons.search),color: Colors.blue,),
           ],
@@ -81,6 +81,7 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
               FadeInUp(
                   duration: Duration(milliseconds: 700),
                   child: buildFile(context)),
+              h100
 
 
             ],
@@ -317,6 +318,7 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
             );
           }
           else{
+            final reversedList = data.reversed.toList();
             return Padding(
               padding:EdgeInsets.symmetric(horizontal: 18.w),
               child: Column(
@@ -328,28 +330,28 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
                     color: ColorManager.black.withOpacity(0.8),
                   ),
                   ListView.builder(
-                    itemCount: data.length > 5 ? 5 : data.length,
+                    itemCount: reversedList.length > 5 ? 5 : reversedList.length,
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (BuildContext context, int index) {
                       return _fileTile(context,
                         docId: docId,
-                        documentId:data[index].documentID! ,
-                        typeId: data[index].documentTypeID!,
-                        fileName: data[index].documentTitle!,
-                        description: data[index].documentDescription?? 'No description',
+                        documentId:reversedList[index].documentID! ,
+                        typeId: reversedList[index].documentTypeID!,
+                        fileName: reversedList[index].documentTitle!,
+                        description: reversedList[index].documentDescription?? 'No description',
                         onTap: ()async{
-                          if(data[index].documentTypeID == 2){
-                            final image = Image.network('${Api.baseUrl}/${data[index].doctorAttachment}').image;
+                          if(reversedList[index].documentTypeID == 2){
+                            final image = Image.network('${Api.baseUrl}/${reversedList[index].doctorAttachment}').image;
                             showImageViewer(context, image, onViewerDismissed: () {
                               print("dismissed");
                             });
                           }
                           else{
-                            final String path = '${Api.baseUrl}/${data[index].doctorAttachment}';
+                            final String path = '${Api.baseUrl}/${reversedList[index].doctorAttachment}';
                             final file = await PDFApi.loadNetwork(path);
-                            Get.to(()=>PDFViewerPage(file: file,title:data[index].documentTitle! ,));
+                            Get.to(()=>PDFViewerPage(file: file,title:reversedList[index].documentTitle! ,));
 
                           }
                         },

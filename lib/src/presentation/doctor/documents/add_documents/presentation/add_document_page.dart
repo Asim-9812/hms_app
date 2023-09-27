@@ -80,9 +80,10 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
     super.initState();
     _getDocumentTypes();
     _folderNameController.text =widget.existingFolder ?? '';
-    setState(() {
-      selectedFolder = widget.existingFolder ?? 'Select a folder';
-    });
+    selectedFolder = widget.existingFolder ?? 'Select a folder';
+    _durationController.text = '1';
+
+
 
   }
 
@@ -102,7 +103,7 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
   Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate:_dateController.text.isNotEmpty?DateFormat('yyyy-MM-dd').parse(_dateController.text): DateTime.now(),
       firstDate:DateTime(1900),
       lastDate:DateTime.now(),
     );
@@ -125,12 +126,12 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
         backgroundColor: ColorManager.white.withOpacity(0.9),
         appBar: AppBar(
           centerTitle: true,
-          backgroundColor: ColorManager.white.withOpacity(0.8),
+          backgroundColor: ColorManager.blueText,
           elevation: 1,
-          title: Text('Add Document',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
+          title: Text('Add Document',style: getMediumStyle(color: ColorManager.white,fontSize: 24),),
           leading: IconButton(
             onPressed: ()=>Get.back(),
-            icon: Icon(Icons.chevron_left,color: ColorManager.black,),
+            icon: Icon(Icons.chevron_left,color: ColorManager.white,),
           ),
         ),
         body: SingleChildScrollView(
@@ -182,7 +183,7 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
                             folderName: _folderNameController.text.trim(),
                             doctorAttachmentID: 1,
                             documentTitle: _nameController.text.trim(),
-                            documentDescription: _descController?.text.trim() ?? 'N/A',
+                            documentDescription: _descController!.text.isNotEmpty ? _descController!.text.trim() :'N/A',
                             duration: int.parse(_durationController.text.trim()),
                             durationType: dateTypeId.toString(),
                             completedDate: _dateController.text.trim(),
@@ -389,8 +390,6 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
 
                 return null;
               },
-
-
               inputFormatters: [
                 DateInputFormatter()
               ],

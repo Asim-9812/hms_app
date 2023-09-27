@@ -57,18 +57,18 @@ class _PatientFolderPageState extends ConsumerState<FolderPage> {
       backgroundColor: ColorManager.white.withOpacity(0.9),
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: ColorManager.white.withOpacity(0.8),
+        backgroundColor: ColorManager.primaryDark,
         elevation: 1,
-        title: Text(widget.folderName,style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
+        title: Text(widget.folderName,style: getMediumStyle(color: ColorManager.white,fontSize: 24),),
         leading: IconButton(
           onPressed: ()=>Get.back(),
-          icon: FaIcon(CupertinoIcons.chevron_back),color: Colors.blue,),
+          icon: FaIcon(CupertinoIcons.chevron_back),color: Colors.white,),
       actions: [
           IconButton(
             onPressed: ()=>Get.to(()=>AddDocuments(existingFolder: widget.folderName,),transition: Transition.rightToLeftWithFade,duration: Duration(milliseconds: 500))
-            , icon: FaIcon(Icons.add),color: Colors.blue,),
+            , icon: FaIcon(Icons.add),color: Colors.white,),
           IconButton(onPressed: ()=>Get.to(()=>SearchDocuments(),transition:Transition.rightToLeftWithFade)
-            , icon: FaIcon(Icons.search),color: Colors.blue,),
+            , icon: FaIcon(Icons.search),color: Colors.white,),
         ],
       ),
       body: SingleChildScrollView(
@@ -80,6 +80,7 @@ class _PatientFolderPageState extends ConsumerState<FolderPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               buildFile(context),
+
 
 
             ],

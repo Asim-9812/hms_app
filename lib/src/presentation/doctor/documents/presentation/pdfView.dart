@@ -45,25 +45,25 @@ class PDFViewerPageState extends State<PDFViewerPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: ColorManager.black,
         elevation: 0,
         automaticallyImplyLeading: true,
         iconTheme: const IconThemeData(
-          color: Colors.black,
+          color: Colors.white,
         ),
-        title: Text(widget.title,style: getMediumStyle(color: ColorManager.black),),
+        title: Text(widget.title,style: getMediumStyle(color: ColorManager.white),),
         actions: pages >= 2
             ? [
-          Center(child: Text(text, style: const TextStyle(color: Colors.black),)),
+          Center(child: Text(text, style: const TextStyle(color: Colors.white),)),
           IconButton(
-            icon: Icon(Icons.chevron_left, size: 32.h, color: indexPage > 0 ? Colors.black : Colors.grey,),
+            icon: Icon(Icons.chevron_left, size: 32.h, color: indexPage > 0 ? Colors.white : Colors.grey,),
             onPressed: indexPage > 0 ? () {
               final page = indexPage - 1;
               controller.setPage(page);
             } : null,
           ),
           IconButton(
-            icon: Icon(Icons.chevron_right, size: 32.h, color: indexPage < pages - 1 ? Colors.black : Colors.grey,),
+            icon: Icon(Icons.chevron_right, size: 32.h, color: indexPage < pages - 1 ? Colors.white : Colors.grey,),
             onPressed: indexPage < pages - 1 ? () {
               final page = indexPage + 1;
               controller.setPage(page);
