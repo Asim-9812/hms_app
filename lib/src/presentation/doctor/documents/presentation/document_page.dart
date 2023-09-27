@@ -276,13 +276,7 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
                   _folderCustomize(icon: Icons.drive_file_move_rounded, name: 'Move', onTap: (){}),
                   _folderCustomize(icon: Icons.copy_rounded, name: 'Copy', onTap: (){}),
                   _folderCustomize(icon: Icons.delete_outline, name: 'Delete', onTap: (){}),
-                  _folderCustomize(icon: isLocked? FontAwesomeIcons.unlock:Icons.lock, name: isLocked? 'Unlock Folder':'Make the folder private',
-                      onTap: (){
-                        setState(() {
-                          isFolderLocked = !isFolderLocked;
-                        });
-                        Navigator.pop(context);
-                      }),
+
 
                 ],
               ),
@@ -438,37 +432,38 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
                     color: ColorManager.black,
                   ),
                   _folderCustomize(icon: Icons.delete_outline, name: 'Delete',
-                      onTap: ()async{
-                        final scaffoldMessage = ScaffoldMessenger.of(context);
-                    final response = await DoctorDocumentServices().delDocument(documentId: documentId);
-                    if(response.isLeft()){
-                      final left = response.fold(
-                              (l) => l,
-                              (r) => null
-                      );
-                      scaffoldMessage.showSnackBar(
-                          SnackbarUtil.showFailureSnackbar(
-                              message: '$left',
-                              duration: const Duration(milliseconds: 1200)
-                          )
-                      );
-                      Navigator.pop(context);
-                    }
-                    else{
-                      if(response.isLeft()){
-
-                        scaffoldMessage.showSnackBar(
-                            SnackbarUtil.showSuccessSnackbar(
-                                message: 'Successful',
-                                duration: const Duration(milliseconds: 1200)
-                            )
-                        );
-                        ref.refresh(documentProvider(docId));
-                        ref.refresh(folderProvider(docId));
-                        Navigator.pop(context);
-                      }
-                    }
-                      }
+                      onTap: (){}
+                    //       ()async{
+                    //     final scaffoldMessage = ScaffoldMessenger.of(context);
+                    // final response = await DoctorDocumentServices().delDocument(documentId: documentId);
+                    // if(response.isLeft()){
+                    //   final left = response.fold(
+                    //           (l) => l,
+                    //           (r) => null
+                    //   );
+                    //   scaffoldMessage.showSnackBar(
+                    //       SnackbarUtil.showFailureSnackbar(
+                    //           message: '$left',
+                    //           duration: const Duration(milliseconds: 1200)
+                    //       )
+                    //   );
+                    //   Navigator.pop(context);
+                    // }
+                    // else{
+                    //   if(response.isLeft()){
+                    //
+                    //     scaffoldMessage.showSnackBar(
+                    //         SnackbarUtil.showSuccessSnackbar(
+                    //             message: 'Successful',
+                    //             duration: const Duration(milliseconds: 1200)
+                    //         )
+                    //     );
+                    //     ref.refresh(documentProvider(docId));
+                    //     ref.refresh(folderProvider(docId));
+                    //     Navigator.pop(context);
+                    //   }
+                    // }
+                    //   }
                   ),
 
                 ],

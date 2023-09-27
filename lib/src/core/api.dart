@@ -62,6 +62,7 @@ class Api{
    static const getDocumentType = '$baseUrl/api/DocumentType/GetList';
    static const getFolders = '$baseUrl/api/DoctorDocument/FolderList/';
    static const getDocuments = '$baseUrl/api/DoctorDocument/GetDocuList/';
+   static const addDocuments = '$baseUrl/api/DoctorDocument/InsertDocument';
    static const delDocuments = '$baseUrl/api/DoctorDocument/DeleteDocument/';
 
 }

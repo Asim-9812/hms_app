@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class ColorManager {
   // Sajha colors
-  static Color primary = HexColor.fromHex("#2EC4B6");
-  static Color primaryOpacity80 = HexColor.fromHex('#10A194').withOpacity(0.8);
-  static Color primaryDark = HexColor.fromHex('#10A194');
+  static Color primary = HexColor.fromHex("#00aff0");
+  static Color primaryOpacity80 = HexColor.fromHex('#42bcea');
+  static Color primaryDark = HexColor.fromHex('#1383ad');
   static Color splashColor = HexColor.fromHex('#10A194').withOpacity(0.8);
   static Color searchColor = HexColor.fromHex('#49EBDC');
   static Color lightGreen = HexColor.fromHex('#D8E9A8');

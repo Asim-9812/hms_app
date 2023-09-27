@@ -3,7 +3,9 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart';
 
 import '../../../../../core/api.dart';
 import '../model/document_model.dart';
@@ -69,7 +71,7 @@ class DoctorDocumentServices {
 
   }
   Future<Either<String,dynamic>> addDocument({
-    required String documentID,
+    required int documentID,
     required String userID,
     required int documentTypeID,
     required String folderName,
@@ -77,9 +79,9 @@ class DoctorDocumentServices {
     required String documentTitle,
     required String documentDescription,
     required int duration,
-    required int durationType,
+    required String durationType,
     required String completedDate,
-    required File documentUrl,
+    required PlatformFile documentUrl,
   }) async{
     try{
       Map<String,dynamic> data = {
@@ -94,10 +96,15 @@ class DoctorDocumentServices {
         "durationType": durationType,
         "completedDate": completedDate,
         "flag": "Insert",
-        "documentUrl": documentUrl
+        "documentUrl": await MultipartFile.fromFile(
+          documentUrl.path!,
+          filename: basename(documentUrl.path!),
+
+        ),
       };
+      print(data);
       FormData formData = FormData.fromMap(data);
-      final response = await dio.post('http://192.168.1.110:404/api/DoctorDocument/InsertDocument/documentUrl',
+      final response = await dio.post('${Api.addDocuments}',
       data: formData
       );
       if(response.statusCode == 200){

@@ -65,7 +65,7 @@ class _PatientFolderPageState extends ConsumerState<FolderPage> {
           icon: FaIcon(CupertinoIcons.chevron_back),color: Colors.blue,),
       actions: [
           IconButton(
-            onPressed: ()=>Get.to(()=>AddDocuments(),transition: Transition.rightToLeftWithFade,duration: Duration(milliseconds: 500))
+            onPressed: ()=>Get.to(()=>AddDocuments(existingFolder: widget.folderName,),transition: Transition.rightToLeftWithFade,duration: Duration(milliseconds: 500))
             , icon: FaIcon(Icons.add),color: Colors.blue,),
           IconButton(onPressed: ()=>Get.to(()=>SearchDocuments(),transition:Transition.rightToLeftWithFade)
             , icon: FaIcon(Icons.search),color: Colors.blue,),

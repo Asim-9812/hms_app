@@ -128,7 +128,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             child: ZoomIn(
               duration: const Duration(milliseconds: 700),
               child: CircleAvatar(
-                backgroundColor: ColorManager.primary.withOpacity(0.5),
+                backgroundColor: ColorManager.primaryOpacity80,
                 radius: 150.sp,
               ),
             ),
@@ -139,7 +139,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             child: ZoomIn(
               duration: const Duration(milliseconds: 500),
               child: CircleAvatar(
-                backgroundColor: ColorManager.primary.withOpacity(0.3),
+                backgroundColor: ColorManager.primary.withOpacity(0.5),
                 radius: 220.sp,
               ),
             ),

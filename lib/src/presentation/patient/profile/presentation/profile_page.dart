@@ -30,9 +30,7 @@ class ProfilePage extends StatelessWidget {
         backgroundColor: ColorManager.white,
         leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
         title: Text('Profile',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 24.sp:28),),
-        actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.edit_note_outlined,color: ColorManager.primary,size: 30,))
-        ],
+
 
       ),
       body: Column(
@@ -375,6 +373,15 @@ class ProfilePage extends StatelessWidget {
                     ],
                   )
                 ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child:  Padding(
+                padding:EdgeInsets.only(bottom: 20),
+                child: InkWell(
+                    onTap: (){},
+                    child: FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primary,)),
               ),
             ),
           ],

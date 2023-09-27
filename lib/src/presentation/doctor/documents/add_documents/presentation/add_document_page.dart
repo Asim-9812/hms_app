@@ -6,6 +6,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -24,19 +25,21 @@ import '../../domain/services/document_services.dart';
 
 
 
-class AddDocuments extends StatefulWidget {
-  const AddDocuments({super.key});
+class AddDocuments extends ConsumerStatefulWidget {
+  final String? existingFolder;
+  AddDocuments({this.existingFolder});
 
   @override
-  State<AddDocuments> createState() => _AddDocumentPageState();
+  ConsumerState<AddDocuments> createState() => _AddDocumentPageState();
 }
 
-class _AddDocumentPageState extends State<AddDocuments> {
+class _AddDocumentPageState extends ConsumerState<AddDocuments> {
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _dateController = TextEditingController();
   TextEditingController _durationController = TextEditingController();
   TextEditingController _folderNameController = TextEditingController();
+  TextEditingController? _descController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
 
@@ -44,16 +47,19 @@ class _AddDocumentPageState extends State<AddDocuments> {
 
 
 
+  bool isPosting = false;
   bool? _validateFile ;
   bool _newFolder = false;
   String selectedDocumentType ='Select a type';
-  String selectedFolder ='Select a folder';
+  late String selectedFolder;
   int selectedDocumentTypeId =0;
   List<DocumentTypeModel> docTypeList = [];
   List<DoctorFolderModel> folderList = [];
 
 
   DoctorFolderModel initialFolder = DoctorFolderModel(folderName: 'Select a folder');
+  final userBox = Hive.box<User>('session').values.toList();
+
 
 
   DocumentTypeModel initial = DocumentTypeModel(
@@ -73,12 +79,16 @@ class _AddDocumentPageState extends State<AddDocuments> {
   void initState(){
     super.initState();
     _getDocumentTypes();
+    _folderNameController.text =widget.existingFolder ?? '';
+    setState(() {
+      selectedFolder = widget.existingFolder ?? 'Select a folder';
+    });
 
   }
 
 
   void _getDocumentTypes() async {
-    final userBox = Hive.box<User>('session').values.toList();
+
     final docId = userBox[0].userID;
     final folders = await DoctorDocumentServices().getFolderList(docID: docId!);
     final typeList = await DoctorDocumentServices().getDocumentTypeList();
@@ -132,38 +142,110 @@ class _AddDocumentPageState extends State<AddDocuments> {
               h20,
               _createFile(),
               buildBrowseFile(),
+              h100
             ],
           ),
         ),
-        bottomNavigationBar: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: ColorManager.blueText,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 18.w),
+          child: Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorManager.blueText,
+                  ),
+                  onPressed: ()async {
+                    final scaffoldMessage = ScaffoldMessenger.of(context);
+                    if(formKey.currentState!.validate()){
+
+                      if(file == null){
+                        setState(() {
+                          _validateFile = true;
+                        });
+                        scaffoldMessage.showSnackBar(
+                            SnackbarUtil.showFailureSnackbar(
+                                message: 'Please select a file',
+                                duration: const Duration(milliseconds: 1200)
+                            )
+                        );
+                      }
+                      else{
+                        setState(() {
+                          isPosting = true;
+                        });
+                        final response = await DoctorDocumentServices().addDocument(
+                            documentID: 1,
+                            userID: userBox[0].userID!,
+                            documentTypeID: selectedDocumentTypeId,
+                            folderName: _folderNameController.text.trim(),
+                            doctorAttachmentID: 1,
+                            documentTitle: _nameController.text.trim(),
+                            documentDescription: _descController?.text.trim() ?? 'N/A',
+                            duration: int.parse(_durationController.text.trim()),
+                            durationType: dateTypeId.toString(),
+                            completedDate: _dateController.text.trim(),
+                            documentUrl: file!
+                        );
+                        if(response.isLeft()){
+                          final left = response.fold((l) => l, (r) => null);
+                          print(left);
+                          scaffoldMessage.showSnackBar(
+                              SnackbarUtil.showFailureSnackbar(
+                                  message: 'Something went wrong',
+                                  duration: const Duration(milliseconds: 1200)
+                              )
+                          );
+
+                        }
+                        else{
+                          scaffoldMessage.showSnackBar(
+                              SnackbarUtil.showSuccessSnackbar(
+                                  message: 'File uploaded!!!',
+                                  duration: const Duration(milliseconds: 1200)
+                              )
+                          );
+                          setState(() {
+                            isPosting = false;
+                          });
+                          ref.refresh(documentProvider(userBox[0].userID!));
+                          ref.refresh(folderProvider(userBox[0].userID!));
+                          Navigator.pop(context);
+                        }
+                      }
+
+
+
+
+                    }
+                    else{
+
+                      scaffoldMessage.showSnackBar(
+                          SnackbarUtil.showFailureSnackbar(
+                              message: 'Please fill required fields',
+                              duration: const Duration(milliseconds: 1200)
+                          )
+                      );
+                    }
+                  },
+                  child: Text('Save',style: getMediumStyle(color: ColorManager.white,fontSize: 20),),
+                ),
+              ),
+              w10,
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorManager.dotGrey,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Cancel',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
+                ),
+              ),
+            ],
           ),
-          onPressed: () {
-            final scaffoldMessage = ScaffoldMessenger.of(context);
-            if(formKey.currentState!.validate()){
-
-              scaffoldMessage.showSnackBar(
-                  SnackbarUtil.showSuccessSnackbar(
-                      message: 'Form valid',
-                      duration: const Duration(milliseconds: 1200)
-                  )
-              );
-
-            }
-            else{
-              setState(() {
-                _validateFile = true;
-              });
-              scaffoldMessage.showSnackBar(
-                  SnackbarUtil.showFailureSnackbar(
-                      message: 'Form not valid',
-                      duration: const Duration(milliseconds: 1200)
-                  )
-              );
-            }
-          },
-          child: Text('Save'),
         ),
       ),
     );
@@ -466,7 +548,7 @@ class _AddDocumentPageState extends State<AddDocuments> {
                       });
                     },
                     validator: (value){
-                      if(value == 'Select a folder' && _newFolder == false){
+                      if(value == 'Select a folder'  && _newFolder == false){
                         return 'Select a folder';
                       }
                       return null;
@@ -518,6 +600,9 @@ class _AddDocumentPageState extends State<AddDocuments> {
                   if (RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
                     return 'Invalid Name';
                   }
+                  if (folderList.any((folder) => folder.folderName.toLowerCase() == value.toLowerCase())) {
+                    return 'Folder name already exists';
+                  }
                   return null;
                 },
                 decoration: InputDecoration(
@@ -539,6 +624,7 @@ class _AddDocumentPageState extends State<AddDocuments> {
                     )
                 ),
               ),
+            h10,
 
           ],
         ),
@@ -593,6 +679,7 @@ class _AddDocumentPageState extends State<AddDocuments> {
                 if (result != null) {
                   setState(() {
                     file = result.files.first;
+                    _validateFile =false;
                   });
 
                 } else {
@@ -611,6 +698,7 @@ class _AddDocumentPageState extends State<AddDocuments> {
 
                   setState(() {
                     file = result.files.first;
+                    _validateFile =false;
                   });
                 } else {
                   // User canceled the picker
@@ -622,14 +710,28 @@ class _AddDocumentPageState extends State<AddDocuments> {
             child: Container(
               height: 150.h,
               width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 30.w),
 
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  if(file != null)
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: InkWell(
+                        onTap: (){
+                          setState(() {
+                            file = null;
+                          });
+                        },
+                        child: FaIcon(Icons.cancel_outlined,color: ColorManager.blueText,)),
+                  ),
                   FaIcon(CupertinoIcons.arrow_down_doc,color: ColorManager.blueText,size: 40,),
                   h10,
-                  Text(file == null ? 'Browse for files':'${file!.path}',style: getMediumStyle(color: ColorManager.blueText,fontSize: 18),),
+                  Container(
+                      width: file == null ? double.infinity : 300,
+                      child: Center(child: Text(file == null ? 'Browse for files':'${file!.path}',style: getMediumStyle(color: ColorManager.blueText,fontSize: 16),overflow: TextOverflow.clip ,maxLines: 2,))),
 
                 ],
               ),
@@ -641,7 +743,37 @@ class _AddDocumentPageState extends State<AddDocuments> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.w),
             child: Text('File is required',style: TextStyle(color: ColorManager.red.withOpacity(0.7)),),
-          )
+          ),
+        if(_validateFile == true)
+          h10,
+        if(file != null)
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 18.w),
+            child: TextFormField(
+              controller: _descController,
+              maxLines: null,
+
+              decoration: InputDecoration(
+
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                          color: ColorManager.blueText
+                      )
+                  ),
+                  floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                  labelText: 'Add a description (Optional)',
+                  labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                          color: ColorManager.blueText
+                      )
+                  )
+              ),
+            ),
+          ),
+
       ],
     );
   }
