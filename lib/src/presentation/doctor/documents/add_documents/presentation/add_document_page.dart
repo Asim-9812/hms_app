@@ -39,7 +39,7 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
   TextEditingController _dateController = TextEditingController();
   TextEditingController _durationController = TextEditingController();
   TextEditingController _folderNameController = TextEditingController();
-  TextEditingController? _descController = TextEditingController();
+  TextEditingController _descController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
 
@@ -183,7 +183,7 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
                             folderName: _folderNameController.text.trim(),
                             doctorAttachmentID: 1,
                             documentTitle: _nameController.text.trim(),
-                            documentDescription: _descController!.text.isNotEmpty ? _descController!.text.trim() :'N/A',
+                            documentDescription:_descController.text.trim() ,
                             duration: int.parse(_durationController.text.trim()),
                             durationType: dateTypeId.toString(),
                             completedDate: _dateController.text.trim(),
@@ -230,7 +230,7 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
                       );
                     }
                   },
-                  child: Text('Save',style: getMediumStyle(color: ColorManager.white,fontSize: 20),),
+                  child: Text('Save',style: getRegularStyle(color: ColorManager.white,fontSize: 20),),
                 ),
               ),
               w10,
@@ -242,7 +242,7 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
+                  child: Text('Cancel',style: getRegularStyle(color: ColorManager.black,fontSize: 20),),
                 ),
               ),
             ],
@@ -326,9 +326,9 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
                           color: ColorManager.blueText
                       )
                   ),
-                  floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                  floatingLabelStyle: getRegularStyle(color: ColorManager.blueText),
                   labelText: 'File name',
-                  labelStyle: getRegularStyle(color: ColorManager.black),
+                  labelStyle: getRegularStyle(color: ColorManager.blueText),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide(
@@ -395,8 +395,9 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
               ],
               controller: _dateController,
               decoration: InputDecoration(
+                floatingLabelStyle: getRegularStyle(color: ColorManager.blueText),
                 labelText: 'Completed date',
-                labelStyle: TextStyle(color: ColorManager.black),
+                labelStyle: TextStyle(color: ColorManager.blueText),
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(
@@ -443,7 +444,7 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
                       return null;
                     },
                     decoration: InputDecoration(
-                      floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                      floatingLabelStyle: getRegularStyle(color: ColorManager.blueText),
                       labelText: 'Duration',
                       labelStyle: getRegularStyle(color: ColorManager.black),
                       enabledBorder:OutlineInputBorder(
@@ -588,7 +589,7 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
               ],
             ),
             h10,
-            if(_newFolder)
+              if(_newFolder == true)
               TextFormField(
                 controller: _folderNameController,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -606,15 +607,16 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
                 },
                 decoration: InputDecoration(
 
+
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide(
                             color: ColorManager.blueText
                         )
                     ),
-                    floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                    floatingLabelStyle: getRegularStyle(color: ColorManager.blueText),
                     labelText: 'Folder name',
-                    labelStyle: getRegularStyle(color: ColorManager.black),
+                    labelStyle: getRegularStyle(color: ColorManager.blueText),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide(
@@ -737,7 +739,7 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
             ),
           ),
         ),
-        h10,
+        h20,
         if(_validateFile == true)
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.w),
@@ -745,7 +747,7 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
           ),
         if(_validateFile == true)
           h10,
-        if(file != null)
+
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.w),
             child: TextFormField(
@@ -760,8 +762,8 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
                           color: ColorManager.blueText
                       )
                   ),
-                  floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                  labelText: 'Add a description (Optional)',
+                  floatingLabelStyle: getRegularStyle(color: ColorManager.blueText),
+                  labelText: 'Add a description',
                   labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
