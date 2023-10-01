@@ -86,18 +86,6 @@ class Prescriptions extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
                 child: Row(
                   children: [
-                    FaIcon(CupertinoIcons.person,),
-                    w20,
-                    Text('Your Medicines',style: getRegularStyle(color: ColorManager.black,fontSize: 20),)
-                  ],
-                ),
-              ),
-              h10,
-              Container(
-                color: ColorManager.dotGrey.withOpacity(0.3),
-                padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-                child: Row(
-                  children: [
                     FaIcon(Icons.history,),
                     w20,
                     Text('Medication History',style: getRegularStyle(color: ColorManager.black,fontSize: 20),)

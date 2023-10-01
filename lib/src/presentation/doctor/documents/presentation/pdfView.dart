@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 
@@ -47,11 +48,14 @@ class PDFViewerPageState extends State<PDFViewerPage> {
       appBar: AppBar(
         backgroundColor: ColorManager.black,
         elevation: 0,
-        automaticallyImplyLeading: true,
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
         title: Text(widget.title,style: getMediumStyle(color: ColorManager.white),),
+        leading: IconButton(
+          onPressed: ()=>Get.back(),
+          icon: Icon(Icons.chevron_left,color: ColorManager.white,),
+        ),
         actions: pages >= 2
             ? [
           Center(child: Text(text, style: const TextStyle(color: Colors.white),)),

@@ -1,6 +1,8 @@
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -14,21 +16,42 @@ import 'package:medical_app/src/presentation/settings/settings_global.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
+import '../../../../core/resources/style_manager.dart';
+import '../../../../core/resources/value_manager.dart';
+import '../../../../data/provider/common_provider.dart';
+import '../../../../dummy_datas/dummy_datas.dart';
+import '../../../notices/presentation/notices.dart';
 
 
 
-class OrgMainPage extends StatefulWidget {
+
+class OrgMainPage extends ConsumerStatefulWidget {
   const OrgMainPage({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<OrgMainPage> createState() => _AnimatedBarExampleState();
+  ConsumerState<OrgMainPage> createState() => _AnimatedBarExampleState();
 }
 
-class _AnimatedBarExampleState extends State<OrgMainPage> {
+class _AnimatedBarExampleState extends ConsumerState<OrgMainPage> {
   dynamic selected;
   PageController controller = PageController();
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final check = ref.watch(itemProvider).noticeChange;
+    if(check == true){
+      // Schedule the _showAlertDialog method to be called after the build is complete.
+      Future.delayed(Duration.zero, () {
+        showAlertDialog(context);
+      });
+    }
+
+  }
+
 
 
   @override

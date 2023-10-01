@@ -38,7 +38,7 @@ centerTitle:true,
                 )
               ),
               title: Text(healthTipsList[index].type!,style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
-              subtitle: Text(healthTipsList[index].type!,style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+              subtitle: Text(healthTipsList[index].description!,style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
               
             ),
           );

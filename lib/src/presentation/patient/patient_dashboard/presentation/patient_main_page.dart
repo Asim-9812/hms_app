@@ -1,11 +1,19 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
+import 'package:medical_app/src/core/resources/style_manager.dart';
+import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
+import '../../../../core/resources/value_manager.dart';
+import '../../../../data/provider/common_provider.dart';
+import '../../../../test.dart';
+import '../../../notices/presentation/notices.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../../settings/settings_global.dart';
 import 'patient_home_page.dart';
@@ -14,18 +22,36 @@ import '../../utilities/presentation/patient_utilities.dart';
 
 
 
-class PatientMainPage extends StatefulWidget {
+class PatientMainPage extends ConsumerStatefulWidget {
   const PatientMainPage({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<PatientMainPage> createState() => _AnimatedBarExampleState();
+  ConsumerState<PatientMainPage> createState() => _AnimatedBarExampleState();
 }
 
-class _AnimatedBarExampleState extends State<PatientMainPage> {
+class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
   dynamic selected;
+
   PageController controller = PageController();
+
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final check = ref.watch(itemProvider).noticeChange;
+    if(check == true){
+      // Schedule the _showAlertDialog method to be called after the build is complete.
+      Future.delayed(Duration.zero, () {
+        showAlertDialog(context);
+      });
+    }
+
+  }
+
+
 
 
   @override
@@ -103,7 +129,7 @@ class _AnimatedBarExampleState extends State<PatientMainPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>Get.to(()=>QRViewExample()),
+        onPressed: () =>Get.to(()=>TestPage()),
         backgroundColor: ColorManager.primaryOpacity80,
         child: FaIcon(Icons.qr_code_2_outlined,size: isWideScreen?40: 40.sp,)
       ),

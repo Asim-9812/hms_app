@@ -1,7 +1,9 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -12,7 +14,12 @@ import 'package:medical_app/src/presentation/patient_registration/presentation/p
 
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
+import '../../../../core/resources/style_manager.dart';
+import '../../../../core/resources/value_manager.dart';
+import '../../../../data/provider/common_provider.dart';
+import '../../../../dummy_datas/dummy_datas.dart';
 import '../../../common/snackbar.dart';
+import '../../../notices/presentation/notices.dart';
 import '../../../settings/settings_global.dart';
 import '../../documents/presentation/document_page.dart';
 import '../../patient_reports/presentation/report_page_doctor.dart';
@@ -20,39 +27,55 @@ import '../../patient_reports/presentation/report_page_doctor.dart';
 
 
 
-class DoctorMainPage extends StatefulWidget {
+class DoctorMainPage extends ConsumerStatefulWidget {
    DoctorMainPage({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<DoctorMainPage> createState() => _AnimatedBarExampleState();
+  ConsumerState<DoctorMainPage> createState() => _AnimatedBarExampleState();
 }
 
-class _AnimatedBarExampleState extends State<DoctorMainPage> with SingleTickerProviderStateMixin {
+class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with SingleTickerProviderStateMixin {
   dynamic selected;
   PageController controller = PageController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  late Animation<double> _animation;
-  late AnimationController _animationController;
-  bool set = false;
+  // late Animation<double> _animation;
+  // late AnimationController _animationController;
+  // bool set = false;
+
+  // @override
+  // void initState(){
+  //
+  //   _animationController = AnimationController(
+  //     vsync: this,
+  //     duration: Duration(milliseconds: 260),
+  //   );
+  //
+  //   final curvedAnimation = CurvedAnimation(curve: Curves.easeInOut, parent: _animationController);
+  //   _animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
+  //
+  //
+  //   super.initState();
+  //
+  //
+  // }
+  //
+
 
   @override
-  void initState(){
-
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 260),
-    );
-
-    final curvedAnimation = CurvedAnimation(curve: Curves.easeInOut, parent: _animationController);
-    _animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
-
-
-    super.initState();
-
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final check = ref.watch(itemProvider).noticeChange;
+    if(check == true){
+      // Schedule the _showAlertDialog method to be called after the build is complete.
+      Future.delayed(Duration.zero, () {
+        showAlertDialog(context);
+      });
+    }
 
   }
+
 
 
   @override

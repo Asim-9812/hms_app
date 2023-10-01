@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:medical_app/src/data/provider/common_provider.dart';
 import 'package:medical_app/src/presentation/patient/health_tips/data/tagList_provider.dart';
 import 'package:medical_app/src/presentation/patient/health_tips/presentation/health_tips_list.dart';
 import 'package:medical_app/src/presentation/patient/personal_services/lab_reports/lab_reports.dart';
@@ -55,11 +56,21 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
 
 
 
+
   @override
   void initState() {
     super.initState();
+
     checkGeolocationStatus();
+
+
+
   }
+
+
+
+
+
 
   /// health tags...
 
@@ -144,6 +155,8 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
 
     }
   }
+
+
 
 
   @override
@@ -554,7 +567,6 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
               }, icon: FaIcon(Icons.add,color: ColorManager.black,))
             ],
           ),
-          h10,
           HealthTipsList(),
 
         ],

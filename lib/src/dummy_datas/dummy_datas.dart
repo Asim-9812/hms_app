@@ -1,5 +1,36 @@
 
 
+List<Map<String, dynamic>> notices = [
+  {
+    "date": "2023-09-29",
+    "title": "Important Meeting Announcement",
+    "description": "There will be a mandatory meeting on October 5th, 2023, at 10:00 AM in the conference room."
+  },
+  {
+    "date": "2023-09-28",
+    "title": "Holiday Office Closure",
+    "description": "Please note that our office will be closed on October 1st, 2023, in observance of a public holiday."
+  },
+  {
+    "date": "2023-09-27",
+    "title": "Upcoming Training Session",
+    "description": "We are excited to announce an upcoming training session on project management scheduled for October 12th, 2023."
+  },
+  {
+    "date": "2023-09-25",
+    "title": "Employee Recognition Award",
+    "description": "Congratulations to John Smith for receiving the Employee of the Month award for his outstanding contributions to the team."
+  },
+  {
+    "date": "2023-09-24",
+    "title": "System Maintenance Notice",
+    "description": "Our online systems will undergo scheduled maintenance on October 8th, 2023, from 2:00 AM to 5:00 AM. During this time, access may be limited."
+  }
+];
+
+
+
+
 
 List<Map<String, dynamic>> doctorInfo = [
   {

@@ -23,6 +23,9 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
   final CarouselController _carouselController = CarouselController();
   int _currentSlide = 0; // Store the current slide index
 
+  final List<String> imageList = ['assets/images/containers/Tip-Container-3.png','assets/images/containers/Tip-Container.png', 'assets/images/containers/Tip-Container 2.png', ];
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -48,6 +51,7 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
                 enableInfiniteScroll: true,
                 autoPlayAnimationDuration: Duration(milliseconds: 500),
                 viewportFraction: 1,
+                autoPlayInterval:Duration(seconds: 5) ,
                 onPageChanged: (index, reason) {
                   // Update the current slide index when the page changes
                   setState(() {
@@ -56,23 +60,40 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
                 },
               ),
               items: updatedList.take(5).map((tips) {
+                int index = updatedList.indexOf(tips) % imageList.length;
+
                 return Container(
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
                   decoration: BoxDecoration(
-                    color: ColorManager.dotGrey.withOpacity(0.2),
+                    image: DecorationImage(image: AssetImage(imageList[index]),fit: BoxFit.cover),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text('${tips.type}', style: getMediumStyle(color: Colors.black, fontSize: 20)),
-                      h10,
-                      Text(
-                        tips.description ?? '',
-                        style: getRegularStyle(color: Colors.black, fontSize: 18,),maxLines: 1,
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('${tips.type}', style: getMediumStyle(color: ColorManager.white, fontSize: 20)),
+                          h10,
+                          Text(
+                            tips.description ?? '',
+                            style: getRegularStyle(color: ColorManager.white, fontSize: 18,),maxLines: 1,
+                          ),
+
+                        ],
                       ),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: ColorManager.white.withOpacity(0.7),
+                              elevation: 0
+                          ),
+                          onPressed: ()=>Get.to(()=>HealthTips(healthTipsList: data,)),
+                          child: Text('See More',style: getRegularStyle(color: ColorManager.black,fontSize: 14),)
+                      )
                     ],
                   ),
                 );
