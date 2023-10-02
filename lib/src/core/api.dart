@@ -55,8 +55,6 @@ class Api{
    static const getDoctorDepartment = '$baseUrl/api/DoctorDepartment/GetDepartment';
    static const getDoctorList = '$baseUrl/api/DoctorRegistration/Getlist';
 
-   /// Health tips...
-   static const getHealthTipsList = '$baseUrl/api/HealthTips/GetList';
 
    /// Doctor Documents...
    static const getDocumentType = '$baseUrl/api/DocumentType/GetList';
@@ -64,6 +62,10 @@ class Api{
    static const getDocuments = '$baseUrl/api/DoctorDocument/GetDocuList/';
    static const addDocuments = '$baseUrl/api/DoctorDocument/InsertDocument';
    static const delDocuments = '$baseUrl/api/DoctorDocument/DeleteDocument/';
+
+   /// Notices & health tips...
+   static const getNoticeList = '$baseUrl/api/Notice/GetList';
+   static const getHealthTipsList = '$baseUrl/api/HealthTips/GetList';
 
 }
 

@@ -39,18 +39,18 @@ class _AnimatedBarExampleState extends ConsumerState<OrgMainPage> {
   PageController controller = PageController();
 
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final check = ref.watch(itemProvider).noticeChange;
-    if(check == true){
-      // Schedule the _showAlertDialog method to be called after the build is complete.
-      Future.delayed(Duration.zero, () {
-        showAlertDialog(context);
-      });
-    }
-
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   final check = ref.watch(itemProvider).noticeChange;
+  //   if(check == true){
+  //     // Schedule the _showAlertDialog method to be called after the build is complete.
+  //     Future.delayed(Duration.zero, () {
+  //       showAlertDialog(context);
+  //     });
+  //   }
+  //
+  // }
 
 
 
@@ -127,6 +127,11 @@ class _AnimatedBarExampleState extends ConsumerState<OrgMainPage> {
         },
       ),
       body: PageView(
+        onPageChanged: (value){
+          setState(() {
+            selected = value;
+          });
+        },
         physics: NeverScrollableScrollPhysics(),
         controller: controller,
         children: [

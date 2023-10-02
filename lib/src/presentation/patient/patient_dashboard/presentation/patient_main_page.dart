@@ -16,9 +16,9 @@ import '../../../../test.dart';
 import '../../../notices/presentation/notices.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../../settings/settings_global.dart';
+import '../../utilities/presentation/patient_utilities_test.dart';
 import 'patient_home_page.dart';
 import '../../scan/presentation/qr_scan.dart';
-import '../../utilities/presentation/patient_utilities.dart';
 
 
 
@@ -38,18 +38,6 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
 
 
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final check = ref.watch(itemProvider).noticeChange;
-    if(check == true){
-      // Schedule the _showAlertDialog method to be called after the build is complete.
-      Future.delayed(Duration.zero, () {
-        showAlertDialog(context);
-      });
-    }
-
-  }
 
 
 
@@ -135,10 +123,15 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: PageView(
+        onPageChanged: (value){
+          setState(() {
+            selected = value;
+          });
+        },
         controller: controller,
         children: [
           PatientHomePage(isWideScreen,isNarrowScreen),
-          PatientUtilitiesPage(isWideScreen,isNarrowScreen),
+          PatientUtilities(isWideScreen,isNarrowScreen),
           NotificationPage(),
           Settings(isWideScreen,isNarrowScreen)
         ],

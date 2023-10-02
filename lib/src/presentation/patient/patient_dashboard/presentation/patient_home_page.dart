@@ -23,12 +23,13 @@ import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../../login/domain/model/user.dart';
+import '../../../notices/presentation/notices.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../../patient_registration/presentation/patient_registration.dart';
 import '../../health_tips/domain/model/health_tips_dummy_tags.dart';
 import '../../health_tips/domain/model/health_tips_model.dart';
 import '../../health_tips/domain/services/health_tips_services.dart';
-import '../../health_tips/presentation/health_tips.dart';
+
 import '../../personal_services/bloodpressure/bp.dart';
 import '../../personal_services/ct_scan/ct_scan.dart';
 import '../../personal_services/discharge_summary/discharge_summary.dart';
@@ -52,6 +53,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
   bool? _geolocationStatus;
   LocationPermission? _locationPermission;
   Position? _userPosition;
+  bool check = false;
 
 
 
@@ -62,12 +64,28 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
     super.initState();
 
     checkGeolocationStatus();
+    // _checkDialog();
 
 
 
   }
 
-
+  //
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   final bool = ref.watch(itemProvider).noticeChange;
+  //   print(bool);
+  //   if(ref.watch(itemProvider).noticeChange){
+  //     // Schedule the _showAlertDialog method to be called after the build is complete.
+  //     Future.delayed(Duration.zero, () {
+  //       showAlertDialog(context);
+  //     });
+  //   }
+  //
+  // }
+  //
+  //
 
 
 
@@ -157,6 +175,14 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
   }
 
 
+  // void _checkDialog(){
+  //   final bool = ref.watch(itemProvider).noticeChange;
+  //   if(bool){
+  //     showAlertDialog(context);
+  //   }
+  // }
+
+
 
 
   @override
@@ -203,23 +229,29 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
 
 
 
-    return FadeIn(
-      duration: Duration(milliseconds: 700),
-      child: Scaffold(
-        key: scaffoldKey,
-        body: CustomScrollView(
-          physics: BouncingScrollPhysics(),
-          slivers: [
-            SliverPersistentHeader(
-              delegate: CustomSliverAppBarDelegate(widget.isWideScreen,widget.isNarrowScreen,expandedHeight:getExpandedHeight(MediaQuery.of(context).size), scaffoldKey: scaffoldKey),
-              pinned: true,
-            ),
-            buildBody(context)
-          ],
+
+
+      return FadeIn(
+        duration: Duration(milliseconds: 700),
+        child: Scaffold(
+          key: scaffoldKey,
+          body: CustomScrollView(
+            physics: BouncingScrollPhysics(),
+            slivers: [
+              SliverPersistentHeader(
+                delegate: CustomSliverAppBarDelegate(widget.isWideScreen,widget.isNarrowScreen,expandedHeight:getExpandedHeight(MediaQuery.of(context).size), scaffoldKey: scaffoldKey),
+                pinned: true,
+              ),
+              buildBody(context)
+            ],
+          ),
+          extendBody: true,
         ),
-        extendBody: true,
-      ),
-    );
+      );
+
+
+
+
   }
 
   Widget buildBody(BuildContext context){

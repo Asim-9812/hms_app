@@ -40,41 +40,20 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
   dynamic selected;
   PageController controller = PageController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  // late Animation<double> _animation;
-  // late AnimationController _animationController;
-  // bool set = false;
 
+  //
   // @override
-  // void initState(){
-  //
-  //   _animationController = AnimationController(
-  //     vsync: this,
-  //     duration: Duration(milliseconds: 260),
-  //   );
-  //
-  //   final curvedAnimation = CurvedAnimation(curve: Curves.easeInOut, parent: _animationController);
-  //   _animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
-  //
-  //
-  //   super.initState();
-  //
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   final check = ref.watch(itemProvider).noticeChange;
+  //   if(check == true){
+  //     // Schedule the _showAlertDialog method to be called after the build is complete.
+  //     Future.delayed(Duration.zero, () {
+  //       showAlertDialog(context);
+  //     });
+  //   }
   //
   // }
-  //
-
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final check = ref.watch(itemProvider).noticeChange;
-    if(check == true){
-      // Schedule the _showAlertDialog method to be called after the build is complete.
-      Future.delayed(Duration.zero, () {
-        showAlertDialog(context);
-      });
-    }
-
-  }
 
 
 

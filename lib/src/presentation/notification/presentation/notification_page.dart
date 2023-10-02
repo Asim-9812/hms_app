@@ -3,26 +3,30 @@
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
+import 'package:medical_app/src/presentation/notices/domain/services/notice_services.dart';
 import '../../../core/resources/value_manager.dart';
 import 'notfication_general.dart';
 import 'notification_personal.dart';
 
-class NotificationPage extends StatefulWidget {
+class NotificationPage extends ConsumerStatefulWidget {
   const NotificationPage({super.key});
 
   @override
-  State<NotificationPage> createState() => _NotificationPageState();
+  ConsumerState<NotificationPage> createState() => _NotificationPageState();
 }
 
-class _NotificationPageState extends State<NotificationPage> with TickerProviderStateMixin{
+class _NotificationPageState extends ConsumerState<NotificationPage> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
+    final noticeList = ref.watch(getNoticeList);
     TabController _tabController = TabController(length: 2, vsync: this);
     return FadeIn(
       child: Scaffold(
@@ -84,16 +88,40 @@ class _NotificationPageState extends State<NotificationPage> with TickerProvider
               h20,
               Container(
                 height: MediaQuery.of(context).size.height*3.9/5,
-                child: TabBarView(
-                  // physics: NeverScrollableScrollPhysics(),
+                child: noticeList.when(
+                    data: (data){
+                      return TabBarView(
+                        // physics: NeverScrollableScrollPhysics(),
 
-                  controller: _tabController,
-                  children: [
-                    General(notificationList: notificationData.where((element) => element['type']=='general').toList()),
-                    Personal(notificationList: notificationData.where((element) => element['type']=='personal').toList()),
-                  ],
-                  //MyClass(id: class_id, school_id: school_id, class_teacher: class_teacher, teacher_subject: teacher_subject, classSub_id: classSub_id,)
-                ),
+                        controller: _tabController,
+                        children: [
+                          General(notificationList: data.where((element) => element.noticeType==1).toList()),
+                          Personal(notificationList: data.where((element) => element.noticeType==2).toList()),
+                        ],
+
+                      );
+                    },
+                    error: (error,stack)=>TabBarView(
+                      // physics: NeverScrollableScrollPhysics(),
+
+                      controller: _tabController,
+                      children: [
+                        Text('$error'),
+                        Text('$error')
+                      ],
+
+                    ),
+                    loading: ()=>TabBarView(
+                      // physics: NeverScrollableScrollPhysics(),
+
+                      controller: _tabController,
+                      children: [
+                        Center(child: SpinKitDualRing(color: ColorManager.blueText)),
+                        Center(child: SpinKitDualRing(color: ColorManager.blueText)),
+                      ],
+
+                    ),
+                )
               ),
             ],
           ),
