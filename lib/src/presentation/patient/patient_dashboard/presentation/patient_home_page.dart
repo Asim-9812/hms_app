@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import 'package:medical_app/src/data/provider/common_provider.dart';
 import 'package:medical_app/src/presentation/patient/health_tips/data/tagList_provider.dart';
 import 'package:medical_app/src/presentation/patient/health_tips/presentation/health_tips_list.dart';
@@ -42,7 +43,8 @@ import '../../search-near-by/presentation/search_for_page.dart';
 class PatientHomePage extends ConsumerStatefulWidget {
   final bool isWideScreen;
   final bool isNarrowScreen;
-  PatientHomePage(this.isWideScreen,this.isNarrowScreen);
+  final bool noticeBool;
+  PatientHomePage(this.isWideScreen,this.isNarrowScreen,this.noticeBool);
 
   @override
   ConsumerState<PatientHomePage> createState() => _PatientHomePageState();
@@ -53,7 +55,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
   bool? _geolocationStatus;
   LocationPermission? _locationPermission;
   Position? _userPosition;
-  bool check = false;
+  late bool check;
 
 
 
@@ -64,28 +66,29 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
     super.initState();
 
     checkGeolocationStatus();
-    // _checkDialog();
+
+
+
 
 
 
   }
 
-  //
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   final bool = ref.watch(itemProvider).noticeChange;
-  //   print(bool);
-  //   if(ref.watch(itemProvider).noticeChange){
-  //     // Schedule the _showAlertDialog method to be called after the build is complete.
-  //     Future.delayed(Duration.zero, () {
-  //       showAlertDialog(context);
-  //     });
-  //   }
-  //
-  // }
-  //
-  //
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if(widget.noticeBool){
+      // Schedule the _showAlertDialog method to be called after the build is complete.
+      Future.delayed(Duration.zero, () {
+        showAlertDialog(context);
+      });
+    }
+
+  }
+
+
 
 
 
@@ -175,19 +178,20 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
   }
 
 
-  // void _checkDialog(){
-  //   final bool = ref.watch(itemProvider).noticeChange;
-  //   if(bool){
-  //     showAlertDialog(context);
-  //   }
-  // }
+
+
+
+
 
 
 
 
   @override
   Widget build(BuildContext context) {
+
+
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
 
 
     double getExpandedHeight(Size screenSize) {
@@ -667,7 +671,11 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
           children: [
             InkWell(
                 onTap: ()=>Get.to(()=>SearchNearByPage(isNarrowScreen,isWideScreen),transition: Transition.fadeIn),
-                child: Icon(Icons.search,color: ColorManager.black,size: 20,)),
+                child: Icon(Icons.search,color: ColorManager.primaryDark)),
+            w20,
+            InkWell(
+                onTap: ()=>Get.to(()=>NotificationPage()),
+                child: Icon(Icons.notifications,color: ColorManager.primaryDark,))
           ],
         ),
       ),
@@ -702,13 +710,21 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                     child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
                   ),
                 ),
-                title: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    h20,
-                    Text('Good Morning,',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isWideScreen? 16:16.sp),),
-                    Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: isWideScreen?24:28.sp),),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        h20,
+                        Text('Good Morning,',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isWideScreen? 16:16.sp),),
+                        Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: isWideScreen?24:28.sp),),
+                      ],
+                    ),
+                    InkWell(
+                        onTap: ()=>Get.to(()=>NotificationPage()),
+                        child: Icon(Icons.notifications,color: ColorManager.primaryDark,))
                   ],
                 ),
 

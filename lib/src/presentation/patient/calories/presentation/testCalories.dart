@@ -113,14 +113,45 @@ class _UserProfileFormState extends State<UserProfileForm> {
                   );
 
                   // Save the UserProfileModel to Hive
-                  final box = Hive.box<UserProfileModel>('user_profile');
-                  box.put('user_profile', userProfile);
+                  // final box = Hive.box<UserProfileModel>('user_profile');
+                  // box.add(userProfile);
+                  if(Hive.box<UserProfileModel>('user_profile').isEmpty){
+                    Hive.box<UserProfileModel>('user_profile').add(userProfile);
+
+                  }else{
+                    Hive.box<UserProfileModel>('user_profile').putAt(0, userProfile);
+
+                  }
 
                   // Optionally, navigate to another screen or perform other actions
                 }
               },
               child: Text('Save'),
             ),
+            ElevatedButton(
+              onPressed: () async {
+                // Retrieve the UserProfileModel from Hive
+                final box = Hive.box<UserProfileModel>('user_profile').values.toList();
+                print(box);
+                final savedUserProfile = box.last;
+
+                if (savedUserProfile != null) {
+                  // Print the retrieved UserProfileModel
+                  print(savedUserProfile);
+
+                  // Optionally, you can access individual properties of the UserProfileModel
+                  print('User ID: ${savedUserProfile.userId}');
+                  print('Username: ${savedUserProfile.username}');
+                  // Print other properties as needed
+
+                  // You can also use the retrieved data for further processing or display
+                } else {
+                  print('No UserProfileModel found in the Hive box.');
+                }
+              },
+              child: Text('Print'),
+            ),
+
           ],
         ),
       ),

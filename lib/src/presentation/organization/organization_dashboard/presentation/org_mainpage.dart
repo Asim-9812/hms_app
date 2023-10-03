@@ -62,6 +62,7 @@ class _AnimatedBarExampleState extends ConsumerState<OrgMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final noticeBool = ref.watch(itemProvider).noticeChange;
 
     // Get the screen size
     final screenSize = MediaQuery.of(context).size;
@@ -135,7 +136,7 @@ class _AnimatedBarExampleState extends ConsumerState<OrgMainPage> {
         physics: NeverScrollableScrollPhysics(),
         controller: controller,
         children: [
-          OrgHomePage(isWideScreen,isNarrowScreen),
+          OrgHomePage(isWideScreen,isNarrowScreen,noticeBool),
           OrgPatientReports(),
           DoctorReportsPage(isWideScreen, isNarrowScreen),
           Settings(isWideScreen,isNarrowScreen),

@@ -16,9 +16,9 @@ import '../../../core/resources/value_manager.dart';
 import '../../../data/provider/common_provider.dart';
 import '../../../dummy_datas/dummy_datas.dart';
 
-void showAlertDialog(BuildContext context) {
-  List noticeList = notices;
-  showDialog(
+void showAlertDialog(BuildContext context) async {
+
+  await showDialog(
 
     context: context,
     builder: (BuildContext context) {
@@ -99,7 +99,7 @@ void showAlertDialog(BuildContext context) {
                       child: Text('OK'),
                       onPressed: () {
                         ref.read(itemProvider.notifier).updateNotice(false);
-                        Navigator.of(context).pop();// Close the dialog
+                        Navigator.pop(context);// Close the dialog
                         print(ref.watch(itemProvider).noticeChange);
                       },
                     ),

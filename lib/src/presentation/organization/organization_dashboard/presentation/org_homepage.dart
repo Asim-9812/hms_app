@@ -25,6 +25,7 @@ import '../../../../core/resources/value_manager.dart';
 import '../../../../dummy_datas/dummy_datas.dart';
 
 import '../../../login/domain/model/user.dart';
+import '../../../notices/presentation/notices.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../charts_graphs/doctor_charts.dart';
 import '../../charts_graphs/financial_charts.dart';
@@ -32,7 +33,8 @@ import '../../charts_graphs/financial_charts.dart';
 class OrgHomePage extends StatefulWidget {
   final bool isWideScreen;
   final bool isNarrowScreen;
-  OrgHomePage(this.isWideScreen,this.isNarrowScreen);
+  final bool noticeBool;
+  OrgHomePage(this.isWideScreen,this.isNarrowScreen,this.noticeBool);
 
   @override
   State<OrgHomePage> createState() => _OrgHomePageState();
@@ -58,6 +60,22 @@ class _OrgHomePageState extends State<OrgHomePage> {
     _getDoctorsList();
 
   }
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if(widget.noticeBool){
+      // Schedule the _showAlertDialog method to be called after the build is complete.
+      Future.delayed(Duration.zero, () {
+        showAlertDialog(context);
+      });
+    }
+
+  }
+
+
 
 
 

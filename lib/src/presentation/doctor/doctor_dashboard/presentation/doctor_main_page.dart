@@ -65,6 +65,7 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
 
   @override
   Widget build(BuildContext context) {
+    final noticeBool = ref.watch(itemProvider).noticeChange;
     // Get the screen size
     final screenSize = MediaQuery.of(context).size;
 
@@ -180,7 +181,7 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
           },
           controller: controller,
           children: [
-            DoctorHomePage(isWideScreen,isNarrowScreen),
+            DoctorHomePage(isWideScreen,isNarrowScreen,noticeBool),
             DocumentPage(isWideScreen,isNarrowScreen),
             PatientReportPageDoctor(),
             DoctorUtilityPage(),

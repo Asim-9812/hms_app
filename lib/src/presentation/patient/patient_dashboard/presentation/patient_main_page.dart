@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
+import 'package:medical_app/src/presentation/patient/reminders/presentation/reminders.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import '../../../../core/resources/value_manager.dart';
@@ -16,6 +17,7 @@ import '../../../../test.dart';
 import '../../../notices/presentation/notices.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../../settings/settings_global.dart';
+import '../../reminders/presentation/testReminder.dart';
 import '../../utilities/presentation/patient_utilities_test.dart';
 import 'patient_home_page.dart';
 import '../../scan/presentation/qr_scan.dart';
@@ -50,6 +52,7 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final noticeBool = ref.watch(itemProvider).noticeChange;
     // Get the screen size
     final screenSize = MediaQuery.of(context).size;
 
@@ -82,20 +85,20 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
             title:  Text('Home'),
           ),
           BottomBarItem(
+            icon:  FaIcon(Icons.calendar_month,size: isWideScreen?24:24.sp,),
+            // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
+            selectedColor: ColorManager.primary,
+            // unSelectedColor: Colors.purple,
+            // backgroundColor: Colors.orange,
+            title:  Text('Reminder'),
+          ),
+          BottomBarItem(
             icon:  FaIcon(Icons.grid_view_outlined,size: isWideScreen?24:24.sp,),
             // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
             selectedColor: ColorManager.primary,
             // unSelectedColor: Colors.purple,
             // backgroundColor: Colors.orange,
             title:  Text('Utilities'),
-          ),
-          BottomBarItem(
-            icon:  FaIcon(Icons.notifications,size: isWideScreen?24:24.sp,),
-            // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
-            selectedColor: ColorManager.primary,
-            // unSelectedColor: Colors.purple,
-            // backgroundColor: Colors.orange,
-            title:  Text('Notifications'),
           ),
           BottomBarItem(
             icon:  FaIcon(Icons.menu,size: isWideScreen?24:24.sp,),
@@ -130,9 +133,9 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
         },
         controller: controller,
         children: [
-          PatientHomePage(isWideScreen,isNarrowScreen),
+          PatientHomePage(isWideScreen,isNarrowScreen,noticeBool),
+          CreateReminder(),
           PatientUtilities(isWideScreen,isNarrowScreen),
-          NotificationPage(),
           Settings(isWideScreen,isNarrowScreen)
         ],
       ),

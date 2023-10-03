@@ -139,7 +139,7 @@ class _EDDState extends State<EDD> {
                             borderRadius: BorderRadius.circular(10)
                         ),
                       ),
-                      child: Text('A.D.',style: getRegularStyle(color: dateType == 1 ? ColorManager.white:ColorManager.black),),
+                      child: Text('A.D.',style: getRegularStyle(color: dateType == 1 ? ColorManager.white:ColorManager.black,fontSize: 16),),
                     ),
                     w10,
                     ElevatedButton(
@@ -167,7 +167,7 @@ class _EDDState extends State<EDD> {
                             borderRadius: BorderRadius.circular(10)
                         ),
                       ),
-                      child: Text('B.S.',style: getRegularStyle(color: dateType == 2 ? ColorManager.white:ColorManager.black)),
+                      child: Text('B.S.',style: getRegularStyle(color: dateType == 2 ? ColorManager.white:ColorManager.black,fontSize: 16)),
                     ),
                   ],
                 ),

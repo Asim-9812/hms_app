@@ -16,6 +16,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../../core/resources/value_manager.dart';
 import '../../../login/domain/model/user.dart';
+import '../../../notices/presentation/notices.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../patient_profile/presentation/doctor_patient_profile_page.dart';
 
@@ -23,7 +24,8 @@ import '../../patient_profile/presentation/doctor_patient_profile_page.dart';
 class DoctorHomePage extends StatefulWidget {
   final bool isWideScreen;
   final bool isNarrowScreen;
-  DoctorHomePage(this.isWideScreen,this.isNarrowScreen);
+  final bool noticeBool;
+  DoctorHomePage(this.isWideScreen,this.isNarrowScreen,this.noticeBool);
 
   @override
   State<DoctorHomePage> createState() => _DoctorHomePageState();
@@ -42,10 +44,25 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
   int currentPage = 0;
   final int rowsPerPage = 5;
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if(widget.noticeBool){
+      // Schedule the _showAlertDialog method to be called after the build is complete.
+      Future.delayed(Duration.zero, () {
+        showAlertDialog(context);
+      });
+    }
+
+  }
+
+
 
 
   @override
   Widget build(BuildContext context) {
+
     final userBox = Hive.box<User>('session').values.toList();
     String firstName = userBox[0].firstName!;
     return FadeIn(

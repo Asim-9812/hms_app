@@ -142,14 +142,14 @@ dependencies:
   flutter_spinkit: ^5.2.0
 
   qr_code_scanner: ^1.0.1
+#
+#  #pedometer:
+#  pedometer: ^4.0.1
+#
+#  #weather:
+#  weather: ^3.1.0
 
-  #pedometer:
-  pedometer: ^4.0.1
-
-  #weather:
-  weather: ^3.1.0
-
-  flutter_sensors: ^1.0.1
+#  flutter_sensors: ^1.0.1
 
   #pie_chart:
   pie_chart: ^5.3.2
