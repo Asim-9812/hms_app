@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:medical_app/src/app/app.dart';
 import 'package:medical_app/src/presentation/login/domain/model/user.dart';
 import 'package:medical_app/src/presentation/patient/calories/model/calorie_model.dart';
+import 'package:medical_app/src/presentation/patient/reminders/domain/model/reminder_model.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
@@ -50,6 +51,7 @@ void main() async {
 
   await Hive.initFlutter();
   Hive.registerAdapter<User>(UserAdapter());
+  Hive.registerAdapter(ReminderModelAdapter());
   Hive.registerAdapter(UserProfileModelAdapter());
   Hive.registerAdapter(DailyIntakeModelAdapter());
   Hive.registerAdapter(FoodDetailModelAdapter());
@@ -58,7 +60,8 @@ void main() async {
   await Hive.openBox<String>('tokenBox');
   final userSession = await Hive.openBox< User>('session');
   userBox2 = await Hive.openBox('user');
-  await Hive.openBox<UserProfileModel>('user_profile');
+  // await Hive.openBox<UserProfileModel>('user_profile');
+  await Hive.openBox<ReminderModel>('medicine_reminder');
   runApp(ProviderScope(
       overrides: [
         box.overrideWithValue(userBox.get('userData')),

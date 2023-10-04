@@ -30,6 +30,10 @@ class CommonProvider extends ChangeNotifier{
 
   bool noticeChange = true;
   int noticeIndex = 0;
+  int selectMealType = 0;
+  int selectPatternId = 0;
+  String selectedPattern = 'Select a pattern';
+
 
   void updateNotice(bool value){
     noticeChange = value;
@@ -38,6 +42,21 @@ class CommonProvider extends ChangeNotifier{
 
   void updateIndex(int value){
     noticeIndex = value;
+    notifyListeners();
+  }
+  void updateMealType(int value){
+    selectMealType = value;
+    notifyListeners();
+  }
+
+  void updatePatternId(int value){
+    selectPatternId = value;
+    notifyListeners();
+  }
+
+
+  void updatePattern(String value){
+    selectedPattern = value;
     notifyListeners();
   }
 

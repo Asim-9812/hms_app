@@ -8,7 +8,7 @@ part of 'reminder_model.dart';
 
 class ReminderModelAdapter extends TypeAdapter<ReminderModel> {
   @override
-  final int typeId = 0;
+  final int typeId = 5;
 
   @override
   ReminderModel read(BinaryReader reader) {
@@ -22,8 +22,8 @@ class ReminderModelAdapter extends TypeAdapter<ReminderModel> {
       strength: fields[2] as int,
       strengthUnitType: fields[3] as String,
       frequency: fields[4] as String,
-      intakeTime: (fields[5] as List).cast<DateTime>(),
-      medicineInterval: fields[6] as int,
+      intakeTime: (fields[5] as List).cast<TimeOfDay>(),
+      totalDays: fields[6] as int,
       startDate: fields[7] as DateTime,
       endDate: fields[8] as DateTime,
       medicineTime: fields[9] as String,
@@ -34,13 +34,14 @@ class ReminderModelAdapter extends TypeAdapter<ReminderModel> {
       summary: fields[14] as String,
       createdDate: fields[15] as DateTime,
       daysOfWeek: (fields[16] as List?)?.cast<String>(),
+      userId: fields[17] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, ReminderModel obj) {
     writer
-      ..writeByte(17)
+      ..writeByte(18)
       ..writeByte(0)
       ..write(obj.medicineType)
       ..writeByte(1)
@@ -54,7 +55,7 @@ class ReminderModelAdapter extends TypeAdapter<ReminderModel> {
       ..writeByte(5)
       ..write(obj.intakeTime)
       ..writeByte(6)
-      ..write(obj.medicineInterval)
+      ..write(obj.totalDays)
       ..writeByte(7)
       ..write(obj.startDate)
       ..writeByte(8)
@@ -74,7 +75,9 @@ class ReminderModelAdapter extends TypeAdapter<ReminderModel> {
       ..writeByte(15)
       ..write(obj.createdDate)
       ..writeByte(16)
-      ..write(obj.daysOfWeek);
+      ..write(obj.daysOfWeek)
+      ..writeByte(17)
+      ..write(obj.userId);
   }
 
   @override

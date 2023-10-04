@@ -8,7 +8,8 @@ import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
-import 'package:medical_app/src/presentation/patient/reminders/presentation/reminders.dart';
+import 'package:medical_app/src/presentation/patient/reminders/presentation/reminder.dart';
+import 'package:medical_app/src/presentation/patient/reminders/presentation/testReminderNotification.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import '../../../../core/resources/value_manager.dart';
@@ -17,7 +18,7 @@ import '../../../../test.dart';
 import '../../../notices/presentation/notices.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../../settings/settings_global.dart';
-import '../../reminders/presentation/testReminder.dart';
+import '../../reminders/presentation/create_reminder.dart';
 import '../../utilities/presentation/patient_utilities_test.dart';
 import 'patient_home_page.dart';
 import '../../scan/presentation/qr_scan.dart';
@@ -120,9 +121,9 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>Get.to(()=>TestPage()),
-        backgroundColor: ColorManager.primaryOpacity80,
-        child: FaIcon(Icons.qr_code_2_outlined,size: isWideScreen?40: 40.sp,)
+        onPressed: () =>selected == 1? Get.to(()=>CreateReminder()):Get.to(()=>TestPage()),
+        backgroundColor: selected == 1? ColorManager.white:ColorManager.primaryOpacity80,
+        child: FaIcon(selected == 1? Icons.add_alarm:Icons.qr_code_2_outlined,size: isWideScreen?40: 40.sp,color: selected == 1? ColorManager.primaryOpacity80:ColorManager.white,)
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: PageView(
@@ -134,7 +135,7 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
         controller: controller,
         children: [
           PatientHomePage(isWideScreen,isNarrowScreen,noticeBool),
-          CreateReminder(),
+          Reminders(),
           PatientUtilities(isWideScreen,isNarrowScreen),
           Settings(isWideScreen,isNarrowScreen)
         ],

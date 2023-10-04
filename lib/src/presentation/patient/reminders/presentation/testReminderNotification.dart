@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 
-class Reminders extends StatelessWidget {
+class testNotifications extends StatelessWidget {
   // Specify the initial date
   final DateTime startDate = DateTime.now();
   final DateTime endDate = DateTime.now().add(Duration(days: 30));

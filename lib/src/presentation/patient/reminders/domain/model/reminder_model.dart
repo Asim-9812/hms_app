@@ -1,10 +1,11 @@
 import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 part 'reminder_model.g.dart';
 
-@HiveType(typeId: 0)
+@HiveType(typeId: 5)
 class ReminderModel extends HiveObject {
   @HiveField(0)
   int medicineType;
@@ -22,7 +23,7 @@ class ReminderModel extends HiveObject {
   String frequency;
 
   @HiveField(5)
-  List<DateTime> intakeTime;
+  List<TimeOfDay> intakeTime;
 
   @HiveField(6)
   int totalDays;
@@ -57,6 +58,14 @@ class ReminderModel extends HiveObject {
   @HiveField(16)
   List<String>? daysOfWeek;
 
+
+  @HiveField(17)
+  int userId;
+
+
+
+
+
   ReminderModel({
     required this.medicineType,
     required this.medicineName,
@@ -75,5 +84,6 @@ class ReminderModel extends HiveObject {
     required this.summary,
     required this.createdDate,
     this.daysOfWeek,
+    required this.userId,
   });
 }
