@@ -89,7 +89,6 @@ class FrequencyModel{
 }
 
 List<FrequencyModel> frequencyType = [
-  FrequencyModel(id: 0, frequencyName: 'Select a frequency', frequencyInterval: 'Intervals'),
   FrequencyModel(id: 1, frequencyName: 'OD - Once a day', frequencyInterval: '24 hours interval'),
   FrequencyModel(id: 2, frequencyName: 'BDS - Twice a day', frequencyInterval: '12 hours interval'),
   FrequencyModel(id: 3, frequencyName: 'TDS - Thrice a day', frequencyInterval: '8 hours interval'),
@@ -112,7 +111,6 @@ class ReminderPatternModel{
 }
 
 List<ReminderPatternModel> patternList = [
-  ReminderPatternModel(id: 0, patternName: 'Select a pattern'),
   ReminderPatternModel(id: 1, patternName: 'Everyday'),
   ReminderPatternModel(id: 2, patternName: 'Specific Days'),
   ReminderPatternModel(id: 3, patternName: 'Intervals (in days)'),

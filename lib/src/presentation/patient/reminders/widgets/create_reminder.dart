@@ -4,6 +4,8 @@
 
 
 import 'dart:io';
+import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -14,14 +16,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/presentation/patient/reminders/data/reminder_db.dart';
+import 'package:medical_app/src/presentation/patient/reminders/domain/model/reminder_model.dart';
 
 import '../../../../core/resources/value_manager.dart';
 import '../../../../data/provider/common_provider.dart';
 import '../../../common/snackbar.dart';
+import '../../../login/domain/model/user.dart';
+import '../data/reminder_provider.dart';
 
 class CreateReminder extends ConsumerStatefulWidget {
   const CreateReminder({super.key});
@@ -34,7 +40,8 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
   final formKey1 = GlobalKey<FormState>();
   final formKey2 = GlobalKey<FormState>();
   final formKey3 = GlobalKey<FormState>();
-
+  final formKey4 = GlobalKey<FormState>();
+  PageController _pageController = PageController(initialPage: 0);
   TextEditingController _medicineNameController = TextEditingController();
   TextEditingController _strengthController = TextEditingController();
   TextEditingController _startTimeController = TextEditingController();
@@ -46,25 +53,41 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
   TextEditingController _summaryController = TextEditingController();
   int selectedMedicineType = 1;
   String selectedMedicineTypeName = '';
-  String selectedStrengthUnit = '';
-  String selectedFrequency = 'Select a frequency';
+  String? selectedStrengthUnit;
+  String? selectedFrequency;
+  String? selectedPattern;
+
 
   int frequency = 0;
   String? intervals;
-  List<TimeOfDay> intakeSchedule = [];
+  List<String> intakeSchedule = [];
+  List<String> selectedDays = [];
   DateTime? endDateIntake;
+  DateTime? startDateIntake;
 
   int imageSet = 1;
+  int mealSet = 0;
+  
+  
+  int page = 0;
 
 
   List<bool> isSelected = [false, false, false, false, false, false, false];
 
 
+  TimeOfDay _parseTime(String timeString) {
+    final parsedTime = DateFormat('hh:mm a').parse(timeString);
+    return TimeOfDay(
+      hour: parsedTime.hour,
+      minute: parsedTime.minute,
+    );
+  }
+
   Future<void> _selectTime(BuildContext context) async {
     if(formKey2.currentState!.validate()){
       final TimeOfDay? picked = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay.now(),
+        initialTime:_startTimeController.text.isNotEmpty?  _parseTime(_startTimeController.text) :TimeOfDay.now(),
       );
 
       if (picked != null) {
@@ -81,7 +104,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
         intakeSchedule.clear(); // Clear the list before adding new times
 
         // Add the initial selected time
-        intakeSchedule.add(selectedTime);
+        intakeSchedule.add(formattedTime);
 
         // Calculate additional times based on frequency
         if (frequency >= 1) {
@@ -94,7 +117,8 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
               hour: (selectedTime.hour + intervalHours) % 24,
               minute: selectedTime.minute,
             );
-            intakeSchedule.add(selectedTime);
+            final formattedTime = selectedTime.format(context);
+            intakeSchedule.add(formattedTime);
           }
         }
         setState(() {});
@@ -125,6 +149,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
 
       if (selectedDate != null) {
         setState(() {
+          startDateIntake = selectedDate;
           endDateIntake = selectedDate.add(Duration(days: int.parse(_totalDaysController.text)));
         });
 
@@ -147,13 +172,13 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
 
 
   void printSelectedDays() {
-    final selectedDays = <String>[];
+
     for (int i = 0; i < isSelected.length; i++) {
       if (isSelected[i]) {
         selectedDays.add(daysOfWeekMedication[i]);
       }
     }
-    print('Selected Days: ${selectedDays.join(', ')}');
+    // print('Selected Days: ${selectedDays.join(', ')}');
   }
 
 
@@ -162,7 +187,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
 
   @override
   Widget build(BuildContext context) {
-    TabController _tabController = TabController(length: 2, vsync: this);
+   // TabController _tabController = TabController(length: 2, vsync: this);
     return GestureDetector(
       onTap: ()=>FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -186,18 +211,14 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
 
                       child: Transform.rotate(
                           angle: 320 * 3.14159265358979323846 / 180,
-                          child: ZoomIn(
-                              duration: Duration(seconds: 1),
-                              child: FaIcon(CupertinoIcons.alarm,color: ColorManager.white.withOpacity(0.3),size: 70,)))
+                          child: FaIcon(CupertinoIcons.alarm,color: ColorManager.white.withOpacity(0.3),size: 70,))
                   ),
                   Positioned(
                     top: 20,
                       left: 50,
                       child: Transform.rotate(
                           angle: 30 * 3.14159265358979323846 / 180,
-                          child: ZoomIn(
-                              duration: Duration(seconds: 1),
-                              child: FaIcon(FontAwesomeIcons.heartPulse,color: ColorManager.white.withOpacity(0.3),size: 80,)))
+                          child: FaIcon(FontAwesomeIcons.heartPulse,color: ColorManager.white.withOpacity(0.3),size: 80,))
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -212,85 +233,113 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
               )),
           
         ),
-        body: SlideInUp(
-          duration: Duration(seconds: 1),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30)
-              ),
-              color: ColorManager.white,
+        body:  Container(
+          height: 900,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
             ),
-            padding: EdgeInsets.symmetric(horizontal: 18.w),
+            color: ColorManager.white,
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 18.w),
+          child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Container(
-
-                  height: 70,
-                  child: TabBar(
-                    dividerColor: ColorManager.dotGrey,
-
-
-                      controller: _tabController,
-                      padding: EdgeInsets.symmetric(
-                          vertical: 8.h, horizontal: 8.w),
-                      labelStyle: getMediumStyle(
-                          color: ColorManager.black,
-                          fontSize: 18
-                      ),
-                      onTap: (index){
-                        _tabController.index = 0;
-                      },
-                      unselectedLabelStyle: getMediumStyle(
-                          color: ColorManager.textGrey,
-                          fontSize: 18
-                      ),
-                      isScrollable: false,
-                      labelPadding: EdgeInsets.only(left: 15.w, right: 15.w),
-                      labelColor: ColorManager.primaryDark,
-
-                      unselectedLabelColor: ColorManager.textGrey,
-                      // indicatorColor: primary,
-                      indicator: UnderlineTabIndicator(
-                          borderSide: BorderSide(
-                            color: ColorManager.primaryDark
-                          )),
-                      // dividerColor: ColorManager.primaryDark,
-
-                      tabs: [
-                        Tab(
-                          text: 'Step 1',
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color:   ColorManager.blueText,
+                              width: 2
+                            )
+                          )
                         ),
-                        Tab(text: 'Step 2'),
-                      ]),
+                        padding: EdgeInsets.symmetric(vertical: 24.h),
+                        child:  Center(child: Text('Step 1',style: getMediumStyle(color: page == 0?ColorManager.blueText: ColorManager.black.withOpacity(0.4),fontSize: 20),)),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color:page == 1?  ColorManager.blueText :ColorManager.black.withOpacity(0.2),
+                              width: 2
+                            )
+                          )
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 24.h),
+                        child:  Center(child: Text('Step 2',style: getMediumStyle(color: page == 1? ColorManager.blueText: ColorManager.black.withOpacity(0.4),fontSize: 20),)),
+                      ),
+                    ),
+
+                  ],
                 ),
-                Expanded(
-                  child: TabBarView(
+                h20,
+                Container(
+                  height: 700.h,
+                  child: PageView(
+                    controller: _pageController,
+                    physics: NeverScrollableScrollPhysics(), // Disable swiping between pages
+                    children: [
+                      _form1(_pageController),
+                      _form2(_pageController)
 
-                      controller: _tabController,
-                      physics: NeverScrollableScrollPhysics(),
-                      children: [
-                        _form1(_tabController),
-                        _form2(_tabController),
-
-
-
-                      ]
+                    ],
                   ),
-                )
-
-
+                ),
+                // h20,
+                // Row(
+                //   children: [
+                //     Expanded(
+                //       child: ElevatedButton(
+                //           style: ElevatedButton.styleFrom(
+                //               elevation: 0,
+                //               backgroundColor: ColorManager.black.withOpacity(0.7)
+                //           ),
+                //           onPressed: (){
+                //
+                //           }, child: Text('Back',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
+                //     ),
+                //     w10,
+                //     Expanded(
+                //       child: ElevatedButton(
+                //           style: ElevatedButton.styleFrom(
+                //               backgroundColor: ColorManager.primaryDark
+                //           ),
+                //           onPressed: (){
+                //             setState(() {
+                //               page = 1;
+                //               _pageController.nextPage(duration: Duration(microseconds: 500), curve: Curves.easeIn);
+                //             });
+                //             // formKey1.currentState!.validate();
+                //             // formKey2.currentState!.validate();
+                //             // formKey3.currentState!.validate();
+                //             //
+                //             // if(formKey1.currentState!.validate() && formKey2.currentState!.validate() && formKey3.currentState!.validate()){
+                //             //   print('success');
+                //             //   _tabController.index = 1;
+                //             // }
+                //             // else{
+                //             //   print('Unsucessful');
+                //             // }
+                //           }, child: Text('Save',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
+                //     ),
+                //   ],
+                // ),
               ],
-            )
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _form1(TabController _tabController){
+  Widget _form1(PageController _pageController){
     return Form(
       key: formKey1,
       child: SingleChildScrollView(
@@ -313,6 +362,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                         selectedMedicineTypeName = e.name;
 
                       });
+                      ref.read(itemProvider.notifier).updateMedicineType(e.name);
 
                     },
                     child: Container(
@@ -365,6 +415,9 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                 return null;
               },
               autovalidateMode: AutovalidateMode.onUserInteraction,
+              onChanged: (value){
+                ref.read(itemProvider.notifier).updateMedicineName(value);
+              },
 
             ),
             h10,
@@ -402,6 +455,9 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                       return null;
                     },
                     autovalidateMode: AutovalidateMode.onUserInteraction,
+                    onChanged: (value){
+                      ref.read(itemProvider.notifier).updateStrength(value);
+                    },
                   ),
                 ),
                 w10,
@@ -409,7 +465,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                   child: DropdownButtonFormField(
                       menuMaxHeight: 200,
                       isDense: true,
-                      value:strengthType.where((element) => element.typeId == selectedMedicineType).first.unitName,
+                      value:selectedStrengthUnit == null ? null : selectedStrengthUnit,
                       decoration: InputDecoration(
 
                           isDense: true,
@@ -444,7 +500,16 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                         setState(() {
                           selectedStrengthUnit = value!;
                         });
-                      }
+                          ref.read(itemProvider.notifier).updateStrengthUnit(value!);
+
+                      },
+                    validator: (value){
+                        if(selectedStrengthUnit == null){
+                          return 'Please select a unit';
+                        }
+                        return null;
+                    },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
                 )
               ],
@@ -456,7 +521,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
 
                 menuMaxHeight: 250,
                 isDense: true,
-                value: selectedFrequency,
+                value: selectedFrequency == null ? null : selectedFrequency,
                 decoration: InputDecoration(
 
                     isDense: true,
@@ -496,10 +561,10 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                     frequency = frequencyType.firstWhere((element) => element.frequencyName == value).id;
                     intervals = frequencyType.firstWhere((element) => element.frequencyName == value).frequencyInterval;
                   });
-                  print(selectedFrequency);
+                  ref.read(itemProvider.notifier).updateFrequency(selectedFrequency!);
                 },
                 validator: (value){
-                  if(selectedFrequency == 'Select a frequency'){
+                  if(selectedFrequency == null){
                     return 'Frequency is required';
                   }
 
@@ -600,7 +665,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                         color: ColorManager.primaryDark,
                         borderRadius: BorderRadius.circular(10)
                     ),
-                    child: Text('${e.hour}:${e.minute} ${e.period.name}',style: getRegularStyle(color: ColorManager.white,fontSize: 16),),
+                    child: Text('$e',style: getRegularStyle(color: ColorManager.white,fontSize: 16),),
                   );
                 }).toList(),
               ),
@@ -709,7 +774,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                 Expanded(
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        elevation: 0,
+                          elevation: 0,
                           backgroundColor: ColorManager.black.withOpacity(0.7)
                       ),
                       onPressed: ()=>Get.back(), child: Text('Cancel',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
@@ -727,7 +792,10 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
 
                         if(formKey1.currentState!.validate() && formKey2.currentState!.validate() && formKey3.currentState!.validate()){
                           print('success');
-                          _tabController.index = 1;
+                          setState(() {
+                            page = 1;
+                          });
+                          _pageController.nextPage(duration: Duration(milliseconds: 500), curve: Curves.easeIn);
                         }
                         else{
                           print('Unsucessful');
@@ -748,12 +816,14 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
   }
 
 
-  Widget _form2(TabController _tabController){
+  Widget _form2(PageController _pageController){
     final selectImage = ref.watch(imageProvider);
     final selectMealType = ref.watch(itemProvider).selectMealType;
-    final selectedPattern = ref.watch(itemProvider).selectedPattern;
     final selectedPatternId = ref.watch(itemProvider).selectPatternId;
+    _summaryController.text = '${ref.watch(itemProvider).medicineType} ${ref.watch(itemProvider).medicineName} ${ref.watch(itemProvider).strength} ${ref.watch(itemProvider).strengthUnit} ${ref.watch(itemProvider).frequency} ${ref.watch(itemProvider).mealTime}';
+
     return Form(
+      key: formKey4,
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -766,37 +836,41 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                     InkWell(
                       onTap: (){
                         ref.read(itemProvider.notifier).updateMealType(1);
+                        ref.read(itemProvider.notifier).updateMealTime('Before a Meal');
+                        setState(() {
+                          mealSet =0;
+                        });
                       },
                       child: Container(
-                        decoration: BoxDecoration(
-                          color: ColorManager.dotGrey.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: selectMealType == 1 ?ColorManager.primaryDark.withOpacity(0.7):ColorManager.black.withOpacity(0.5)
-                          )
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: 8.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 10,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                color: selectMealType == 1 ? ColorManager.orange :Colors.transparent,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: ColorManager.black.withOpacity(0.5)
-                                )
+                          decoration: BoxDecoration(
+                              color: ColorManager.dotGrey.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                  color: selectMealType == 1 ?ColorManager.primaryDark.withOpacity(0.7):ColorManager.black.withOpacity(0.5)
+                              )
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 8.w),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 10,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                    color: selectMealType == 1 ? ColorManager.orange :Colors.transparent,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        color: ColorManager.black.withOpacity(0.5)
+                                    )
+                                ),
                               ),
-                            ),
-                            Container(
-                                padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                                child: Image.asset(selectMealType == 1 ?'assets/icons/meal.png':'assets/icons/meal2.png',width: 50,height: 50,)),
+                              Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
+                                  child: Image.asset(selectMealType == 1 ?'assets/icons/meal.png':'assets/icons/meal2.png',width: 50,height: 50,)),
 
-                          ],
-                        )
+                            ],
+                          )
                       ),
                     ),
                     h10,
@@ -808,38 +882,42 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                     InkWell(
                       onTap: (){
                         ref.read(itemProvider.notifier).updateMealType(2);
+                        ref.read(itemProvider.notifier).updateMealTime('After a Meal');
+                        setState(() {
+                          mealSet =0;
+                        });
                       },
                       child: Container(
-                        decoration: BoxDecoration(
-                          color: ColorManager.dotGrey.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color:  selectMealType == 2 ? ColorManager.primaryDark.withOpacity(0.7): ColorManager.black.withOpacity(0.5)
-                          )
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: 8.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                                padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                                child: Image.asset(selectMealType == 2 ?'assets/icons/meal.png':'assets/icons/meal2.png',width: 50,height: 50,)),
-                            Container(
-                              width: 10,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                color: selectMealType == 2 ? ColorManager.orange : Colors.transparent,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: ColorManager.black.withOpacity(0.5)
-                                )
+                          decoration: BoxDecoration(
+                              color: ColorManager.dotGrey.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                  color:  selectMealType == 2 ? ColorManager.primaryDark.withOpacity(0.7): ColorManager.black.withOpacity(0.5)
+                              )
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 8.w),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
+                                  child: Image.asset(selectMealType == 2 ?'assets/icons/meal.png':'assets/icons/meal2.png',width: 50,height: 50,)),
+                              Container(
+                                width: 10,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                    color: selectMealType == 2 ? ColorManager.orange : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        color: ColorManager.black.withOpacity(0.5)
+                                    )
+                                ),
                               ),
-                            ),
 
 
-                          ],
-                        )
+                            ],
+                          )
                       ),
                     ),
                     h10,
@@ -849,6 +927,13 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
 
               ],
             ),
+            if(mealSet ==1)
+              h10,
+            if(mealSet == 1)
+              Align(
+                alignment: Alignment.center,
+                child: Text('Please select a meal time',style: getRegularStyle(color: ColorManager.red,fontSize: 12),),
+              ),
             h20,
             DropdownButtonFormField(
 
@@ -873,7 +958,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                       )
                   )
               ),
-              value: selectedPattern,
+              value: selectedPattern == null ? null : selectedPattern,
 
               items: patternList
                   .map(
@@ -887,13 +972,16 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                 ),
               ).toList(),
               onChanged: (value){
+                setState(() {
+                  selectedPattern = value!;
+                  isSelected = [false, false, false, false, false, false, false];
+                });
 
-                 ref.read(itemProvider.notifier).updatePattern(value!);
-                 ref.read(itemProvider.notifier).updatePatternId(patternList.firstWhere((element) => element.patternName == value).id);
-                 print(selectedPatternId);
+                ref.read(itemProvider.notifier).updatePatternId(patternList.firstWhere((element) => element.patternName == value).id);
+
               },
               validator: (value){
-                if(selectedPattern == ''||selectedPattern =='Select a pattern'){
+                if(selectedPattern == null){
                   return 'Reminder Pattern is required';
                 }
 
@@ -937,7 +1025,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
               ),
 
             if(selectedPatternId == 3)
-            h10,
+              h10,
 
             if(selectedPatternId == 2)
               Row(
@@ -1112,16 +1200,20 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                     readOnly: true,
                     maxLines: null,
                     decoration: InputDecoration(
+                      fillColor: ColorManager.dotGrey.withOpacity(0.4),
+                      filled: true,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: ColorManager.blueText
+                              color: ColorManager.black,
+                            width: 2
                           )
                       ),
                       enabledBorder:  OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: ColorManager.primaryDark
+                              color: ColorManager.black,
+                            width: 2
                           )
                       ),
                       labelText: 'Summary',
@@ -1154,13 +1246,6 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                       hintStyle: getRegularStyle(color: ColorManager.black.withOpacity(0.7),fontSize: 16),
 
                     ),
-                    validator: (value){
-                      if(value!.isEmpty){
-                        return 'Interval is required';
-                      }
-                      return null;
-                    },
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
 
                   ),
                 ),
@@ -1179,7 +1264,10 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                           backgroundColor: ColorManager.black.withOpacity(0.7)
                       ),
                       onPressed: (){
-                        _tabController.index = 0;
+                        setState(() {
+                          page = 0;
+                        });
+                        _pageController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.easeIn);
                       }, child: Text('Back',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
                 ),
                 w10,
@@ -1188,19 +1276,79 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                       style: ElevatedButton.styleFrom(
                           backgroundColor: ColorManager.primaryDark
                       ),
-                      onPressed: (){
-                        printSelectedDays();
-                        // formKey1.currentState!.validate();
-                        // formKey2.currentState!.validate();
-                        // formKey3.currentState!.validate();
-                        //
-                        // if(formKey1.currentState!.validate() && formKey2.currentState!.validate() && formKey3.currentState!.validate()){
-                        //   print('success');
-                        //   _tabController.index = 1;
-                        // }
-                        // else{
-                        //   print('Unsucessful');
-                        // }
+                      onPressed: () async {
+                        Uint8List? reminderImage;
+                        final scaffoldMessage = ScaffoldMessenger.of(context);
+                        final userBox = Hive.box<User>('session').values.toList();
+
+                        if(selectMealType == 0){
+                          setState(() {
+                            mealSet = 1;
+                          });
+                        }
+
+                        if(selectImage != null) {
+
+                           reminderImage = await selectImage.readAsBytes();
+
+                        }
+
+
+                          for (int i = 0; i < isSelected.length; i++) {
+                            if (isSelected[i]) {
+                              setState(() {
+                                selectedDays.add(daysOfWeekMedication[i]);
+                              });
+                            }
+                          }
+
+
+                        formKey4.currentState!.validate();
+
+
+                        if(selectMealType != 0 && formKey4.currentState!.validate()){
+                          ReminderModel reminderModel = ReminderModel(
+                            id:Random().nextInt(1000),
+                              medicineType: selectedMedicineType,
+                              medicineName: _medicineNameController.text.trim(),
+                              strength: int.parse(_strengthController.text.trim()),
+                              strengthUnitType: ref.watch(itemProvider).strengthUnit,
+                              frequency: selectedFrequency!,
+                              intakeTime: intakeSchedule,
+                              totalDays: int.parse(_totalDaysController.text.trim()),
+                              startDate: startDateIntake!,
+                              endDate: endDateIntake!,
+                              medicineTime: ref.watch(itemProvider).mealTime,
+                              reminderDuration:selectedPatternId ==1 ? 0 : selectedPatternId ==2 ? 0 : selectedPatternId ==1 ? 1 :0 ,
+                              breakDuration: selectedPatternId == 1 || selectedPatternId == 2 ? 0 : int.parse(_intervalDurationController.text.trim()),
+                              summary: _summaryController.text.trim(),
+                              createdDate: DateTime.now(),
+                              userId: userBox[0].id!,
+                            daysOfWeek: selectedPatternId == 2 ? selectedDays : null,
+                            reminderNote: _noteController.text.isEmpty? null : _noteController.text.trim(),
+                            reminderImage: reminderImage == null ? null : reminderImage
+
+                          );
+
+                          print(reminderModel.userId);
+                          print(reminderModel.medicineName);
+                          print(reminderModel.intakeTime);
+                          // print(reminderModel.reminderImage);
+                          print(reminderModel.daysOfWeek);
+                          print(reminderModel.summary);
+
+                          // await ref.read(reminderProvider.notifier).addReminder(reminderModel);
+
+                          await Hive.box<ReminderModel>('medicine_reminder').add(reminderModel);
+                          //
+                          // await Hive.box<ReminderModel>('medicine_reminder').save();
+
+                          // ref.refresh(reminderProvider);
+
+
+                          Navigator.pop(context);
+
+                        }
                       }, child: Text('Save',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
                 ),
               ],
@@ -1210,4 +1358,6 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
       ),
     );
   }
+
+
 }

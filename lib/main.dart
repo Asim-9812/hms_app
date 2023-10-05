@@ -22,6 +22,8 @@ final boxA = Provider<List<User>>((ref) => []);
 
 late Box userBox2;
 
+final boxB = Provider<List<ReminderModel>>((ref) => []);
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,11 +63,12 @@ void main() async {
   final userSession = await Hive.openBox< User>('session');
   userBox2 = await Hive.openBox('user');
   // await Hive.openBox<UserProfileModel>('user_profile');
-  await Hive.openBox<ReminderModel>('medicine_reminder');
+  final reminderBox =await Hive.openBox<ReminderModel>('medicine_reminder');
   runApp(ProviderScope(
       overrides: [
         box.overrideWithValue(userBox.get('userData')),
         boxA.overrideWithValue(userSession.values.toList()),
+        boxB.overrideWithValue(reminderBox.values.toList()),
       ],
 
       child: MyApp()));

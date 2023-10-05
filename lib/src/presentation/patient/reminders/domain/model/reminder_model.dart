@@ -23,7 +23,7 @@ class ReminderModel extends HiveObject {
   String frequency;
 
   @HiveField(5)
-  List<TimeOfDay> intakeTime;
+  List<String> intakeTime;
 
   @HiveField(6)
   int totalDays;
@@ -62,6 +62,10 @@ class ReminderModel extends HiveObject {
   @HiveField(17)
   int userId;
 
+  @HiveField(18)
+  int id;
+
+
 
 
 
@@ -85,5 +89,6 @@ class ReminderModel extends HiveObject {
     required this.createdDate,
     this.daysOfWeek,
     required this.userId,
+    required this.id
   });
 }

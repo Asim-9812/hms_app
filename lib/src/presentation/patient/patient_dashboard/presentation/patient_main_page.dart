@@ -18,7 +18,7 @@ import '../../../../test.dart';
 import '../../../notices/presentation/notices.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../../settings/settings_global.dart';
-import '../../reminders/presentation/create_reminder.dart';
+import '../../reminders/widgets/create_reminder.dart';
 import '../../utilities/presentation/patient_utilities_test.dart';
 import 'patient_home_page.dart';
 import '../../scan/presentation/qr_scan.dart';
@@ -121,7 +121,7 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>selected == 1? Get.to(()=>CreateReminder()):Get.to(()=>TestPage()),
+        onPressed: () =>selected == 1? Get.to(()=>CreateReminder(),transition: Transition.fade,curve: Curves.easeIn):Get.to(()=>QRViewExample()),
         backgroundColor: selected == 1? ColorManager.white:ColorManager.primaryOpacity80,
         child: FaIcon(selected == 1? Icons.add_alarm:Icons.qr_code_2_outlined,size: isWideScreen?40: 40.sp,color: selected == 1? ColorManager.primaryOpacity80:ColorManager.white,)
       ),

@@ -5,131 +5,68 @@
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
+import 'package:medical_app/src/data/provider/common_provider.dart';
 import 'package:medical_app/src/presentation/patient/reminders/data/reminder_db.dart';
+import 'package:medical_app/src/presentation/patient/reminders/data/reminder_provider.dart';
+import 'package:medical_app/src/presentation/patient/reminders/domain/model/reminder_model.dart';
+import 'package:medical_app/src/presentation/patient/reminders/presentation/reminder_details.dart';
 
 import '../../../../core/resources/value_manager.dart';
 import '../../../common/snackbar.dart';
 
-class Reminders extends StatefulWidget {
+class Reminders extends ConsumerStatefulWidget {
   const Reminders({super.key});
 
   @override
-  State<Reminders> createState() => _ReminderState();
+  ConsumerState<Reminders> createState() => _ReminderState();
 }
 
-class _ReminderState extends State<Reminders> {
-  final formKey1 = GlobalKey<FormState>();
-  final formKey2 = GlobalKey<FormState>();
-  final formKey3 = GlobalKey<FormState>();
-  TextEditingController _medicineNameController = TextEditingController();
-  TextEditingController _strengthController = TextEditingController();
-  TextEditingController _startTimeController = TextEditingController();
-  TextEditingController _totalDaysController = TextEditingController();
-  TextEditingController _startDateController = TextEditingController();
-  TextEditingController _endDateController = TextEditingController();
-  TextEditingController _reminderDurationDateController = TextEditingController();
-  TextEditingController _breakDurationController = TextEditingController();
-  TextEditingController _noteController = TextEditingController();
-  int selectedMedicineType = 1;
-  String selectedStrengthUnit = '';
-  String selectedFrequency = 'Select a frequency';
-  int frequency = 0;
-  String? intervals;
-  List<TimeOfDay> intakeSchedule = [];
-  DateTime? endDateIntake;
+class _ReminderState extends ConsumerState<Reminders> {
 
+  late Box<ReminderModel> reminderBox;
+  late ValueListenable<Box<ReminderModel>> reminderBoxListenable;
 
+  @override
+  void initState() {
+    super.initState();
 
-  Future<void> _selectTime(BuildContext context) async {
-    if(formKey2.currentState!.validate()){
-      final TimeOfDay? picked = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-      );
+    // Open the Hive box
+    reminderBox = Hive.box<ReminderModel>('medicine_reminder');
 
-      if (picked != null) {
-        var selectedTime = TimeOfDay(
-          hour: picked.hour,
-          minute: picked.minute,
-        );
+    // Create a ValueListenable for the box
+    reminderBoxListenable = reminderBox.listenable();
 
-        final formattedTime = selectedTime.format(context);
-
-        _startTimeController.text = formattedTime;
-
-        // Calculate intake times based on selected frequency
-        intakeSchedule.clear(); // Clear the list before adding new times
-
-        // Add the initial selected time
-        intakeSchedule.add(selectedTime);
-
-        // Calculate additional times based on frequency
-        if (frequency >= 1) {
-          // Calculate intervals based on frequency
-          int intervalHours = 24 ~/ frequency;
-
-          for (int i = 1; i < frequency; i++) {
-            // Add intervals to the selected time and add to the list
-            selectedTime = TimeOfDay(
-              hour: (selectedTime.hour + intervalHours) % 24,
-              minute: selectedTime.minute,
-            );
-            intakeSchedule.add(selectedTime);
-          }
-        }
-        setState(() {});
-      }
-      print(intakeSchedule);
-    }
-    else{
-      final scaffoldMessage = ScaffoldMessenger.of(context);
-      scaffoldMessage.showSnackBar(
-        SnackbarUtil.showFailureSnackbar(
-          message: 'Please select a frequency first',
-          duration: const Duration(milliseconds: 1400),
-        ),
-      );
-    }
-
+    // Add a listener to update the UI when the box changes
+    reminderBoxListenable.addListener(_onHiveBoxChanged);
   }
 
-  Future<void> _selectStartDate(BuildContext context) async {
-    if(formKey3.currentState!.validate()){
-      final DateTime? selectedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now(),
-        lastDate: DateTime(2101),
-      );
-
-
-      if (selectedDate != null) {
-        setState(() {
-          endDateIntake = selectedDate.add(Duration(days: int.parse(_totalDaysController.text)));
-        });
-
-        final formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
-        final formattedEndDate = DateFormat('yyyy-MM-dd').format(endDateIntake!);
-        _startDateController.text = formattedDate;
-        _endDateController.text = formattedEndDate; // Set end date to start date by default
-      }
-    }
-    else{
-      final scaffoldMessage = ScaffoldMessenger.of(context);
-      scaffoldMessage.showSnackBar(
-        SnackbarUtil.showFailureSnackbar(
-          message: 'Please select medication duration first',
-          duration: const Duration(milliseconds: 1400),
-        ),
-      );
-    }
+  void _onHiveBoxChanged() {
+    // This function will be called whenever the Hive box changes.
+    // You can update your UI or refresh the data here.
+    setState(() {
+      // Update your data or UI as needed
+    });
   }
+
+  @override
+  void dispose() {
+    // Be sure to remove the listener when the widget is disposed.
+    reminderBoxListenable.removeListener(_onHiveBoxChanged);
+    super.dispose();
+  }
+
+
 
 
 
@@ -137,6 +74,8 @@ class _ReminderState extends State<Reminders> {
 
   @override
   Widget build(BuildContext context) {
+    final reminderList = Hive.box<ReminderModel>('medicine_reminder').values.toList();
+
     return GestureDetector(
       onTap: ()=>FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -177,7 +116,91 @@ class _ReminderState extends State<Reminders> {
               )),
 
         ),
-        body: Container(),
+        body:reminderList.isNotEmpty
+        ? SingleChildScrollView(
+          child: Column(
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.symmetric(horizontal: 18.w),
+                itemCount: reminderList.length,
+                itemBuilder: (context, index) {
+                  final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+                  final intakeTimes = reminderList[index].intakeTime;
+
+                  // Sort the intakeTimes list in ascending order (upcoming times)
+                  intakeTimes.sort((a, b) =>
+                      DateFormat('hh:mm a').parse(a).compareTo(DateFormat('hh:mm a').parse(b)));
+
+                  // Find the first time in intakeTimes that is after the current time
+                  String? firstAfterCurrentTime;
+                  for (final time in intakeTimes) {
+                    if (DateFormat('hh:mm a').parse(time).isAfter(
+                        DateFormat('hh:mm a').parse(currentTime))) {
+                      firstAfterCurrentTime = time;
+                      break;
+                    }
+                  }
+
+                  if (firstAfterCurrentTime == null) {
+                    // If no time in intakeTimes is after the current time, use the first time
+                    firstAfterCurrentTime = intakeTimes.first;
+                  }
+
+                  final reminder = reminderList[index];
+
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: ColorManager.white,
+                    ),
+                    margin: EdgeInsets.symmetric(vertical: 8.h),
+                    child: ListTile(
+                      onTap: ()=>Get.to(()=>ReminderIndividual(reminderModel: reminder)),
+                      leading: CircleAvatar(
+                        backgroundColor: ColorManager.primaryDark,
+                        child: FaIcon(medicineType.firstWhere((element) => element.id == reminder.medicineType).icon,color: ColorManager.white.withOpacity(0.5),),
+                      ),
+                      title: Text(
+                        '${reminder.medicineName}',
+                        style: getMediumStyle(color: ColorManager.black, fontSize: 20),
+                      ),
+                      subtitle: Text(
+                        '${reminder.strength} ${reminder.strengthUnitType} | ${reminder.medicineTime} | in 2 hours',
+                        style: getRegularStyle(
+                            color: ColorManager.black.withOpacity(0.7), fontSize: 12),
+                      ),
+                      trailing: Container(
+                        decoration: BoxDecoration(
+                          color: ColorManager.blueText.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.h),
+                        child: Text(
+                          '$firstAfterCurrentTime',
+                          style: getRegularStyle(color: ColorManager.white, fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+
+              h100
+            ],
+          ),
+        )
+            : Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset('assets/images/leaf.png',width: 200.w,height: 200.h,),
+              h10,
+              Text('No Reminders',style: getMediumStyle(color: ColorManager.white.withOpacity(0.5)),)
+            ],
+          ),
+        )
 
       ),
     );
