@@ -218,7 +218,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                       left: 50,
                       child: Transform.rotate(
                           angle: 30 * 3.14159265358979323846 / 180,
-                          child: FaIcon(FontAwesomeIcons.heartPulse,color: ColorManager.white.withOpacity(0.3),size: 80,))
+                          child: FaIcon(FontAwesomeIcons.notesMedical,color: ColorManager.white.withOpacity(0.3),size: 80,))
                   ),
                   Align(
                     alignment: Alignment.centerLeft,

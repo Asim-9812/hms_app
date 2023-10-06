@@ -6,6 +6,7 @@ import 'package:medical_app/src/app/app.dart';
 import 'package:medical_app/src/presentation/login/domain/model/user.dart';
 import 'package:medical_app/src/presentation/patient/calories/model/calorie_model.dart';
 import 'package:medical_app/src/presentation/patient/reminders/domain/model/reminder_model.dart';
+import 'package:medical_app/src/presentation/patient/reminders/widgets/create_reminder_test.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
@@ -25,10 +26,15 @@ late Box userBox2;
 final boxB = Provider<List<ReminderModel>>((ref) => []);
 
 
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
+
+
 
 
   FlutterError.demangleStackTrace = (StackTrace stack) {
@@ -36,6 +42,8 @@ void main() async {
     if (stack is stack_trace.Chain) return stack.toTrace().vmTrace;
     return stack;
   };
+
+
 
   Workmanager().initialize(
       callbackDispatcher, // The top level function, aka callbackDispatcher

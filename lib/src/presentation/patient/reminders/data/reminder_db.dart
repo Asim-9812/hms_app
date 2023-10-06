@@ -96,7 +96,7 @@ List<FrequencyModel> frequencyType = [
 ];
 
 
-List<String> mealInterval = ['','Before meal','After meal'];
+List<String> mealInterval = ['','Before a Meal','After a Meal'];
 
 
 class ReminderPatternModel{

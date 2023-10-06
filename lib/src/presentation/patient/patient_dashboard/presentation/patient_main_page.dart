@@ -18,6 +18,7 @@ import '../../../../test.dart';
 import '../../../notices/presentation/notices.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../../settings/settings_global.dart';
+import '../../profile/presentation/profile_page.dart';
 import '../../reminders/widgets/create_reminder.dart';
 import '../../utilities/presentation/patient_utilities_test.dart';
 import 'patient_home_page.dart';
@@ -53,6 +54,7 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final scaffoldMessage = ScaffoldMessenger.of(context);
     final noticeBool = ref.watch(itemProvider).noticeChange;
     // Get the screen size
     final screenSize = MediaQuery.of(context).size;
@@ -102,12 +104,12 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
             title:  Text('Utilities'),
           ),
           BottomBarItem(
-            icon:  FaIcon(Icons.menu,size: isWideScreen?24:24.sp,),
+            icon:  FaIcon(Icons.person,size: isWideScreen?24:24.sp,),
             // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
             selectedColor: ColorManager.primary,
             // unSelectedColor: Colors.purple,
             // backgroundColor: Colors.orange,
-            title:  Text('Menu'),
+            title:  Text('Profile'),
           ),
         ],
         hasNotch: true,
@@ -137,7 +139,7 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
           PatientHomePage(isWideScreen,isNarrowScreen,noticeBool),
           Reminders(),
           PatientUtilities(isWideScreen,isNarrowScreen),
-          Settings(isWideScreen,isNarrowScreen)
+          ProfilePage()
         ],
       ),
     );

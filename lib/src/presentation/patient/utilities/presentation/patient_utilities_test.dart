@@ -344,9 +344,7 @@ class _PatientUtilitiesState extends State<PatientUtilities> {
             // ),
 
             h20,
-            FadeInUp(
-                duration: Duration(milliseconds: 700),
-                child: _buildCalculatorBody())
+            _buildCalculatorBody()
 
           ],
         ),

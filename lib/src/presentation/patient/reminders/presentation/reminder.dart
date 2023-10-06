@@ -24,6 +24,7 @@ import 'package:medical_app/src/presentation/patient/reminders/presentation/remi
 
 import '../../../../core/resources/value_manager.dart';
 import '../../../common/snackbar.dart';
+import '../widgets/create_reminder_test.dart';
 
 class Reminders extends ConsumerStatefulWidget {
   const Reminders({super.key});
@@ -34,12 +35,15 @@ class Reminders extends ConsumerStatefulWidget {
 
 class _ReminderState extends ConsumerState<Reminders> {
 
+  NotificationServices notificationServices = NotificationServices();
+
   late Box<ReminderModel> reminderBox;
   late ValueListenable<Box<ReminderModel>> reminderBoxListenable;
 
   @override
   void initState() {
     super.initState();
+    notificationServices.initializeNotifications();
 
     // Open the Hive box
     reminderBox = Hive.box<ReminderModel>('medicine_reminder');
@@ -109,7 +113,7 @@ class _ReminderState extends ConsumerState<Reminders> {
                           angle: 30 * 3.14159265358979323846 / 180,
                           child: ZoomIn(
                               duration: Duration(seconds: 1),
-                              child: FaIcon(FontAwesomeIcons.heartPulse,color: ColorManager.white.withOpacity(0.3),size: 80,)))
+                              child: FaIcon(FontAwesomeIcons.notesMedical,color: ColorManager.white.withOpacity(0.3),size: 80,)))
                   ),
                   Center(child: Text('Reminder',style: getHeadBoldStyle(color: ColorManager.white),)),
                 ],

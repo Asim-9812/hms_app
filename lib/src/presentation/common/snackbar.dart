@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../core/resources/color_manager.dart';
 
@@ -156,5 +157,41 @@ class SnackbarUtil {
       animation: CurvedAnimation(parent: kAlwaysCompleteAnimation, curve: Curves.easeOut),
     );
   }
+
+
+  static SnackBar showComingSoonBar({
+    required String message,
+    required Duration duration,
+  }) {
+    return SnackBar(
+      content: Center(
+          child: Row(
+            children: [
+              FaIcon(FontAwesomeIcons.clock, color: Colors.white, size: 22.h,),
+              const SizedBox(width: 10,),
+              Text(
+                message,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          )
+      ),
+      backgroundColor: ColorManager.primary,
+      behavior: SnackBarBehavior.floating,
+      elevation: 10,
+      margin: const EdgeInsets.fromLTRB(40, 0, 40, 50),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.r),
+      ),
+      duration: duration,
+      dismissDirection: DismissDirection.horizontal,
+      animation: CurvedAnimation(parent: kAlwaysCompleteAnimation, curve: Curves.easeOut),
+    );
+  }
+
 
 }

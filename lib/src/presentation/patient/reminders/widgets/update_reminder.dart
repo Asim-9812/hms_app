@@ -57,6 +57,8 @@ class _CreateReminderState extends ConsumerState<UpdateReminder> with TickerProv
   String? selectedStrengthUnit;
   String? selectedFrequency;
   String? selectedPattern;
+  int? selectMealType;
+  int? selectedPatternId;
 
 
   int frequency = 0;
@@ -66,14 +68,14 @@ class _CreateReminderState extends ConsumerState<UpdateReminder> with TickerProv
   DateTime? endDateIntake;
   DateTime? startDateIntake;
 
-  int imageSet = 1;
+  int? imageSet;
   int mealSet = 0;
 
 
   int page = 0;
 
 
-  List<bool> isSelected = [false, false, false, false, false, false, false];
+  List<bool>? isSelected;
 
 
 
@@ -82,12 +84,43 @@ class _CreateReminderState extends ConsumerState<UpdateReminder> with TickerProv
     super.initState();
     _medicineNameController.text = widget.reminderModel.medicineName;
     _strengthController.text = widget.reminderModel.strength.toString();
+    selectedMedicineType = widget.reminderModel.medicineType;
     selectedStrengthUnit = widget.reminderModel.strengthUnitType;
     selectedFrequency = widget.reminderModel.frequency;
     _startTimeController.text = widget.reminderModel.intakeTime.first;
+    intervals = frequencyType.firstWhere((element) => element.frequencyName == widget.reminderModel.frequency).frequencyInterval;
+    _totalDaysController.text = widget.reminderModel.totalDays.toString();
+    _startDateController.text=DateFormat('yyyy-MM-dd').format(widget.reminderModel.startDate);
+    _endDateController.text = DateFormat('yyyy-MM-dd').format(widget.reminderModel.endDate);
+    // _summaryController.text = widget.reminderModel.summary;
+    selectMealType = widget.reminderModel.medicineTime == 'Before a Meal' ? 1 : 2;
+    selectedPattern = widget.reminderModel.breakDuration > 0 ? 'Intervals (in days)' : widget.reminderModel.daysOfWeek==null? 'Everyday' :'Specific Days' ;
+    selectedPatternId = widget.reminderModel.breakDuration > 0 ? 3 : widget.reminderModel.daysOfWeek==null? 1 : 2;
+
     if(widget.reminderModel.reminderNote != null){
       _noteController.text = widget.reminderModel.reminderNote!;
     }
+
+
+
+
+    if(widget.reminderModel.breakDuration > 0){
+      _intervalDurationController.text = widget.reminderModel.breakDuration.toString();
+    }
+
+    if(widget.reminderModel.daysOfWeek != null){
+      isSelected = [
+        widget.reminderModel.daysOfWeek!.contains('Monday'),
+        widget.reminderModel.daysOfWeek!.contains('Tuesday'),
+        widget.reminderModel.daysOfWeek!.contains('Wednesday'),
+        widget.reminderModel.daysOfWeek!.contains('Thursday'),
+        widget.reminderModel.daysOfWeek!.contains('Friday'),
+        widget.reminderModel.daysOfWeek!.contains('Saturday'),
+        widget.reminderModel.daysOfWeek!.contains('Sunday'),
+      ];
+    }
+
+    imageSet = widget.reminderModel.reminderImage == null ? 2 : 1;
 
 
   }
@@ -241,7 +274,7 @@ class _CreateReminderState extends ConsumerState<UpdateReminder> with TickerProv
                       left: 50,
                       child: Transform.rotate(
                           angle: 30 * 3.14159265358979323846 / 180,
-                          child: FaIcon(FontAwesomeIcons.heartPulse,color: ColorManager.white.withOpacity(0.3),size: 80,))
+                          child: FaIcon(FontAwesomeIcons.notesMedical,color: ColorManager.white.withOpacity(0.3),size: 80,))
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -383,6 +416,7 @@ class _CreateReminderState extends ConsumerState<UpdateReminder> with TickerProv
                       setState(() {
                         selectedMedicineType =e.id;
                         selectedMedicineTypeName = e.name;
+                        selectedStrengthUnit = null;
 
                       });
                       ref.read(itemProvider.notifier).updateMedicineType(e.name);
@@ -841,9 +875,8 @@ class _CreateReminderState extends ConsumerState<UpdateReminder> with TickerProv
 
   Widget _form2(PageController _pageController){
     final selectImage = ref.watch(imageProvider);
-    final selectMealType = ref.watch(itemProvider).selectMealType;
-    final selectedPatternId = ref.watch(itemProvider).selectPatternId;
-    _summaryController.text = '${ref.watch(itemProvider).medicineType} ${ref.watch(itemProvider).medicineName} ${ref.watch(itemProvider).strength} ${ref.watch(itemProvider).strengthUnit} ${ref.watch(itemProvider).frequency} ${ref.watch(itemProvider).mealTime}';
+
+  _summaryController.text = '${selectedMedicineTypeName}';
 
     return Form(
       key: formKey4,
@@ -862,6 +895,7 @@ class _CreateReminderState extends ConsumerState<UpdateReminder> with TickerProv
                         ref.read(itemProvider.notifier).updateMealTime('Before a Meal');
                         setState(() {
                           mealSet =0;
+                          selectMealType =1;
                         });
                       },
                       child: Container(
@@ -908,6 +942,7 @@ class _CreateReminderState extends ConsumerState<UpdateReminder> with TickerProv
                         ref.read(itemProvider.notifier).updateMealTime('After a Meal');
                         setState(() {
                           mealSet =0;
+                          selectMealType =2;
                         });
                       },
                       child: Container(
@@ -996,6 +1031,7 @@ class _CreateReminderState extends ConsumerState<UpdateReminder> with TickerProv
               ).toList(),
               onChanged: (value){
                 setState(() {
+                  selectedPatternId = patternList.firstWhere((element) => element.patternName == value).id;
                   selectedPattern = value!;
                   isSelected = [false, false, false, false, false, false, false];
                 });
@@ -1059,13 +1095,13 @@ class _CreateReminderState extends ConsumerState<UpdateReminder> with TickerProv
                   return GestureDetector(
                     onTap: () {
                       setState(() {
-                        isSelected[index] = !isSelected[index];
+                        isSelected![index] = !isSelected![index];
                       });
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
                       decoration: BoxDecoration(
-                        color: isSelected[index]
+                        color: isSelected![index]
                             ? ColorManager.primaryDark
                             : ColorManager.dotGrey.withOpacity(0.5), // Selected and unselected colors
                         borderRadius: BorderRadius.circular(10.0),
@@ -1073,7 +1109,7 @@ class _CreateReminderState extends ConsumerState<UpdateReminder> with TickerProv
                       child: Text(
                         '${day.substring(0, 3)}',
                         style: TextStyle(
-                          color: isSelected[index]
+                          color: isSelected![index]
                               ? ColorManager.white
                               : Colors.black, // Text color when selected and unselected
                           fontSize: 16.0,
@@ -1086,6 +1122,50 @@ class _CreateReminderState extends ConsumerState<UpdateReminder> with TickerProv
 
             if(selectedPatternId == 2)
               h10,
+
+
+            if(imageSet == 1)
+              Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: ColorManager.blueText.withOpacity(0.5),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 18.h,horizontal: 12.w),
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Column(
+                          children: [
+                            Image.memory(widget.reminderModel.reminderImage!,width: 200,height: 100,),
+                            // h10,
+                            // Text('${selectImage.path}',style: getRegularStyle(color: ColorManager.black,fontSize: 14),overflow: TextOverflow.fade,maxLines: 1,)
+                          ],
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: InkWell(
+                          onTap: (){
+                            setState(() {
+                              imageSet = 2;
+                            });
+                          },
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: ColorManager.textGrey.withOpacity(0.15)
+                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 2.w,vertical: 2.h),
+                              child: FaIcon(Icons.close)),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+
+            if(imageSet == 2)
 
             Center(
               child:selectImage != null
@@ -1124,7 +1204,7 @@ class _CreateReminderState extends ConsumerState<UpdateReminder> with TickerProv
               )
                   :  DottedBorder(
                 dashPattern: [16,6,16,4],
-                color:imageSet == 2 ? ColorManager.red: ColorManager.textGrey,
+                color:ColorManager.textGrey,
                 radius: Radius.circular(20),
                 borderType: BorderType.RRect,
                 child: InkWell(
@@ -1317,8 +1397,8 @@ class _CreateReminderState extends ConsumerState<UpdateReminder> with TickerProv
                         }
 
 
-                        for (int i = 0; i < isSelected.length; i++) {
-                          if (isSelected[i]) {
+                        for (int i = 0; i < isSelected!.length; i++) {
+                          if (isSelected![i]) {
                             setState(() {
                               selectedDays.add(daysOfWeekMedication[i]);
                             });

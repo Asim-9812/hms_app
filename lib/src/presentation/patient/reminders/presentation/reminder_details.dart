@@ -59,7 +59,7 @@ class ReminderIndividual extends StatelessWidget {
                     left: 50,
                     child: Transform.rotate(
                         angle: 30 * 3.14159265358979323846 / 180,
-                        child: FaIcon(FontAwesomeIcons.heartPulse,color: ColorManager.white.withOpacity(0.3),size: 80,))
+                        child: FaIcon(FontAwesomeIcons.notesMedical,color: ColorManager.white.withOpacity(0.3),size: 80,))
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -318,24 +318,24 @@ class ReminderIndividual extends StatelessWidget {
                         ],
                       ) ),
                 ),
-                w10,
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: ColorManager.blueText,
-                      elevation: 0
-                    ),
-                      onPressed: ()=>Get.to(()=>UpdateReminder(reminderModel)), 
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.white,size: 16,),
-                          w10,
-                          Text('Edit',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
-                        ],
-                      ) ),
-                ),
+                // w10,
+                // Expanded(
+                //   child: ElevatedButton(
+                //     style: ElevatedButton.styleFrom(
+                //       backgroundColor: ColorManager.blueText,
+                //       elevation: 0
+                //     ),
+                //       onPressed: ()=>Get.to(()=>UpdateReminder(reminderModel)),
+                //       child: Row(
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         crossAxisAlignment: CrossAxisAlignment.end,
+                //         children: [
+                //           FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.white,size: 16,),
+                //           w10,
+                //           Text('Edit',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
+                //         ],
+                //       ) ),
+                // ),
               ],
             )
             

@@ -13,16 +13,12 @@ import 'package:intl/intl.dart';
 import 'package:medical_app/src/data/provider/common_provider.dart';
 import 'package:medical_app/src/presentation/patient/health_tips/data/tagList_provider.dart';
 import 'package:medical_app/src/presentation/patient/health_tips/presentation/health_tips_list.dart';
-import 'package:medical_app/src/presentation/patient/personal_services/lab_reports/lab_reports.dart';
-import 'package:medical_app/src/presentation/patient/personal_services/mri/mri.dart';
-import 'package:medical_app/src/presentation/patient/personal_services/sugar/sugar.dart';
-import 'package:medical_app/src/presentation/patient/personal_services/usg/usg.dart';
-import 'package:medical_app/src/presentation/patient/personal_services/xray/xray.dart';
 import 'package:medical_app/src/presentation/patient_registration/domain/services/patient_registration_service.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
+import '../../../common/snackbar.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../notices/presentation/notices.dart';
 import '../../../notification/presentation/notification_page.dart';
@@ -30,11 +26,6 @@ import '../../../patient_registration/presentation/patient_registration.dart';
 import '../../health_tips/domain/model/health_tips_dummy_tags.dart';
 import '../../health_tips/domain/model/health_tips_model.dart';
 import '../../health_tips/domain/services/health_tips_services.dart';
-
-import '../../personal_services/bloodpressure/bp.dart';
-import '../../personal_services/ct_scan/ct_scan.dart';
-import '../../personal_services/discharge_summary/discharge_summary.dart';
-import '../../personal_services/prescription/prescription.dart';
 import '../../profile/presentation/profile_page.dart';
 import '../../search-near-by/presentation/search_for_page.dart';
 
@@ -263,22 +254,14 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FadeInUp(
-            duration: Duration(milliseconds: 500),
-              child: FactCarousel(widget.isWideScreen)),
+          FactCarousel(widget.isWideScreen),
           h10,
 
-          FadeInUp(
-              duration: Duration(milliseconds: 800),
-              child: buildQuickServices(widget.isWideScreen)),
+          buildQuickServices(widget.isWideScreen),
           h10,
-          FadeInUp(
-              duration: Duration(milliseconds: 1000),
-              child: _buildHealthTips(widget.isWideScreen)),
+          _buildHealthTips(widget.isWideScreen),
           h10,
-          FadeInUp(
-              duration: Duration(milliseconds: 1200),
-              child: buildPersonalServices(widget.isWideScreen)),
+          buildPersonalServices(widget.isWideScreen),
 
 
 
@@ -523,6 +506,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
   }
 
   Widget buildPersonalServices(bool isWideScreen) {
+    final scaffoldMessage = ScaffoldMessenger.of(context);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: isWideScreen?18:12.w,vertical: 12.h),
       child: Column(
@@ -545,34 +529,97 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
             ),
             children: [
               _personalServices(
-                  onTap:()=>Get.to(()=>Prescriptions()),
+                  onTap:(){
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showComingSoonBar(
+                        message: 'Coming soon !',
+                        duration: const Duration(milliseconds: 1400),
+                      ),
+                    );
+                  },
                   name: 'Prescription',
                   icon: FontAwesomeIcons.filePrescription,
                   color: ColorManager.accentRed.withOpacity(0.2)
               ),
               _personalServices(
-                  onTap: ()=>Get.to(()=>Discharge()),
+                  onTap:(){
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showComingSoonBar(
+                        message: 'Coming soon !',
+                        duration: const Duration(milliseconds: 1400),
+                      ),
+                    );
+                  },
                   name: 'Discharge Summary', icon: Icons.sticky_note_2_rounded,color: ColorManager.accentBlue.withOpacity(0.2)),
               _personalServices(
-                  onTap: ()=>Get.to(()=>LabReports()),
+                  onTap:(){
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showComingSoonBar(
+                        message: 'Coming soon !',
+                        duration: const Duration(milliseconds: 1400),
+                      ),
+                    );
+                  },
                   name: 'Lab', icon: FontAwesomeIcons.microscope,color: ColorManager.accentYellow.withOpacity(0.2)),
               _personalServices(
-                  onTap: ()=>Get.to(()=>Xray()),
+                  onTap:(){
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showComingSoonBar(
+                        message: 'Coming soon !',
+                        duration: const Duration(milliseconds: 1400),
+                      ),
+                    );
+                  },
                   name: 'X-Ray', icon: FontAwesomeIcons.xRay,color: ColorManager.accentLightGreen.withOpacity(0.2)),
               _personalServices(
-                  onTap: ()=>Get.to(()=>USG()),
+                  onTap:(){
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showComingSoonBar(
+                        message: 'Coming soon !',
+                        duration: const Duration(milliseconds: 1400),
+                      ),
+                    );
+                  },
                   name: 'USG', img: 'assets/icons/ultrasound.png',color: ColorManager.accentCream.withOpacity(0.2)),
               _personalServices(
-                  onTap: ()=>Get.to(()=>CTScan()),
+                  onTap:(){
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showComingSoonBar(
+                        message: 'Coming soon !',
+                        duration: const Duration(milliseconds: 1400),
+                      ),
+                    );
+                  },
                   name: 'CT Scan', img: 'assets/icons/tomography.png',color: ColorManager.accentOrange.withOpacity(0.2)),
               _personalServices(
-                  onTap: ()=>Get.to(()=>MRI()),
+                  onTap:(){
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showComingSoonBar(
+                        message: 'Coming soon !',
+                        duration: const Duration(milliseconds: 1400),
+                      ),
+                    );
+                  },
                   name: 'MRI', img:'assets/icons/ct-scan.png',color: ColorManager.accentPurple.withOpacity(0.2)),
               _personalServices(
-                  onTap: ()=>Get.to(()=>Sugar()),
+                  onTap:(){
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showComingSoonBar(
+                        message: 'Coming soon !',
+                        duration: const Duration(milliseconds: 1400),
+                      ),
+                    );
+                  },
                   name: 'Sugar', img:'assets/icons/sugar.png',color: ColorManager.accentGreen.withOpacity(0.2)),
               _personalServices(
-                  onTap: ()=>Get.to(()=>BP()),
+                  onTap:(){
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showComingSoonBar(
+                        message: 'Coming soon !',
+                        duration: const Duration(milliseconds: 1400),
+                      ),
+                    );
+                  },
                   name: 'Blood Pressure', img:'assets/icons/bp.png',color: ColorManager.accentPink.withOpacity(0.2)),
 
 
@@ -629,7 +676,7 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent,) {
     final userBox = Hive.box<User>('session').values.toList();
-    String firstName = 'User'; //userBox[0].username!;
+    String firstName = userBox[0].username!;
     final deviceSize = MediaQuery.of(context).size;
     const size = 60;
     ('Shrink Offset: $shrinkOffset');

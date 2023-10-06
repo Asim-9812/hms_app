@@ -20,6 +20,8 @@ class DoctorDocumentServices {
 
 
 
+
+
   Future<List<DocumentTypeModel>> getDocumentTypeList() async{
     dio.options.headers['Authorization'] = Api.bearerToken;
     try{
@@ -39,6 +41,7 @@ class DoctorDocumentServices {
   Future<List<DoctorFolderModel>> getFolderList({
     required String docID
 }) async{
+    dio.options.headers['Authorization'] = Api.bearerToken;
     try{
       final response = await dio.get('${Api.getFolders}$docID');
 
@@ -48,6 +51,7 @@ class DoctorDocumentServices {
 
       return data;
     } on DioException catch(e){
+      print(e);
       throw Exception('Unable to fetch data');
     }
 
@@ -57,6 +61,7 @@ class DoctorDocumentServices {
   Future<List<DocumentModel>> getDocumentList({
     required String docID
   }) async{
+    dio.options.headers['Authorization'] = Api.bearerToken;
     try{
       final response = await dio.get('${Api.getDocuments}$docID');
 
@@ -84,6 +89,7 @@ class DoctorDocumentServices {
     required PlatformFile documentUrl,
   }) async{
     try{
+      dio.options.headers['Authorization'] = Api.bearerToken;
       Map<String,dynamic> data = {
         "documentID": documentID,
         "userID": userID,
@@ -124,6 +130,7 @@ class DoctorDocumentServices {
   Future<Either<String,String>> delDocument({
     required String documentId
   }) async{
+    dio.options.headers['Authorization'] = Api.bearerToken;
     try{
       final response = await dio.delete('${Api.delDocuments}$documentId');
       if(response.statusCode == 200){
