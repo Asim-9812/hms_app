@@ -344,6 +344,8 @@ class _PatientUtilitiesState extends State<PatientUtilities> {
             // ),
 
             h20,
+            _patientStat(context),
+
             _buildCalculatorBody()
 
           ],
@@ -439,7 +441,8 @@ class _PatientUtilitiesState extends State<PatientUtilities> {
           border: Border.all(
               color: ColorManager.black.withOpacity(0.8),
               width: 0.5
-          )
+          ),
+        color: ColorManager.white
       ),
       child: Center(
         child: ListTile(
@@ -449,7 +452,7 @@ class _PatientUtilitiesState extends State<PatientUtilities> {
 
 
           title: Text('$name',style: getMediumStyle(color: ColorManager.black,fontSize: name.length <= 6? widget.isWideScreen? 24:20.sp:widget.isWideScreen? 18:16.sp),),
-          subtitle: Text('Calculator',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 14:10.sp),),
+          subtitle: Text('Calculator',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 14:12.sp),),
           trailing: FaIcon(Icons.chevron_right,color: ColorManager.black.withOpacity(0.5),),
         ),
       ),
@@ -493,17 +496,17 @@ class _PatientUtilitiesState extends State<PatientUtilities> {
             shrinkWrap: true,
             children: [
               _buildCalculators(
-                  icon: 'bmi',
+                  icon: 'bmi2',
                   name: 'BMI',
                   onTap: ()=>Get.to(()=>BMI())
               ),
               _buildCalculators(
-                  icon: 'bmr',
+                  icon: 'bmr3',
                   name: 'BMR',
                   onTap: ()=>Get.to(()=>BMR())
               ),
               _buildCalculators(
-                  icon: 'due-date',
+                  icon: 'due-date2',
                   name: 'Due Date',
                   onTap: ()=>Get.to(()=>EDD())
               )
@@ -512,6 +515,153 @@ class _PatientUtilitiesState extends State<PatientUtilities> {
           h100,
         ],
       ),
+    );
+  }
+
+
+  _patientStat(BuildContext context){
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 18.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Container(
+                  // width: MediaQuery.of(context).size.width*0.45,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+
+                      color: ColorManager.red.withOpacity(0.15)
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          FaIcon(FontAwesomeIcons.heartPulse,color: ColorManager.red.withOpacity(0.5),size: 20.sp,),
+                          w10,
+                          Text('Heart Rate',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),)
+                        ],
+                      ),
+                      h10,
+                      Text('120 bpm',style: getMediumStyle(color: ColorManager.black,fontSize: 16.sp),),
+                      h20,
+                      Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: 12.sp),)
+                    ],
+
+                  ),
+                ),
+              ),
+              w10,
+              Expanded(
+                child: Container(
+                  // width: MediaQuery.of(context).size.width*.45,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+
+                      color: ColorManager.primary.withOpacity(0.15)
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          FaIcon(FontAwesomeIcons.heartCircleBolt,color: ColorManager.primaryDark.withOpacity(0.5),size: 20.sp,),
+                          w10,
+                          Text('Blood Pressure',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),)
+                        ],
+                      ),
+                      h10,
+                      Text('120/80 mmHg',style: getMediumStyle(color: ColorManager.black,fontSize: 16.sp),),
+                      h20,
+                      Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: 12.sp),)
+                    ],
+
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        h10,
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 18.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Container(
+                  // width: MediaQuery.of(context).size.width*.45,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+
+                      color: ColorManager.blue.withOpacity(0.15)
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          FaIcon(CupertinoIcons.graph_circle_fill,color: ColorManager.blue.withOpacity(0.5),size: 20.sp,),
+                          w10,
+                          Text('Cholesterol',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),)
+                        ],
+                      ),
+                      h10,
+                      Text('97 mg/dl',style: getMediumStyle(color: ColorManager.black,fontSize: 16.sp),),
+                      h20,
+                      Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: 12.sp),)
+                    ],
+
+                  ),
+                ),
+              ),
+              w10,
+              Expanded(
+                child: Container(
+                  // width: MediaQuery.of(context).size.width*.45,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+
+                      color: ColorManager.orange.withOpacity(0.15)
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          FaIcon(FontAwesomeIcons.heartCircleCheck,color: ColorManager.orange.withOpacity(0.5),size: 20.sp,),
+                          w10,
+                          Text('Sugar',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),)
+                        ],
+                      ),
+                      h10,
+                      Text('90 mg/dl',style: getMediumStyle(color: ColorManager.black,fontSize:16.sp),),
+                      h20,
+                      Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: 12.sp),)
+                    ],
+
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

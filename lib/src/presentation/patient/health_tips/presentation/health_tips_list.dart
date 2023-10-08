@@ -23,7 +23,7 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
   final CarouselController _carouselController = CarouselController();
   int _currentSlide = 0; // Store the current slide index
 
-  final List<String> imageList = ['assets/images/containers/Tip-Container-3.png','assets/images/containers/Tip-Container.png', 'assets/images/containers/Tip-Container 2.png', ];
+  final List<String> imageList = ['assets/images/containers/primary-container.png','assets/images/containers/Tip-Container.png'];
 
 
   @override

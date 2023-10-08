@@ -47,16 +47,13 @@ class ProfilePage extends ConsumerWidget {
               duration: Duration(milliseconds: 500),
               child: profileBanner(context)),
           Container(
-            height: MediaQuery.of(context).size.height * 3/5,
+            height: MediaQuery.of(context).size.height * 3.5/5,
             child: SingleChildScrollView(
               physics: BouncingScrollPhysics(),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  h20,
-                  _patientStat(context),
-                  h16,
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 12.w),
                     child: Column(
@@ -66,9 +63,59 @@ class ProfilePage extends ConsumerWidget {
                       children: [
 
                         h10,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  // border: Border.all(
+                                  //   color: ColorManager.black.withOpacity(0.2)
+                                  // ),
+                                  color: ColorManager.textGrey.withOpacity(0.05)
+                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    FaIcon(FontAwesomeIcons.phone,color: ColorManager.primaryDark,),
+                                    w20,
+                                    Text('98XXXXXXXX',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
 
-                        _profileItems2(title: 'Phone Number', icon: FontAwesomeIcons.phone, onTap: (){},subtitle: '98XXXXXXXX'),
-                        _profileItems2(title: 'E-Mail', icon: Icons.email_outlined, onTap: (){},subtitle: 'user@gmail.com'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            w10,
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  // border: Border.all(
+                                  //   color: ColorManager.black.withOpacity(0.2)
+                                  // ),
+                                  color: ColorManager.textGrey.withOpacity(0.05)
+                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    FaIcon(Icons.email_outlined,color: ColorManager.primaryDark,),
+                                    w20,
+                                    Text('user@gmail.com',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        h10,
+                        //
+                        // _profileItems2(title: 'Phone Number', icon: FontAwesomeIcons.phone, onTap: (){},subtitle: '98XXXXXXXX'),
+                        // _profileItems2(title: 'E-Mail', icon: Icons.email_outlined, onTap: (){},subtitle: 'user@gmail.com'),
                         _profileItems2(title: 'My Documents', icon: FontAwesomeIcons.folderClosed, onTap: (){
                           Get.to(()=>PatientDocumentPage(isWideScreen,isNarrowScreen));
                         },trailing: true),
@@ -123,151 +170,7 @@ class ProfilePage extends ConsumerWidget {
     );
   }
 
-  _patientStat(BuildContext context){
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 18.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Container(
-                  // width: MediaQuery.of(context).size.width*0.45,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
 
-                      color: ColorManager.red.withOpacity(0.15)
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          FaIcon(FontAwesomeIcons.heartPulse,color: ColorManager.red.withOpacity(0.5),size: 20.sp,),
-                          w10,
-                          Text('Heart Rate',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),)
-                        ],
-                      ),
-                      h10,
-                      Text('120 bpm',style: getMediumStyle(color: ColorManager.black,fontSize: 16.sp),),
-                      h20,
-                      Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: 12.sp),)
-                    ],
-
-                  ),
-                ),
-              ),
-              w10,
-              Expanded(
-                child: Container(
-                  // width: MediaQuery.of(context).size.width*.45,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-
-                      color: ColorManager.primary.withOpacity(0.15)
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          FaIcon(FontAwesomeIcons.heartCircleBolt,color: ColorManager.primaryDark.withOpacity(0.5),size: 20.sp,),
-                          w10,
-                          Text('Blood Pressure',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),)
-                        ],
-                      ),
-                      h10,
-                      Text('120/80 mmHg',style: getMediumStyle(color: ColorManager.black,fontSize: 16.sp),),
-                      h20,
-                      Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: 12.sp),)
-                    ],
-
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        h10,
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 18.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Container(
-                  // width: MediaQuery.of(context).size.width*.45,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-
-                      color: ColorManager.blue.withOpacity(0.15)
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          FaIcon(CupertinoIcons.graph_circle_fill,color: ColorManager.blue.withOpacity(0.5),size: 20.sp,),
-                          w10,
-                          Text('Cholesterol',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),)
-                        ],
-                      ),
-                      h10,
-                      Text('97 mg/dl',style: getMediumStyle(color: ColorManager.black,fontSize: 16.sp),),
-                      h20,
-                      Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: 12.sp),)
-                    ],
-
-                  ),
-                ),
-              ),
-              w10,
-              Expanded(
-                child: Container(
-                  // width: MediaQuery.of(context).size.width*.45,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-
-                      color: ColorManager.orange.withOpacity(0.15)
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          FaIcon(FontAwesomeIcons.heartCircleCheck,color: ColorManager.orange.withOpacity(0.5),size: 20.sp,),
-                          w10,
-                          Text('Sugar',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),)
-                        ],
-                      ),
-                      h10,
-                      Text('90 mg/dl',style: getMediumStyle(color: ColorManager.black,fontSize:16.sp),),
-                      h20,
-                      Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: 12.sp),)
-                    ],
-
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
 
 
   /// Profile...
@@ -285,87 +188,56 @@ class ProfilePage extends ConsumerWidget {
 
 
     return Card(
-      elevation: 3,
+      elevation: 1,
       shadowColor: ColorManager.textGrey.withOpacity(0.4),
       child: Container(
-        height: MediaQuery.of(context).size.height * 1/4,
+        
         padding: EdgeInsets.symmetric(horizontal: 18.w,vertical:12.h),
-        child: Stack(
+        child:  Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                height: 120.h,
-                decoration: BoxDecoration(
-                    image: DecorationImage(image: AssetImage('assets/images/containers/Tip-Container-3.png'),fit: BoxFit.cover),
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10)
-                    )
-                ),
-              ) ,
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Card(
-                    shape: CircleBorder(),
-                    elevation: 5,
+            Row(
+              children: [
+                Card(
+                  shape: CircleBorder(),
+                  elevation: 5,
+                  child: CircleAvatar(
+                    backgroundColor: ColorManager.white,
+                    radius: isNarrowScreen? 50.r:50,
                     child: CircleAvatar(
-                      backgroundColor: ColorManager.white,
-                      radius: isNarrowScreen? 50.r:50,
-                      child: CircleAvatar(
-                        backgroundColor: ColorManager.black,
-                        radius: isNarrowScreen? 45.r:45,
-                        child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
-                      ),
+                      backgroundColor: ColorManager.black,
+                      radius: isNarrowScreen? 45.r:45,
+                      child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
                     ),
                   ),
-                  w10,
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 32.sp:32),),
-                      h10,
-                      Row(
-                        children: [
-                          Text('Gender',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?16.sp:16),),
-                          w10,
-                          Text('|',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?12.sp:12),),
-                          w10,
-                          Text('23 yrs',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?16.sp:16),),
-                          w10,
-                          Text('|',style: getRegularStyle(color: ColorManager.textGrey,fontSize:isNarrowScreen?12.sp: 12),),
-                          w10,
-                          Text('Address',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?16.sp:16),),
-                        ],
-                      )
-                    ],
-                  )
-                ],
-              ),
+                ),
+                w10,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 32.sp:32),),
+                    h10,
+                    Row(
+                      children: [
+                        Text('Gender',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?16.sp:16),),
+                        w10,
+                        Text('|',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?12.sp:12),),
+                        w10,
+                        Text('23 yrs',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?16.sp:16),),
+                        w10,
+                        Text('|',style: getRegularStyle(color: ColorManager.textGrey,fontSize:isNarrowScreen?12.sp: 12),),
+                        w10,
+                        Text('Address',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?16.sp:16),),
+                      ],
+                    )
+                  ],
+                ),
+              ],
             ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child:  Padding(
-                padding:EdgeInsets.only(bottom: 20),
-                child: InkWell(
-                    onTap: (){
-                      final scaffoldMessage = ScaffoldMessenger.of(context);
-                      scaffoldMessage.showSnackBar(
-                        SnackbarUtil.showComingSoonBar(
-                          message: 'Coming soon !',
-                          duration: const Duration(milliseconds: 1400),
-                        ),
-                      );
-                    },
-                    child: FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primary,)),
-              ),
-            ),
+            w10,
+            FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primaryDark,)
           ],
         ),
       ),
@@ -414,10 +286,13 @@ class ProfilePage extends ConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
       child: ListTile(
+        shape: BeveledRectangleBorder(
+          borderRadius: BorderRadius.circular(5)
+        ),
         onTap: onTap, // Pass the onTap callback here
         splashColor: ColorManager.textGrey.withOpacity(0.2),
         tileColor: ColorManager.textGrey.withOpacity(0.05),
-        leading: FaIcon(icon, size: 20,),
+        leading: FaIcon(icon, size: 20,color: ColorManager.primaryDark,),
         title: Text('$title', style: getRegularStyle(color: ColorManager.black, fontSize: 18),),
         subtitle: subtitle != null ? Text('$subtitle', style: getRegularStyle(color: ColorManager.subtitleGrey, fontSize: 14),) : null,
         trailing: trailing == true ? Icon(Icons.chevron_right, color: ColorManager.iconGrey,) : null,

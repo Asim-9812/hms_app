@@ -23,11 +23,26 @@ class NotificationServices{
   }
 
 
+  void sendNotification(String body, {required int id, required String title,}) async {
+    AndroidNotificationDetails androidNotificationDetails =
+    const AndroidNotificationDetails(
+      'channelId',
+      'channelName',
+      importance: Importance.max,
+      priority: Priority.max,
+    );
+
+    NotificationDetails notificationDetails = NotificationDetails(android: androidNotificationDetails);
+
+    await _flutterLocalNotificationsPlugin.show(id, title, body, notificationDetails);
+  }
+
+
 
   void scheduleNotification() async {
 
 
-    TimeOfDay time = TimeOfDay(hour: 14, minute: 05);
+    TimeOfDay time = TimeOfDay(hour: 11, minute: 46);
     AndroidNotificationDetails androidNotificationDetails =
     const AndroidNotificationDetails(
       'channelId',

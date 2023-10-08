@@ -199,8 +199,6 @@ class _ReminderState extends ConsumerState<Reminders> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/images/leaf.png',width: 200.w,height: 200.h,),
-              h10,
               Text('No Reminders',style: getMediumStyle(color: ColorManager.white.withOpacity(0.5)),)
             ],
           ),

@@ -266,7 +266,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
 
 
           SizedBox(
-            height: 300.h,
+            height: 100.h,
           )
 
 
@@ -310,7 +310,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                     width: width,
                     decoration: BoxDecoration(
                         borderRadius:BorderRadius.circular(10),
-                        color: ColorManager.brightGreen
+                        color: ColorManager.primary
                     ),
                     child: Stack(
                       children: [
@@ -419,7 +419,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                   width: width,
                   decoration: BoxDecoration(
                       borderRadius:BorderRadius.circular(10),
-                      color: ColorManager.brightPink
+                      color: ColorManager.orange.withOpacity(0.2)
                   ),
                   child: Stack(
                     children: [
@@ -458,9 +458,8 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
   /// Personal Services...
   Widget _personalServices({
     required String name,
-    required Color color,
-    IconData? icon,
-    String? img,
+
+    required String img,
     VoidCallback? onTap,
 }) {
 
@@ -472,11 +471,11 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
     bool isWideScreen = screenSize.width > 500;
     bool isNarrowScreen = screenSize.width < 500;
     return Card(
+      
       shape: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-              color: ColorManager.black,
-              width: 0.3
+              color: ColorManager.dotGrey.withOpacity(0.2),
           )
       ),
       elevation: 0,
@@ -487,7 +486,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
         child: Container(
 
           decoration: BoxDecoration(
-            color: color,
+            color: ColorManager.dotGrey.withOpacity(0.2),
               borderRadius: BorderRadius.circular(10)
           ),
           padding: EdgeInsets.symmetric(horizontal: isWideScreen?5:5.w,vertical:isWideScreen?8: 8.h),
@@ -495,9 +494,9 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              icon!=null?Center(child: FaIcon(icon,size:isWideScreen? 30: 24.sp,color: ColorManager.black.withOpacity(0.7),)): Image.asset('$img',width: isWideScreen?34:isNarrowScreen?20:28,height:isWideScreen?34:isNarrowScreen?20: 28,),
+              Image.asset('$img',width: 30,height: 30,),
               h10,
-              name.length<=12?Text('$name',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isWideScreen?12:12.sp,),):Text('$name',style: getRegularStyle(color: ColorManager.textGrey,fontSize:isWideScreen?10: 10.sp),textAlign: TextAlign.center,)
+              name.length<=12?Text('$name',style: getRegularStyle(color: ColorManager.primaryDark,fontSize: isWideScreen?12:12.sp,),):Text('$name',style: getRegularStyle(color: ColorManager.primaryDark,fontSize:isWideScreen?10: 10.sp),textAlign: TextAlign.center,)
             ],
           ),
         ),
@@ -537,9 +536,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                       ),
                     );
                   },
-                  name: 'Prescription',
-                  icon: FontAwesomeIcons.filePrescription,
-                  color: ColorManager.accentRed.withOpacity(0.2)
+                  name: 'Prescription', img: 'assets/personal_services/prxprim.png'
               ),
               _personalServices(
                   onTap:(){
@@ -550,7 +547,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                       ),
                     );
                   },
-                  name: 'Discharge Summary', icon: Icons.sticky_note_2_rounded,color: ColorManager.accentBlue.withOpacity(0.2)),
+                  name: 'Discharge Summary',  img: 'assets/personal_services/discprim.png'),
               _personalServices(
                   onTap:(){
                     scaffoldMessage.showSnackBar(
@@ -560,7 +557,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                       ),
                     );
                   },
-                  name: 'Lab', icon: FontAwesomeIcons.microscope,color: ColorManager.accentYellow.withOpacity(0.2)),
+                  name: 'Lab', img: 'assets/personal_services/labprim.png'),
               _personalServices(
                   onTap:(){
                     scaffoldMessage.showSnackBar(
@@ -570,7 +567,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                       ),
                     );
                   },
-                  name: 'X-Ray', icon: FontAwesomeIcons.xRay,color: ColorManager.accentLightGreen.withOpacity(0.2)),
+                  name: 'X-Ray', img: 'assets/personal_services/xrayprim.png'),
               _personalServices(
                   onTap:(){
                     scaffoldMessage.showSnackBar(
@@ -580,7 +577,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                       ),
                     );
                   },
-                  name: 'USG', img: 'assets/icons/ultrasound.png',color: ColorManager.accentCream.withOpacity(0.2)),
+                  name: 'USG',  img: 'assets/personal_services/usgprim.png'),
               _personalServices(
                   onTap:(){
                     scaffoldMessage.showSnackBar(
@@ -590,7 +587,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                       ),
                     );
                   },
-                  name: 'CT Scan', img: 'assets/icons/tomography.png',color: ColorManager.accentOrange.withOpacity(0.2)),
+                  name: 'CT Scan', img: 'assets/personal_services/ctprim.png'),
               _personalServices(
                   onTap:(){
                     scaffoldMessage.showSnackBar(
@@ -600,7 +597,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                       ),
                     );
                   },
-                  name: 'MRI', img:'assets/icons/ct-scan.png',color: ColorManager.accentPurple.withOpacity(0.2)),
+                  name: 'MRI', img:'assets/personal_services/mriprim.png'),
               _personalServices(
                   onTap:(){
                     scaffoldMessage.showSnackBar(
@@ -610,7 +607,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                       ),
                     );
                   },
-                  name: 'Sugar', img:'assets/icons/sugar.png',color: ColorManager.accentGreen.withOpacity(0.2)),
+                  name: 'Sugar', img:'assets/personal_services/sugarprim.png'),
               _personalServices(
                   onTap:(){
                     scaffoldMessage.showSnackBar(
@@ -620,7 +617,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                       ),
                     );
                   },
-                  name: 'Blood Pressure', img:'assets/icons/bp.png',color: ColorManager.accentPink.withOpacity(0.2)),
+                  name: 'Blood Pressure', img:'assets/personal_services/bpprim.png'),
 
 
 
@@ -705,13 +702,10 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
       // height: 40.h,
       color: ColorManager.white,
       child: ListTile(
-        leading: InkWell(
-          onTap: ()=>Get.to(()=>ProfilePage(),transition: Transition.fade),
-          child: CircleAvatar(
-            backgroundColor: ColorManager.black,
-            radius: 20,
-            child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
-          ),
+        leading: CircleAvatar(
+          backgroundColor: ColorManager.black,
+          radius: 20,
+          child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -749,13 +743,10 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                 toolbarHeight: isWideScreen? 100:70.h,
                 backgroundColor: Colors.transparent,
                 elevation: 0,
-                leading: InkWell(
-                  onTap: ()=>Get.to(()=>ProfilePage(),transition: Transition.fade),
-                  child: CircleAvatar(
-                    backgroundColor: ColorManager.black,
-                    radius: isWideScreen? 30:20.sp,
-                    child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
-                  ),
+                leading: CircleAvatar(
+                  backgroundColor: ColorManager.black,
+                  radius: isWideScreen? 30:20.sp,
+                  child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
                 ),
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -836,7 +827,7 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 class FactCarousel extends StatelessWidget {
   final bool isWideScreen;
   FactCarousel(this.isWideScreen);
-  final List<String> imageList = ['assets/images/containers/Tip-Container.png', 'assets/images/containers/Tip-Container 2.png', 'assets/images/containers/Tip-Container-3.png'];
+  final List<String> imageList = ['assets/images/containers/Tip-Container.png', 'assets/images/containers/primary-container.png'];
 
   @override
   Widget build(BuildContext context) {

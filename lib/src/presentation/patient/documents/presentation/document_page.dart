@@ -52,42 +52,42 @@ class _PatientDocumentPageState extends ConsumerState<PatientDocumentPage> {
   @override
   Widget build(BuildContext context) {
 
-    return FadeIn(
-      duration: Duration(milliseconds: 700),
-      child: Scaffold(
-        backgroundColor: ColorManager.white.withOpacity(0.9),
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          backgroundColor: ColorManager.white.withOpacity(0.8),
-          elevation: 1,
-          title: Text('Documents',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
-          actions: [
-            IconButton(
-              onPressed: ()=>Get.to(()=>AddPatientDocuments(),transition: Transition.rightToLeftWithFade,duration: Duration(milliseconds: 500))
-              , icon: FaIcon(CupertinoIcons.add_circled,size: 28,),color: Colors.blue,),
-            IconButton(onPressed: ()=>Get.to(()=>SearchDocuments(),transition:Transition.rightToLeftWithFade)
-              , icon: FaIcon(Icons.search),color: Colors.blue,),
+    return Scaffold(
+      backgroundColor: ColorManager.white.withOpacity(0.9),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        backgroundColor: ColorManager.primaryDark.withOpacity(0.8),
+        elevation: 1,
+        leading: IconButton(
+          onPressed: ()=>Get.back(),
+          icon: FaIcon(CupertinoIcons.chevron_back),color:ColorManager.white,),
+        title: Text('Documents',style: getMediumStyle(color: ColorManager.white,fontSize: 24),),
+        actions: [
+          IconButton(
+            onPressed: ()=>Get.to(()=>AddPatientDocuments(),transition: Transition.rightToLeftWithFade,duration: Duration(milliseconds: 500))
+            , icon: FaIcon(CupertinoIcons.add_circled,size: 28,),color: ColorManager.white,),
+          IconButton(onPressed: ()=>Get.to(()=>SearchDocuments(),transition:Transition.rightToLeftWithFade)
+            , icon: FaIcon(Icons.search),color: ColorManager.white,),
+        ],
+      ),
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            h20,
+            FadeInUp(
+                duration: Duration(milliseconds: 500),
+                child: myFolders(context)),
+            FadeInUp(
+                duration: Duration(milliseconds: 600),
+                child: buildFile(context)),
+            h100
+
+
           ],
-        ),
-        body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              h20,
-              FadeInUp(
-                  duration: Duration(milliseconds: 500),
-                  child: myFolders(context)),
-              FadeInUp(
-                  duration: Duration(milliseconds: 700),
-                  child: buildFile(context)),
-              h100
-
-
-            ],
-          ),
         ),
       ),
     );
@@ -159,7 +159,9 @@ class _PatientDocumentPageState extends ConsumerState<PatientDocumentPage> {
                 }
               },
               error: (error,stack)=>Center(child: Text('$error'),),
-              loading: ()=>Center(child: SpinKitDualRing(color: ColorManager.blue,lineWidth: 20),)
+              loading: ()=>Container(
+                  height: 600,
+                  child: Center(child: SpinKitDualRing(color: ColorManager.blue,lineWidth: 20),))
           ),
           h20,
         ],
@@ -179,7 +181,7 @@ class _PatientDocumentPageState extends ConsumerState<PatientDocumentPage> {
       isLocked = false;
     }
     return Card(
-      elevation: 5,
+      elevation: 3,
       shadowColor: ColorManager.dotGrey.withOpacity(0.5),
       color: ColorManager.lightBlueAccent,
       shape: RoundedRectangleBorder(

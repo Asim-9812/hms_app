@@ -228,7 +228,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                       ),
                     ),
                   ),
-                  Center(child: Text('Create a Reminder',style: getHeadBoldStyle(color: ColorManager.white),)),
+                  Center(child: Text('Set a Reminder',style: getHeadBoldStyle(color: ColorManager.white),)),
                 ],
               )),
           

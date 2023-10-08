@@ -696,7 +696,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
                           selectSubscription: schemePlanId,
                           gradient: selectedScheme?.schemeName == 'GOLD'
                               ?ColorManager.goldContainer
-                              :selectedScheme?.schemeName == 'SILVER'
+                              :selectedScheme?.schemeName == 'SLIVER'
                               ?ColorManager.silverContainer
                               :selectedScheme?.schemeName == 'PLATINUM'
                               ?ColorManager.blackContainer
@@ -707,7 +707,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
 
                       h20,
                       Container(
-                        height: 250.h,
+                        height: 300,
                         child: ListView.builder(
                           scrollDirection: Axis.vertical,
                           itemCount: schemeMonth.length,
@@ -784,7 +784,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
                             selectSubscription: schemePlanId,
                             gradient: selectedScheme?.schemeName == 'GOLD'
                                 ?ColorManager.goldContainer
-                                :selectedScheme?.schemeName == 'SILVER'
+                                :selectedScheme?.schemeName == 'SLIVER'
                                 ?ColorManager.silverContainer
                                 :selectedScheme?.schemeName == 'PLATINUM'
                                 ?ColorManager.blackContainer
@@ -796,7 +796,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
 
                       h20,
                       Container(
-                        height: 250.h,
+                        height: 300,
                         child: ListView.builder(
 
                           scrollDirection: Axis.vertical,
