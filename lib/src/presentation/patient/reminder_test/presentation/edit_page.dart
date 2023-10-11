@@ -59,7 +59,7 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
   late String selectedMealName;
   late String selectedPatternName;
   late int selectedPatternId;
-  late List<String> selectedDays;
+  List<String>? selectedDays;
 
 
 
@@ -1129,19 +1129,21 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
                       onPressed: (){
 
 
+                        if(selectedDays!=null){
 
-
-                        for (int i = 0; i < isSelected.length; i++) {
-                          if (isSelected[i]) {
-                            setState(() {
-                              selectedDays.add(daysOfWeekMedication[i]);
-                            });
+                          for (int i = 0; i < isSelected.length; i++) {
+                            if (isSelected[i]) {
+                              setState(() {
+                                selectedDays!.add(daysOfWeekMedication[i]);
+                              });
+                            }
                           }
                         }
 
 
                         Map<String,dynamic> reminderTest = {
                           'reminderId' : updatedReminder['reminderId'],
+                          'userId' : updatedReminder['userId'],
                           'medTypeId' : selectedMedTypeId,
                           'medTypeName' : selectedMedTypeName,
                           'medicineName' : _medicineNameController.text.trim(),

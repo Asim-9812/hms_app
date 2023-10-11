@@ -7,6 +7,8 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../../../login/domain/model/user.dart';
+
 class TestCreate extends StatelessWidget {
   const TestCreate({super.key});
 
@@ -18,9 +20,13 @@ class TestCreate extends StatelessWidget {
 
 
   void saveData() async {
+    final userBox = Hive.box<User>('session').values.toList();
+    int userId = userBox[0].id!;
 
-   Map<String,dynamic> reminderTest = {
+
+    Map<String,dynamic> reminderTest = {
      'reminderId' : 1002,
+     'userId' : userId,
      'medTypeId' : 1,
      'medTypeName' : 'Tablet',
      'medicineName' : 'Medicine 2',
