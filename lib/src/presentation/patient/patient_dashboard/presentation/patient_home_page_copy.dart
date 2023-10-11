@@ -183,8 +183,6 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
 
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-    final userBox = Hive.box<User>('session').values.toList();
-    String firstName = userBox[0].firstName!;
 
 
     double getExpandedHeight(Size screenSize) {
@@ -231,66 +229,18 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
       return FadeIn(
         duration: Duration(milliseconds: 700),
         child: Scaffold(
-          backgroundColor: ColorManager.primary,
           key: scaffoldKey,
-            appBar: AppBar(
-              backgroundColor: ColorManager.primaryDark,
-              elevation: 0,
-              toolbarHeight: 120,
-              centerTitle: true,
-              titleSpacing: 0,
-              title: Container(
-                  width: double.infinity,
-                  height: 120,
-                padding: EdgeInsets.symmetric(horizontal: 18.w),
-                decoration: BoxDecoration(
-                  image: DecorationImage(image: AssetImage('assets/images/ban2.png'),fit: BoxFit.fitWidth)
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: ColorManager.black,
-                      radius:30,
-                      child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
-                    ),
-                    w10,
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-
-                        Text('Welcome,',style: getRegularStyle(color: ColorManager.white,fontSize: 16),),
-
-                        Text('$firstName',style: getMediumStyle(color: ColorManager.white,fontSize: 28),),
-                      ],
-                    ),
-                  ],
-                ),
-              )
-            ),
-          body: Container(
-
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10)
-                ),
-                color: ColorManager.white,
+          body: CustomScrollView(
+            physics: BouncingScrollPhysics(),
+            slivers: [
+              SliverPersistentHeader(
+                delegate: CustomSliverAppBarDelegate(widget.isWideScreen,widget.isNarrowScreen,expandedHeight:getExpandedHeight(MediaQuery.of(context).size), scaffoldKey: scaffoldKey),
+                pinned: true,
               ),
-              child: buildBody(context))
-
-          // CustomScrollView(
-          //   physics: BouncingScrollPhysics(),
-          //   slivers: [
-          //     // SliverPersistentHeader(
-          //     //   delegate: CustomSliverAppBarDelegate(widget.isWideScreen,widget.isNarrowScreen,expandedHeight:getExpandedHeight(MediaQuery.of(context).size), scaffoldKey: scaffoldKey),
-          //     //   pinned: true,
-          //     // ),
-          //     buildBody(context)
-          //   ],
-          // ),
-          // extendBody: true,
+              buildBody(context)
+            ],
+          ),
+          extendBody: true,
         ),
       );
 
@@ -300,16 +250,15 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
   }
 
   Widget buildBody(BuildContext context){
-    return SingleChildScrollView(
+    return SliverToBoxAdapter(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          h20,
           FactCarousel(widget.isWideScreen),
           h10,
 
           buildQuickServices(widget.isWideScreen),
-
+          h10,
           _buildHealthTips(widget.isWideScreen),
           h10,
           buildPersonalServices(widget.isWideScreen),
@@ -341,9 +290,9 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Text('Quick Services',style: getMediumStyle(color: ColorManager.black,fontSize: isWideScreen == true ? 20: 20.sp),),
-          //
-          // h10,
+          Text('Quick Services',style: getMediumStyle(color: ColorManager.black,fontSize: isWideScreen == true ? 20: 20.sp),),
+
+          h10,
           Container(
             height: 150.h,
             width: double.infinity,
@@ -587,7 +536,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                       ),
                     );
                   },
-                  name: 'Prescription', img: 'assets/images/ps/prescribe.png'
+                  name: 'Prescription', img: 'assets/personal_services/prx.png'
               ),
               _personalServices(
                   onTap:(){
@@ -598,7 +547,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                       ),
                     );
                   },
-                  name: 'Discharge Summary',  img: 'assets/images/ps/discharge.png'),
+                  name: 'Discharge Summary',  img: 'assets/personal_services/bed.png'),
               _personalServices(
                   onTap:(){
                     scaffoldMessage.showSnackBar(
@@ -608,7 +557,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                       ),
                     );
                   },
-                  name: 'Lab', img: 'assets/images/ps/lab.png'),
+                  name: 'Lab', img: 'assets/personal_services/lab.png'),
               _personalServices(
                   onTap:(){
                     scaffoldMessage.showSnackBar(
@@ -618,7 +567,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                       ),
                     );
                   },
-                  name: 'X-Ray', img: 'assets/images/ps/xray.png'),
+                  name: 'X-Ray', img: 'assets/personal_services/x-ray.png'),
               _personalServices(
                   onTap:(){
                     scaffoldMessage.showSnackBar(
@@ -628,7 +577,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                       ),
                     );
                   },
-                  name: 'USG',  img: 'assets/images/ps/usg.png'),
+                  name: 'USG',  img: 'assets/personal_services/ultra.png'),
               _personalServices(
                   onTap:(){
                     scaffoldMessage.showSnackBar(
@@ -638,7 +587,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                       ),
                     );
                   },
-                  name: 'CT Scan', img: 'assets/images/ps/ct.png'),
+                  name: 'CT Scan', img: 'assets/personal_services/ct.png'),
               _personalServices(
                   onTap:(){
                     scaffoldMessage.showSnackBar(
@@ -648,7 +597,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                       ),
                     );
                   },
-                  name: 'MRI', img:'assets/images/ps/mri.png'),
+                  name: 'MRI', img:'assets/personal_services/mri.png'),
               _personalServices(
                   onTap:(){
                     scaffoldMessage.showSnackBar(
@@ -658,7 +607,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                       ),
                     );
                   },
-                  name: 'Sugar', img:'assets/images/ps/sugar.png'),
+                  name: 'Sugar', img:'assets/personal_services/sugar.png'),
               _personalServices(
                   onTap:(){
                     scaffoldMessage.showSnackBar(
@@ -668,7 +617,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                       ),
                     );
                   },
-                  name: 'Blood Pressure', img:'assets/images/ps/bp.png'),
+                  name: 'Blood Pressure', img:'assets/personal_services/arm.png'),
 
 
 

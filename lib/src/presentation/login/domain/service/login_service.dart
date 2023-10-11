@@ -34,12 +34,15 @@ class LoginProvider{
             });
 
             if(response.statusCode == 200 && response.data["result"]["id"] != 0){
+              print(response.data['result']['contact']);
 
                 response.data["result"]["typeID"] = 4;
+
+                response.data["result"]["contactNo"] = response.data['result']['contact'];
                   final token = response.data["result"]["token"];
                   Box tokenBox = Hive.box<String>('tokenBox');
                   tokenBox.put('accessToken', token);
-                  (response.data);
+
                   return Right(response.data);
 
 

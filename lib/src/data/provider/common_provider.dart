@@ -36,9 +36,12 @@ class CommonProvider extends ChangeNotifier {
 
   bool noticeChange = true;
   int noticeIndex = 0;
-  int selectMealType = 0;
+  int selectMealType = 1;
   int selectPatternId = 0;
   // TabController tabController = TabController(length: 2, vsync: this);
+
+
+  bool isMenuOpen = false;
 
 
 
@@ -51,7 +54,14 @@ class CommonProvider extends ChangeNotifier {
   String strength ='';
   String strengthUnit ='';
   String frequency ='';
-  String mealTime ='';
+  String mealTime ='Before a Meal';
+
+
+
+  void updateMenu(bool value) {
+    isMenuOpen = value;
+    notifyListeners();
+  }
 
 
 

@@ -40,6 +40,7 @@ class AppSize {
 
 SizedBox h10 = SizedBox(height: 10.h,);
 SizedBox h12 = SizedBox(height: 12.h,);
+SizedBox h14 = SizedBox(height: 14.h,);
 SizedBox h16 = SizedBox(height: 16.h,);
 SizedBox h18 = SizedBox(height: 18.h,);
 SizedBox h20 = SizedBox(height: 20.h,);

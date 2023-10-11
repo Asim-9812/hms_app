@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,6 +20,7 @@ import '../../../notices/presentation/notices.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../../settings/settings_global.dart';
 import '../../profile/presentation/profile_page.dart';
+import '../../reminder_test/presentation/test_reminder_page.dart';
 import '../../reminders/widgets/create_reminder.dart';
 import '../../utilities/presentation/patient_utilities_test.dart';
 import 'patient_home_page.dart';
@@ -42,6 +44,10 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
 
 
 
+  bool _isMenuOpen = false;
+
+
+
 
 
 
@@ -54,6 +60,9 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
 
   @override
   Widget build(BuildContext context) {
+
+
+    final isMenuOpen = ref.watch(itemProvider).isMenuOpen;
     final scaffoldMessage = ScaffoldMessenger.of(context);
     final noticeBool = ref.watch(itemProvider).noticeChange;
     // Get the screen size
@@ -63,84 +72,136 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
     bool isWideScreen = screenSize.width > 500;
     bool isNarrowScreen = screenSize.width < 380;
 
-    return Scaffold(
-      extendBody: true, //to make floating action button notch transparent
+    return WillPopScope(
+      onWillPop: ()async{
+        if(selected == 0){
+          return true;
+        }
+        else{
+          setState(() {
+            selected =0;
+            controller.jumpToPage(selected);
+          });
+          return false;
+        }
 
-      //to avoid the floating action button overlapping behavior,
-      // when a soft keyboard is displayed
-      // resizeToAvoidBottomInset: false,
 
-      bottomNavigationBar: StylishBottomBar(
-        option: AnimatedBarOptions(
-          // iconSize: 32,
-          barAnimation: BarAnimation.fade,
-          iconStyle: IconStyle.animated,
-          // opacity: 0.3,
+      },
+      child: Scaffold(
+        extendBody: true, //to make floating action button notch transparent
+
+        //to avoid the floating action button overlapping behavior,
+        // when a soft keyboard is displayed
+        // resizeToAvoidBottomInset: false,
+
+        bottomNavigationBar: StylishBottomBar(
+          option: AnimatedBarOptions(
+            // iconSize: 32,
+            barAnimation: BarAnimation.fade,
+            iconStyle: IconStyle.animated,
+            // opacity: 0.3,
+          ),
+          items: [
+            BottomBarItem(
+
+              icon:  FaIcon(CupertinoIcons.home,size: isWideScreen?24:24.sp,),
+              // selectedIcon: const Icon(CupertinoIcons.home,size: isWideScreen?24:24.sp,),
+              selectedColor: ColorManager.primary,
+              // unSelectedColor: Colors.purple,
+              // backgroundColor: Colors.orange,
+              title:  Text('Home'),
+            ),
+            BottomBarItem(
+              icon:  FaIcon(Icons.calendar_month,size: isWideScreen?24:24.sp,),
+              // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
+              selectedColor: ColorManager.primary,
+              // unSelectedColor: Colors.purple,
+              // backgroundColor: Colors.orange,
+              title:  Text('Reminder'),
+            ),
+            BottomBarItem(
+              icon:  FaIcon(Icons.grid_view_outlined,size: isWideScreen?24:24.sp,),
+              // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
+              selectedColor: ColorManager.primary,
+              // unSelectedColor: Colors.purple,
+              // backgroundColor: Colors.orange,
+              title:  Text('Utilities'),
+            ),
+            BottomBarItem(
+              icon:  Container(
+                // color: ColorManager.red,
+                  width: isWideScreen?30:30.sp,
+
+                  child: Stack(
+                    children: [
+                      Center(child: Padding(
+
+                        padding:  EdgeInsets.only(top: 2),
+                        child: FaIcon(Icons.person,size: isWideScreen?24:24.sp,),
+                      )),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: CircleAvatar(
+                          radius: 6.sp,
+                          backgroundColor: ColorManager.red.withOpacity(0.7),
+                          child: Text('2',style:TextStyle(fontSize: 5) ,),
+                        ),
+                      )
+                    ],
+                  )),
+              // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
+              selectedColor: ColorManager.primary,
+              // unSelectedColor: Colors.purple,
+              // backgroundColor: Colors.orange,
+              title:  Text('Profile'),
+            ),
+          ],
+          hasNotch: true,
+          fabLocation: StylishBarFabLocation.center,
+          currentIndex: selected ?? 0,
+          onTap: (index) {
+            controller.jumpToPage(index);
+            setState(() {
+              selected = index;
+            });
+          },
         ),
-        items: [
-          BottomBarItem(
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              if(selected == 1){
 
-            icon:  FaIcon(CupertinoIcons.home,size: isWideScreen?24:24.sp,),
-            // selectedIcon: const Icon(CupertinoIcons.home,size: isWideScreen?24:24.sp,),
-            selectedColor: ColorManager.primary,
-            // unSelectedColor: Colors.purple,
-            // backgroundColor: Colors.orange,
-            title:  Text('Home'),
-          ),
-          BottomBarItem(
-            icon:  FaIcon(Icons.calendar_month,size: isWideScreen?24:24.sp,),
-            // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
-            selectedColor: ColorManager.primary,
-            // unSelectedColor: Colors.purple,
-            // backgroundColor: Colors.orange,
-            title:  Text('Reminder'),
-          ),
-          BottomBarItem(
-            icon:  FaIcon(Icons.grid_view_outlined,size: isWideScreen?24:24.sp,),
-            // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
-            selectedColor: ColorManager.primary,
-            // unSelectedColor: Colors.purple,
-            // backgroundColor: Colors.orange,
-            title:  Text('Utilities'),
-          ),
-          BottomBarItem(
-            icon:  FaIcon(Icons.person,size: isWideScreen?24:24.sp,),
-            // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
-            selectedColor: ColorManager.primary,
-            // unSelectedColor: Colors.purple,
-            // backgroundColor: Colors.orange,
-            title:  Text('Profile'),
-          ),
-        ],
-        hasNotch: true,
-        fabLocation: StylishBarFabLocation.center,
-        currentIndex: selected ?? 0,
-        onTap: (index) {
-          controller.jumpToPage(index);
-          setState(() {
-            selected = index;
-          });
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () =>selected == 1? Get.to(()=>CreateReminder(),transition: Transition.fade,curve: Curves.easeIn):Get.to(()=>QRViewExample()),
-        backgroundColor: selected == 1? ColorManager.white:ColorManager.primaryOpacity80,
-        child: FaIcon(selected == 1? Icons.add_alarm:Icons.qr_code_2_outlined,size: isWideScreen?40: 40.sp,color: selected == 1? ColorManager.primaryOpacity80:ColorManager.white,)
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: PageView(
-        onPageChanged: (value){
-          setState(() {
-            selected = value;
-          });
-        },
-        controller: controller,
-        children: [
-          PatientHomePage(isWideScreen,isNarrowScreen,noticeBool),
-          Reminders(),
-          PatientUtilities(isWideScreen,isNarrowScreen),
-          ProfilePage()
-        ],
+
+
+                ref.read(itemProvider.notifier).updateMenu(!isMenuOpen);
+
+                //Get.to(()=>CreateReminder(),transition: Transition.fade,curve: Curves.easeIn)
+              }
+              else{
+
+
+              // Get.to(()=>NoticesUI());
+              Get.to(()=>QRViewExample());
+              }
+            },
+            backgroundColor: selected == 1? ColorManager.white:ColorManager.primaryOpacity80,
+            child: FaIcon(selected == 1? !isMenuOpen ? Icons.add_alarm:CupertinoIcons.xmark:Icons.qr_code_2_outlined,size: isWideScreen?40: 40.sp,color: selected == 1? ColorManager.primaryOpacity80:ColorManager.white,)
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        body: PageView(
+          onPageChanged: (value){
+            setState(() {
+              selected = value;
+            });
+            ref.read(itemProvider.notifier).updateMenu(false);
+          },
+          controller: controller,
+          children: [
+            PatientHomePage(isWideScreen,isNarrowScreen,noticeBool),
+            TestRemind(),
+            PatientUtilities(isWideScreen,isNarrowScreen),
+            ProfilePage()
+          ],
+        ),
       ),
     );
   }

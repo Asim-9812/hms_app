@@ -83,7 +83,6 @@ class _NotificationPageState extends ConsumerState<NotificationPage> with Ticker
                     ]),
               ),
             ),
-            h20,
             Container(
               height: MediaQuery.of(context).size.height*3.9/5,
               child: noticeList.when(
@@ -93,8 +92,8 @@ class _NotificationPageState extends ConsumerState<NotificationPage> with Ticker
 
                       controller: _tabController,
                       children: [
-                        General(notificationList: data.where((element) => element.noticeType==1).toList()),
-                        Personal(notificationList: data.where((element) => element.noticeType==2).toList()),
+                        General(notificationList: data),
+                        Personal(notificationList: data.where((element) => element.noticeType==3).toList()),
                       ],
 
                     );

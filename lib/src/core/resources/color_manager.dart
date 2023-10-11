@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class ColorManager {
   // Sajha colors
-  static Color primary = HexColor.fromHex("#00aff0");
-  static Color primaryOpacity80 = HexColor.fromHex('#42bcea');
-  static Color primaryDark = HexColor.fromHex('#1383ad');
+  static Color primary = HexColor.fromHex("#28A89C");
+  static Color primaryOpacity80 = HexColor.fromHex('#28A89C');
+  static Color primaryDark = HexColor.fromHex('#28A89C');
   static Color splashColor = HexColor.fromHex('#10A194').withOpacity(0.8);
   static Color searchColor = HexColor.fromHex('#49EBDC');
   static Color lightGreen = HexColor.fromHex('#D8E9A8');
@@ -15,9 +15,9 @@ class ColorManager {
   static Color white = HexColor.fromHex('#ffffff');
   static Color listTile = HexColor.fromHex('#F9F8F8').withOpacity(0.5);
   static Color tileGreen = HexColor.fromHex('#EDF8EF');
-  static Color blue = HexColor.fromHex('#2191E5');
-  static Color lightBlueAccent = HexColor.fromHex('#E4F3FF');
-  static Color blueText = HexColor.fromHex('#0F5080');
+  static Color blue = HexColor.fromHex('#28A89C');
+  static Color lightBlueAccent = HexColor.fromHex('#28A89C');
+  static Color blueText = HexColor.fromHex('#28A89C');
   static Color red = HexColor.fromHex('#FF0000');
   static Color brightRed = HexColor.fromHex('#FF5733');
   static Color black = HexColor.fromHex('#36454F');

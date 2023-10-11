@@ -7,7 +7,7 @@ import 'package:medical_app/src/presentation/login/domain/model/user.dart';
 import 'package:medical_app/src/presentation/patient/calories/model/calorie_model.dart';
 import 'package:medical_app/src/presentation/patient/reminders/domain/model/reminder_model.dart';
 import 'package:medical_app/src/presentation/patient/reminders/widgets/create_reminder_test.dart';
-import 'package:workmanager/workmanager.dart';
+
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
 // @pragma('vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
@@ -72,6 +72,7 @@ void main() async {
   userBox2 = await Hive.openBox('user');
   // await Hive.openBox<UserProfileModel>('user_profile');
   final reminderBox =await Hive.openBox<ReminderModel>('medicine_reminder');
+  final reminderTestBox =await Hive.openBox<Map<String,dynamic>>('test_reminder');
   runApp(ProviderScope(
       overrides: [
         box.overrideWithValue(userBox.get('userData')),
@@ -79,6 +80,7 @@ void main() async {
         boxB.overrideWithValue(reminderBox.values.toList()),
       ],
 
-      child: MyApp()));
+      child: MyApp()
+  ));
 }
 

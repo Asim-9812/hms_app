@@ -1,16 +1,4 @@
-
-
-
-
-
-import 'dart:io';
-import 'dart:math';
-import 'dart:typed_data';
-
-import 'package:animate_do/animate_do.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,64 +6,123 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
-import 'package:medical_app/src/core/resources/color_manager.dart';
-import 'package:medical_app/src/core/resources/style_manager.dart';
-import 'package:medical_app/src/presentation/patient/reminders/data/reminder_db.dart';
-import 'package:medical_app/src/presentation/patient/reminders/domain/model/reminder_model.dart';
 
+import '../../../../core/resources/color_manager.dart';
+import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../../../data/provider/common_provider.dart';
 import '../../../common/snackbar.dart';
-import '../../../login/domain/model/user.dart';
-import '../data/reminder_provider.dart';
+import '../../reminders/data/reminder_db.dart';
 
-class CreateReminder extends ConsumerStatefulWidget {
-  const CreateReminder({super.key});
+class EditReminderPage extends ConsumerStatefulWidget {
+  final Map<String, dynamic> reminderTest;
+
+  EditReminderPage(this.reminderTest);
 
   @override
-  ConsumerState<CreateReminder> createState() => _CreateReminderState();
+  _EditReminderPageState createState() => _EditReminderPageState();
 }
 
-class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProviderStateMixin {
+class _EditReminderPageState extends ConsumerState<EditReminderPage> {
+  Map<String, dynamic> updatedReminder = {};
+
+  int page = 0;
+  PageController _pageController = PageController(initialPage: 0);
+
+
+
   final formKey1 = GlobalKey<FormState>();
   final formKey2 = GlobalKey<FormState>();
   final formKey3 = GlobalKey<FormState>();
   final formKey4 = GlobalKey<FormState>();
-  PageController _pageController = PageController(initialPage: 0);
+
+
   TextEditingController _medicineNameController = TextEditingController();
   TextEditingController _strengthController = TextEditingController();
   TextEditingController _startTimeController = TextEditingController();
-  TextEditingController _totalDaysController = TextEditingController();
+  TextEditingController _medicationDurationController = TextEditingController();
   TextEditingController _startDateController = TextEditingController();
   TextEditingController _endDateController = TextEditingController();
   TextEditingController _intervalDurationController = TextEditingController();
-  TextEditingController _noteController = TextEditingController();
-  TextEditingController _summaryController = TextEditingController();
-  int selectedMedicineType = 1;
-  String selectedMedicineTypeName = '';
+
+
+  late int selectedMedTypeId;
+  late String selectedMedTypeName;
   String? selectedStrengthUnit;
-  String? selectedFrequency;
-  String? selectedPattern;
+  late String selectedFrequencyName;
+  late List<String> scheduleTime;
+  late String intervals;
+  late int frequencyId;
+  late DateTime endDateIntake;
+  late DateTime startDateIntake;
+  late int selectedMealId;
+  late String selectedMealName;
+  late String selectedPatternName;
+  late int selectedPatternId;
+  late List<String> selectedDays;
 
 
-  int frequency = 0;
-  String? intervals;
-  List<String> intakeSchedule = [];
-  List<String> selectedDays = [];
-  DateTime? endDateIntake;
-  DateTime? startDateIntake;
-
-  bool selectDaysValidation = false;
-
-  int imageSet = 1;
-  int mealSet = 0;
-  
-  
-  int page = 0;
 
 
   List<bool> isSelected = [false, false, false, false, false, false, false];
 
+
+  bool selectDaysValidation = false;
+
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the updatedReminder with the data from Hive
+    updatedReminder = widget.reminderTest;
+    selectedMedTypeId = updatedReminder['medTypeId'];
+    selectedMedTypeName = updatedReminder['medTypeName'];
+    _medicineNameController.text = updatedReminder['medicineName'];
+    _strengthController.text = updatedReminder['strength'].toString();
+    selectedStrengthUnit = updatedReminder['unit'];
+    selectedFrequencyName = updatedReminder['frequency']['frequencyName'];
+    frequencyId = updatedReminder['frequency']['frequencyId'];
+    intervals = updatedReminder['frequency']['intervals'];
+    scheduleTime = updatedReminder['scheduleTime'];
+    _startTimeController.text = (updatedReminder['scheduleTime'] as List<String>).first;
+    _medicationDurationController.text = updatedReminder['medicationDuration'].toString();
+    _startDateController.text = DateFormat('yyyy-MM-dd').format(updatedReminder['startDate']);
+    _endDateController.text = DateFormat('yyyy-MM-dd').format(updatedReminder['endDate']);
+    startDateIntake =updatedReminder['startDate'];
+    endDateIntake =updatedReminder['endDate'];
+    selectedMealId =updatedReminder['mealTypeId'];
+    selectedMealName =updatedReminder['meal'];
+    selectedPatternName = updatedReminder['reminderPattern']['patternName'];
+    selectedPatternId = updatedReminder['reminderPattern']['reminderPatternId'];
+    if(updatedReminder['reminderPattern']['interval'] != null){
+      _intervalDurationController.text = updatedReminder['reminderPattern']['interval'].toString();
+    }
+
+    if(updatedReminder['reminderPattern']['daysOfWeek'] != null){
+      selectedDays = updatedReminder['reminderPattern']['daysOfWeek'];
+    }
+
+
+  }
+
+  void _updateReminder(Map<String, dynamic> reminder) {
+    final reminderBox = Hive.box<Map<String, dynamic>>('test_reminder');
+    // Get the index of the reminder to update based on its 'reminderId' (you should replace 1002 with the actual 'reminderId' you want to update)
+    final int indexToUpdate = reminderBox.values.toList().indexWhere((element) => element['reminderId'] == updatedReminder['reminderId']);
+
+    if (indexToUpdate != -1) {
+      // If the reminder is found, update it
+      reminderBox.putAt(indexToUpdate, reminder);
+      Navigator.pop(context); // Optionally, you can navigate back to the previous screen
+    } else {
+      // Handle the case where the reminder is not found
+      // You might want to show an error message or take appropriate action
+      // based on your app's requirements.
+      print('Reminder not found for update.');
+    }
+  }
 
   TimeOfDay _parseTime(String timeString) {
     final parsedTime = DateFormat('hh:mm a').parse(timeString);
@@ -102,30 +149,30 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
 
         _startTimeController.text = formattedTime;
 
-        // Calculate intake times based on selected frequency
-        intakeSchedule.clear(); // Clear the list before adding new times
+        // Calculate intake times based on selected frequencyId
+        scheduleTime.clear(); // Clear the list before adding new times
 
         // Add the initial selected time
-        intakeSchedule.add(formattedTime);
+        scheduleTime.add(formattedTime);
 
-        // Calculate additional times based on frequency
-        if (frequency >= 1) {
-          // Calculate intervals based on frequency
-          int intervalHours = 24 ~/ frequency;
+        // Calculate additional times based on frequencyId
+        if (frequencyId >= 1) {
+          // Calculate intervals based on frequencyId
+          int intervalHours = 24 ~/ frequencyId;
 
-          for (int i = 1; i < frequency; i++) {
+          for (int i = 1; i < frequencyId; i++) {
             // Add intervals to the selected time and add to the list
             selectedTime = TimeOfDay(
               hour: (selectedTime.hour + intervalHours) % 24,
               minute: selectedTime.minute,
             );
             final formattedTime = selectedTime.format(context);
-            intakeSchedule.add(formattedTime);
+            scheduleTime.add(formattedTime);
           }
         }
         setState(() {});
       }
-      print(intakeSchedule);
+      print(scheduleTime);
     }
     else{
       final scaffoldMessage = ScaffoldMessenger.of(context);
@@ -150,7 +197,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
 
       final DateTime? selectedDate = await showDatePicker(
         context: context,
-        initialDate: date.isBefore(now) ? now.add(Duration(days: 1)) :DateTime.now(),
+        initialDate:startDateIntake.isAfter(date)?startDateIntake: date.isBefore(now) ? now.add(Duration(days: 1)) :DateTime.now(),
         firstDate: date.isBefore(now) ? now.add(Duration(days: 1)) :DateTime.now(),
         lastDate: DateTime(2101),
       );
@@ -159,7 +206,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
       if (selectedDate != null) {
         setState(() {
           startDateIntake = selectedDate;
-          endDateIntake = selectedDate.add(Duration(days: int.parse(_totalDaysController.text)));
+          endDateIntake = selectedDate.add(Duration(days: int.parse(_medicationDurationController.text)));
         });
 
         final formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
@@ -168,7 +215,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
         _endDateController.text = formattedEndDate; // Set end date to start date by default
       }
     }
-   else{
+    else{
       final scaffoldMessage = ScaffoldMessenger.of(context);
       scaffoldMessage.showSnackBar(
         SnackbarUtil.showFailureSnackbar(
@@ -180,23 +227,21 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
   }
 
 
-  void printSelectedDays() {
-
-    for (int i = 0; i < isSelected.length; i++) {
-      if (isSelected[i]) {
-        selectedDays.add(daysOfWeekMedication[i]);
-      }
-    }
-    // print('Selected Days: ${selectedDays.join(', ')}');
-  }
-
-
+  // void printSelectedDays() {
+  //
+  //   for (int i = 0; i < isSelected.length; i++) {
+  //     if (isSelected[i]) {
+  //       selectedDays.add(daysOfWeekMedication[i]);
+  //     }
+  //   }
+  //   // print('Selected Days: ${selectedDays.join(', ')}');
+  // }
 
 
 
   @override
   Widget build(BuildContext context) {
-   // TabController _tabController = TabController(length: 2, vsync: this);
+    // TabController _tabController = TabController(length: 2, vsync: this);
     return GestureDetector(
       onTap: ()=>FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -209,13 +254,13 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
           titleSpacing: 0,
           automaticallyImplyLeading: false,
           title: Container(
-            width: double.infinity,
+              width: double.infinity,
               height: 100,
 
               child: Stack(
                 children: [
                   Positioned(
-                    top: 20,
+                      top: 20,
                       right: 60,
 
                       child: Transform.rotate(
@@ -223,7 +268,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                           child: FaIcon(CupertinoIcons.alarm,color: ColorManager.white.withOpacity(0.2),size: 70,))
                   ),
                   Positioned(
-                    top: 20,
+                      top: 20,
                       left: 40,
                       child: Transform.rotate(
                           angle: 30 * 3.14159265358979323846 / 180,
@@ -240,7 +285,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                   Center(child: Text('Set a Reminder',style: getHeadBoldStyle(color: ColorManager.white),)),
                 ],
               )),
-          
+
         ),
         body:  Container(
           height: 900,
@@ -260,12 +305,12 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color:   ColorManager.blueText,
-                              width: 2
+                            border: Border(
+                                bottom: BorderSide(
+                                    color:   ColorManager.blueText,
+                                    width: 2
+                                )
                             )
-                          )
                         ),
                         padding: EdgeInsets.symmetric(vertical: 24.h),
                         child:  Center(child: Text('Step 1',style: getMediumStyle(color: page == 0?ColorManager.blueText: ColorManager.black.withOpacity(0.4),fontSize: 20),)),
@@ -274,12 +319,12 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color:page == 1?  ColorManager.blueText :ColorManager.black.withOpacity(0.2),
-                              width: 2
+                            border: Border(
+                                bottom: BorderSide(
+                                    color:page == 1?  ColorManager.blueText :ColorManager.black.withOpacity(0.2),
+                                    width: 2
+                                )
                             )
-                          )
                         ),
                         padding: EdgeInsets.symmetric(vertical: 24.h),
                         child:  Center(child: Text('Step 2',style: getMediumStyle(color: page == 1? ColorManager.blueText: ColorManager.black.withOpacity(0.4),fontSize: 20),)),
@@ -301,45 +346,6 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                     ],
                   ),
                 ),
-                // h20,
-                // Row(
-                //   children: [
-                //     Expanded(
-                //       child: ElevatedButton(
-                //           style: ElevatedButton.styleFrom(
-                //               elevation: 0,
-                //               backgroundColor: ColorManager.black.withOpacity(0.7)
-                //           ),
-                //           onPressed: (){
-                //
-                //           }, child: Text('Back',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
-                //     ),
-                //     w10,
-                //     Expanded(
-                //       child: ElevatedButton(
-                //           style: ElevatedButton.styleFrom(
-                //               backgroundColor: ColorManager.primaryDark
-                //           ),
-                //           onPressed: (){
-                //             setState(() {
-                //               page = 1;
-                //               _pageController.nextPage(duration: Duration(microseconds: 500), curve: Curves.easeIn);
-                //             });
-                //             // formKey1.currentState!.validate();
-                //             // formKey2.currentState!.validate();
-                //             // formKey3.currentState!.validate();
-                //             //
-                //             // if(formKey1.currentState!.validate() && formKey2.currentState!.validate() && formKey3.currentState!.validate()){
-                //             //   print('success');
-                //             //   _tabController.index = 1;
-                //             // }
-                //             // else{
-                //             //   print('Unsucessful');
-                //             // }
-                //           }, child: Text('Save',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
-                //     ),
-                //   ],
-                // ),
               ],
             ),
           ),
@@ -349,6 +355,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
   }
 
   Widget _form1(PageController _pageController){
+
     return Form(
       key: formKey1,
       child: SingleChildScrollView(
@@ -367,8 +374,9 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                     splashColor: MaterialStateColor.resolveWith((states) => Colors.transparent),
                     onTap: (){
                       setState(() {
-                        selectedMedicineType =e.id;
-                        selectedMedicineTypeName = e.name;
+                        selectedMedTypeId =e.id;
+                        selectedMedTypeName = e.name;
+                        selectedStrengthUnit = null;
 
                       });
                       ref.read(itemProvider.notifier).updateMedicineType(e.name);
@@ -380,16 +388,16 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                         children: [
                           Container(
                               decoration: BoxDecoration(
-                                  color: selectedMedicineType ==e.id? ColorManager.blueText.withOpacity(0.3):ColorManager.dotGrey.withOpacity(0.5),
+                                  color: selectedMedTypeId ==e.id? ColorManager.blueText.withOpacity(0.3):ColorManager.dotGrey.withOpacity(0.5),
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
-                                      color:  selectedMedicineType ==e.id? ColorManager.blueText:ColorManager.dotGrey
+                                      color:  selectedMedTypeId ==e.id? ColorManager.blueText:ColorManager.dotGrey
                                   )
                               ),
                               padding:EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                              child: FaIcon(e.icon,color:selectedMedicineType ==e.id? ColorManager.blueText.withOpacity(0.8):ColorManager.black.withOpacity(0.4),)),
+                              child: FaIcon(e.icon,color:selectedMedTypeId ==e.id? ColorManager.blueText.withOpacity(0.8):ColorManager.black.withOpacity(0.4),)),
                           h10,
-                          Text(e.name,style: getRegularStyle(color: selectedMedicineType ==e.id? ColorManager.blueText.withOpacity(0.8):ColorManager.dotGrey,fontSize: 12),)
+                          Text(e.name,style: getRegularStyle(color: selectedMedTypeId ==e.id? ColorManager.blueText.withOpacity(0.8):ColorManager.dotGrey,fontSize: 12),)
                         ],
                       ),
                     ),
@@ -428,7 +436,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
               },
               autovalidateMode: AutovalidateMode.onUserInteraction,
               onChanged: (value){
-                ref.read(itemProvider.notifier).updateMedicineName(value);
+                // ref.read(itemProvider.notifier).updateMedicineName(value);
               },
 
             ),
@@ -471,58 +479,58 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                     },
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     onChanged: (value){
-                      ref.read(itemProvider.notifier).updateStrength(value);
+                      // ref.read(itemProvider.notifier).updateStrength(value);
                     },
                   ),
                 ),
                 w10,
                 Expanded(
                   child: DropdownButtonFormField(
-                      menuMaxHeight: 200,
-                      isDense: true,
-                      value:selectedStrengthUnit == null ? null : selectedStrengthUnit,
-                      decoration: InputDecoration(
+                    menuMaxHeight: 200,
+                    isDense: true,
+                    value:selectedStrengthUnit==null ? null :selectedStrengthUnit ,
+                    decoration: InputDecoration(
 
-                          isDense: true,
-                          labelText: 'Unit',
-                          labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: ColorManager.primaryDark
-                              )
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: ColorManager.primaryDark
-                              )
-                          )
-                      ),
-
-                      items: strengthType.where((element) => element.typeId == selectedMedicineType)
-                          .map(
-                            (StrengthModel item) => DropdownMenuItem<String>(
-                          value: item.unitName,
-                          child: Text(
-                            item.unitName,
-                            style: getRegularStyle(color: Colors.black,fontSize: 16.sp),
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                        isDense: true,
+                        labelText: 'Unit',
+                        labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                                color: ColorManager.primaryDark
+                            )
                         ),
-                      ).toList(),
-                      onChanged: (value){
-                        setState(() {
-                          selectedStrengthUnit = value!;
-                        });
-                          ref.read(itemProvider.notifier).updateStrengthUnit(value!);
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                                color: ColorManager.primaryDark
+                            )
+                        )
+                    ),
 
-                      },
+                    items: strengthType.where((element) => element.typeId == selectedMedTypeId)
+                        .map(
+                          (StrengthModel item) => DropdownMenuItem<String>(
+                        value: item.unitName,
+                        child: Text(
+                          item.unitName,
+                          style: getRegularStyle(color: Colors.black,fontSize: 16.sp),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ).toList(),
+                    onChanged: (value){
+                      setState(() {
+                        selectedStrengthUnit = value!;
+                      });
+                      // ref.read(itemProvider.notifier).updateStrengthUnit(value!);
+
+                    },
                     validator: (value){
-                        if(selectedStrengthUnit == null){
-                          return 'Please select a unit';
-                        }
-                        return null;
+                      if(selectedStrengthUnit == null){
+                        return 'Please select a unit';
+                      }
+                      return null;
                     },
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
@@ -536,7 +544,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
 
                 menuMaxHeight: 250,
                 isDense: true,
-                value: selectedFrequency == null ? null : selectedFrequency,
+                value: selectedFrequencyName,
                 decoration: InputDecoration(
 
                     isDense: true,
@@ -570,16 +578,16 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                 ).toList(),
                 onChanged: (value){
                   setState(() {
-                    intakeSchedule.clear();
+                    scheduleTime.clear();
                     _startTimeController.clear();
-                    selectedFrequency = value!;
-                    frequency = frequencyType.firstWhere((element) => element.frequencyName == value).id;
+                    selectedFrequencyName = value!;
+                    frequencyId = frequencyType.firstWhere((element) => element.frequencyName == value).id;
                     intervals = frequencyType.firstWhere((element) => element.frequencyName == value).frequencyInterval;
                   });
-                  ref.read(itemProvider.notifier).updateFrequency(selectedFrequency!);
+                  ref.read(itemProvider.notifier).updateFrequency(selectedFrequencyName!);
                 },
                 validator: (value){
-                  if(selectedFrequency == null){
+                  if(value == null){
                     return 'Please select a Frequency';
                   }
 
@@ -669,12 +677,13 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
 
               ],
             ),
-            if(intakeSchedule.isNotEmpty && intakeSchedule.length> 1)
+            h10,
+            if(scheduleTime.isNotEmpty && scheduleTime.length> 1)
               h10,
-            if(intakeSchedule.isNotEmpty && intakeSchedule.length> 1)
+            if(scheduleTime.isNotEmpty && scheduleTime.length> 1)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: intakeSchedule.map((e) {
+                children: scheduleTime.map((e) {
                   return Container(
                     padding: EdgeInsets.symmetric(vertical: 8.h,horizontal: 8.w),
                     decoration: BoxDecoration(
@@ -685,13 +694,13 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                   );
                 }).toList(),
               ),
-            if(intakeSchedule.isNotEmpty && intakeSchedule.length> 1)
-              h10,
-            h10,
+            if(scheduleTime.isNotEmpty && scheduleTime.length> 1)
+              h20,
+
             Form(
               key: formKey3,
               child: TextFormField(
-                controller: _totalDaysController,
+                controller: _medicationDurationController,
                 keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -818,6 +827,8 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                           backgroundColor: ColorManager.primaryDark
                       ),
                       onPressed: (){
+
+
                         formKey1.currentState!.validate();
                         formKey2.currentState!.validate();
                         formKey3.currentState!.validate();
@@ -830,7 +841,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                           _pageController.nextPage(duration: Duration(milliseconds: 500), curve: Curves.easeIn);
                         }
                         else{
-                          print('Unsucessful');
+                          print('Unsuccessful');
                         }
                       }, child: Text('Next',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
                 ),
@@ -849,10 +860,6 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
 
 
   Widget _form2(PageController _pageController){
-    final selectImage = ref.watch(imageProvider);
-    final selectMealType = ref.watch(itemProvider).selectMealType;
-    final selectedPatternId = ref.watch(itemProvider).selectPatternId;
-    _summaryController.text = '${ref.watch(itemProvider).medicineType} ${ref.watch(itemProvider).medicineName} ${ref.watch(itemProvider).strength} ${ref.watch(itemProvider).strengthUnit} ${ref.watch(itemProvider).frequency} ${ref.watch(itemProvider).mealTime}';
 
     return Form(
       key: formKey4,
@@ -867,18 +874,15 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                   children: [
                     InkWell(
                       onTap: (){
-                        ref.read(itemProvider.notifier).updateMealType(1);
-                        ref.read(itemProvider.notifier).updateMealTime('Before a Meal');
-                        setState(() {
-                          mealSet =0;
-                        });
+                        selectedMealId = 1;
+                        selectedMealName = 'Before a Meal';
                       },
                       child: Container(
                           decoration: BoxDecoration(
                               color: ColorManager.dotGrey.withOpacity(0.3),
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                  color: selectMealType == 1 ?ColorManager.primaryDark.withOpacity(0.7):ColorManager.black.withOpacity(0.5)
+                                  color: selectedMealId == 1 ?ColorManager.primaryDark.withOpacity(0.7):ColorManager.black.withOpacity(0.5)
                               )
                           ),
                           padding: EdgeInsets.symmetric(horizontal: 8.w),
@@ -890,7 +894,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                                 width: 10,
                                 height: 30,
                                 decoration: BoxDecoration(
-                                    color: selectMealType == 1 ? ColorManager.orange :Colors.transparent,
+                                    color: selectedMealId == 1 ? ColorManager.orange :Colors.transparent,
                                     borderRadius: BorderRadius.circular(10),
                                     border: Border.all(
                                         color: ColorManager.black.withOpacity(0.5)
@@ -899,24 +903,23 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                               ),
                               Container(
                                   padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                                  child: Image.asset(selectMealType == 1 ?'assets/icons/meal.png':'assets/icons/meal2.png',width: 50,height: 50,)),
+                                  child: Image.asset(selectedMealId == 1 ?'assets/icons/meal.png':'assets/icons/meal2.png',width: 50,height: 50,)),
 
                             ],
                           )
                       ),
                     ),
                     h10,
-                    Text('Before Meal',style: getRegularStyle(color: ColorManager.black,fontSize: 12),)
+                    Text('Before a Meal',style: getRegularStyle(color: ColorManager.black,fontSize: 12),)
                   ],
                 ),
                 Column(
                   children: [
                     InkWell(
                       onTap: (){
-                        ref.read(itemProvider.notifier).updateMealType(2);
-                        ref.read(itemProvider.notifier).updateMealTime('After a Meal');
                         setState(() {
-                          mealSet =0;
+                          selectedMealId =2 ;
+                          selectedMealName = 'After a Meal';
                         });
                       },
                       child: Container(
@@ -924,7 +927,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                               color: ColorManager.dotGrey.withOpacity(0.3),
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                  color:  selectMealType == 2 ? ColorManager.primaryDark.withOpacity(0.7): ColorManager.black.withOpacity(0.5)
+                                  color:  selectedMealId == 2 ? ColorManager.primaryDark.withOpacity(0.7): ColorManager.black.withOpacity(0.5)
                               )
                           ),
                           padding: EdgeInsets.symmetric(horizontal: 8.w),
@@ -934,12 +937,12 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                             children: [
                               Container(
                                   padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                                  child: Image.asset(selectMealType == 2 ?'assets/icons/meal.png':'assets/icons/meal2.png',width: 50,height: 50,)),
+                                  child: Image.asset(selectedMealId == 2 ?'assets/icons/meal.png':'assets/icons/meal2.png',width: 50,height: 50,)),
                               Container(
                                 width: 10,
                                 height: 30,
                                 decoration: BoxDecoration(
-                                    color: selectMealType == 2 ? ColorManager.orange : Colors.transparent,
+                                    color: selectedMealId == 2 ? ColorManager.orange : Colors.transparent,
                                     borderRadius: BorderRadius.circular(10),
                                     border: Border.all(
                                         color: ColorManager.black.withOpacity(0.5)
@@ -953,19 +956,12 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                       ),
                     ),
                     h10,
-                    Text('After Meal',style: getRegularStyle(color: ColorManager.black,fontSize: 12),)
+                    Text('After a Meal',style: getRegularStyle(color: ColorManager.black,fontSize: 12),)
                   ],
                 ),
 
               ],
             ),
-            if(mealSet ==1)
-              h10,
-            if(mealSet == 1)
-              Align(
-                alignment: Alignment.center,
-                child: Text('Please select a meal time',style: getRegularStyle(color: ColorManager.red,fontSize: 12),),
-              ),
             h20,
             DropdownButtonFormField(
 
@@ -990,7 +986,7 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                       )
                   )
               ),
-              value: selectedPattern == null ? null : selectedPattern,
+              value: selectedPatternName ,
 
               items: patternList
                   .map(
@@ -1005,16 +1001,17 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
               ).toList(),
               onChanged: (value){
                 setState(() {
-                  selectedPattern = value!;
+                  selectedPatternName = value!;
+                  selectedPatternId = patternList.firstWhere((element) => element.patternName == value).id;
                   isSelected = [false, false, false, false, false, false, false];
                   selectDaysValidation = false;
                 });
 
-                ref.read(itemProvider.notifier).updatePatternId(patternList.firstWhere((element) => element.patternName == value).id);
+                //ref.read(itemProvider.notifier).updatePatternId(patternList.firstWhere((element) => element.patternName == value).id);
 
               },
               validator: (value){
-                if(selectedPattern == null){
+                if(selectedPatternName == null){
                   return 'Reminder Pattern is required';
                 }
 
@@ -1108,199 +1105,6 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
 
             if(selectedPatternId == 2)
               h10,
-
-            Center(
-              child:selectImage != null
-                  ? Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: ColorManager.blueText.withOpacity(0.5),
-                ),
-                padding: EdgeInsets.symmetric(vertical: 18.h,horizontal: 12.w),
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Column(
-                        children: [
-                          Image.file(File(selectImage.path),width: 200,height: 100,),
-                          // h10,
-                          // Text('${selectImage.path}',style: getRegularStyle(color: ColorManager.black,fontSize: 14),overflow: TextOverflow.fade,maxLines: 1,)
-                        ],
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: InkWell(
-                        onTap: ()=>ref.invalidate(imageProvider),
-                        child: Container(
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: ColorManager.textGrey.withOpacity(0.15)
-                            ),
-                            padding: EdgeInsets.symmetric(horizontal: 2.w,vertical: 2.h),
-                            child: FaIcon(Icons.close)),
-                      ),
-                    )
-                  ],
-                ),
-              )
-                  :  DottedBorder(
-                dashPattern: [16,6,16,4],
-                color:imageSet == 2 ? ColorManager.red: ColorManager.textGrey,
-                radius: Radius.circular(20),
-                borderType: BorderType.RRect,
-                child: InkWell(
-                  onTap: () async {
-                    await showModalBottomSheet(
-
-                        backgroundColor: ColorManager.white,
-                        context: context,
-                        builder: (context){
-                          return Container(
-                            height: 150,
-                            padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Column(
-                                  children: [
-                                    InkWell(
-                                      onTap : (){
-                                        ref.read(imageProvider.notifier).camera();
-                                        Navigator.pop(context);
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
-                                            border: Border.all(
-                                                color: ColorManager.black.withOpacity(0.5)
-                                            )
-                                        ),
-                                        padding: EdgeInsets.symmetric(horizontal: 30.w,vertical: 30.h),
-                                        child: Icon(FontAwesomeIcons.camera,color: ColorManager.black,),
-                                      ),
-                                    ),
-                                    h10,
-                                    Text('Camera',style: getRegularStyle(color: ColorManager.black,fontSize: 16),)
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    InkWell(
-                                      onTap:(){
-                                        ref.read(imageProvider.notifier).pickAnImage();
-                                        Navigator.pop(context);
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
-                                            border: Border.all(
-                                                color: ColorManager.black.withOpacity(0.5)
-                                            )
-                                        ),
-                                        padding: EdgeInsets.symmetric(horizontal: 30.w,vertical: 30.h),
-                                        child: Icon(FontAwesomeIcons.image,color: ColorManager.black,),
-                                      ),
-                                    ),
-                                    h10,
-                                    Text('Gallery',style: getRegularStyle(color: ColorManager.black,fontSize: 16),)
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                    );
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: ColorManager.textGrey.withOpacity(0.1),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 18.h),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          FaIcon(FontAwesomeIcons.image,color: ColorManager.textGrey,),
-                          h10,
-                          Text('Please provide a image',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 20.sp),)
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            h20,
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    controller: _summaryController,
-                    readOnly: true,
-                    maxLines: null,
-                    decoration: InputDecoration(
-                      fillColor: ColorManager.dotGrey.withOpacity(0.4),
-                      filled: true,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ColorManager.black,
-                            width: 2
-                          )
-                      ),
-                      enabledBorder:  OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ColorManager.black,
-                            width: 2
-                          )
-                      ),
-                      labelText: 'Summary',
-                      labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
-
-                    ),
-                  ),
-                ),
-                w10,
-                Expanded(
-                  child: TextFormField(
-
-                    maxLines: null,
-                    controller: _noteController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ColorManager.blueText
-                          )
-                      ),
-                      enabledBorder:  OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ColorManager.primaryDark
-                          )
-                      ),
-                      labelText: 'Note (optional)',
-                      labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
-                      hintText: 'E.G. Take Medicine with water',
-                      hintStyle: getRegularStyle(color: ColorManager.black.withOpacity(0.7),fontSize: 16),
-
-                    ),
-
-                  ),
-                ),
-              ],
-            ),
-
-
-
-            h10,
             Row(
               children: [
                 Expanded(
@@ -1322,103 +1126,65 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
                       style: ElevatedButton.styleFrom(
                           backgroundColor: ColorManager.primaryDark
                       ),
-                      onPressed: () async {
-                        Uint8List? reminderImage;
-                        final scaffoldMessage = ScaffoldMessenger.of(context);
-                        final userBox = Hive.box<User>('session').values.toList();
-
-                        if(selectMealType == 0){
-                          setState(() {
-                            mealSet = 1;
-                          });
-                        }
-
-                        if(selectImage != null) {
-
-                           reminderImage = await selectImage.readAsBytes();
-
-                        }
+                      onPressed: (){
 
 
-                          for (int i = 0; i < isSelected.length; i++) {
-                            if (isSelected[i]) {
-                              setState(() {
-                                selectedDays.add(daysOfWeekMedication[i]);
-                              });
-                            }
-                          }
 
 
-                        formKey4.currentState!.validate();
-
-                          if(selectedPatternId == 2 && selectedDays.isEmpty ){
+                        for (int i = 0; i < isSelected.length; i++) {
+                          if (isSelected[i]) {
                             setState(() {
-                              selectDaysValidation = true;
+                              selectedDays.add(daysOfWeekMedication[i]);
                             });
-                            scaffoldMessage.showSnackBar(
-                              SnackbarUtil.showFailureSnackbar(
-                                message: 'Please select a day',
-                                duration: const Duration(milliseconds: 1400),
-                              ),
-                            );
                           }
-
-                          else{
-                            if(selectMealType != 0 && formKey4.currentState!.validate()){
-                              ReminderModel reminderModel = ReminderModel(
-                                  id:Random().nextInt(1000),
-                                  medicineType: selectedMedicineType,
-                                  medicineName: _medicineNameController.text.trim(),
-                                  strength: int.parse(_strengthController.text.trim()),
-                                  strengthUnitType: ref.watch(itemProvider).strengthUnit,
-                                  frequency: selectedFrequency!,
-                                  intakeTime: intakeSchedule,
-                                  totalDays: int.parse(_totalDaysController.text.trim()),
-                                  startDate: startDateIntake!,
-                                  endDate: endDateIntake!,
-                                  medicineTime: ref.watch(itemProvider).mealTime,
-                                  reminderDuration:selectedPatternId ==1 ? 0 : selectedPatternId ==2 ? 0 : selectedPatternId ==1 ? 1 :0 ,
-                                  breakDuration: selectedPatternId == 1 || selectedPatternId == 2 ? 0 : int.parse(_intervalDurationController.text.trim()),
-                                  summary: _summaryController.text.trim(),
-                                  createdDate: DateTime.now(),
-                                  userId: userBox[0].id!,
-                                  daysOfWeek: selectedPatternId == 2 ? selectedDays : null,
-                                  reminderNote: _noteController.text.isEmpty? null : _noteController.text.trim(),
-                                  reminderImage: reminderImage == null ? null : reminderImage
-
-                              );
-
-                              print(reminderModel.userId);
-                              print(reminderModel.medicineName);
-                              print(reminderModel.intakeTime);
-                              // print(reminderModel.reminderImage);
-                              print(reminderModel.daysOfWeek);
-                              print(reminderModel.summary);
-
-                              // await ref.read(reminderProvider.notifier).addReminder(reminderModel);
-
-                              await Hive.box<ReminderModel>('medicine_reminder').add(reminderModel);
-                              //
-                              // await Hive.box<ReminderModel>('medicine_reminder').save();
-
-                              // ref.refresh(reminderProvider);
-
-                              ref.read(itemProvider.notifier).updateMealType(1);
-
-                              scaffoldMessage.showSnackBar(
-                                SnackbarUtil.showSuccessSnackbar(
-                                  message: 'Reminder saved !',
-                                  duration: const Duration(milliseconds: 1400),
-                                ),
-                              );
+                        }
 
 
-                              Navigator.pop(context);
+                        Map<String,dynamic> reminderTest = {
+                          'reminderId' : updatedReminder['reminderId'],
+                          'medTypeId' : selectedMedTypeId,
+                          'medTypeName' : selectedMedTypeName,
+                          'medicineName' : _medicineNameController.text.trim(),
+                          'strength' : int.parse(_strengthController.text),
+                          'unit' : selectedStrengthUnit,
+                          'frequency' : {
+                            'frequencyId' : frequencyId,
+                            'frequencyName' : selectedFrequencyName,
+                            'intervals' : intervals
+                          } ,
+                          'scheduleTime' : scheduleTime,
+                          'medicationDuration' : _medicationDurationController.text.trim(),
+                          'startDate' : startDateIntake,
+                          'endDate' : endDateIntake,
+                          'mealTypeId' : selectedMealId,
+                          'meal' : selectedMealName,
+                          'reminderPattern' : {
+                            'reminderPatternId' : selectedPatternId,
+                            'patternName' : selectedPatternName,
+                            'interval' : selectedPatternId == 3 ? int.parse(_intervalDurationController.text):null,
+                            'daysOfWeek' : selectedPatternId == 2 ? selectedDays : null,
+                          } ,
+                          'reminderImage' : updatedReminder['reminderImage'],
+                          'notes':null,
+                          'summary':'this is a summary'
+                        };
 
-                            }
-                          }
+                        _updateReminder(reminderTest);
 
-
+                        // formKey1.currentState!.validate();
+                        // formKey2.currentState!.validate();
+                        // formKey3.currentState!.validate();
+                        //
+                        // if(formKey1.currentState!.validate() && formKey2.currentState!.validate() && formKey3.currentState!.validate()){
+                        //   print('success');
+                        //   setState(() {
+                        //     page = 1;
+                        //   });
+                        //   _pageController.nextPage(duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+                        // }
+                        // else{
+                        //   print('Unsucessful');
+                        // }
                       }, child: Text('Save',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
                 ),
               ],
@@ -1431,3 +1197,5 @@ class _CreateReminderState extends ConsumerState<CreateReminder> with TickerProv
 
 
 }
+
+

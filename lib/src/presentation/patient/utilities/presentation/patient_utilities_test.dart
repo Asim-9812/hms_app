@@ -1,18 +1,9 @@
 
-
-
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:medical_app/src/presentation/organization/organization_dashboard/presentation/org_homepage.dart';
-import 'package:pie_chart/pie_chart.dart';
-import 'package:syncfusion_flutter_charts/charts.dart' as sync;
-// import 'package:weather/weather.dart';
 
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
@@ -20,7 +11,6 @@ import '../../../../core/resources/value_manager.dart';
 import '../../../widgets/bmi.dart';
 import '../../../widgets/bmr.dart';
 import '../../../widgets/edd.dart';
-import '../../calories/presentation/testCalories.dart';
 
 class PatientUtilities extends StatefulWidget {
   final bool isWideScreen;
@@ -80,9 +70,9 @@ class _PatientUtilitiesState extends State<PatientUtilities> {
     return Scaffold(
       backgroundColor: ColorManager.dotGrey.withOpacity(0.01),
       appBar: AppBar(
-        backgroundColor: ColorManager.white,
+        backgroundColor: ColorManager.primaryDark.withOpacity(0.9),
         elevation: 1,
-        title: Text('Utilities',style: getRegularStyle(color: ColorManager.black),),
+        title: Text('Utilities',style: getMediumStyle(color: ColorManager.white),),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -496,7 +486,7 @@ class _PatientUtilitiesState extends State<PatientUtilities> {
             shrinkWrap: true,
             children: [
               _buildCalculators(
-                  icon: 'bmi2',
+                  icon: 'bmi_final',
                   name: 'BMI',
                   onTap: ()=>Get.to(()=>BMI())
               ),
@@ -506,7 +496,7 @@ class _PatientUtilitiesState extends State<PatientUtilities> {
                   onTap: ()=>Get.to(()=>BMR())
               ),
               _buildCalculators(
-                  icon: 'due-date2',
+                  icon: 'duedate',
                   name: 'Due Date',
                   onTap: ()=>Get.to(()=>EDD())
               )

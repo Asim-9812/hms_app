@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
+import 'package:medical_app/src/presentation/notification/presentation/notification_page.dart';
 
 import '../../../../core/resources/value_manager.dart';
 import '../../../common/snackbar.dart';
@@ -29,14 +30,25 @@ class ProfilePage extends ConsumerWidget {
 
     bool isNarrowScreen = screenSize.width < 380;
     bool isWideScreen = screenSize.width > 560;
+
+
+    final userBox = Hive.box<User>('session').values.toList();
+    String firstName = userBox[0].firstName!;
+    String mobileNo = userBox[0].contactNo!;
+    String email = userBox[0].email!;
     return Scaffold(
       backgroundColor: ColorManager.white.withOpacity(0.99),
       appBar: AppBar(
         elevation: 1,
-        backgroundColor: ColorManager.white,
+        backgroundColor: ColorManager.primaryDark,
         automaticallyImplyLeading: false,
-        title: Text('Profile',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
+        title: Text('Profile',style: getMediumStyle(color: ColorManager.white),),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed:()=>Get.to(()=>NotificationPage()),
+              icon: FaIcon(Icons.notifications,color: ColorManager.white,))
+        ],
 
       ),
       body: Column(
@@ -81,7 +93,7 @@ class ProfilePage extends ConsumerWidget {
                                   children: [
                                     FaIcon(FontAwesomeIcons.phone,color: ColorManager.primaryDark,),
                                     w20,
-                                    Text('98XXXXXXXX',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                                    Text(mobileNo,style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
 
                                   ],
                                 ),
@@ -104,7 +116,7 @@ class ProfilePage extends ConsumerWidget {
                                   children: [
                                     FaIcon(Icons.email_outlined,color: ColorManager.primaryDark,),
                                     w20,
-                                    Text('user@gmail.com',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                                    Text(email,style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
 
                                   ],
                                 ),
@@ -181,7 +193,7 @@ class ProfilePage extends ConsumerWidget {
     bool isNarrowScreen = screenSize.width < 420;
 
     final userBox = Hive.box<User>('session').values.toList();
-    String firstName = userBox[0].username!;
+    String firstName = userBox[0].firstName!;
 
 
 

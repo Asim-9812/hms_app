@@ -7,7 +7,6 @@ import 'package:esewa_flutter_sdk/esewa_config.dart';
 import 'package:esewa_flutter_sdk/esewa_flutter_sdk.dart';
 import 'package:esewa_flutter_sdk/esewa_payment.dart';
 import 'package:esewa_flutter_sdk/esewa_payment_success_result.dart';
-import 'package:esewa_flutter_sdk/payment_failure.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,19 +15,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
-import 'package:lottie/lottie.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/core/utils/shimmer.dart';
 import 'package:medical_app/src/presentation/login/presentation/login_page.dart';
 import 'package:medical_app/src/presentation/subscription-plan/domain/scheme_service.dart';
-import 'package:shimmer/shimmer.dart';
-
 import '../../../core/api.dart';
 import '../../../core/resources/value_manager.dart';
 import '../../../data/services/payment_services.dart';
 import '../../common/snackbar.dart';
-import '../../register/domain/register_service.dart';
 import '../domain/scheme_model.dart';
 
 class SubscriptionPageOrganization extends ConsumerStatefulWidget {

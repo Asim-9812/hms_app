@@ -57,14 +57,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
-  bookfx:
-    dependency: "direct main"
-    description:
-      name: bookfx
-      sha256: "115e64b263d077943440c885acf4a249bcdb1ba5a2ad26c41b9c027292fa0010"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.2"
   boolean_selector:
     dependency: transitive
     description:
@@ -137,14 +129,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.6.2"
-  buttons_tabbar:
-    dependency: "direct main"
-    description:
-      name: buttons_tabbar
-      sha256: "781128180f3e76cf93c093183f10395c664983dbee20bc4da2025be70085c2da"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.7+1"
   carousel_slider:
     dependency: "direct main"
     description:
@@ -344,14 +328,6 @@ packages:
       relative: true
     source: path
     version: "2.1.0+13"
-  expandable_text:
-    dependency: "direct main"
-    description:
-      name: expandable_text
-      sha256: "7d03ea48af6987b20ece232678b744862aa3250d4a71e2aaf1e4af90015d76b1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.3.0"
   fake_async:
     dependency: transitive
     description:
@@ -424,14 +400,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-  floating_action_bubble:
-    dependency: "direct main"
-    description:
-      name: floating_action_bubble
-      sha256: "760fd392eaf01e5bccf58889ceaf98d3e90f51066a7efd426d5db5888528931a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.4"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -485,14 +453,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.16"
-  flutter_rating_bar:
-    dependency: "direct main"
-    description:
-      name: flutter_rating_bar
-      sha256: d2af03469eac832c591a1eba47c91ecc871fe5708e69967073c043b2d775ed93
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.1"
   flutter_riverpod:
     dependency: "direct main"
     description:
@@ -518,7 +478,7 @@ packages:
     source: hosted
     version: "5.2.0"
   flutter_svg:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_svg
       sha256: "8c5d68a82add3ca76d792f058b186a0599414f279f00ece4830b9b231b570338"
@@ -543,14 +503,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.5.0"
-  freezed:
-    dependency: "direct main"
-    description:
-      name: freezed
-      sha256: "83462cfc33dc9680533a7f3a4a6ab60aa94f287db5f4ee6511248c22833c497f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.4.2"
   freezed_annotation:
     dependency: "direct dev"
     description:
@@ -856,7 +808,7 @@ packages:
     source: hosted
     version: "0.7.4"
   json_annotation:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: json_annotation
       sha256: b10a7b2ff83d83c777edba3c6a0f97045ddadd56c944e1a23a3fdf43a1bf4467
@@ -919,14 +871,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  lottie:
-    dependency: "direct main"
-    description:
-      name: lottie
-      sha256: b8bdd54b488c54068c57d41ae85d02808da09e2bee8b8dd1f59f441e7efa60cd
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.6.0"
   maps_launcher:
     dependency: "direct main"
     description:
@@ -1159,14 +1103,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.0"
-  pie_chart:
-    dependency: "direct main"
-    description:
-      name: pie_chart
-      sha256: "5dba6d0eb4718e8ed00a9079361cd8947c3f84ac5a5d76f05a27f4ec5e27589e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.3.2"
   platform:
     dependency: transitive
     description:
@@ -1548,14 +1484,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
-  workmanager:
-    dependency: "direct main"
-    description:
-      name: workmanager
-      sha256: e0be7e35d644643f164ee45d2ce14414f0e0fdde19456aa66065f35a0b1d2ea1
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.1"
   xdg_directories:
     dependency: transitive
     description:

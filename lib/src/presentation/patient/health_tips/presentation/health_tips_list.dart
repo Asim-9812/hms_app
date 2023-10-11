@@ -10,6 +10,7 @@ import 'package:medical_app/src/presentation/patient/health_tips/domain/services
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../domain/model/health_tips_model.dart';
+import 'health_pop_up.dart';
 
 
 class HealthTipsList extends ConsumerStatefulWidget {
@@ -23,7 +24,7 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
   final CarouselController _carouselController = CarouselController();
   int _currentSlide = 0; // Store the current slide index
 
-  final List<String> imageList = ['assets/images/containers/primary-container.png','assets/images/containers/Tip-Container.png'];
+  final List<String> imageList = ['assets/images/containers/Tip-Container-3.png'];
 
 
   @override
@@ -43,7 +44,7 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
             CarouselSlider(
               carouselController: _carouselController,
               options: CarouselOptions(
-                height: 80,
+                height: 150,
                 enlargeCenterPage: true,
                 pageSnapping: true,
                 autoPlay: true,
@@ -64,29 +65,125 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
 
                 return SingleChildScrollView(
                   child: Container(
+                    height: 150,
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
+                    padding: EdgeInsets.only(left: 18.w, top: 8.h,bottom: 8.h),
                     decoration: BoxDecoration(
-                      image: DecorationImage(image: AssetImage(imageList[index]),fit: BoxFit.cover),
+                      // image: DecorationImage(image: AssetImage(imageList[index]),fit: BoxFit.cover),
+                      color: ColorManager.primary,
                       borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: ColorManager.primary
+                      )
                     ),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('${tips.type}', style: getMediumStyle(color: ColorManager.white, fontSize: 20)),
-                        h10,
-                        Text(
-                          tips.description ?? '',
-                          style: getRegularStyle(color: ColorManager.white, fontSize: 18,),maxLines: 1,
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text('By JOHN DOE',style: getMediumStyle(color: ColorManager.white, fontSize: 16,),maxLines: 1,),
-                        )
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
 
-                      ],
-                    ),
+                      Container(
+                        height: 100,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            tips.description ?? '',
+                            style: getRegularStyle(color: ColorManager.white, fontSize: 18,),maxLines: 4,overflow: TextOverflow.ellipsis,softWrap: true,
+                          ),
+                        ),
+                      ),
+
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            InkWell(
+                              onTap:() async {
+                                // Get.to(()=>TestTips(tips));
+                                await showDialog(
+                                    context: context,
+                                    builder: (context){
+                                      return AlertDialog(
+                                        contentPadding: EdgeInsets.zero,
+                                        backgroundColor: Colors.transparent,
+                                        content: Container(
+                                          decoration: BoxDecoration(
+                                              color: ColorManager.primary,
+                                              borderRadius: BorderRadius.circular(5)
+                                          ),
+
+                                          width: 300,
+                                          padding: EdgeInsets.symmetric(vertical: 18.h,horizontal: 18.w),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text('Health Tip',style: getMediumStyle(color: ColorManager.white,fontSize: 24),),
+                                              Divider(
+                                                color: ColorManager.white,
+                                              ),
+                                              h10,
+                                              Container(
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white.withOpacity(0.9),
+                                                    borderRadius: BorderRadius.circular(5)
+                                                ),
+                                                padding: EdgeInsets.symmetric(vertical: 12.h,horizontal: 8.h),
+                                                child: Text(tips.description!,style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                                              ),
+                                              h20,
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  ElevatedButton(
+                                                      style: ElevatedButton.styleFrom(
+                                                          backgroundColor: ColorManager.white
+                                                      ),
+                                                      onPressed: (){
+                                                        Navigator.pop(context);
+                                                      }, child: Text('OK',style: getMediumStyle(color: ColorManager.primary,fontSize: 16),)),
+                                                  Column(
+                                                    children: [
+                                                      Text('- John Doe',style: getMediumStyle(color: Colors.white,fontSize: 18),),
+                                                      h10,
+                                                      Text('2023-10-10',style: getMediumStyle(color: Colors.white,fontSize: 18),)
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+
+
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                );
+                              },
+                              child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 8.h),
+                                  decoration: BoxDecoration(
+                                      color: ColorManager.orange.withOpacity(0.7),
+                                      borderRadius: BorderRadius.circular(10)
+                                  ),
+                                  child: Text('See more',style: getMediumStyle(color: ColorManager.white, fontSize: 16,),maxLines: 1,)),
+                            ),
+                            Container(
+                                padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 8.h),
+                                decoration: BoxDecoration(
+                                    color: ColorManager.orange.withOpacity(0.7),
+                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(10),bottomLeft: Radius.circular(10))
+                                ),
+                                child: Text('By JOHN DOE',style: getMediumStyle(color: ColorManager.white, fontSize: 16,),maxLines: 1,)),
+                          ],
+                        ),
+                      )
+
+
+
+                    ],
+                      ),
                   ),
                 );
               }).toList(),
@@ -107,7 +204,7 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: _currentSlide == index
-                          ? ColorManager.primary // Active dot color
+                          ? ColorManager.primary.withOpacity(0.7) // Active dot color
                           : ColorManager.dotGrey.withOpacity(0.5), // Inactive dot color
                     ),
                   ),

@@ -14,6 +14,7 @@ import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/presentation/patient/scan/presentation/scanner_error_widget.dart';
 import 'package:mobile_scanner/mobile_scanner.dart' as mobile_scanner;
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart' as qr_scanner;
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -44,6 +45,25 @@ class _QRViewExampleState extends State<QRViewExample> {
     autoStart: false,
   );
 
+
+  @override
+  void initState() {
+    super.initState();
+    // Request camera permission when the widget initializes
+    requestCameraPermission();
+  }
+
+  Future<void> requestCameraPermission() async {
+    final status = await Permission.camera.request();
+    if (status.isGranted) {
+      // Permission is granted, you can initialize the QR code scanner here.
+    } else if (status.isDenied) {
+      // Permission is denied, you can handle this case accordingly (show a dialog, etc.).
+    } else if (status.isPermanentlyDenied) {
+      // Permission is permanently denied, you can ask the user to open settings to grant the permission.
+      openAppSettings();
+    }
+  }
 
 
 

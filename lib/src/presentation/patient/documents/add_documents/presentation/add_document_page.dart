@@ -13,7 +13,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:hive/hive.dart';
-import 'dart:ffi' as ffi;
 import 'package:intl/intl.dart';
 
 import '../../../../../core/resources/color_manager.dart';

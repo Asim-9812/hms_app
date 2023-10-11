@@ -20,17 +20,22 @@ import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../data/reminder_db.dart';
 
-class ReminderIndividual extends StatelessWidget {
+class ReminderIndividual extends StatefulWidget {
   final ReminderModel reminderModel;
   ReminderIndividual({required this.reminderModel});
-  
+
+  @override
+  State<ReminderIndividual> createState() => _ReminderIndividualState();
+}
+
+class _ReminderIndividualState extends State<ReminderIndividual> {
   final _noteController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    _noteController.text = reminderModel.reminderNote == null ? '' : reminderModel.reminderNote!;
+    _noteController.text = widget.reminderModel.reminderNote == null ? '' : widget.reminderModel.reminderNote!;
     final currentTime = DateTime.now();
-    final remainingDays = reminderModel.endDate.difference(currentTime);
+    final remainingDays = widget.reminderModel.endDate.difference(currentTime);
     return Scaffold(
       backgroundColor: ColorManager.primaryDark,
       appBar: AppBar(
@@ -90,16 +95,16 @@ class ReminderIndividual extends StatelessWidget {
                 CircleAvatar(
                   radius: 30,
                   backgroundColor: ColorManager.primaryDark,
-                  child: FaIcon(medicineType.firstWhere((element) => element.id == reminderModel.medicineType).icon,color: ColorManager.white.withOpacity(0.5),size: 30,),
+                  child: FaIcon(medicineType.firstWhere((element) => element.id == widget.reminderModel.medicineType).icon,color: ColorManager.white.withOpacity(0.5),size: 30,),
                 ),
                 w20,
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('${reminderModel.medicineName}',style: getSemiBoldStyle(color: ColorManager.black,fontSize: 32),),
+                    Text('${widget.reminderModel.medicineName}',style: getSemiBoldStyle(color: ColorManager.black,fontSize: 32),),
                     h10,
                     Row(
-                      children: reminderModel.intakeTime.map((e){
+                      children: widget.reminderModel.intakeTime.map((e){
                         return Container(
                           padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
                           margin: EdgeInsets.only(right: 5.w),
@@ -126,7 +131,7 @@ class ReminderIndividual extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -134,10 +139,10 @@ class ReminderIndividual extends StatelessWidget {
                         children: [
                           Text('Dose:',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
                           w10,
-                          Text('${reminderModel.strength} ${reminderModel.strengthUnitType}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
+                          Text('${widget.reminderModel.strength} ${widget.reminderModel.strengthUnitType}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
                         ],
                       ),
-                      Text('${reminderModel.medicineTime}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),)
+                      Text('${widget.reminderModel.medicineTime}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),)
 
 
                     ],
@@ -148,7 +153,7 @@ class ReminderIndividual extends StatelessWidget {
                     children: [
                       Text('Frequency:',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
                       w10,
-                      Text('${reminderModel.frequency}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
+                      Text('${widget.reminderModel.frequency}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
                     ],
                   ),
                   h20,
@@ -157,19 +162,19 @@ class ReminderIndividual extends StatelessWidget {
                     children: [
                       Text('Duration:',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
                       w10,
-                      Text('${reminderModel.totalDays} days',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
+                      Text('${widget.reminderModel.totalDays} days',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
                     ],
                   ),
                   h20,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text('Intervals:',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
+                      Text('Consumption Pattern:',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
                       w10,
-                      reminderModel.breakDuration != 0 ? Text('Every ${reminderModel.breakDuration} days',style: getRegularStyle(color: ColorManager.white,fontSize: 18),)
-                          : reminderModel.daysOfWeek == null ?   Text('Everyday',style: getRegularStyle(color: ColorManager.white,fontSize: 18),)
+                      widget.reminderModel.breakDuration != 0 ? Text('Every ${widget.reminderModel.breakDuration} days',style: getRegularStyle(color: ColorManager.white,fontSize: 18),)
+                          : widget.reminderModel.daysOfWeek == null ?   Text('Everyday',style: getRegularStyle(color: ColorManager.white,fontSize: 18),)
                           : Row(
-                        children: reminderModel.daysOfWeek!.map((e){
+                        children: widget.reminderModel.daysOfWeek!.map((e){
                           return Container(
                             padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
                             margin: EdgeInsets.only(right: 5.w),
@@ -188,7 +193,7 @@ class ReminderIndividual extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             h20,
             Container(
               decoration: BoxDecoration(
@@ -207,7 +212,7 @@ class ReminderIndividual extends StatelessWidget {
                         children: [
                           Text('Start Date',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
                           h10,
-                          Text('${DateFormat('yyyy-MM-dd').format(reminderModel.startDate)}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
+                          Text('${DateFormat('yyyy-MM-dd').format(widget.reminderModel.startDate)}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
                         ],
                       ),
 
@@ -216,7 +221,7 @@ class ReminderIndividual extends StatelessWidget {
                         children: [
                           Text('End Date',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
                           h10,
-                          Text('${DateFormat('yyyy-MM-dd').format(reminderModel.endDate)}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
+                          Text('${DateFormat('yyyy-MM-dd').format(widget.reminderModel.endDate)}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
                         ],
                       ),
                     ],
@@ -227,13 +232,13 @@ class ReminderIndividual extends StatelessWidget {
                     children: [
                       Text('Progress:',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
                       w10,
-                      Text('${remainingDays.inDays} days left',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
+                      Text('${remainingDays.inDays +1} days left',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
                     ],
                   ),
                   h10,
                   LinearProgressBar(
-                      maxSteps: reminderModel.totalDays,
-                      currentStep: reminderModel.totalDays - remainingDays.inDays,
+                      maxSteps: widget.reminderModel.totalDays,
+                      currentStep: widget.reminderModel.totalDays - remainingDays.inDays-1,
                       progressColor: ColorManager.orange,
                       backgroundColor: ColorManager.dotGrey
                   ),
@@ -244,10 +249,10 @@ class ReminderIndividual extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if(reminderModel.reminderImage != null)
+                if(widget.reminderModel.reminderImage != null)
                 InkWell(
                   onTap: (){
-                    final image = Image.memory(reminderModel.reminderImage!).image;
+                    final image = Image.memory(widget.reminderModel.reminderImage!).image;
                     showImageViewer(context, image, onViewerDismissed: () {
                       print("dismissed");
                     });
@@ -259,11 +264,11 @@ class ReminderIndividual extends StatelessWidget {
                       width: 100,height: 100,
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: Image.memory(reminderModel.reminderImage!,fit: BoxFit.cover,))),
+                          child: Image.memory(widget.reminderModel.reminderImage!,fit: BoxFit.cover,))),
                 ),
-                if(reminderModel.reminderNote != null&&reminderModel.reminderImage != null)
+                if(widget.reminderModel.reminderNote != null&&widget.reminderModel.reminderImage != null)
                 w10,
-                if(reminderModel.reminderNote != null)
+                if(widget.reminderModel.reminderNote != null)
                   Expanded(
                     child: AbsorbPointer(
                       child: TextFormField(
@@ -304,9 +309,43 @@ class ReminderIndividual extends StatelessWidget {
                       backgroundColor: ColorManager.red.withOpacity(0.7),
                       elevation: 0
                     ),
-                      onPressed: (){
-                        reminderModel.delete();
-                        Navigator.pop(context);
+                      onPressed: () async {
+                       int back = 0;
+                        await showDialog(
+                            context: context,
+                            builder: (context){
+                              return AlertDialog(
+                                content: Text('Do you want to delete this reminder?',style: getRegularStyle(color: ColorManager.black),),
+                                actions: [
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: ColorManager.primaryDark
+                                      ),
+                                      onPressed: (){
+                                        widget.reminderModel.delete();
+                                        setState(() {
+                                          back = 1;
+                                        });
+                                        Navigator.pop(context);
+                                      }, child: Text('Yes')),
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        elevation: 0,
+                                          backgroundColor: ColorManager.dotGrey
+                                      ),
+                                      onPressed: (){
+
+                                        Navigator.pop(context);
+
+                                      }, child: Text('No',style: TextStyle(color: ColorManager.black),)),
+                                ],
+                                actionsAlignment: MainAxisAlignment.center,
+                              );
+                            }
+                        );
+                        if(back == 1){
+                          Get.back();
+                        }
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -338,7 +377,7 @@ class ReminderIndividual extends StatelessWidget {
                 // ),
               ],
             )
-            
+
           ],
         ),
       ),
