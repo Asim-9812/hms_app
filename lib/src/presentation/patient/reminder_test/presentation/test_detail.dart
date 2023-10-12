@@ -19,6 +19,7 @@ class TestDetails extends StatefulWidget {
 
 class _TestDetailsState extends State<TestDetails> {
 
+  GlobalKey<_TestDetailsState> refreshKey = GlobalKey();
 
 
 
@@ -70,7 +71,10 @@ class _TestDetailsState extends State<TestDetails> {
   @override
   Widget build(BuildContext context) {
     // Decode the image
-    final img.Image? image = img.decodeImage(widget.reminderTest['reminderImage']);
+     img.Image? image;
+    if(widget.reminderTest['reminderImage'] !=null){
+      image =img.decodeImage(widget.reminderTest['reminderImage']);
+    }
 
     final reminder = Hive.box<Map<String,dynamic>>('test_reminder');
 
@@ -78,7 +82,7 @@ class _TestDetailsState extends State<TestDetails> {
 
     final reminderBox = reminder.getAt(index)!;
 
-    print(reminderBox);
+
 
 
     return Scaffold(
@@ -132,8 +136,26 @@ class _TestDetailsState extends State<TestDetails> {
                 subtitle: Text('Summary: ${reminderBox['summary']}'),
               ),
             ),
-            ElevatedButton(onPressed: ()=>Get.to(()=>EditReminderPage(reminderBox))
-                , child: Text('Edit'))
+            // if(reminderBox['daysOfWeek'].runtimeType == List)
+            Card(
+              child: ListTile(
+                title: Text('intervals: ${reminderBox['reminderPattern']['daysOfWeek'] ??reminderBox['reminderPattern']['interval'] ?? 'Everday' }'),
+              ),
+            ),
+
+            ElevatedButton(
+              onPressed: () async {
+                final result = await Get.to(() => EditReminderPage(reminderBox));
+                if (result != null && result == true) {
+                  // Data has changed; refresh the page
+                  setState(() {
+                    // Refresh the page as needed
+                  });
+                }
+              },
+              child: Text('Edit'),
+            ),
+
 
           ],
         ),

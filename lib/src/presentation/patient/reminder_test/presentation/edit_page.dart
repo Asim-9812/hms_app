@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,6 +35,8 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
 
 
 
+
+
   final formKey1 = GlobalKey<FormState>();
   final formKey2 = GlobalKey<FormState>();
   final formKey3 = GlobalKey<FormState>();
@@ -59,12 +65,17 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
   late String selectedMealName;
   late String selectedPatternName;
   late int selectedPatternId;
-  List<String>? selectedDays;
+  // List<String> selectedDays = [];
+
+  List? days;
+  late int imageSet;
 
 
 
 
-  List<bool> isSelected = [false, false, false, false, false, false, false];
+
+  List<bool>? isSelected;
+  // List<bool> isSelected = [false, false, false, false, false, false, false];
 
 
   bool selectDaysValidation = false;
@@ -101,8 +112,23 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
     }
 
     if(updatedReminder['reminderPattern']['daysOfWeek'] != null){
-      selectedDays = updatedReminder['reminderPattern']['daysOfWeek'];
+      days = updatedReminder['reminderPattern']['daysOfWeek'];
+      isSelected = [
+        days!.contains('Monday'),
+        days!.contains('Tuesday'),
+        days!.contains('Wednesday'),
+        days!.contains('Thursday'),
+        days!.contains('Friday'),
+        days!.contains('Saturday'),
+        days!.contains('Sunday'),
+      ];
     }
+
+
+     imageSet = updatedReminder['reminderImage'] != null ? 1:2;
+
+
+
 
 
   }
@@ -115,7 +141,7 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
     if (indexToUpdate != -1) {
       // If the reminder is found, update it
       reminderBox.putAt(indexToUpdate, reminder);
-      Navigator.pop(context); // Optionally, you can navigate back to the previous screen
+      Navigator.pop(context,true); // Optionally, you can navigate back to the previous screen
     } else {
       // Handle the case where the reminder is not found
       // You might want to show an error message or take appropriate action
@@ -227,16 +253,34 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
   }
 
 
-  // void printSelectedDays() {
-  //
-  //   for (int i = 0; i < isSelected.length; i++) {
-  //     if (isSelected[i]) {
-  //       selectedDays.add(daysOfWeekMedication[i]);
-  //     }
-  //   }
-  //   // print('Selected Days: ${selectedDays.join(', ')}');
-  // }
+  void printSelectedDays() {
+    List<String> list = [];
 
+    // selectedDays.clear(); // Clear the list before populating it
+    if(isSelected != null){
+      for (int i = 0; i < isSelected!.length; i++) {
+
+        if (isSelected![i]) {
+          print(daysOfWeekMedication[i]);
+          list.add(daysOfWeekMedication[i]);
+
+
+          // selectedDays.add(daysOfWeekMedication[i]);
+        }
+      }
+    }
+
+
+    setState(() {
+      days = list;
+    });
+    // Print the selected days
+    // print('Selected Days: ${selectedDays.join(', ')}');
+    print(isSelected);
+    print(days);
+
+
+  }
 
 
   @override
@@ -860,6 +904,7 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
 
 
   Widget _form2(PageController _pageController){
+    final selectImage = ref.watch(imageProvider);
 
     return Form(
       key: formKey4,
@@ -1069,14 +1114,14 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
                   return GestureDetector(
                     onTap: () {
                       setState(() {
-                        isSelected[index] = !isSelected[index];
+                        isSelected![index] = !isSelected![index];
                         selectDaysValidation = false;
                       });
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
                       decoration: BoxDecoration(
-                        color: isSelected[index]
+                        color: isSelected![index]
                             ? ColorManager.primaryDark
                             : ColorManager.dotGrey.withOpacity(0.5), // Selected and unselected colors
                         borderRadius: BorderRadius.circular(10.0),
@@ -1084,7 +1129,7 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
                       child: Text(
                         '${day.substring(0, 3)}',
                         style: TextStyle(
-                          color: isSelected[index]
+                          color: isSelected![index]
                               ? ColorManager.white
                               : Colors.black, // Text color when selected and unselected
                           fontSize: 16.0,
@@ -1105,6 +1150,180 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
 
             if(selectedPatternId == 2)
               h10,
+
+
+            if(imageSet ==1 )
+              Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: ColorManager.white,
+                    border: Border.all(
+                      color: ColorManager.black.withOpacity(0.5)
+                    )
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 18.h,horizontal: 12.w),
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Column(
+                          children: [
+                            Image.memory(updatedReminder['reminderImage'],width: 200,height: 100,),
+                            // h10,
+                            // Text('${selectImage.path}',style: getRegularStyle(color: ColorManager.black,fontSize: 14),overflow: TextOverflow.fade,maxLines: 1,)
+                          ],
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: InkWell(
+                          onTap: (){
+                            setState(() {
+                              imageSet = 2;
+                            });
+                          },
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: ColorManager.textGrey.withOpacity(0.15)
+                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 2.w,vertical: 2.h),
+                              child: FaIcon(Icons.close)),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+
+            if(imageSet == 2)
+
+              Center(
+                child:selectImage != null
+                    ? Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: ColorManager.blueText.withOpacity(0.5),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 18.h,horizontal: 12.w),
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Column(
+                          children: [
+                            Image.file(File(selectImage.path),width: 200,height: 100,),
+                            // h10,
+                            // Text('${selectImage.path}',style: getRegularStyle(color: ColorManager.black,fontSize: 14),overflow: TextOverflow.fade,maxLines: 1,)
+                          ],
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: InkWell(
+                          onTap: ()=>ref.invalidate(imageProvider),
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: ColorManager.textGrey.withOpacity(0.15)
+                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 2.w,vertical: 2.h),
+                              child: FaIcon(Icons.close)),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+                    :  DottedBorder(
+                  dashPattern: [16,6,16,4],
+                  color:ColorManager.textGrey,
+                  radius: Radius.circular(20),
+                  borderType: BorderType.RRect,
+                  child: InkWell(
+                    onTap: () async {
+                      await showModalBottomSheet(
+
+                          backgroundColor: ColorManager.white,
+                          context: context,
+                          builder: (context){
+                            return Container(
+                              height: 150,
+                              padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      InkWell(
+                                        onTap : (){
+                                          ref.read(imageProvider.notifier).camera();
+                                          Navigator.pop(context);
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10),
+                                              border: Border.all(
+                                                  color: ColorManager.black.withOpacity(0.5)
+                                              )
+                                          ),
+                                          padding: EdgeInsets.symmetric(horizontal: 30.w,vertical: 30.h),
+                                          child: Icon(FontAwesomeIcons.camera,color: ColorManager.black,),
+                                        ),
+                                      ),
+                                      h10,
+                                      Text('Camera',style: getRegularStyle(color: ColorManager.black,fontSize: 16),)
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      InkWell(
+                                        onTap:(){
+                                          ref.read(imageProvider.notifier).pickAnImage();
+                                          Navigator.pop(context);
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10),
+                                              border: Border.all(
+                                                  color: ColorManager.black.withOpacity(0.5)
+                                              )
+                                          ),
+                                          padding: EdgeInsets.symmetric(horizontal: 30.w,vertical: 30.h),
+                                          child: Icon(FontAwesomeIcons.image,color: ColorManager.black,),
+                                        ),
+                                      ),
+                                      h10,
+                                      Text('Gallery',style: getRegularStyle(color: ColorManager.black,fontSize: 16),)
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: ColorManager.textGrey.withOpacity(0.1),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 18.h),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            FaIcon(FontAwesomeIcons.image,color: ColorManager.textGrey,),
+                            h10,
+                            Text('Please provide a image',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 20.sp),)
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            h20,
             Row(
               children: [
                 Expanded(
@@ -1126,18 +1345,33 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: ColorManager.primaryDark
                       ),
-                      onPressed: (){
+                      onPressed: () async {
+                        Uint8List? reminderImage;
+                        List<String> list = [];
+
+                        // selectedDays.clear(); // Clear the list before populating it
+
+                        if(isSelected != null){
+                          for (int i = 0; i < isSelected!.length; i++) {
+
+                            if (isSelected![i]) {
+                              print(daysOfWeekMedication[i]);
+                              list.add(daysOfWeekMedication[i]);
 
 
-                        if(selectedDays!=null){
-
-                          for (int i = 0; i < isSelected.length; i++) {
-                            if (isSelected[i]) {
-                              setState(() {
-                                selectedDays!.add(daysOfWeekMedication[i]);
-                              });
+                              // selectedDays.add(daysOfWeekMedication[i]);
                             }
                           }
+                        }
+
+                        setState(() {
+                          days = list;
+                        });
+
+                        if(selectImage != null) {
+
+                          reminderImage = await selectImage.readAsBytes();
+
                         }
 
 
@@ -1164,9 +1398,9 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
                             'reminderPatternId' : selectedPatternId,
                             'patternName' : selectedPatternName,
                             'interval' : selectedPatternId == 3 ? int.parse(_intervalDurationController.text):null,
-                            'daysOfWeek' : selectedPatternId == 2 ? selectedDays : null,
+                            'daysOfWeek' : selectedPatternId == 2 ? days : null,
                           } ,
-                          'reminderImage' : updatedReminder['reminderImage'],
+                          'reminderImage' : imageSet ==1 ? updatedReminder['reminderImage'] : selectImage != null ? reminderImage : null,
                           'notes':null,
                           'summary':'this is a summary'
                         };
