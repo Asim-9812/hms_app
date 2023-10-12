@@ -197,7 +197,9 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
           controller: controller,
           children: [
             PatientHomePage(isWideScreen,isNarrowScreen,noticeBool),
-            TestRemind(),
+
+            Reminders(),
+            //TestRemind(),
             PatientUtilities(isWideScreen,isNarrowScreen),
             ProfilePage()
           ],
