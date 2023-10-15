@@ -100,10 +100,10 @@ class _PatientReportPageDoctorState extends State<PatientReportPageDoctor> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: ColorManager.white,
+        backgroundColor: ColorManager.primary,
         centerTitle: true,
         elevation: 1,
-        title: Text('Reports',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
+        title: Text('Reports',style: getMediumStyle(color: ColorManager.white,fontSize: 20),),
 
       ),
       body: Column(

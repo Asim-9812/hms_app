@@ -140,40 +140,40 @@ class _OrgHomePageState extends State<OrgHomePage> {
       key: scaffoldKey,
       backgroundColor: ColorManager.white,
       appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(color: ColorManager.black),
-        backgroundColor: ColorManager.white,
-        toolbarHeight: 80,
-        leadingWidth: 70,
-        leading: Padding(
-          padding: EdgeInsets.only(left: 18),
-          child: InkWell(
-            onTap: ()=>Get.to(()=>OrgProfilePage()),
-            child: CircleAvatar(
-              backgroundColor: ColorManager.black,
-              radius: widget.isNarrowScreen? 40 : 40.r,
-              child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
+          backgroundColor: ColorManager.primaryDark,
+          elevation: 0,
+          toolbarHeight: 120,
+          centerTitle: true,
+          titleSpacing: 0,
+          title: Container(
+            width: double.infinity,
+            height: 120,
+            padding: EdgeInsets.symmetric(horizontal: 18.w),
+            decoration: BoxDecoration(
+                image: DecorationImage(image: AssetImage('assets/images/ban2.png'),fit: BoxFit.fitWidth)
             ),
-          ),
-        ),
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Good Morning',style: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen? 14.sp:14 ),),
-            Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?32.sp:32),),
-          ],
-        ),
-        actions: [
-          IconButton(
-              onPressed: ()=>Get.to(()=>NotificationPage()),
-              icon: FaIcon(Icons.search,color: ColorManager.black,)),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  backgroundColor: ColorManager.black,
+                  radius:30,
+                  child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
+                ),
+                w10,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-          IconButton(
-              onPressed: ()=>Get.to(()=>NotificationPage()),
-              icon: FaIcon(Icons.notifications_none_outlined,color: ColorManager.black,)),
+                    Text('Welcome,',style: getRegularStyle(color: ColorManager.white,fontSize: 16),),
 
-        ],
+                    Text('$firstName',style: getMediumStyle(color: ColorManager.white,fontSize: 28),),
+                  ],
+                ),
+              ],
+            ),
+          )
       ),
       body: RefreshIndicator(
         onRefresh: _refreshData,

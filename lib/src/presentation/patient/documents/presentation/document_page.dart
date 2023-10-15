@@ -181,9 +181,9 @@ class _PatientDocumentPageState extends ConsumerState<PatientDocumentPage> {
       isLocked = false;
     }
     return Card(
-      elevation: 3,
+      elevation: 0,
       shadowColor: ColorManager.dotGrey.withOpacity(0.5),
-      color: ColorManager.lightBlueAccent,
+      color: ColorManager.lightBlueAccent.withOpacity(0.2),
       shape: RoundedRectangleBorder(
           side: BorderSide(
               color: ColorManager.blue.withOpacity(0.2)
@@ -395,7 +395,8 @@ class _PatientDocumentPageState extends ConsumerState<PatientDocumentPage> {
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
       leading: Card(
-        color: ColorManager.lightBlueAccent,
+        elevation: 0,
+        color: ColorManager.lightBlueAccent.withOpacity(0.3),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10)
         ),

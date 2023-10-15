@@ -9,6 +9,8 @@ import 'package:intl/intl.dart';
 import 'package:medical_app/src/presentation/patient/reminder_test/presentation/create_test.dart';
 import 'package:medical_app/src/presentation/patient/reminder_test/presentation/test_detail.dart';
 
+import '../domain/model/reminder_model.dart';
+
 class TestRemind extends StatefulWidget {
   const TestRemind({super.key});
 
@@ -20,8 +22,8 @@ class _TestRemindState extends State<TestRemind> {
 
 
 
-  late Box<Map<String,dynamic>> reminderBox;
-  late ValueListenable<Box<Map<String,dynamic>>> reminderBoxListenable;
+  late Box<Reminder> reminderBox;
+  late ValueListenable<Box<Reminder>> reminderBoxListenable;
 
   int page  = 0;
   PageController _pageController = PageController(initialPage: 0);
@@ -38,7 +40,7 @@ class _TestRemindState extends State<TestRemind> {
     // notificationServices.initializeNotifications();
 
     // Open the Hive box
-    reminderBox = Hive.box<Map<String,dynamic>>('test_reminder');
+    reminderBox = Hive.box<Reminder>('med_reminder');
 
     // Create a ValueListenable for the box
     reminderBoxListenable = reminderBox.listenable();
@@ -94,7 +96,7 @@ class _TestRemindState extends State<TestRemind> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ...reminderList.map((e) {
-              List<String> timeStrings = e['scheduleTime'];
+              List<String> timeStrings = e.scheduleTime;
               List<TimeOfDay> times = timeStrings
                   .map((timeString) {
                 final parsedTime = DateFormat('HH:mm').parse(timeString); // Use 'HH:mm' for 24-hour format
@@ -137,9 +139,9 @@ class _TestRemindState extends State<TestRemind> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('${e['medicineName']}',style: TextStyle(color: Colors.white),),
+                      Text('${e.medTypeName}',style: TextStyle(color: Colors.white),),
                       Text('${closestTime.hour}:${closestTime.minute} ${closestTime.period.name}',style: TextStyle(color: Colors.white),),
-                      Text('${e['frequency']['frequencyName']}',style: TextStyle(color: Colors.white),)
+                      Text('${e.frequency.frequencyName}',style: TextStyle(color: Colors.white),)
                     ],
                   ),
                 ),

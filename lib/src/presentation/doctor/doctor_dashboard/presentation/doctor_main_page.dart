@@ -22,6 +22,7 @@ import '../../../notices/presentation/notices.dart';
 import '../../../settings/settings_global.dart';
 import '../../documents/presentation/document_page.dart';
 import '../../patient_reports/presentation/report_page_doctor.dart';
+import '../../profile/presentation/profile_page.dart';
 
 
 
@@ -136,12 +137,31 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
               title:  Text('Utilities'),
             ),
             BottomBarItem(
-              icon:  FaIcon(Icons.settings,size: isWideScreen?24:24.sp,),
-              // selectedIcon:  FaIcon(FontAwesomeIcons.folder),
+              icon:  Container(
+                // color: ColorManager.red,
+                  width: isWideScreen?30:30.sp,
+
+                  child: Stack(
+                    children: [
+                      Center(child: Padding(
+
+                        padding:  EdgeInsets.only(top: 2),
+                        child: FaIcon(Icons.person,size: isWideScreen?24:24.sp,),
+                      )),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: CircleAvatar(
+                          radius: 6.sp,
+                          backgroundColor: ColorManager.red.withOpacity(0.7),
+                        ),
+                      )
+                    ],
+                  )),
+              // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
               selectedColor: ColorManager.primary,
               // unSelectedColor: Colors.purple,
               // backgroundColor: Colors.orange,
-              title:  Text('Settings'),
+              title:  Text('Profile'),
             ),
 
           ],
@@ -184,7 +204,7 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
             DocumentPage(isWideScreen,isNarrowScreen),
             PatientReportPageDoctor(),
             DoctorUtilityPage(),
-            Settings(isWideScreen, isNarrowScreen)
+            DocProfilePage()
           ],
         ),
       ),

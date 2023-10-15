@@ -66,9 +66,9 @@ class _PatientFolderPageState extends ConsumerState<FolderPage> {
       actions: [
           IconButton(
             onPressed: ()=>Get.to(()=>AddDocuments(existingFolder: widget.folderName,),transition: Transition.rightToLeftWithFade,duration: Duration(milliseconds: 500))
-            , icon: FaIcon(Icons.add),color: Colors.white,),
+            , icon: FaIcon(Icons.add),color: ColorManager.primary),
           IconButton(onPressed: ()=>Get.to(()=>SearchDocuments(),transition:Transition.rightToLeftWithFade)
-            , icon: FaIcon(Icons.search),color: Colors.white,),
+            , icon: FaIcon(Icons.search),color: ColorManager.primary,),
         ],
       ),
       body: SingleChildScrollView(
@@ -152,7 +152,8 @@ class _PatientFolderPageState extends ConsumerState<FolderPage> {
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
       leading: Card(
-        color: ColorManager.lightBlueAccent,
+        color: ColorManager.lightBlueAccent.withOpacity(0.3),
+        elevation: 0,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10)
         ),

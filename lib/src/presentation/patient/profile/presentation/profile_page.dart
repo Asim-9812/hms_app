@@ -116,7 +116,7 @@ class ProfilePage extends ConsumerWidget {
                                   children: [
                                     FaIcon(Icons.email_outlined,color: ColorManager.primaryDark,),
                                     w20,
-                                    Text(email,style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                                    Text(email,style: getRegularStyle(color: ColorManager.black,fontSize: 16),maxLines: 1,overflow: TextOverflow.ellipsis,),
 
                                   ],
                                 ),

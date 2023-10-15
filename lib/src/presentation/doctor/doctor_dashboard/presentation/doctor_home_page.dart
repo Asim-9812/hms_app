@@ -74,75 +74,79 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
           endDrawerEnableOpenDragGesture: false,
 
           appBar: AppBar(
-            elevation: 0,
-            iconTheme: IconThemeData(color: ColorManager.black),
-            backgroundColor: ColorManager.white,
-            toolbarHeight: 100,
-            leadingWidth: 70,
-            leading: Padding(
-              padding: EdgeInsets.only(left: 18),
-              child: InkWell(
-                onTap: ()=>Get.to(()=>DocProfilePage()),
-                child: CircleAvatar(
-                  backgroundColor: ColorManager.black,
-                  radius: widget.isNarrowScreen? 40 : 40.r,
-                  child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
+              backgroundColor: ColorManager.primaryDark,
+              elevation: 0,
+              toolbarHeight: 120,
+              centerTitle: true,
+              titleSpacing: 0,
+              title: Container(
+                width: double.infinity,
+                height: 120,
+                padding: EdgeInsets.symmetric(horizontal: 18.w),
+                decoration: BoxDecoration(
+                    image: DecorationImage(image: AssetImage('assets/images/ban2.png'),fit: BoxFit.fitWidth)
                 ),
-              ),
-            ),
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Good Morning',style: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen? 14.sp:14 ),),
-                Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?32.sp:32),),
-              ],
-            ),
-            actions: [
-              IconButton(
-                  onPressed: ()=>Get.to(()=>NotificationPage()),
-                  icon: Icon(Icons.notifications_none_outlined,color: ColorManager.black,)),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: ColorManager.black,
+                      radius:30,
+                      child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
+                    ),
+                    w10,
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
 
-            ],
+                        Text('Welcome,',style: getRegularStyle(color: ColorManager.white,fontSize: 16),),
+
+                        Text('$firstName',style: getMediumStyle(color: ColorManager.white,fontSize: 28),),
+                      ],
+                    ),
+                  ],
+                ),
+              )
           ),
           body: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                InkWell(
-                  // onTap: ()=>Get.to(()=>SearchNearByPage(),transition: Transition.fadeIn),
-                  splashColor: ColorManager.primary.withOpacity(0.4),
-                  child: Center(
-                    child: Container(
-                        height: 50.h,
-                        width: 390.w,
-                        padding: EdgeInsets.symmetric(horizontal: 18.w),
-                        decoration: BoxDecoration(
-                            color: ColorManager.searchColor.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                                color:ColorManager.searchColor,
-                                width: 1
-                            )
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(Icons.search,color: ColorManager.iconGrey,),
-                                w10,
-                                Text('Search medical...',style: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?15.sp:15),),
-                              ],
-                            ),
-                            SizedBox()
-                          ],
-                        )
-                    ),
-                  ),
-                ),
+                // InkWell(
+                //   // onTap: ()=>Get.to(()=>SearchNearByPage(),transition: Transition.fadeIn),
+                //   splashColor: ColorManager.primary.withOpacity(0.4),
+                //   child: Center(
+                //     child: Container(
+                //         height: 50.h,
+                //         width: 390.w,
+                //         padding: EdgeInsets.symmetric(horizontal: 18.w),
+                //         decoration: BoxDecoration(
+                //             color: ColorManager.searchColor.withOpacity(0.15),
+                //             borderRadius: BorderRadius.circular(20),
+                //             border: Border.all(
+                //                 color:ColorManager.searchColor,
+                //                 width: 1
+                //             )
+                //         ),
+                //         child: Row(
+                //           mainAxisSize: MainAxisSize.max,
+                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //           children: [
+                //             Row(
+                //               children: [
+                //                 Icon(Icons.search,color: ColorManager.iconGrey,),
+                //                 w10,
+                //                 Text('Search medical...',style: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?15.sp:15),),
+                //               ],
+                //             ),
+                //             SizedBox()
+                //           ],
+                //         )
+                //     ),
+                //   ),
+                // ),
                 h20,
                 _overallStat(),
                 h20,
@@ -240,16 +244,16 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                       children: [
                         Text('New Patients :',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:widget.isNarrowScreen?16.sp:18.sp),),
                         w10,
-                        Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?40:widget.isNarrowScreen?30.sp:40.sp),),
+                        Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?30:widget.isNarrowScreen?20.sp:30.sp),),
                       ],
                     ),
                     h10,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text('Follow ups :',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:widget.isNarrowScreen?16.sp:18.sp),),
+                        Text('Follow ups :',style: getRegularStyle(color: ColorManager.white,fontSize:widget.isWideScreen?18:widget.isNarrowScreen?16.sp:18.sp),),
                         w10,
-                        Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?40:widget.isNarrowScreen?30.sp:40.sp),),
+                        Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?30:widget.isNarrowScreen?20.sp:30.sp),),
                       ],
                     ),
                   ],

@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:medical_app/src/app/app.dart';
 import 'package:medical_app/src/presentation/login/domain/model/user.dart';
 import 'package:medical_app/src/presentation/patient/calories/model/calorie_model.dart';
+import 'package:medical_app/src/presentation/patient/reminder_test/domain/model/reminder_model.dart';
 import 'package:medical_app/src/presentation/patient/reminders/domain/model/reminder_model.dart';
 import 'package:medical_app/src/presentation/patient/reminders/widgets/create_reminder_test.dart';
 
@@ -66,13 +67,16 @@ void main() async {
   Hive.registerAdapter(DailyIntakeModelAdapter());
   Hive.registerAdapter(FoodDetailModelAdapter());
   Hive.registerAdapter(ExerciseModelAdapter());
+  Hive.registerAdapter<Reminder>(ReminderAdapter());
+  Hive.registerAdapter<Frequency>(FrequencyAdapter());
+  Hive.registerAdapter<ReminderPattern>(ReminderPatternAdapter());
   final userBox = await Hive.openBox<String>('user1');
   await Hive.openBox<String>('tokenBox');
   final userSession = await Hive.openBox< User>('session');
   userBox2 = await Hive.openBox('user');
   // await Hive.openBox<UserProfileModel>('user_profile');
   final reminderBox =await Hive.openBox<ReminderModel>('medicine_reminder');
-  final reminderTestBox =await Hive.openBox<Map<String,dynamic>>('test_reminder');
+  await Hive.openBox<Reminder>('med_reminder');
   runApp(ProviderScope(
       overrides: [
         box.overrideWithValue(userBox.get('userData')),

@@ -1,5 +1,6 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:medical_app/src/presentation/organization/org_profile/presentation/org_profile_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -110,12 +111,31 @@ class _AnimatedBarExampleState extends ConsumerState<OrgMainPage> {
             title:  Text('Doctors'),
           ),
           BottomBarItem(
-            icon:  FaIcon(Icons.settings,size: isWideScreen?24:24.sp,),
+            icon:  Container(
+              // color: ColorManager.red,
+                width: isWideScreen?30:30.sp,
+
+                child: Stack(
+                  children: [
+                    Center(child: Padding(
+
+                      padding:  EdgeInsets.only(top: 2),
+                      child: FaIcon(Icons.person,size: isWideScreen?24:24.sp,),
+                    )),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: CircleAvatar(
+                        radius: 6.sp,
+                        backgroundColor: ColorManager.red.withOpacity(0.7),
+                      ),
+                    )
+                  ],
+                )),
             // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
             selectedColor: ColorManager.primary,
             // unSelectedColor: Colors.purple,
             // backgroundColor: Colors.orange,
-            title:  Text('Settings'),
+            title:  Text('Profile'),
           ),
         ],
         hasNotch: false,
@@ -139,7 +159,7 @@ class _AnimatedBarExampleState extends ConsumerState<OrgMainPage> {
           OrgHomePage(isWideScreen,isNarrowScreen,noticeBool),
           OrgPatientReports(),
           DoctorReportsPage(isWideScreen, isNarrowScreen),
-          Settings(isWideScreen,isNarrowScreen),
+          OrgProfilePage(),
         ],
       ),
     );

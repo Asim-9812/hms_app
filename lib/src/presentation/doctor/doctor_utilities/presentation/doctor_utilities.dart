@@ -30,10 +30,10 @@ class _PatientReportPageState extends State<DoctorUtilityPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: ColorManager.white,
+        backgroundColor: ColorManager.primary,
         centerTitle: true,
         elevation: 1,
-        title: Text('Utilities',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
+        title: Text('Utilities',style: getMediumStyle(color: ColorManager.white,fontSize: 20),),
 
       ),
       body: GridView(

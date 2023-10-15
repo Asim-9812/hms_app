@@ -10,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
+import 'package:medical_app/src/presentation/patient/reminder_test/domain/model/reminder_model.dart';
 
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
@@ -19,7 +20,7 @@ import '../../../common/snackbar.dart';
 import '../../reminders/data/reminder_db.dart';
 
 class EditReminderPage extends ConsumerStatefulWidget {
-  final Map<String, dynamic> reminderTest;
+  final Reminder reminderTest;
 
   EditReminderPage(this.reminderTest);
 
@@ -28,7 +29,7 @@ class EditReminderPage extends ConsumerStatefulWidget {
 }
 
 class _EditReminderPageState extends ConsumerState<EditReminderPage> {
-  Map<String, dynamic> updatedReminder = {};
+  late Reminder updatedReminder;
 
   int page = 0;
   PageController _pageController = PageController(initialPage: 0);
@@ -50,6 +51,8 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
   TextEditingController _startDateController = TextEditingController();
   TextEditingController _endDateController = TextEditingController();
   TextEditingController _intervalDurationController = TextEditingController();
+  TextEditingController _summaryController = TextEditingController();
+  TextEditingController _noteController = TextEditingController();
 
 
   late int selectedMedTypeId;
@@ -67,7 +70,7 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
   late int selectedPatternId;
   // List<String> selectedDays = [];
 
-  List? days;
+  List<String>? days;
   late int imageSet;
 
 
@@ -88,31 +91,31 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
     super.initState();
     // Initialize the updatedReminder with the data from Hive
     updatedReminder = widget.reminderTest;
-    selectedMedTypeId = updatedReminder['medTypeId'];
-    selectedMedTypeName = updatedReminder['medTypeName'];
-    _medicineNameController.text = updatedReminder['medicineName'];
-    _strengthController.text = updatedReminder['strength'].toString();
-    selectedStrengthUnit = updatedReminder['unit'];
-    selectedFrequencyName = updatedReminder['frequency']['frequencyName'];
-    frequencyId = updatedReminder['frequency']['frequencyId'];
-    intervals = updatedReminder['frequency']['intervals'];
-    scheduleTime = updatedReminder['scheduleTime'];
-    _startTimeController.text = (updatedReminder['scheduleTime'] as List<String>).first;
-    _medicationDurationController.text = updatedReminder['medicationDuration'].toString();
-    _startDateController.text = DateFormat('yyyy-MM-dd').format(updatedReminder['startDate']);
-    _endDateController.text = DateFormat('yyyy-MM-dd').format(updatedReminder['endDate']);
-    startDateIntake =updatedReminder['startDate'];
-    endDateIntake =updatedReminder['endDate'];
-    selectedMealId =updatedReminder['mealTypeId'];
-    selectedMealName =updatedReminder['meal'];
-    selectedPatternName = updatedReminder['reminderPattern']['patternName'];
-    selectedPatternId = updatedReminder['reminderPattern']['reminderPatternId'];
-    if(updatedReminder['reminderPattern']['interval'] != null){
-      _intervalDurationController.text = updatedReminder['reminderPattern']['interval'].toString();
+    selectedMedTypeId = updatedReminder.medTypeId;
+    selectedMedTypeName = updatedReminder.medTypeName;
+    _medicineNameController.text = updatedReminder.medicineName;
+    _strengthController.text = updatedReminder.strength.toString();
+    selectedStrengthUnit = updatedReminder.unit;
+    selectedFrequencyName = updatedReminder.frequency.frequencyName;
+    frequencyId = updatedReminder.frequency.frequencyId;
+    intervals = updatedReminder.frequency.intervals;
+    scheduleTime = updatedReminder.scheduleTime;
+    _startTimeController.text = updatedReminder.scheduleTime.first;
+    _medicationDurationController.text = updatedReminder.medicationDuration.toString();
+    _startDateController.text = DateFormat('yyyy-MM-dd').format(updatedReminder.startDate);
+    _endDateController.text = DateFormat('yyyy-MM-dd').format(updatedReminder.endDate);
+    startDateIntake =updatedReminder.startDate;
+    endDateIntake =updatedReminder.endDate;
+    selectedMealId =updatedReminder.mealTypeId;
+    selectedMealName =updatedReminder.meal;
+    selectedPatternName = updatedReminder.reminderPattern.patternName;
+    selectedPatternId = updatedReminder.reminderPattern.reminderPatternId;
+    if(updatedReminder.reminderPattern.interval != null){
+      _intervalDurationController.text = updatedReminder.reminderPattern.interval.toString();
     }
 
-    if(updatedReminder['reminderPattern']['daysOfWeek'] != null){
-      days = updatedReminder['reminderPattern']['daysOfWeek'];
+    if(updatedReminder.reminderPattern.daysOfWeek != null){
+      days = updatedReminder.reminderPattern.daysOfWeek;
       isSelected = [
         days!.contains('Monday'),
         days!.contains('Tuesday'),
@@ -125,7 +128,16 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
     }
 
 
-     imageSet = updatedReminder['reminderImage'] != null ? 1:2;
+     imageSet = updatedReminder.reminderImage != null ? 1:2;
+
+
+
+    if(updatedReminder.notes != null){
+      _noteController.text = updatedReminder.notes!;
+    }
+
+
+    _summaryController.text = '${selectedMedTypeName} ${_medicineNameController.text} ${_strengthController.text}${selectedStrengthUnit} ${selectedFrequencyName} ${selectedPatternName}';
 
 
 
@@ -133,10 +145,10 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
 
   }
 
-  void _updateReminder(Map<String, dynamic> reminder) {
-    final reminderBox = Hive.box<Map<String, dynamic>>('test_reminder');
+  void _updateReminder(Reminder reminder) {
+    final reminderBox = Hive.box<Reminder>('med_reminder');
     // Get the index of the reminder to update based on its 'reminderId' (you should replace 1002 with the actual 'reminderId' you want to update)
-    final int indexToUpdate = reminderBox.values.toList().indexWhere((element) => element['reminderId'] == updatedReminder['reminderId']);
+    final int indexToUpdate = reminderBox.values.toList().indexWhere((element) => element.reminderId == updatedReminder.reminderId);
 
     if (indexToUpdate != -1) {
       // If the reminder is found, update it
@@ -253,34 +265,34 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
   }
 
 
-  void printSelectedDays() {
-    List<String> list = [];
-
-    // selectedDays.clear(); // Clear the list before populating it
-    if(isSelected != null){
-      for (int i = 0; i < isSelected!.length; i++) {
-
-        if (isSelected![i]) {
-          print(daysOfWeekMedication[i]);
-          list.add(daysOfWeekMedication[i]);
-
-
-          // selectedDays.add(daysOfWeekMedication[i]);
-        }
-      }
-    }
-
-
-    setState(() {
-      days = list;
-    });
-    // Print the selected days
-    // print('Selected Days: ${selectedDays.join(', ')}');
-    print(isSelected);
-    print(days);
-
-
-  }
+  // void printSelectedDays() {
+  //   List<String> list = [];
+  //
+  //   // selectedDays.clear(); // Clear the list before populating it
+  //   if(isSelected != null){
+  //     for (int i = 0; i < isSelected!.length; i++) {
+  //
+  //       if (isSelected![i]) {
+  //         print(daysOfWeekMedication[i]);
+  //         list.add(daysOfWeekMedication[i]);
+  //
+  //
+  //         // selectedDays.add(daysOfWeekMedication[i]);
+  //       }
+  //     }
+  //   }
+  //
+  //
+  //   setState(() {
+  //     days = list;
+  //   });
+  //   // Print the selected days
+  //   // print('Selected Days: ${selectedDays.join(', ')}');
+  //   print(isSelected);
+  //   print(days);
+  //
+  //
+  // }
 
 
   @override
@@ -326,7 +338,7 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
                       ),
                     ),
                   ),
-                  Center(child: Text('Set a Reminder',style: getHeadBoldStyle(color: ColorManager.white),)),
+                  Center(child: Text('Update Reminder',style: getHeadBoldStyle(color: ColorManager.white),)),
                 ],
               )),
 
@@ -1168,7 +1180,7 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
                       Center(
                         child: Column(
                           children: [
-                            Image.memory(updatedReminder['reminderImage'],width: 200,height: 100,),
+                            Image.memory(updatedReminder.reminderImage!,width: 200,height: 100,),
                             // h10,
                             // Text('${selectImage.path}',style: getRegularStyle(color: ColorManager.black,fontSize: 14),overflow: TextOverflow.fade,maxLines: 1,)
                           ],
@@ -1323,6 +1335,71 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
                   ),
                 ),
               ),
+
+
+            h20,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: _summaryController,
+                    readOnly: true,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      fillColor: ColorManager.dotGrey.withOpacity(0.4),
+                      filled: true,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                              color: ColorManager.black,
+                              width: 2
+                          )
+                      ),
+                      enabledBorder:  OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                              color: ColorManager.black,
+                              width: 2
+                          )
+                      ),
+                      labelText: 'Summary',
+                      labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
+
+                    ),
+                  ),
+                ),
+                w10,
+                Expanded(
+                  child: TextFormField(
+
+                    maxLines: null,
+                    controller: _noteController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                              color: ColorManager.blueText
+                          )
+                      ),
+                      enabledBorder:  OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                              color: ColorManager.primaryDark
+                          )
+                      ),
+                      labelText: 'Note (optional)',
+                      labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
+                      hintText: 'E.G. Take Medicine with water',
+                      hintStyle: getRegularStyle(color: ColorManager.black.withOpacity(0.7),fontSize: 16),
+
+                    ),
+
+                  ),
+                ),
+              ],
+            ),
+
             h20,
             Row(
               children: [
@@ -1375,37 +1452,66 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
                         }
 
 
-                        Map<String,dynamic> reminderTest = {
-                          'reminderId' : updatedReminder['reminderId'],
-                          'userId' : updatedReminder['userId'],
-                          'medTypeId' : selectedMedTypeId,
-                          'medTypeName' : selectedMedTypeName,
-                          'medicineName' : _medicineNameController.text.trim(),
-                          'strength' : int.parse(_strengthController.text),
-                          'unit' : selectedStrengthUnit,
-                          'frequency' : {
-                            'frequencyId' : frequencyId,
-                            'frequencyName' : selectedFrequencyName,
-                            'intervals' : intervals
-                          } ,
-                          'scheduleTime' : scheduleTime,
-                          'medicationDuration' : _medicationDurationController.text.trim(),
-                          'startDate' : startDateIntake,
-                          'endDate' : endDateIntake,
-                          'mealTypeId' : selectedMealId,
-                          'meal' : selectedMealName,
-                          'reminderPattern' : {
-                            'reminderPatternId' : selectedPatternId,
-                            'patternName' : selectedPatternName,
-                            'interval' : selectedPatternId == 3 ? int.parse(_intervalDurationController.text):null,
-                            'daysOfWeek' : selectedPatternId == 2 ? days : null,
-                          } ,
-                          'reminderImage' : imageSet ==1 ? updatedReminder['reminderImage'] : selectImage != null ? reminderImage : null,
-                          'notes':null,
-                          'summary':'this is a summary'
-                        };
+                        // Map<String,dynamic> reminderTest = {
+                        //   'reminderId' : updatedReminder['reminderId'],
+                        //   'userId' : updatedReminder['userId'],
+                        //   'medTypeId' : selectedMedTypeId,
+                        //   'medTypeName' : selectedMedTypeName,
+                        //   'medicineName' : _medicineNameController.text.trim(),
+                        //   'strength' : int.parse(_strengthController.text),
+                        //   'unit' : selectedStrengthUnit,
+                        //   'frequency' : {
+                        //     'frequencyId' : frequencyId,
+                        //     'frequencyName' : selectedFrequencyName,
+                        //     'intervals' : intervals
+                        //   } ,
+                        //   'scheduleTime' : scheduleTime,
+                        //   'medicationDuration' : _medicationDurationController.text.trim(),
+                        //   'startDate' : startDateIntake,
+                        //   'endDate' : endDateIntake,
+                        //   'mealTypeId' : selectedMealId,
+                        //   'meal' : selectedMealName,
+                        //   'reminderPattern' : {
+                        //     'reminderPatternId' : selectedPatternId,
+                        //     'patternName' : selectedPatternName,
+                        //     'interval' : selectedPatternId == 3 ? int.parse(_intervalDurationController.text):null,
+                        //     'daysOfWeek' : selectedPatternId == 2 ? days : null,
+                        //   } ,
+                        //   'reminderImage' : imageSet ==1 ? updatedReminder['reminderImage'] : selectImage != null ? reminderImage : null,
+                        //   'notes':null,
+                        //   'summary':'this is a summary'
+                        // };
 
-                        _updateReminder(reminderTest);
+                        Reminder reminder = Reminder(
+                          reminderId: updatedReminder.reminderId,
+                          userId: updatedReminder.userId,
+                          medTypeId: selectedMedTypeId,
+                          medTypeName: selectedMedTypeName,
+                          medicineName: _medicineNameController.text.trim(),
+                          strength: int.parse(_strengthController.text),
+                          unit: selectedStrengthUnit!,
+                          frequency: Frequency(
+                              frequencyId: frequencyId,
+                              frequencyName: selectedFrequencyName,
+                              intervals: intervals
+                          ) ,
+                          scheduleTime: scheduleTime,
+                          medicationDuration: int.parse(_medicationDurationController.text.trim()),
+                          startDate: startDateIntake,
+                          endDate: endDateIntake,
+                          mealTypeId: selectedMealId,
+                          meal: selectedMealName,
+                          reminderPattern:ReminderPattern(
+                              reminderPatternId: selectedPatternId,
+                              patternName: selectedPatternName,
+                            interval: selectedPatternId == 3 ? int.parse(_intervalDurationController.text) : null,
+                            daysOfWeek: selectedPatternId == 2 ? days : null
+                          ) ,
+                          reminderImage: imageSet == 1 ? updatedReminder.reminderImage : selectImage != null ? reminderImage : null,
+                          notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
+                          summary: _summaryController.text.trim(),
+                        );
+                        _updateReminder(reminder);
 
                         // formKey1.currentState!.validate();
                         // formKey2.currentState!.validate();

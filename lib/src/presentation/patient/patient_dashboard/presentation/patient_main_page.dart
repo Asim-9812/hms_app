@@ -144,7 +144,6 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
                         child: CircleAvatar(
                           radius: 6.sp,
                           backgroundColor: ColorManager.red.withOpacity(0.7),
-                          child: Text('2',style:TextStyle(fontSize: 5) ,),
                         ),
                       )
                     ],
@@ -198,8 +197,8 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
           children: [
             PatientHomePage(isWideScreen,isNarrowScreen,noticeBool),
 
-            Reminders(),
-            //TestRemind(),
+            // Reminders(),
+            TestRemind(),
             PatientUtilities(isWideScreen,isNarrowScreen),
             ProfilePage()
           ],

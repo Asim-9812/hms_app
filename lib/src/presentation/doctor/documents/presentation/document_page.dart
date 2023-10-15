@@ -57,15 +57,15 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           centerTitle: true,
-          backgroundColor: ColorManager.white.withOpacity(0.8),
+          backgroundColor: ColorManager.primary,
           elevation: 1,
-          title: Text('Documents',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
+          title: Text('Documents',style: getMediumStyle(color: ColorManager.white,fontSize: 20),),
           actions: [
             IconButton(
               onPressed: ()=>Get.to(()=>AddDocuments(),transition: Transition.rightToLeftWithFade,duration: Duration(milliseconds: 500))
-              , icon: FaIcon(CupertinoIcons.add_circled,size: 28,),color: Colors.blue,),
+              , icon: FaIcon(CupertinoIcons.add_circled,size: 28,),color: ColorManager.white,),
             IconButton(onPressed: ()=>Get.to(()=>SearchDocuments(),transition:Transition.rightToLeftWithFade)
-              , icon: FaIcon(Icons.search),color: Colors.blue,),
+              , icon: FaIcon(Icons.search),color: ColorManager.white,),
           ],
         ),
         body: SingleChildScrollView(
@@ -177,9 +177,9 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
       isLocked = false;
     }
     return Card(
-      elevation: 5,
+      elevation: 0,
       shadowColor: ColorManager.dotGrey.withOpacity(0.5),
-      color: ColorManager.lightBlueAccent,
+      color: ColorManager.lightBlueAccent.withOpacity(0.3),
       shape: RoundedRectangleBorder(
           side: BorderSide(
               color: ColorManager.blue.withOpacity(0.2)
@@ -391,7 +391,8 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
       leading: Card(
-        color: ColorManager.lightBlueAccent,
+        color: ColorManager.lightBlueAccent.withOpacity(0.3),
+        elevation: 0,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10)
         ),

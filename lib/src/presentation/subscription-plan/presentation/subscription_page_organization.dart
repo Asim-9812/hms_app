@@ -3,10 +3,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:dartz/dartz.dart' as dartz;
 import 'package:dio/dio.dart';
-import 'package:esewa_flutter_sdk/esewa_config.dart';
-import 'package:esewa_flutter_sdk/esewa_flutter_sdk.dart';
-import 'package:esewa_flutter_sdk/esewa_payment.dart';
-import 'package:esewa_flutter_sdk/esewa_payment_success_result.dart';
+// import 'package:esewa_flutter_sdk/esewa_config.dart';
+// import 'package:esewa_flutter_sdk/esewa_flutter_sdk.dart';
+// import 'package:esewa_flutter_sdk/esewa_payment.dart';
+// import 'package:esewa_flutter_sdk/esewa_payment_success_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -166,7 +166,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
               children: [
                 Container(
                   height: 50.h,
-                  width: 240.w,
+                  width: 250.w,
                   decoration:BoxDecoration(
                     borderRadius: BorderRadius.circular(40),
                     border: Border.all(
@@ -186,7 +186,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
                         splashColor: Colors.transparent,
                         child: Container(
                           width: 90.w,
-                          child: Center(child: Text('Monthly',style: selectedDuration==0? getRegularStyle(color: ColorManager.black,fontSize: 24):getRegularStyle(color: ColorManager.black.withOpacity(0.5)),)),
+                          child: Center(child: Text('Monthly',style: selectedDuration==0? getRegularStyle(color: ColorManager.black,fontSize: 20):getRegularStyle(color: ColorManager.black.withOpacity(0.5)),)),
                         ),
                       ),
                       VerticalDivider(
@@ -204,7 +204,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
                         splashColor: Colors.transparent,
                         child: Container(
                           width: 90.w,
-                          child: Center(child: Text('Yearly',style: selectedDuration==1? getRegularStyle(color: ColorManager.black,fontSize: 24):getRegularStyle(color: ColorManager.black.withOpacity(0.5)),)),
+                          child: Center(child: Text('Yearly',style: selectedDuration==1? getRegularStyle(color: ColorManager.black,fontSize: 20):getRegularStyle(color: ColorManager.black.withOpacity(0.5)),)),
                         ),
                       ),
                     ],
@@ -276,33 +276,33 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      InkWell(
-                                        onTap:(){
-                                          setState(() {
-                                            selectedPayment = 1;
-                                          });
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
-                                            color: getPaymentContainerColor(1),
-                                              border: Border.all(
-                                              color: ColorManager.black.withOpacity(0.5)
-                                            )
-                                          ),
-                                          padding: EdgeInsets.symmetric(horizontal: 18,vertical: 18),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              Image.asset('assets/images/esewa.png',height: 30,fit: BoxFit.contain,),
-                                              h10,
-                                              Text('E-sewa',style: getRegularStyle(color: ColorManager.black),),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                      // InkWell(
+                                      //   onTap:(){
+                                      //     setState(() {
+                                      //       selectedPayment = 1;
+                                      //     });
+                                      //   },
+                                      //   child: Container(
+                                      //     decoration: BoxDecoration(
+                                      //       borderRadius: BorderRadius.circular(10),
+                                      //       color: getPaymentContainerColor(1),
+                                      //         border: Border.all(
+                                      //         color: ColorManager.black.withOpacity(0.5)
+                                      //       )
+                                      //     ),
+                                      //     padding: EdgeInsets.symmetric(horizontal: 18,vertical: 18),
+                                      //     child: Column(
+                                      //       mainAxisSize: MainAxisSize.min,
+                                      //       mainAxisAlignment: MainAxisAlignment.center,
+                                      //       crossAxisAlignment: CrossAxisAlignment.center,
+                                      //       children: [
+                                      //         Image.asset('assets/images/esewa.png',height: 30,fit: BoxFit.contain,),
+                                      //         h10,
+                                      //         Text('E-sewa',style: getRegularStyle(color: ColorManager.black),),
+                                      //       ],
+                                      //     ),
+                                      //   ),
+                                      // ),
                                       InkWell(
                                         onTap:(){
                                           setState(() {
@@ -346,11 +346,11 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
 
                                         if(selectedPayment == 1){
                                           Navigator.pop(context);
-                                          payWithEsewaInApp(productId: widget.outputValue['result']['orgId'], amount: amount, schemePlanId: schemePlanId, schemePlanName: schemePlanName);
+                                          // payWithEsewaInApp(productId: widget.outputValue['result']['orgId'], amount: amount, schemePlanId: schemePlanId, schemePlanName: schemePlanName);
                                         }else if(selectedPayment ==2 ){
                                           Navigator.pop(context);
                                           payWithKhaltiInApp(productId: widget.outputValue['result']['orgId'], amount: amount, schemePlanId: schemePlanId, schemePlanName: schemePlanName);
-                                          (selectedPayment);
+                                          // (selectedPayment);
 
                                         } else {
                                           final scaffoldMessage = ScaffoldMessenger.of(context);
@@ -394,129 +394,129 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
 
   ///-------------------------ESEWA SERVICES---------------------------///
 
-  payWithEsewaInApp({
-    required String productId,
-    required int amount,
-    required int schemePlanId,
-    required String schemePlanName
-}){
-    const String kEsewaClientId = 'JB0BBQ4aD0UqIThFJwAKBgAXEUkEGQUBBAwdOgABHD4DChwUAB0R';
-    const String kEsewaSecretKey = 'BhwIWQQADhIYSxILExMcAgFXFhcOBwAKBgAXEQ==';
-    try{
-      EsewaFlutterSdk.initPayment(
-          esewaConfig: EsewaConfig(
-            environment: Environment.test,
-            clientId: kEsewaClientId,
-            secretId: kEsewaSecretKey,
-          ),
-          esewaPayment: EsewaPayment(
-            productId: productId,
-            productName: schemePlanName,
-            productPrice: '$amount',
-            callbackUrl: '',
-          ),
-          onPaymentSuccess: onEsewaSuccess,
-          onPaymentFailure: (failure){
-            setState(() {
-              isPostingData = false;
-            });
-            ('$loadingString $loadingStatus');
-
-            final scaffoldMessage = ScaffoldMessenger.of(context);
-
-            scaffoldMessage.showSnackBar(
-              SnackbarUtil.showFailureSnackbar(
-                message: '${failure.toString()}',
-                duration: const Duration(milliseconds: 1200),
-              ),
-            );
-          },
-          onPaymentCancellation: (){
-            setState(() {
-              isPostingData = false;
-            });
-            final scaffoldMessage = ScaffoldMessenger.of(context);
-            scaffoldMessage.showSnackBar(
-                SnackbarUtil.showFailureSnackbar(
-                    message: 'Payment Cancelled',
-                    duration: const Duration(milliseconds: 1200)
-                )
-            );
-          }
-      );
-    }catch(e){
-
-    }
-
-
-  }
-  void onEsewaSuccess(EsewaPaymentSuccessResult success) async {
-    final scaffoldMessage = ScaffoldMessenger.of(context);
-    scaffoldMessage.showSnackBar(
-      SnackbarUtil.showProcessSnackbar2(
-          message: 'Please Wait. Verification in process...',
-          duration: const Duration(seconds: 2)
-      ),
-    );
-    setState(() {
-      isPostingData = true;
-    });
-    if(success.status.toLowerCase() == 'complete'){
-      final paymentResponse = await ref.read(paymentSuccessProvider).InsertPaymentInfo(
-          token: '',
-          amount: double.parse(success.totalAmount).round(),
-          mobile: widget.outputValue['result']['contact'],
-          pid: success.productId,
-          orderName: schemePlanName,
-          tId: success.refId
-      );
-      if(paymentResponse.isLeft()){
-        final leftValue= paymentResponse.fold(
-                (l) => 'Payment incomplete',
-                (r) => null
-        );
-        scaffoldMessage.showSnackBar(
-          SnackbarUtil.showFailureSnackbar(
-              message: '$leftValue',
-              duration: const Duration(seconds: 2)
-          ),
-        );
-      }else{
-        subscriptionPlan(
-            schemePlanId: selectedScheme?.schemeplanID ?? 0
-        ).then((value) async => await userRegisterOrganization()).then((value) {
-          scaffoldMessage.showSnackBar(
-            SnackbarUtil.showSuccessSnackbar(
-                message: 'User registered successfully',
-                duration: const Duration(seconds: 2)
-            ),
-          );
-          setState(() {
-            isPostingData = false;
-          });
-          Get.offAll(()=>LoginPage());
-        }).catchError((e){
-          scaffoldMessage.showSnackBar(
-            SnackbarUtil.showFailureSnackbar(
-                message: '$e',
-                duration: const Duration(seconds: 2)
-            ),
-          );
-
-        });
-      }
-    }
-
-
-
-
-
-
-  }
-
-
-
-
+//   payWithEsewaInApp({
+//     required String productId,
+//     required int amount,
+//     required int schemePlanId,
+//     required String schemePlanName
+// }){
+//     const String kEsewaClientId = 'JB0BBQ4aD0UqIThFJwAKBgAXEUkEGQUBBAwdOgABHD4DChwUAB0R';
+//     const String kEsewaSecretKey = 'BhwIWQQADhIYSxILExMcAgFXFhcOBwAKBgAXEQ==';
+//     try{
+//       EsewaFlutterSdk.initPayment(
+//           esewaConfig: EsewaConfig(
+//             environment: Environment.test,
+//             clientId: kEsewaClientId,
+//             secretId: kEsewaSecretKey,
+//           ),
+//           esewaPayment: EsewaPayment(
+//             productId: productId,
+//             productName: schemePlanName,
+//             productPrice: '$amount',
+//             callbackUrl: '',
+//           ),
+//           onPaymentSuccess: onEsewaSuccess,
+//           onPaymentFailure: (failure){
+//             setState(() {
+//               isPostingData = false;
+//             });
+//             ('$loadingString $loadingStatus');
+//
+//             final scaffoldMessage = ScaffoldMessenger.of(context);
+//
+//             scaffoldMessage.showSnackBar(
+//               SnackbarUtil.showFailureSnackbar(
+//                 message: '${failure.toString()}',
+//                 duration: const Duration(milliseconds: 1200),
+//               ),
+//             );
+//           },
+//           onPaymentCancellation: (){
+//             setState(() {
+//               isPostingData = false;
+//             });
+//             final scaffoldMessage = ScaffoldMessenger.of(context);
+//             scaffoldMessage.showSnackBar(
+//                 SnackbarUtil.showFailureSnackbar(
+//                     message: 'Payment Cancelled',
+//                     duration: const Duration(milliseconds: 1200)
+//                 )
+//             );
+//           }
+//       );
+//     }catch(e){
+//
+//     }
+//
+//
+//   }
+//   void onEsewaSuccess(EsewaPaymentSuccessResult success) async {
+//     final scaffoldMessage = ScaffoldMessenger.of(context);
+//     scaffoldMessage.showSnackBar(
+//       SnackbarUtil.showProcessSnackbar2(
+//           message: 'Please Wait. Verification in process...',
+//           duration: const Duration(seconds: 2)
+//       ),
+//     );
+//     setState(() {
+//       isPostingData = true;
+//     });
+//     if(success.status.toLowerCase() == 'complete'){
+//       final paymentResponse = await ref.read(paymentSuccessProvider).InsertPaymentInfo(
+//           token: '',
+//           amount: double.parse(success.totalAmount).round(),
+//           mobile: widget.outputValue['result']['contact'],
+//           pid: success.productId,
+//           orderName: schemePlanName,
+//           tId: success.refId
+//       );
+//       if(paymentResponse.isLeft()){
+//         final leftValue= paymentResponse.fold(
+//                 (l) => 'Payment incomplete',
+//                 (r) => null
+//         );
+//         scaffoldMessage.showSnackBar(
+//           SnackbarUtil.showFailureSnackbar(
+//               message: '$leftValue',
+//               duration: const Duration(seconds: 2)
+//           ),
+//         );
+//       }else{
+//         subscriptionPlan(
+//             schemePlanId: selectedScheme?.schemeplanID ?? 0
+//         ).then((value) async => await userRegisterOrganization()).then((value) {
+//           scaffoldMessage.showSnackBar(
+//             SnackbarUtil.showSuccessSnackbar(
+//                 message: 'User registered successfully',
+//                 duration: const Duration(seconds: 2)
+//             ),
+//           );
+//           setState(() {
+//             isPostingData = false;
+//           });
+//           Get.offAll(()=>LoginPage());
+//         }).catchError((e){
+//           scaffoldMessage.showSnackBar(
+//             SnackbarUtil.showFailureSnackbar(
+//                 message: '$e',
+//                 duration: const Duration(seconds: 2)
+//             ),
+//           );
+//
+//         });
+//       }
+//     }
+//
+//
+//
+//
+//
+//
+//   }
+//
+//
+//
+//
 
   ///-------------------------ESEWA SERVICES - END---------------------------///
 
@@ -679,9 +679,9 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Select your',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 30),),
+                      Text('Select your',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 24),),
                       h10,
-                      Text('Subscription\nPlan',style: getBoldStyle(color: ColorManager.textGrey,fontSize: 60),textAlign: TextAlign.start,),
+                      Text('Subscription\nPlan',style: getBoldStyle(color: ColorManager.textGrey,fontSize: 50),textAlign: TextAlign.start,),
                       h10,
                       Center(
                         child: _buildSubBanner(
@@ -691,7 +691,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
                           selectSubscription: schemePlanId,
                           gradient: selectedScheme?.schemeName == 'GOLD'
                               ?ColorManager.goldContainer
-                              :selectedScheme?.schemeName == 'SLIVER'
+                              :selectedScheme?.schemeName == 'SILVER'
                               ?ColorManager.silverContainer
                               :selectedScheme?.schemeName == 'PLATINUM'
                               ?ColorManager.blackContainer
@@ -711,9 +711,9 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
                               onTap: () {
                                 setState(() {
                                   schemePlanId = schemeMonth[index].schemeplanID!;
-                                  schemePlanName = schemeMonth[index].schemeName!;
-                                  amount = schemeMonth[index].price!.round();
                                   selectedScheme = schemeMonth[index]; // Set the selectedScheme
+                                  schemePlanName = schemeMonth[index].schemeName!;
+                                  amount =schemeMonth[index].price!.round();
                                 });
                                 (schemePlanId);
                               },
@@ -765,26 +765,23 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Select your',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 30),),
+                      Text('Select your',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 24),),
                       h10,
-                      Text('Subscription\nPlan',style: getBoldStyle(color: ColorManager.textGrey,fontSize: 60),textAlign: TextAlign.start,),
+                      Text('Subscription\nPlan',style: getBoldStyle(color: ColorManager.textGrey,fontSize: 50),textAlign: TextAlign.start,),
                       h10,
-                      Visibility(
-                        visible: selectedScheme != null && schemePlanId == selectedScheme!.schemeplanID,
-                        child: Center(
-                          child: _buildSubBanner(
-                            schemeName: '${selectedScheme?.schemeName}',
-                            schemeDuration: selectedScheme?.storageType == 1 ? 'month' : 'year',
-                            schemePrice: int.parse(selectedScheme?.price!.round().toString() ?? '0'),
-                            selectSubscription: schemePlanId,
-                            gradient: selectedScheme?.schemeName == 'GOLD'
-                                ?ColorManager.goldContainer
-                                :selectedScheme?.schemeName == 'SLIVER'
-                                ?ColorManager.silverContainer
-                                :selectedScheme?.schemeName == 'PLATINUM'
-                                ?ColorManager.blackContainer
-                                :ColorManager.primary ,
-                          ),
+                      Center(
+                        child: _buildSubBanner(
+                          schemeName: '${selectedScheme?.schemeName}',
+                          schemeDuration: selectedScheme?.storageType == 1 ? 'month' : 'year',
+                          schemePrice: int.parse(selectedScheme?.price!.round().toString() ?? '0'),
+                          selectSubscription: schemePlanId,
+                          gradient: selectedScheme?.schemeName == 'GOLD'
+                              ?ColorManager.goldContainer
+                              :selectedScheme?.schemeName == 'SILVER'
+                              ?ColorManager.silverContainer
+                              :selectedScheme?.schemeName == 'PLATINUM'
+                              ?ColorManager.blackContainer
+                              :ColorManager.primary ,
                         ),
                       ),
 
@@ -793,7 +790,6 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
                       Container(
                         height: 300,
                         child: ListView.builder(
-
                           scrollDirection: Axis.vertical,
                           itemCount: schemeYear.length,
                           itemBuilder: (context, index) {
@@ -801,9 +797,9 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
                               onTap: () {
                                 setState(() {
                                   schemePlanId = schemeYear[index].schemeplanID!;
+                                  selectedScheme = schemeYear[index]; // Set the selectedScheme
                                   schemePlanName = schemeYear[index].schemeName!;
                                   amount =schemeYear[index].price!.round();
-                                  selectedScheme = schemeYear[index]; // Set the selectedScheme
                                 });
                                 (schemePlanId);
                               },
@@ -882,29 +878,29 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
     bool isNarrowScreen = screenSize.width < 400;
 
     return CustomBannerShimmer(
-        width: isNarrowScreen? 340.w: 340,
-        height:isNarrowScreen? 200.h: 200,
+        width: 340.w,
+        height: 200,
         borderRadius: 20,
         gradient: gradient,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            schemeDuration!=null?Text('$schemeName',style: getBoldStyle(color: ColorManager.white,fontSize: 40),):Text('Trial',style: getBoldStyle(color: ColorManager.white,fontSize: 20),),
+            schemeDuration!=null?Text('$schemeName',style: getBoldStyle(color: ColorManager.white,fontSize: 20),):Text('Trial',style: getBoldStyle(color: ColorManager.white,fontSize: 20),),
             h20,
             schemeDuration != null?
-                schemePrice != 0?
+            schemePrice != 0?
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('Rs. ',style: getMediumStyle(color: ColorManager.white,fontSize: 24),),
-                Text('$schemePrice',style: getMediumStyle(color: ColorManager.white,fontSize: 60),),
+                Text('Rs. ',style: getMediumStyle(color: ColorManager.white,fontSize: 16),),
+                Text('$schemePrice',style: getMediumStyle(color: ColorManager.white,fontSize: 36),),
                 w10,
-                Text('for a $schemeDuration',style: getMediumStyle(color: ColorManager.white,fontSize: 24),),
+                Text('for a $schemeDuration',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
               ],
             )
-                    :Text('Free for a 15 days',style: getMediumStyle(color: ColorManager.white,fontSize: 24),)
+                :Text('Free for a 15 days',style: getMediumStyle(color: ColorManager.white,fontSize: 20),)
                 :Text('$schemeName',style: getMediumStyle(color: ColorManager.white,fontSize: 30),),
             h12,
             Row(
@@ -913,7 +909,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
               children: [
                 FaIcon(FontAwesomeIcons.check,color: ColorManager.white,size: 12,),
                 w10,
-                Text('Access to new features',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
+                Text('Access to new features',style: getMediumStyle(color: ColorManager.white,fontSize: 16),),
               ],
             ),
             Row(
@@ -922,7 +918,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
               children: [
                 FaIcon(FontAwesomeIcons.check,color: ColorManager.white,size: 12,),
                 w10,
-                Text('features 2',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
+                Text('features 2',style: getMediumStyle(color: ColorManager.white,fontSize: 14),),
               ],
             ),
             Row(
@@ -931,7 +927,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
               children: [
                 FaIcon(FontAwesomeIcons.check,color: ColorManager.white,size: 12,),
                 w10,
-                Text('features 3',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
+                Text('features 3',style: getMediumStyle(color: ColorManager.white,fontSize: 14  ),),
               ],
             ),
 

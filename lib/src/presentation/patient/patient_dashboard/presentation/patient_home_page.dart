@@ -355,7 +355,16 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
               children: [
 
                 InkWell(
-                  onTap: ()=>Get.to(()=>PatientRegistrationForm(widget.isWideScreen,widget.isNarrowScreen)),
+                  onTap: (){
+                    final scaffoldMessage = ScaffoldMessenger.of(context);
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showComingSoonBar(
+                        message: 'Coming Soon !',
+                        duration: const Duration(milliseconds: 1400),
+                      ),
+                    );
+                  },
+                      //()=>Get.to(()=>PatientRegistrationForm(widget.isWideScreen,widget.isNarrowScreen)),
                   child: Container(
                     height: height,
                     width: width,
@@ -392,7 +401,16 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                 ),
                 w10,
                 InkWell(
-                  onTap: ()=>Get.to(()=>PatientRegistrationForm(widget.isWideScreen,widget.isNarrowScreen)),
+                  onTap: (){
+                    final scaffoldMessage = ScaffoldMessenger.of(context);
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showComingSoonBar(
+                        message: 'Coming Soon !',
+                        duration: const Duration(milliseconds: 1400),
+                      ),
+                    );
+                  },
+                      //()=>Get.to(()=>PatientRegistrationForm(widget.isWideScreen,widget.isNarrowScreen)),
                   child: Container(
                     height: height,
                     width: width,

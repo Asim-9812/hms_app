@@ -346,7 +346,7 @@ class _ReminderState extends ConsumerState<Reminders>with TickerProviderStateMix
             ),
             if(isMenuOpen)
               Positioned(
-                bottom: 100,
+                bottom: 110,
                 right: 120.w,
                 child: Column(
                     children: [
