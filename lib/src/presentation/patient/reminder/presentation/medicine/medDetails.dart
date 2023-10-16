@@ -11,26 +11,26 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image/image.dart' as img;
 import 'package:intl/intl.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
-import 'package:medical_app/src/presentation/patient/reminder_test/domain/model/reminder_model.dart';
+import 'package:medical_app/src/presentation/patient/reminder/domain/model/reminder_model.dart';
+import 'package:medical_app/src/presentation/patient/reminder/presentation/medicine/widget/edit_med_page.dart';
 
-import '../../../../core/resources/color_manager.dart';
-import '../../../../core/resources/style_manager.dart';
-import '../../../../core/resources/value_manager.dart';
-import '../../reminders/data/reminder_db.dart';
-import 'edit_page.dart'; // for image decoding
+import '../../../../../core/resources/color_manager.dart';
+import '../../../../../core/resources/style_manager.dart';
+import '../../../../../core/resources/value_manager.dart';
+import '../../data/reminder_db.dart';
 
-class TestDetails extends StatefulWidget {
+class MedDetails extends StatefulWidget {
   final Reminder reminder;
 
-  TestDetails(this.reminder);
+  MedDetails(this.reminder);
 
   @override
-  State<TestDetails> createState() => _TestDetailsState();
+  State<MedDetails> createState() => _MedDetailsState();
 }
 
-class _TestDetailsState extends State<TestDetails> {
+class _MedDetailsState extends State<MedDetails> {
 
-  GlobalKey<_TestDetailsState> refreshKey = GlobalKey();
+  GlobalKey<_MedDetailsState> refreshKey = GlobalKey();
 
 
 
@@ -82,11 +82,7 @@ class _TestDetailsState extends State<TestDetails> {
 
   @override
   Widget build(BuildContext context) {
-    // Decode the image
-     img.Image? image;
-    if(widget.reminder.reminderImage !=null){
-      image =img.decodeImage(widget.reminder.reminderImage!);
-    }
+
 
     final reminder = Hive.box<Reminder>('med_reminder');
 
@@ -94,10 +90,14 @@ class _TestDetailsState extends State<TestDetails> {
 
     final reminderBox = reminder.getAt(index)!;
 
-     _noteController.text = widget.reminder.notes == null ? '' : widget.reminder.notes!;
+     _noteController.text = reminderBox.notes == null ? '' : reminderBox.notes!;
      final currentTime = DateTime.now();
-     final remainingDays = widget.reminder.endDate.difference(currentTime);
-
+     final remainingDays = reminderBox.endDate.difference(currentTime);
+// Decode the image
+    img.Image? image;
+    if(reminderBox.reminderImage !=null){
+      image =img.decodeImage(reminderBox.reminderImage!);
+    }
 
 
 
@@ -160,16 +160,16 @@ class _TestDetailsState extends State<TestDetails> {
                  CircleAvatar(
                    radius: 30,
                    backgroundColor: ColorManager.primaryDark,
-                   child: FaIcon(medicineType.firstWhere((element) => element.name == widget.reminder.medTypeName).icon,color: ColorManager.white.withOpacity(0.5),size: 30,),
+                   child: FaIcon(medicineType.firstWhere((element) => element.name == reminderBox.medTypeName).icon,color: ColorManager.white.withOpacity(0.5),size: 30,),
                  ),
                  w20,
                  Column(
                    crossAxisAlignment: CrossAxisAlignment.start,
                    children: [
-                     Text('${widget.reminder.medicineName}',style: getSemiBoldStyle(color: ColorManager.black,fontSize: 32),),
+                     Text('${reminderBox.medicineName}',style: getSemiBoldStyle(color: ColorManager.black,fontSize: 32),),
                      h10,
                      Row(
-                       children: widget.reminder.scheduleTime.map((e){
+                       children: reminderBox.scheduleTime.map((e){
                          return Container(
                            padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
                            margin: EdgeInsets.only(right: 5.w),
@@ -204,10 +204,10 @@ class _TestDetailsState extends State<TestDetails> {
                          children: [
                            Text('Dose:',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
                            w10,
-                           Text('${widget.reminder.strength} ${widget.reminder.unit}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
+                           Text('${reminderBox.strength} ${reminderBox.unit}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
                          ],
                        ),
-                       Text('${widget.reminder.meal}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),)
+                       Text('${reminderBox.meal}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),)
 
 
                      ],
@@ -218,7 +218,7 @@ class _TestDetailsState extends State<TestDetails> {
                      children: [
                        Text('Frequency:',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
                        w10,
-                       Text('${widget.reminder.frequency.frequencyName}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
+                       Text('${reminderBox.frequency.frequencyName}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
                      ],
                    ),
                    h20,
@@ -227,7 +227,7 @@ class _TestDetailsState extends State<TestDetails> {
                      children: [
                        Text('Duration:',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
                        w10,
-                       Text('${widget.reminder.medicationDuration} days',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
+                       Text('${reminderBox.medicationDuration} days',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
                      ],
                    ),
                    h20,
@@ -236,10 +236,10 @@ class _TestDetailsState extends State<TestDetails> {
                      children: [
                        Text('Consumption Pattern:',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
                        w10,
-                       widget.reminder.reminderPattern.interval != null ? Text('Every ${widget.reminder.reminderPattern.interval} days',style: getRegularStyle(color: ColorManager.white,fontSize: 18),)
-                           : widget.reminder.reminderPattern.daysOfWeek == null ?   Text('Everyday',style: getRegularStyle(color: ColorManager.white,fontSize: 18),)
+                       reminderBox.reminderPattern.interval != null ? Text('Every ${reminderBox.reminderPattern.interval} days',style: getRegularStyle(color: ColorManager.white,fontSize: 18),)
+                           : reminderBox.reminderPattern.daysOfWeek == null ?   Text('Everyday',style: getRegularStyle(color: ColorManager.white,fontSize: 18),)
                            : Row(
-                         children: widget.reminder.reminderPattern.daysOfWeek!.map((e){
+                         children: reminderBox.reminderPattern.daysOfWeek!.map((e){
                            return Container(
                              padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
                              margin: EdgeInsets.only(right: 5.w),
@@ -277,7 +277,7 @@ class _TestDetailsState extends State<TestDetails> {
                          children: [
                            Text('Start Date',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
                            h10,
-                           Text('${DateFormat('yyyy-MM-dd').format(widget.reminder.startDate)}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
+                           Text('${DateFormat('yyyy-MM-dd').format(reminderBox.startDate)}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
                          ],
                        ),
 
@@ -286,7 +286,7 @@ class _TestDetailsState extends State<TestDetails> {
                          children: [
                            Text('End Date',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
                            h10,
-                           Text('${DateFormat('yyyy-MM-dd').format(widget.reminder.endDate)}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
+                           Text('${DateFormat('yyyy-MM-dd').format(reminderBox.endDate)}',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
                          ],
                        ),
                      ],
@@ -302,8 +302,8 @@ class _TestDetailsState extends State<TestDetails> {
                    ),
                    h10,
                    LinearProgressBar(
-                       maxSteps: widget.reminder.medicationDuration,
-                       currentStep: widget.reminder.medicationDuration - remainingDays.inDays-1,
+                       maxSteps: reminderBox.medicationDuration,
+                       currentStep: reminderBox.medicationDuration - remainingDays.inDays-1,
                        progressColor: ColorManager.orange,
                        backgroundColor: ColorManager.dotGrey
                    ),
@@ -314,10 +314,10 @@ class _TestDetailsState extends State<TestDetails> {
              Row(
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
-                 if(widget.reminder.reminderImage != null)
+                 if(reminderBox.reminderImage != null)
                    InkWell(
                      onTap: (){
-                       final image = Image.memory(widget.reminder.reminderImage!).image;
+                       final image = Image.memory(reminderBox.reminderImage!).image;
                        showImageViewer(context, image, onViewerDismissed: () {
                          print("dismissed");
                        });
@@ -329,11 +329,11 @@ class _TestDetailsState extends State<TestDetails> {
                          width: 100,height: 100,
                          child: ClipRRect(
                              borderRadius: BorderRadius.circular(10),
-                             child: Image.memory(widget.reminder.reminderImage!,fit: BoxFit.cover,))),
+                             child: Image.memory(reminderBox.reminderImage!,fit: BoxFit.cover,))),
                    ),
-                 if(widget.reminder.notes != null&&widget.reminder.reminderImage != null)
+                 if(reminderBox.notes != null&&reminderBox.reminderImage != null)
                    w10,
-                 if(widget.reminder.notes != null)
+                 if(reminderBox.notes != null)
                    Expanded(
                      child: AbsorbPointer(
                        child: TextFormField(
@@ -429,7 +429,7 @@ class _TestDetailsState extends State<TestDetails> {
                        backgroundColor: ColorManager.blueText,
                        elevation: 0
                      ),
-                       onPressed: ()=>Get.to(()=>EditReminderPage(widget.reminder)),
+                       onPressed: ()=>Get.to(()=>EditMedReminderPage(reminderBox)),
                        child: Row(
                          mainAxisAlignment: MainAxisAlignment.center,
                          crossAxisAlignment: CrossAxisAlignment.end,

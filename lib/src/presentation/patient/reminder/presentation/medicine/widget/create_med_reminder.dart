@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:dotted_border/dotted_border.dart';
@@ -10,26 +11,27 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
-import 'package:medical_app/src/presentation/patient/reminder_test/domain/model/reminder_model.dart';
+import 'package:medical_app/src/presentation/patient/reminder/domain/model/reminder_model.dart';
+import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_services.dart';
 
-import '../../../../core/resources/color_manager.dart';
-import '../../../../core/resources/style_manager.dart';
-import '../../../../core/resources/value_manager.dart';
-import '../../../../data/provider/common_provider.dart';
-import '../../../common/snackbar.dart';
-import '../../reminders/data/reminder_db.dart';
+import '../../../../../../core/resources/color_manager.dart';
+import '../../../../../../core/resources/style_manager.dart';
+import '../../../../../../core/resources/value_manager.dart';
+import '../../../../../../data/provider/common_provider.dart';
+import '../../../../../common/snackbar.dart';
+import '../../../../../login/domain/model/user.dart';
+import '../../../data/reminder_db.dart';
 
-class EditReminderPage extends ConsumerStatefulWidget {
-  final Reminder reminderTest;
 
-  EditReminderPage(this.reminderTest);
+class CreateMedReminder extends ConsumerStatefulWidget {
+
 
   @override
   _EditReminderPageState createState() => _EditReminderPageState();
 }
 
-class _EditReminderPageState extends ConsumerState<EditReminderPage> {
-  late Reminder updatedReminder;
+class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
+
 
   int page = 0;
   PageController _pageController = PageController(initialPage: 0);
@@ -55,19 +57,19 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
   TextEditingController _noteController = TextEditingController();
 
 
-  late int selectedMedTypeId;
-  late String selectedMedTypeName;
+  int selectedMedTypeId = 1;
+  String selectedMedTypeName='Tablet' ;
   String? selectedStrengthUnit;
-  late String selectedFrequencyName;
-  late List<String> scheduleTime;
-  late String intervals;
-  late int frequencyId;
-  late DateTime endDateIntake;
-  late DateTime startDateIntake;
-  late int selectedMealId;
-  late String selectedMealName;
-  late String selectedPatternName;
-  late int selectedPatternId;
+  String? selectedFrequencyName;
+  List<String> scheduleTime=[];
+  String? intervals;
+  int? frequencyId;
+  DateTime? endDateIntake;
+  DateTime? startDateIntake;
+  int selectedMealId =1;
+  String selectedMealName ='Before a Meal';
+  String? selectedPatternName;
+  int? selectedPatternId;
   // List<String> selectedDays = [];
 
   List<String>? days;
@@ -89,55 +91,9 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
   @override
   void initState() {
     super.initState();
-    // Initialize the updatedReminder with the data from Hive
-    updatedReminder = widget.reminderTest;
-    selectedMedTypeId = updatedReminder.medTypeId;
-    selectedMedTypeName = updatedReminder.medTypeName;
-    _medicineNameController.text = updatedReminder.medicineName;
-    _strengthController.text = updatedReminder.strength.toString();
-    selectedStrengthUnit = updatedReminder.unit;
-    selectedFrequencyName = updatedReminder.frequency.frequencyName;
-    frequencyId = updatedReminder.frequency.frequencyId;
-    intervals = updatedReminder.frequency.intervals;
-    scheduleTime = updatedReminder.scheduleTime;
-    _startTimeController.text = updatedReminder.scheduleTime.first;
-    _medicationDurationController.text = updatedReminder.medicationDuration.toString();
-    _startDateController.text = DateFormat('yyyy-MM-dd').format(updatedReminder.startDate);
-    _endDateController.text = DateFormat('yyyy-MM-dd').format(updatedReminder.endDate);
-    startDateIntake =updatedReminder.startDate;
-    endDateIntake =updatedReminder.endDate;
-    selectedMealId =updatedReminder.mealTypeId;
-    selectedMealName =updatedReminder.meal;
-    selectedPatternName = updatedReminder.reminderPattern.patternName;
-    selectedPatternId = updatedReminder.reminderPattern.reminderPatternId;
-    if(updatedReminder.reminderPattern.interval != null){
-      _intervalDurationController.text = updatedReminder.reminderPattern.interval.toString();
-    }
-
-    if(updatedReminder.reminderPattern.daysOfWeek != null){
-      days = updatedReminder.reminderPattern.daysOfWeek;
-      isSelected = [
-        days!.contains('Monday'),
-        days!.contains('Tuesday'),
-        days!.contains('Wednesday'),
-        days!.contains('Thursday'),
-        days!.contains('Friday'),
-        days!.contains('Saturday'),
-        days!.contains('Sunday'),
-      ];
-    }
-
-
-     imageSet = updatedReminder.reminderImage != null ? 1:2;
 
 
 
-    if(updatedReminder.notes != null){
-      _noteController.text = updatedReminder.notes!;
-    }
-
-
-    _summaryController.text = '${selectedMedTypeName} ${_medicineNameController.text} ${_strengthController.text}${selectedStrengthUnit} ${selectedFrequencyName} ${selectedPatternName}';
 
 
 
@@ -145,21 +101,20 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
 
   }
 
-  void _updateReminder(Reminder reminder) {
+  void _addReminder(Reminder reminder) async {
+    final scaffoldMessage = ScaffoldMessenger.of(context);
     final reminderBox = Hive.box<Reminder>('med_reminder');
-    // Get the index of the reminder to update based on its 'reminderId' (you should replace 1002 with the actual 'reminderId' you want to update)
-    final int indexToUpdate = reminderBox.values.toList().indexWhere((element) => element.reminderId == updatedReminder.reminderId);
 
-    if (indexToUpdate != -1) {
-      // If the reminder is found, update it
-      reminderBox.putAt(indexToUpdate, reminder);
-      Navigator.pop(context,true); // Optionally, you can navigate back to the previous screen
-    } else {
-      // Handle the case where the reminder is not found
-      // You might want to show an error message or take appropriate action
-      // based on your app's requirements.
-      print('Reminder not found for update.');
-    }
+      await reminderBox.add(reminder);
+    scaffoldMessage.showSnackBar(
+      SnackbarUtil.showSuccessSnackbar(
+        message: 'Reminder saved !',
+        duration: const Duration(milliseconds: 1400),
+      ),
+    );
+
+    Navigator.pop(context,true); // Optionally, you can navigate back to the previous screen
+
   }
 
   TimeOfDay _parseTime(String timeString) {
@@ -194,18 +149,18 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
         scheduleTime.add(formattedTime);
 
         // Calculate additional times based on frequencyId
-        if (frequencyId >= 1) {
+        if (frequencyId! >= 1) {
           // Calculate intervals based on frequencyId
-          int intervalHours = 24 ~/ frequencyId;
+          int intervalHours = 24 ~/ frequencyId!;
 
-          for (int i = 1; i < frequencyId; i++) {
+          for (int i = 1; i < frequencyId!; i++) {
             // Add intervals to the selected time and add to the list
             selectedTime = TimeOfDay(
               hour: (selectedTime.hour + intervalHours) % 24,
               minute: selectedTime.minute,
             );
             final formattedTime = selectedTime.format(context);
-            scheduleTime.add(formattedTime);
+            scheduleTime!.add(formattedTime);
           }
         }
         setState(() {});
@@ -235,7 +190,7 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
 
       final DateTime? selectedDate = await showDatePicker(
         context: context,
-        initialDate:startDateIntake.isAfter(date)?startDateIntake: date.isBefore(now) ? now.add(Duration(days: 1)) :DateTime.now(),
+        initialDate:date.isBefore(now) ? now.add(Duration(days: 1)) :DateTime.now(),
         firstDate: date.isBefore(now) ? now.add(Duration(days: 1)) :DateTime.now(),
         lastDate: DateTime(2101),
       );
@@ -297,6 +252,8 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
 
   @override
   Widget build(BuildContext context) {
+    _summaryController.text = '${selectedMedTypeName} ${_medicineNameController.text} ${_strengthController.text}${selectedStrengthUnit} ${selectedFrequencyName} ${selectedPatternName??''}';
+
     // TabController _tabController = TabController(length: 2, vsync: this);
     return GestureDetector(
       onTap: ()=>FocusScope.of(context).unfocus(),
@@ -435,7 +392,7 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
                         selectedStrengthUnit = null;
 
                       });
-                      ref.read(itemProvider.notifier).updateMedicineType(e.name);
+                      // ref.read(itemProvider.notifier).updateMedicineType(e.name);
 
                     },
                     child: Container(
@@ -634,13 +591,13 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
                 ).toList(),
                 onChanged: (value){
                   setState(() {
-                    scheduleTime.clear();
+                    scheduleTime?.clear();
                     _startTimeController.clear();
                     selectedFrequencyName = value!;
                     frequencyId = frequencyType.firstWhere((element) => element.frequencyName == value).id;
                     intervals = frequencyType.firstWhere((element) => element.frequencyName == value).frequencyInterval;
                   });
-                  ref.read(itemProvider.notifier).updateFrequency(selectedFrequencyName!);
+                  // ref.read(itemProvider.notifier).updateFrequency(selectedFrequencyName!);
                 },
                 validator: (value){
                   if(value == null){
@@ -734,12 +691,12 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
               ],
             ),
             h10,
-            if(scheduleTime.isNotEmpty && scheduleTime.length> 1)
+            if(scheduleTime != [] && scheduleTime!.length> 1)
               h10,
-            if(scheduleTime.isNotEmpty && scheduleTime.length> 1)
+            if(scheduleTime!= [] && scheduleTime!.length> 1)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: scheduleTime.map((e) {
+                children: scheduleTime!.map((e) {
                   return Container(
                     padding: EdgeInsets.symmetric(vertical: 8.h,horizontal: 8.w),
                     decoration: BoxDecoration(
@@ -750,7 +707,7 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
                   );
                 }).toList(),
               ),
-            if(scheduleTime.isNotEmpty && scheduleTime.length> 1)
+            if(scheduleTime!= [] && scheduleTime!.length> 1)
               h20,
 
             Form(
@@ -1164,52 +1121,6 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
               h10,
 
 
-            if(imageSet ==1 )
-              Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: ColorManager.white,
-                    border: Border.all(
-                      color: ColorManager.black.withOpacity(0.5)
-                    )
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 18.h,horizontal: 12.w),
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: Column(
-                          children: [
-                            Image.memory(updatedReminder.reminderImage!,width: 200,height: 100,),
-                            // h10,
-                            // Text('${selectImage.path}',style: getRegularStyle(color: ColorManager.black,fontSize: 14),overflow: TextOverflow.fade,maxLines: 1,)
-                          ],
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: InkWell(
-                          onTap: (){
-                            setState(() {
-                              imageSet = 2;
-                            });
-                          },
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: ColorManager.textGrey.withOpacity(0.15)
-                              ),
-                              padding: EdgeInsets.symmetric(horizontal: 2.w,vertical: 2.h),
-                              child: FaIcon(Icons.close)),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-
-            if(imageSet == 2)
-
               Center(
                 child:selectImage != null
                     ? Container(
@@ -1423,6 +1334,9 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
                           backgroundColor: ColorManager.primaryDark
                       ),
                       onPressed: () async {
+                        final userBox = Hive.box<User>('session').values.toList();
+                        int userId = userBox[0].id!;
+
                         Uint8List? reminderImage;
                         List<String> list = [];
 
@@ -1445,88 +1359,73 @@ class _EditReminderPageState extends ConsumerState<EditReminderPage> {
                           days = list;
                         });
 
+
+
                         if(selectImage != null) {
 
                           reminderImage = await selectImage.readAsBytes();
 
                         }
 
+                        formKey4.currentState!.validate();
+                        final scaffoldMessage = ScaffoldMessenger.of(context);
 
-                        // Map<String,dynamic> reminderTest = {
-                        //   'reminderId' : updatedReminder['reminderId'],
-                        //   'userId' : updatedReminder['userId'],
-                        //   'medTypeId' : selectedMedTypeId,
-                        //   'medTypeName' : selectedMedTypeName,
-                        //   'medicineName' : _medicineNameController.text.trim(),
-                        //   'strength' : int.parse(_strengthController.text),
-                        //   'unit' : selectedStrengthUnit,
-                        //   'frequency' : {
-                        //     'frequencyId' : frequencyId,
-                        //     'frequencyName' : selectedFrequencyName,
-                        //     'intervals' : intervals
-                        //   } ,
-                        //   'scheduleTime' : scheduleTime,
-                        //   'medicationDuration' : _medicationDurationController.text.trim(),
-                        //   'startDate' : startDateIntake,
-                        //   'endDate' : endDateIntake,
-                        //   'mealTypeId' : selectedMealId,
-                        //   'meal' : selectedMealName,
-                        //   'reminderPattern' : {
-                        //     'reminderPatternId' : selectedPatternId,
-                        //     'patternName' : selectedPatternName,
-                        //     'interval' : selectedPatternId == 3 ? int.parse(_intervalDurationController.text):null,
-                        //     'daysOfWeek' : selectedPatternId == 2 ? days : null,
-                        //   } ,
-                        //   'reminderImage' : imageSet ==1 ? updatedReminder['reminderImage'] : selectImage != null ? reminderImage : null,
-                        //   'notes':null,
-                        //   'summary':'this is a summary'
-                        // };
+                        if(selectedPatternId == 2 && days!.isEmpty ){
+                          setState(() {
+                            selectDaysValidation = true;
+                          });
+                          scaffoldMessage.showSnackBar(
+                            SnackbarUtil.showFailureSnackbar(
+                              message: 'Please select a day',
+                              duration: const Duration(milliseconds: 1400),
+                            ),
+                          );
+                        }
+                        else{
+                          if(formKey4.currentState!.validate()){
+                            print(scheduleTime);
+                            Reminder reminder = Reminder(
+                              reminderId: Random().nextInt(1000),
+                              userId: userId,
+                              medTypeId: selectedMedTypeId,
+                              medTypeName: selectedMedTypeName,
+                              medicineName: _medicineNameController.text.trim(),
+                              strength: int.parse(_strengthController.text),
+                              unit: selectedStrengthUnit!,
+                              frequency: Frequency(
+                                  frequencyId: frequencyId!,
+                                  frequencyName: selectedFrequencyName!,
+                                  intervals: intervals!
+                              ) ,
+                              scheduleTime: scheduleTime!,
+                              medicationDuration: int.parse(_medicationDurationController.text.trim()),
+                              startDate: startDateIntake!,
+                              endDate: endDateIntake!,
+                              mealTypeId: selectedMealId,
+                              meal: selectedMealName,
+                              reminderPattern:ReminderPattern(
+                                  reminderPatternId: selectedPatternId!,
+                                  patternName: selectedPatternName!,
+                                  interval: selectedPatternId == 3 ? int.parse(_intervalDurationController.text) : null,
+                                  daysOfWeek: selectedPatternId == 2 ? days : null
+                              ) ,
+                              reminderImage: selectImage != null ? reminderImage : null,
+                              notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
+                              summary: _summaryController.text.trim(),
+                            );
 
-                        Reminder reminder = Reminder(
-                          reminderId: updatedReminder.reminderId,
-                          userId: updatedReminder.userId,
-                          medTypeId: selectedMedTypeId,
-                          medTypeName: selectedMedTypeName,
-                          medicineName: _medicineNameController.text.trim(),
-                          strength: int.parse(_strengthController.text),
-                          unit: selectedStrengthUnit!,
-                          frequency: Frequency(
-                              frequencyId: frequencyId,
-                              frequencyName: selectedFrequencyName,
-                              intervals: intervals
-                          ) ,
-                          scheduleTime: scheduleTime,
-                          medicationDuration: int.parse(_medicationDurationController.text.trim()),
-                          startDate: startDateIntake,
-                          endDate: endDateIntake,
-                          mealTypeId: selectedMealId,
-                          meal: selectedMealName,
-                          reminderPattern:ReminderPattern(
-                              reminderPatternId: selectedPatternId,
-                              patternName: selectedPatternName,
-                            interval: selectedPatternId == 3 ? int.parse(_intervalDurationController.text) : null,
-                            daysOfWeek: selectedPatternId == 2 ? days : null
-                          ) ,
-                          reminderImage: imageSet == 1 ? updatedReminder.reminderImage : selectImage != null ? reminderImage : null,
-                          notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
-                          summary: _summaryController.text.trim(),
-                        );
-                        _updateReminder(reminder);
+                             NotificationService().scheduleEverydayNotification(reminder: reminder);
 
-                        // formKey1.currentState!.validate();
-                        // formKey2.currentState!.validate();
-                        // formKey3.currentState!.validate();
-                        //
-                        // if(formKey1.currentState!.validate() && formKey2.currentState!.validate() && formKey3.currentState!.validate()){
-                        //   print('success');
-                        //   setState(() {
-                        //     page = 1;
-                        //   });
-                        //   _pageController.nextPage(duration: Duration(milliseconds: 500), curve: Curves.easeIn);
-                        // }
-                        // else{
-                        //   print('Unsucessful');
-                        // }
+                            _addReminder(reminder);
+                          }
+
+
+                        }
+
+
+
+
+
                       }, child: Text('Save',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
                 ),
               ],

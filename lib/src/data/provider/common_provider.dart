@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../presentation/patient/reminders/domain/model/reminder_model.dart';
 
 final imageProvider = StateNotifierProvider.autoDispose<ImageProvider1, XFile?>((ref) => ImageProvider1(null));
 final imageProvider2 = StateNotifierProvider.autoDispose<ImageProvider1, XFile?>((ref) => ImageProvider1(null));
@@ -45,7 +44,6 @@ class CommonProvider extends ChangeNotifier {
 
 
 
-  List<ReminderModel> reminderList = Hive.box<ReminderModel>('medicine_reminder').values.toList();
 
 
   ///for summary...

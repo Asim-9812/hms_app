@@ -5,9 +5,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:medical_app/src/app/app.dart';
 import 'package:medical_app/src/presentation/login/domain/model/user.dart';
 import 'package:medical_app/src/presentation/patient/calories/model/calorie_model.dart';
-import 'package:medical_app/src/presentation/patient/reminder_test/domain/model/reminder_model.dart';
-import 'package:medical_app/src/presentation/patient/reminders/domain/model/reminder_model.dart';
-import 'package:medical_app/src/presentation/patient/reminders/widgets/create_reminder_test.dart';
+import 'package:medical_app/src/presentation/patient/reminder/domain/model/reminder_model.dart';
+import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_services.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
@@ -24,13 +24,13 @@ final boxA = Provider<List<User>>((ref) => []);
 
 late Box userBox2;
 
-final boxB = Provider<List<ReminderModel>>((ref) => []);
-
 
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  NotificationService().initNotification();
+  tz.initializeTimeZones();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
@@ -62,7 +62,6 @@ void main() async {
 
   await Hive.initFlutter();
   Hive.registerAdapter<User>(UserAdapter());
-  Hive.registerAdapter(ReminderModelAdapter());
   Hive.registerAdapter(UserProfileModelAdapter());
   Hive.registerAdapter(DailyIntakeModelAdapter());
   Hive.registerAdapter(FoodDetailModelAdapter());
@@ -74,14 +73,11 @@ void main() async {
   await Hive.openBox<String>('tokenBox');
   final userSession = await Hive.openBox< User>('session');
   userBox2 = await Hive.openBox('user');
-  // await Hive.openBox<UserProfileModel>('user_profile');
-  final reminderBox =await Hive.openBox<ReminderModel>('medicine_reminder');
   await Hive.openBox<Reminder>('med_reminder');
   runApp(ProviderScope(
       overrides: [
         box.overrideWithValue(userBox.get('userData')),
         boxA.overrideWithValue(userSession.values.toList()),
-        boxB.overrideWithValue(reminderBox.values.toList()),
       ],
 
       child: MyApp()

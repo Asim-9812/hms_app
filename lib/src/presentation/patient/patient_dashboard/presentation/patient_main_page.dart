@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,8 +10,7 @@ import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
-import 'package:medical_app/src/presentation/patient/reminders/presentation/reminder.dart';
-import 'package:medical_app/src/presentation/patient/reminders/presentation/testReminderNotification.dart';
+import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_services.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import '../../../../core/resources/value_manager.dart';
@@ -20,8 +20,8 @@ import '../../../notices/presentation/notices.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../../settings/settings_global.dart';
 import '../../profile/presentation/profile_page.dart';
-import '../../reminder_test/presentation/test_reminder_page.dart';
-import '../../reminders/widgets/create_reminder.dart';
+import '../../reminder/notifications/testNotification.dart';
+import '../../reminder/presentation/reminder_tabs.dart';
 import '../../utilities/presentation/patient_utilities_test.dart';
 import 'patient_home_page.dart';
 import '../../scan/presentation/qr_scan.dart';
@@ -45,6 +45,24 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
 
 
   bool _isMenuOpen = false;
+
+
+
+
+
+  @override
+  void initState(){
+    super.initState();
+    _permission();
+
+
+  }
+
+  Future<void> _permission() async {
+    final request = await NotificationService().notificationsPlugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
+    print(request);
+  }
 
 
 
@@ -197,8 +215,8 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
           children: [
             PatientHomePage(isWideScreen,isNarrowScreen,noticeBool),
 
-            // Reminders(),
-            TestRemind(),
+            // TestNotification(title: 'new notification',),
+            ReminderTabs(),
             PatientUtilities(isWideScreen,isNarrowScreen),
             ProfilePage()
           ],
