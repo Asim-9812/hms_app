@@ -1414,7 +1414,17 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                               summary: _summaryController.text.trim(),
                             );
 
-                             NotificationService().scheduleEverydayNotification(reminder: reminder);
+                            if(selectedPatternId == 1){
+                              NotificationService().scheduleEverydayNotification(reminder: reminder);
+                            }
+                            else if(selectedPatternId == 2){
+                              NotificationService().scheduleSpecificDaysNotification(reminder: reminder);
+                            }
+                            else if(selectedPatternId == 3){
+                              NotificationService().scheduleIntervalSNotification(reminder: reminder);
+                            }
+
+
 
                             _addReminder(reminder);
                           }
