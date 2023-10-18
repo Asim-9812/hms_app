@@ -29,7 +29,7 @@ late Box userBox2;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  NotificationService().initNotification();
+
   tz.initializeTimeZones();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);

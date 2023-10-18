@@ -27,6 +27,7 @@ import '../../health_tips/domain/model/health_tips_dummy_tags.dart';
 import '../../health_tips/domain/model/health_tips_model.dart';
 import '../../health_tips/domain/services/health_tips_services.dart';
 import '../../profile/presentation/profile_page.dart';
+import '../../reminder/notifications/notification_services.dart';
 import '../../search-near-by/presentation/search_for_page.dart';
 
 
@@ -57,6 +58,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
     super.initState();
 
     checkGeolocationStatus();
+    NotificationService().initNotification();
 
 
 

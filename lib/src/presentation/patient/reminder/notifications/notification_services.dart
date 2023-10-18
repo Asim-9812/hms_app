@@ -20,44 +20,60 @@ class NotificationService {
         requestBadgePermission: true,
         requestSoundPermission: true,
         onDidReceiveLocalNotification:
-            (int id, String? title, String? body, String? payload) async {});
+            (int id, String? title, String? body, String? payload) async {
+          if(payload == 'Snooze'){
+            print('snooze');
+          }
+
+            });
 
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     await notificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse:
-            (NotificationResponse notificationResponse) async {});
+            (NotificationResponse notificationResponse) async {
+      if(notificationResponse.actionId == '1'){
+        print('snooze');
+      }
+            });
   }
 
 
 
-  notificationDetails() {
+  notificationDetails({required Reminder reminder}) {
     return const NotificationDetails(
         android: AndroidNotificationDetails('channelId', 'channelName',
-            importance: Importance.max),
+            importance: Importance.max,
+          actions: [
+            // AndroidNotificationAction(
+            //     'Taken',
+            //     'Taken',
+            // ),
+            AndroidNotificationAction(
+              '1', 'Snooze',
+
+            )
+
+          ]
+
+        ),
         iOS: DarwinNotificationDetails());
   }
 
-  Future showNotification(
-      {int id = 0, String? title, String? body, String? payLoad}) async {
-    return notificationsPlugin.show(
-        id, title, body, await notificationDetails());
-  }
+  // Future showNotification(
+  //     {int id = 0, String? title, String? body, String? payLoad}) async {
+  //   return notificationsPlugin.show(
+  //       id, title, body, await notificationDetails());
+  // }
 
   Future scheduleNotification(
-      {int id = 0,
-        String? title,
-        String? body,
-        String? payLoad,
-        bool? isRepeat,
-        required DateTime scheduledNotificationDateTime}) async {
+      {required Reminder reminder}) async {
 
 
-    TimeOfDay time = TimeOfDay(hour: scheduledNotificationDateTime.hour, minute: scheduledNotificationDateTime.minute);
 
     DateTime now = DateTime.now();
 
-    DateTime date = DateTime(now.year,now.month,now.day,time.hour,time.minute);
+    DateTime date = now.add(Duration(minutes: 5));
 
     print( 'date tz : ${tz.TZDateTime.from(
       date,
@@ -66,17 +82,20 @@ class NotificationService {
     }',);
 
     return notificationsPlugin.zonedSchedule(
-        id,
-        title,
-        body,
+        reminder.reminderId,
+        reminder.medicineName,
+        'It\'s time for your medicine',
         tz.TZDateTime.from(
           date,
           tz.local,
         ),
-        await notificationDetails(),
+        await notificationDetails(reminder: reminder),
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
-        UILocalNotificationDateInterpretation.absoluteTime);
+        UILocalNotificationDateInterpretation.absoluteTime,
+
+
+    );
 
 
   }
@@ -111,10 +130,11 @@ class NotificationService {
               date,
               tz.local,
             ),
-            await notificationDetails(),
+            await notificationDetails(reminder: reminder),
             androidAllowWhileIdle: true,
             uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
+            UILocalNotificationDateInterpretation.absoluteTime,
+        );
 
 
       }
@@ -158,7 +178,7 @@ class NotificationService {
                   date,
                   tz.local,
                 ),
-                await notificationDetails(),
+                await notificationDetails(reminder: reminder),
                 androidAllowWhileIdle: true,
                 uiLocalNotificationDateInterpretation:
                 UILocalNotificationDateInterpretation.absoluteTime);
@@ -186,6 +206,7 @@ class NotificationService {
           for(String i in reminder.scheduleTime){
 
 
+
             DateTime time = DateFormat('hh:mm a').parse(i);
 
             //TimeOfDay time = TimeOfDay(hour: scheduledNotificationDateTime.hour, minute: scheduledNotificationDateTime.minute);
@@ -208,7 +229,7 @@ class NotificationService {
                   date,
                   tz.local,
                 ),
-                await notificationDetails(),
+                await notificationDetails(reminder: reminder),
                 androidAllowWhileIdle: true,
                 uiLocalNotificationDateInterpretation:
                 UILocalNotificationDateInterpretation.absoluteTime);

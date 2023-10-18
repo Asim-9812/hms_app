@@ -20,7 +20,6 @@ import '../../../notices/presentation/notices.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../../settings/settings_global.dart';
 import '../../profile/presentation/profile_page.dart';
-import '../../reminder/notifications/testNotification.dart';
 import '../../reminder/presentation/reminder_tabs.dart';
 import '../../utilities/presentation/patient_utilities_test.dart';
 import 'patient_home_page.dart';
