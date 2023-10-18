@@ -368,6 +368,25 @@ class _MedDetailsState extends State<MedDetails> {
              h20,
              Row(
                children: [
+
+                 Expanded(
+                   child: ElevatedButton(
+                     style: ElevatedButton.styleFrom(
+                       backgroundColor: ColorManager.blueText,
+                       elevation: 0
+                     ),
+                       onPressed: ()=>Get.to(()=>EditMedReminderPage(reminderBox)),
+                       child: Row(
+                         mainAxisAlignment: MainAxisAlignment.center,
+                         crossAxisAlignment: CrossAxisAlignment.end,
+                         children: [
+                           FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.white,size: 16,),
+                           w10,
+                           Text('Edit',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
+                         ],
+                       ) ),
+                 ),
+                 w10,
                  Expanded(
                    child: ElevatedButton(
                        style: ElevatedButton.styleFrom(
@@ -419,24 +438,6 @@ class _MedDetailsState extends State<MedDetails> {
                            FaIcon(Icons.delete,color: ColorManager.white,size: 16,),
                            w10,
                            Text('Delete',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
-                         ],
-                       ) ),
-                 ),
-                 w10,
-                 Expanded(
-                   child: ElevatedButton(
-                     style: ElevatedButton.styleFrom(
-                       backgroundColor: ColorManager.blueText,
-                       elevation: 0
-                     ),
-                       onPressed: ()=>Get.to(()=>EditMedReminderPage(reminderBox)),
-                       child: Row(
-                         mainAxisAlignment: MainAxisAlignment.center,
-                         crossAxisAlignment: CrossAxisAlignment.end,
-                         children: [
-                           FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.white,size: 16,),
-                           w10,
-                           Text('Edit',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
                          ],
                        ) ),
                  ),

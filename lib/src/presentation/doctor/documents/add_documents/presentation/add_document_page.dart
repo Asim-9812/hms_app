@@ -144,111 +144,109 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
               h20,
               _createFile(),
               buildBrowseFile(),
+              h10,
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorManager.blueText,
+                      ),
+                      onPressed: ()async {
+                        final scaffoldMessage = ScaffoldMessenger.of(context);
+                        if(formKey.currentState!.validate()){
+
+                          if(file == null){
+                            setState(() {
+                              _validateFile = true;
+                            });
+                            scaffoldMessage.showSnackBar(
+                                SnackbarUtil.showFailureSnackbar(
+                                    message: 'Please select a file',
+                                    duration: const Duration(milliseconds: 1200)
+                                )
+                            );
+                          }
+                          else{
+                            setState(() {
+                              isPosting = true;
+                            });
+                            final response = await DoctorDocumentServices().addDocument(
+                                documentID: 1,
+                                userID: userBox[0].userID!,
+                                documentTypeID: selectedDocumentTypeId,
+                                folderName: _folderNameController.text.trim(),
+                                doctorAttachmentID: 1,
+                                documentTitle: _nameController.text.trim(),
+                                documentDescription:_descController.text.trim() ,
+                                duration: int.parse(_durationController.text.trim()),
+                                durationType: dateTypeId.toString(),
+                                completedDate: _dateController.text.trim(),
+                                documentUrl: file!
+                            );
+                            if(response.isLeft()){
+                              final left = response.fold((l) => l, (r) => null);
+                              print(left);
+                              scaffoldMessage.showSnackBar(
+                                  SnackbarUtil.showFailureSnackbar(
+                                      message: 'Something went wrong',
+                                      duration: const Duration(milliseconds: 1200)
+                                  )
+                              );
+
+                            }
+                            else{
+                              scaffoldMessage.showSnackBar(
+                                  SnackbarUtil.showSuccessSnackbar(
+                                      message: 'File uploaded!!!',
+                                      duration: const Duration(milliseconds: 1200)
+                                  )
+                              );
+                              setState(() {
+                                isPosting = false;
+                              });
+                              ref.refresh(documentProvider(userBox[0].userID!));
+                              ref.refresh(folderProvider(userBox[0].userID!));
+                              Navigator.pop(context);
+                            }
+                          }
+
+
+
+
+                        }
+                        else{
+
+                          scaffoldMessage.showSnackBar(
+                              SnackbarUtil.showFailureSnackbar(
+                                  message: 'Please fill required fields',
+                                  duration: const Duration(milliseconds: 1200)
+                              )
+                          );
+                        }
+                      },
+                      child: Text('Save',style: getRegularStyle(color: ColorManager.white,fontSize: 20),),
+                    ),
+                  ),
+                  w10,
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorManager.dotGrey,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('Cancel',style: getRegularStyle(color: ColorManager.black,fontSize: 20),),
+                    ),
+                  ),
+                ],
+              ),
               h100
             ],
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 18.w),
-          child: Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ColorManager.blueText,
-                  ),
-                  onPressed: ()async {
-                    final scaffoldMessage = ScaffoldMessenger.of(context);
-                    if(formKey.currentState!.validate()){
 
-                      if(file == null){
-                        setState(() {
-                          _validateFile = true;
-                        });
-                        scaffoldMessage.showSnackBar(
-                            SnackbarUtil.showFailureSnackbar(
-                                message: 'Please select a file',
-                                duration: const Duration(milliseconds: 1200)
-                            )
-                        );
-                      }
-                      else{
-                        setState(() {
-                          isPosting = true;
-                        });
-                        final response = await DoctorDocumentServices().addDocument(
-                            documentID: 1,
-                            userID: userBox[0].userID!,
-                            documentTypeID: selectedDocumentTypeId,
-                            folderName: _folderNameController.text.trim(),
-                            doctorAttachmentID: 1,
-                            documentTitle: _nameController.text.trim(),
-                            documentDescription:_descController.text.trim() ,
-                            duration: int.parse(_durationController.text.trim()),
-                            durationType: dateTypeId.toString(),
-                            completedDate: _dateController.text.trim(),
-                            documentUrl: file!
-                        );
-                        if(response.isLeft()){
-                          final left = response.fold((l) => l, (r) => null);
-                          print(left);
-                          scaffoldMessage.showSnackBar(
-                              SnackbarUtil.showFailureSnackbar(
-                                  message: 'Something went wrong',
-                                  duration: const Duration(milliseconds: 1200)
-                              )
-                          );
-
-                        }
-                        else{
-                          scaffoldMessage.showSnackBar(
-                              SnackbarUtil.showSuccessSnackbar(
-                                  message: 'File uploaded!!!',
-                                  duration: const Duration(milliseconds: 1200)
-                              )
-                          );
-                          setState(() {
-                            isPosting = false;
-                          });
-                          ref.refresh(documentProvider(userBox[0].userID!));
-                          ref.refresh(folderProvider(userBox[0].userID!));
-                          Navigator.pop(context);
-                        }
-                      }
-
-
-
-
-                    }
-                    else{
-
-                      scaffoldMessage.showSnackBar(
-                          SnackbarUtil.showFailureSnackbar(
-                              message: 'Please fill required fields',
-                              duration: const Duration(milliseconds: 1200)
-                          )
-                      );
-                    }
-                  },
-                  child: Text('Save',style: getRegularStyle(color: ColorManager.white,fontSize: 20),),
-                ),
-              ),
-              w10,
-              Expanded(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ColorManager.dotGrey,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Cancel',style: getRegularStyle(color: ColorManager.black,fontSize: 20),),
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

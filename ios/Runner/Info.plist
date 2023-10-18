@@ -61,6 +61,9 @@
     <key>NSPhotoLibraryUsageDescription</key>
     <string>We need access to your photo library to access photos.</string>
     <key>FlutterDeepLinkingEnabled</key>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <key>NSCameraUsageDescription</key>
+    <key>NSMicrophoneUsageDescription </key>
     <true/>
     <key>CFBundleURLTypes</key>
     <array>
