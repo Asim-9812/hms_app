@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
+import 'package:medical_app/src/presentation/doctor/profile/presentation/widgets/update_profile.dart';
 import 'package:medical_app/src/presentation/notification/presentation/notification_page.dart';
 
 import '../../../../core/resources/value_manager.dart';
@@ -192,6 +193,7 @@ class DocProfilePage extends ConsumerWidget {
     final screenSize = MediaQuery.of(context).size;
 
     bool isNarrowScreen = screenSize.width < 420;
+    bool isWideScreen = screenSize.width > 560;
 
     final userBox = Hive.box<User>('session').values.toList();
     String firstName = userBox[0].firstName!;
@@ -246,7 +248,9 @@ class DocProfilePage extends ConsumerWidget {
               ],
             ),
             w10,
-            FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primaryDark,)
+            InkWell(
+                onTap: ()=>Get.to(()=>UpdateDocProfile(isWideScreen,isNarrowScreen,userBox[0])),
+                child: FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primaryDark,))
           ],
         ),
       ),

@@ -546,7 +546,7 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                         width: 180.w,
                         child: TextFormField(
                           controller: _mobileController,
-                          keyboardType: TextInputType.phone,
+                          keyboardType: TextInputType.number,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value){
                             if (value!.isEmpty) {
@@ -587,7 +587,7 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                 width: 400.w,
                 child: TextFormField(
                   controller: _licenseController,
-                  keyboardType: TextInputType.phone,
+                  keyboardType: TextInputType.number,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value){
                     if (value!.isEmpty) {
@@ -895,7 +895,7 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                         width: 180.w,
                         child: TextFormField(
                           controller: _wardController,
-                          keyboardType: TextInputType.phone,
+                          keyboardType: TextInputType.number,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value){
                             if (value!.isEmpty) {

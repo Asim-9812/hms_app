@@ -658,30 +658,36 @@ class _AddDocumentPageState extends ConsumerState<AddPatientDocuments> {
                                   InkWell(
                                     onTap:()async{
 
-                                      FilePickerResult? result = await FilePicker.platform.pickFiles(
-                                        allowMultiple: false,
-                                        type: FileType.custom,
-                                        allowedExtensions: [
-                                          'jpg',
-                                          'jpeg',
-                                          'png',
-                                          'gif',
-                                          'bmp',
-                                          'tiff',
-                                          'webp',
-                                          'svg',
-                                          'ico'],
-                                      );
+                                      ref.read(imageProvider.notifier).pickAnImage();
 
-                                      if (result != null) {
-                                        setState(() {
-                                          file = result.files.first;
-                                          _validateFile =false;
-                                        });
+                                      // FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                      //   allowMultiple: false,
+                                      //   type: FileType.custom,
+                                      //   allowedExtensions: [
+                                      //     'jpg',
+                                      //     'jpeg',
+                                      //     'png',
+                                      //     'gif',
+                                      //     'bmp',
+                                      //     'tiff',
+                                      //     'webp',
+                                      //     'svg',
+                                      //     'ico'],
+                                      // );
+                                      //
+                                      // if (result != null) {
+                                      //   setState(() {
+                                      //     file = result.files.first;
+                                      //     _validateFile =false;
+                                      //   });
+                                      //
+                                      // } else {
+                                      //   // User canceled the picker
+                                      // }
 
-                                      } else {
-                                        // User canceled the picker
-                                      }
+                                      setState(() {
+
+                                      });
                                       Navigator.pop(context);
                                     },
                                     child: Container(

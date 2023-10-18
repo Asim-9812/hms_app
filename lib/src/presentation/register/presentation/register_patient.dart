@@ -240,7 +240,7 @@ class _RegisterPatientState extends ConsumerState<RegisterPatient> {
           ),
           TextFormField(
             controller: _mobileController,
-            keyboardType: TextInputType.phone,
+            keyboardType: TextInputType.number,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value){
               if (value!.isEmpty) {

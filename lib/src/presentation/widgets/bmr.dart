@@ -356,7 +356,7 @@ class BMRState extends State<BMR> {
                                           }
                                         },
                                         controller: ageController,
-                                        keyboardType: TextInputType.phone,
+                                        keyboardType: TextInputType.number,
                                         style: getMediumStyle(color: ColorManager.black),
                                         decoration: InputDecoration(
                                             filled: true,

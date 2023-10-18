@@ -464,7 +464,7 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                         width: 180.w,
                         child: TextFormField(
                           controller: _mobileController,
-                          keyboardType: TextInputType.phone,
+                          keyboardType: TextInputType.number,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value){
                             if (value!.isEmpty) {
@@ -505,7 +505,7 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                 width: 400.w,
                 child: TextFormField(
                   controller: _PANController,
-                  keyboardType: TextInputType.phone,
+                  keyboardType: TextInputType.number,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value){
                     if (value!.isEmpty) {
@@ -782,7 +782,7 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                         width: 180.w,
                         child: TextFormField(
                           controller: _wardController,
-                          keyboardType: TextInputType.phone,
+                          keyboardType: TextInputType.number,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value){
                             if (value!.isEmpty) {

@@ -506,7 +506,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
                 Expanded(
                   child: TextFormField(
                     controller: _strengthController,
-                    keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -760,7 +760,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
               key: formKey3,
               child: TextFormField(
                 controller: _medicationDurationController,
-                keyboardType: TextInputType.phone,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -1083,7 +1083,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
             if(selectedPatternId == 3)
               TextFormField(
                 controller: _intervalDurationController,
-                keyboardType: TextInputType.phone,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),

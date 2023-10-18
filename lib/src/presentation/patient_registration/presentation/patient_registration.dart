@@ -625,7 +625,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
             Expanded(
               child: TextFormField(
                 controller: _ageController,
-                keyboardType: TextInputType.phone,
+                keyboardType: TextInputType.number,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value){
                   if (value!.isEmpty) {
@@ -697,7 +697,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 absorbing: ageId  >= ageType.length,
                 child: TextFormField(
                   controller: _ageController2,
-                  keyboardType: TextInputType.phone,
+                  keyboardType: TextInputType.number,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator:(value){
                     if(ageId >= ageType.length){
@@ -806,7 +806,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                   h10,
                   TextFormField(
                     controller: _mobileController,
-                    keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.number,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value){
                       if (value!.isEmpty) {
@@ -1025,7 +1025,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                   width: 120.w,
                   child: TextFormField(
                     controller: _wardController,
-                    keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.number,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value){
                       if (value!.isEmpty) {
@@ -1185,7 +1185,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
         //     //         width: 180.w,
         //     //         child: TextFormField(
         //     //           controller: _policyController,
-        //     //           keyboardType: TextInputType.phone,
+        //     //           keyboardType: TextInputType.number,
         //     //           autovalidateMode: AutovalidateMode.onUserInteraction,
         //     //           validator: (value){
         //     //             if(value !=null){

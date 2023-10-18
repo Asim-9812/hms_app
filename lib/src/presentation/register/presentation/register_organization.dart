@@ -174,7 +174,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
                 child: TextFormField(
                   controller: _panController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  keyboardType: TextInputType.phone,
+                  keyboardType: TextInputType.number,
                   validator: (value){
                     if (value!.isEmpty) {
                       return 'Required';
@@ -317,7 +317,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
           ),
           TextFormField(
             controller: _mobileController,
-            keyboardType: TextInputType.phone,
+            keyboardType: TextInputType.number,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value){
               if (value!.isEmpty) {

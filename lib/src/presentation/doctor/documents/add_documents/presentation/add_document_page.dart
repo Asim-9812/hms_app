@@ -17,6 +17,7 @@ import 'package:intl/intl.dart';
 import '../../../../../core/resources/color_manager.dart';
 import '../../../../../core/resources/style_manager.dart';
 import '../../../../../core/resources/value_manager.dart';
+import '../../../../../data/provider/common_provider.dart';
 import '../../../../common/date_input_formatter.dart';
 import '../../../../common/snackbar.dart';
 import '../../../../login/domain/model/user.dart';
@@ -425,7 +426,7 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
                 Expanded(
                   child: TextFormField(
                     controller: _durationController,
-                    keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.number,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value){
                       if (value!.isEmpty) {
@@ -638,6 +639,18 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
   /* upload files ui ...*/
 
   Widget buildBrowseFile() {
+    final image= ref.watch(imageProvider);
+    if (image != null) {
+      // Convert XFile to File
+      File file2 = File(image.path);
+      PlatformFile platformFile = convertFileToPlatformFile(file2);
+
+      setState(() {
+        file = platformFile;
+        _validateFile = false;
+      });
+
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -662,30 +675,119 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
                 );
               }
               else if(selectedDocumentType.toLowerCase() == 'image'){
-                FilePickerResult? result = await FilePicker.platform.pickFiles(
-                  allowMultiple: false,
-                  type: FileType.custom,
-                  allowedExtensions: [
-                    'jpg',
-                    'jpeg',
-                    'png',
-                    'gif',
-                    'bmp',
-                    'tiff',
-                    'webp',
-                    'svg',
-                    'ico'],
+                await showModalBottomSheet(
+
+                    backgroundColor: ColorManager.white,
+                    context: context,
+                    builder: (context){
+                      return Container(
+                        height: 150,
+                        padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              children: [
+                                InkWell(
+                                  onTap : (){
+                                    ref.read(imageProvider.notifier).camera();
+
+
+                                    // if(image!=null){
+                                    //   // Convert XFile to File
+                                    //   File file2 = File(image.path);
+                                    //   PlatformFile platformFile = convertFileToPlatformFile(file2);
+                                    //
+                                    //   setState(() {
+                                    //     file = platformFile;
+                                    //     _validateFile =false;
+                                    //   });
+                                    //
+                                    //   ref.refresh(imageProvider);
+                                    //
+                                    // }
+
+
+                                    // Now you can work with the 'file' as a File
+                                    // For example, you can use it to display or upload the image
+                                    setState(() {
+
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            color: ColorManager.black.withOpacity(0.5)
+                                        )
+                                    ),
+                                    padding: EdgeInsets.symmetric(horizontal: 30.w,vertical: 30.h),
+                                    child: Icon(FontAwesomeIcons.camera,color: ColorManager.black,),
+                                  ),
+                                ),
+                                h10,
+                                Text('Camera',style: getRegularStyle(color: ColorManager.black,fontSize: 16),)
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                InkWell(
+                                  onTap:()async{
+
+                                    ref.read(imageProvider.notifier).pickAnImage();
+
+                                    // FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                    //   allowMultiple: false,
+                                    //   type: FileType.custom,
+                                    //   allowedExtensions: [
+                                    //     'jpg',
+                                    //     'jpeg',
+                                    //     'png',
+                                    //     'gif',
+                                    //     'bmp',
+                                    //     'tiff',
+                                    //     'webp',
+                                    //     'svg',
+                                    //     'ico'],
+                                    // );
+                                    //
+                                    // if (result != null) {
+                                    //   setState(() {
+                                    //     file = result.files.first;
+                                    //     _validateFile =false;
+                                    //   });
+                                    //
+                                    // } else {
+                                    //   // User canceled the picker
+                                    // }
+
+                                    setState(() {
+
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            color: ColorManager.black.withOpacity(0.5)
+                                        )
+                                    ),
+                                    padding: EdgeInsets.symmetric(horizontal: 30.w,vertical: 30.h),
+                                    child: Icon(FontAwesomeIcons.image,color: ColorManager.black,),
+                                  ),
+                                ),
+                                h10,
+                                Text('Gallery',style: getRegularStyle(color: ColorManager.black,fontSize: 16),)
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                 );
-
-                if (result != null) {
-                  setState(() {
-                    file = result.files.first;
-                    _validateFile =false;
-                  });
-
-                } else {
-                  // User canceled the picker
-                }
               }
               else if(selectedDocumentType.toLowerCase() == 'pdf'){
                 FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -778,6 +880,25 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
       ],
     );
   }
+
+
+
+  PlatformFile convertFileToPlatformFile(File file) {
+    // Get the path of the File
+    String filePath = file.path;
+
+    // Get the name of the File
+    String fileName = file.uri.pathSegments.last;
+
+    // Create a PlatformFile using the path and name
+    PlatformFile platformFile = PlatformFile(
+        path: filePath,
+        name: fileName, size: 128000
+    );
+
+    return platformFile;
+  }
+
 
 
 

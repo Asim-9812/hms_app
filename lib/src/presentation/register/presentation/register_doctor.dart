@@ -364,7 +364,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
           ),
           TextFormField(
             controller: _mobileController,
-            keyboardType: TextInputType.phone,
+            keyboardType: TextInputType.number,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value){
               if (value!.isEmpty) {
