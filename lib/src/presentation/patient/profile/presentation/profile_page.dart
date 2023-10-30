@@ -114,7 +114,7 @@ class ProfilePage extends ConsumerWidget {
                                   children: [
                                     FaIcon(Icons.email_outlined,color: ColorManager.primaryDark,),
                                     w20,
-                                    Text(email,style: getRegularStyle(color: ColorManager.black,fontSize: 16),maxLines: 1,overflow: TextOverflow.ellipsis,),
+                                    Text(email.length > 17? '${email.substring(0,18)}...':email,style: getRegularStyle(color: ColorManager.black,fontSize: 16),maxLines: 1,overflow: TextOverflow.ellipsis,),
 
                                   ],
                                 ),
@@ -123,7 +123,7 @@ class ProfilePage extends ConsumerWidget {
                           ],
                         ),
                         h10,
-                        //
+
                         // _profileItems2(title: 'Phone Number', icon: FontAwesomeIcons.phone, onTap: (){},subtitle: '98XXXXXXXX'),
                         // _profileItems2(title: 'E-Mail', icon: Icons.email_outlined, onTap: (){},subtitle: 'user@gmail.com'),
                         _profileItems2(title: 'My Documents', icon: FontAwesomeIcons.folderClosed, onTap: (){
@@ -138,7 +138,6 @@ class ProfilePage extends ConsumerWidget {
                             icon: Icons.login_outlined,
                             onTap: () {
                               ref.read(userProvider.notifier).userLogout();
-                              ('logout');
                               Get.offAll(() => StatusPage(accountId: 0,));
                             }
                         ),

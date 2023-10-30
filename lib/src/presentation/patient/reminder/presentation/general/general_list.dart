@@ -10,16 +10,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:medical_app/src/presentation/patient/reminder/domain/model/general_reminder_model.dart';
 import 'package:medical_app/src/presentation/patient/reminder/presentation/general/generalDetails.dart';
-import 'package:medical_app/src/presentation/patient/reminder/presentation/medicine/medDetails.dart';
 
 import '../../../../../core/resources/color_manager.dart';
 import '../../../../../core/resources/style_manager.dart';
 import '../../../../../core/resources/value_manager.dart';
 import '../../../../../data/provider/common_provider.dart';
-import '../../domain/model/reminder_model.dart';
 
 
 

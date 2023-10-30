@@ -1,8 +1,5 @@
-import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,12 +10,10 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_app/src/presentation/patient/reminder/domain/model/general_reminder_model.dart';
 import 'package:medical_app/src/presentation/patient/reminder/domain/model/reminder_model.dart';
-import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_services.dart';
 
 import '../../../../../../core/resources/color_manager.dart';
 import '../../../../../../core/resources/style_manager.dart';
 import '../../../../../../core/resources/value_manager.dart';
-import '../../../../../../data/provider/common_provider.dart';
 import '../../../../../common/snackbar.dart';
 import '../../../../../login/domain/model/user.dart';
 import '../../../data/reminder_db.dart';
@@ -691,6 +686,7 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
                               );
                             }
                             else{
+                              print('executed');
                               if(formKey1.currentState!.validate()){
 
                                 GeneralReminderModel reminder = GeneralReminderModel(

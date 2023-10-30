@@ -70,6 +70,7 @@ void main() async {
   Hive.registerAdapter<Frequency>(FrequencyAdapter());
   Hive.registerAdapter<ReminderPattern>(ReminderPatternAdapter());
   Hive.registerAdapter(GeneralReminderModelAdapter());
+  Hive.registerAdapter(InitialReminderAdapter());
 
   final userBox = await Hive.openBox<String>('user1');
   await Hive.openBox<String>('tokenBox');

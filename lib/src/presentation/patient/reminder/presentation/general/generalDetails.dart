@@ -1,5 +1,4 @@
 
-import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,18 +6,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:image/image.dart' as img;
 import 'package:intl/intl.dart';
-import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:medical_app/src/presentation/patient/reminder/domain/model/general_reminder_model.dart';
-import 'package:medical_app/src/presentation/patient/reminder/domain/model/reminder_model.dart';
 import 'package:medical_app/src/presentation/patient/reminder/presentation/general/widget/edit_general_page.dart';
-import 'package:medical_app/src/presentation/patient/reminder/presentation/medicine/widget/edit_med_page.dart';
 
 import '../../../../../core/resources/color_manager.dart';
 import '../../../../../core/resources/style_manager.dart';
 import '../../../../../core/resources/value_manager.dart';
-import '../../data/reminder_db.dart';
 
 class GeneralDetails extends StatefulWidget {
   final GeneralReminderModel reminder;
