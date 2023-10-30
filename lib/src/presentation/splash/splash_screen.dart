@@ -1,13 +1,11 @@
 
 
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
-import 'package:medical_app/src/presentation/login/presentation/login_page.dart';
 import 'package:medical_app/src/presentation/login/presentation/status_page.dart';
 
 import 'package:page_transition/page_transition.dart';

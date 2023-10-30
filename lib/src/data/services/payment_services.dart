@@ -2,13 +2,8 @@
 
 
 import 'dart:io';
-import 'package:esewa_flutter_sdk/esewa_flutter_sdk.dart';
-import 'package:esewa_flutter_sdk/esewa_config.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:esewa_flutter_sdk/esewa_payment.dart';
-import 'package:esewa_flutter_sdk/esewa_payment_success_result.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/api.dart';

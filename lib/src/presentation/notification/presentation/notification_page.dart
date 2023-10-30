@@ -10,7 +10,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
-import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
 import 'package:medical_app/src/presentation/notices/domain/services/notice_services.dart';
 import '../../../core/resources/value_manager.dart';
 import 'notfication_general.dart';

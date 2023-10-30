@@ -1,27 +1,17 @@
-import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/core/resources/value_manager.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:medical_app/src/presentation/login/presentation/login_page.dart';
-import 'package:medical_app/src/presentation/register/data/register_provider.dart';
 import 'package:medical_app/src/presentation/register/presentation/register_doctor.dart';
 import 'package:medical_app/src/presentation/register/presentation/register_organization.dart';
 import 'package:medical_app/src/presentation/register/presentation/register_patient.dart';
-import 'package:medical_app/src/presentation/subscription-plan/presentation/test_output.dart';
 
-import '../../../core/api.dart';
-import '../../common/snackbar.dart';
-import '../../subscription-plan/presentation/subscription_page_organization.dart';
-import '../data/data_provider.dart';
 
 class RegisterPage extends ConsumerStatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);

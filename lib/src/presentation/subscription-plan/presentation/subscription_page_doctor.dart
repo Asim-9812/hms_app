@@ -20,14 +20,12 @@ import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/core/utils/shimmer.dart';
 import 'package:medical_app/src/presentation/login/presentation/login_page.dart';
 import 'package:medical_app/src/presentation/subscription-plan/domain/scheme_service.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../../core/api.dart';
 import '../../../core/resources/value_manager.dart';
 import '../../../data/services/payment_services.dart';
 import '../../common/snackbar.dart';
 import '../../register/domain/register_model/register_model.dart';
-import '../../register/domain/register_service.dart';
 import '../domain/scheme_model.dart';
 
 class SubscriptionPageDoctor extends ConsumerStatefulWidget {

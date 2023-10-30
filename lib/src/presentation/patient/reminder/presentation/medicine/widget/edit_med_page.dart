@@ -18,9 +18,7 @@ import '../../../../../../core/resources/style_manager.dart';
 import '../../../../../../core/resources/value_manager.dart';
 import '../../../../../../data/provider/common_provider.dart';
 import '../../../../../common/snackbar.dart';
-import '../../../../../login/domain/model/user.dart';
 import '../../../data/reminder_db.dart';
-import '../../../notifications/notification_services.dart';
 
 class EditMedReminderPage extends ConsumerStatefulWidget {
   final Reminder reminderTest;
@@ -251,7 +249,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
         });
 
         final formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
-        final formattedEndDate = DateFormat('yyyy-MM-dd').format(endDateIntake!);
+        final formattedEndDate = DateFormat('yyyy-MM-dd').format(endDateIntake);
         _startDateController.text = formattedDate;
         _endDateController.text = formattedEndDate; // Set end date to start date by default
       }
@@ -643,7 +641,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
                     frequencyId = frequencyType.firstWhere((element) => element.frequencyName == value).id;
                     intervals = frequencyType.firstWhere((element) => element.frequencyName == value).frequencyInterval;
                   });
-                  ref.read(itemProvider.notifier).updateFrequency(selectedFrequencyName!);
+                  ref.read(itemProvider.notifier).updateFrequency(selectedFrequencyName);
                 },
                 validator: (value){
                   if(value == null){
@@ -803,7 +801,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
                   if(_startDateController.text.isNotEmpty){
                     setState(() {
                       endDateIntake = DateTime.parse(_startDateController.text).add(Duration(days: int.parse(value)));
-                      _endDateController.text= DateFormat('yyyy-MM-dd').format(endDateIntake!);
+                      _endDateController.text= DateFormat('yyyy-MM-dd').format(endDateIntake);
                     });
                   }
                 },

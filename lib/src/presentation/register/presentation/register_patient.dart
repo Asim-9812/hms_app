@@ -13,6 +13,7 @@ import 'package:medical_app/src/presentation/register/domain/register_service.da
 
 import '../../../core/resources/color_manager.dart';
 import '../../../core/resources/style_manager.dart';
+import '../../../core/resources/value_manager.dart';
 import '../../common/snackbar.dart';
 
 class RegisterPatient extends ConsumerStatefulWidget {
@@ -85,11 +86,9 @@ class _RegisterPatientState extends ConsumerState<RegisterPatient> {
             height: 18.h,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: 60.h,
-                width: 180.w,
+              Expanded(
                 child: TextFormField(
                   controller: _firstNameController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -115,9 +114,8 @@ class _RegisterPatientState extends ConsumerState<RegisterPatient> {
                   ),
                 ),
               ),
-              Container(
-                height: 60.h,
-                width: 180.w,
+              w10,
+              Expanded(
                 child: TextFormField(
                   controller: _lastNameController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,

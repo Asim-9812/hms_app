@@ -2,8 +2,6 @@
 
 
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,7 +11,6 @@ import 'package:medical_app/src/presentation/organization/doctor_statistics/pres
 
 import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
-import '../../../../dummy_datas/dummy_datas.dart';
 
 class DoctorReportsPage extends StatefulWidget {
   final bool isWideScreen;

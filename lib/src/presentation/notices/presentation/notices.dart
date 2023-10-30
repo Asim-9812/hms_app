@@ -3,7 +3,6 @@
 
 
 
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,7 +13,6 @@ import '../../../core/resources/color_manager.dart';
 import '../../../core/resources/style_manager.dart';
 import '../../../core/resources/value_manager.dart';
 import '../../../data/provider/common_provider.dart';
-import '../../../dummy_datas/dummy_datas.dart';
 
 void showAlertDialog(BuildContext context) async {
 

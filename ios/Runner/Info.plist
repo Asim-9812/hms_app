@@ -60,10 +60,12 @@
     <string>We need access to your photo library to save photos.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>We need access to your photo library to access photos.</string>
-    <key>FlutterDeepLinkingEnabled</key>
-    <key>NSPhotoLibraryUsageDescription</key>
     <key>NSCameraUsageDescription</key>
-    <key>NSMicrophoneUsageDescription </key>
+    <string>Please grant camera access</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Please grant microphone access</string>
+    <key>FlutterDeepLinkingEnabled</key>
+
     <true/>
     <key>CFBundleURLTypes</key>
     <array>

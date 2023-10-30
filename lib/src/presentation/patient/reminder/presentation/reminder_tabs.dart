@@ -3,25 +3,22 @@
 
 
 
-import 'dart:math';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:hive_flutter/adapters.dart';
-import 'package:intl/intl.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/data/provider/common_provider.dart';
+import 'package:medical_app/src/presentation/patient/reminder/presentation/general/general_list.dart';
 import 'package:medical_app/src/presentation/patient/reminder/presentation/medicine/widget/create_med_reminder.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../../common/snackbar.dart';
-import 'medicine/medDetails.dart';
+import 'general/widget/create_general_reminder.dart';
 import 'medicine/medicine_list.dart';
 
 class ReminderTabs extends ConsumerStatefulWidget {
@@ -162,9 +159,7 @@ class _ReminderState extends ConsumerState<ReminderTabs>with TickerProviderState
                       },
                       children: [
                         MedReminders(),
-                        Center(
-                          child: Text('Coming Soon...',style: getMediumStyle(color: ColorManager.white.withOpacity(0.7))),
-                        )
+                        GeneralReminders()
                       ],
                     ),
                   ),
@@ -210,13 +205,8 @@ class _ReminderState extends ConsumerState<ReminderTabs>with TickerProviderState
                           child: InkWell(
                             splashColor: MaterialStateColor.resolveWith((states) => ColorManager.primaryDark),
                             onTap: (){
-                              final scaffoldMessage = ScaffoldMessenger.of(context);
-                              scaffoldMessage.showSnackBar(
-                                SnackbarUtil.showComingSoonBar(
-                                  message: 'Coming soon',
-                                  duration: const Duration(milliseconds: 1400),
-                                ),
-                              );
+                              Get.to(()=>CreateGeneralReminder());
+                              ref.read(itemProvider.notifier).updateMenu(false);
                             },
                             child: Container(
                                 decoration: BoxDecoration(

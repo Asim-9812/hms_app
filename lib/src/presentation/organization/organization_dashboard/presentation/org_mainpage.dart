@@ -1,27 +1,19 @@
 
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:medical_app/src/presentation/organization/org_profile/presentation/org_profile_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/presentation/organization/doctor_statistics/presentation/doctor_stat_page.dart';
 import 'package:medical_app/src/presentation/organization/organization_dashboard/presentation/org_homepage.dart';
 import 'package:medical_app/src/presentation/organization/patient_reports/presentation/patients_lists.dart';
-import 'package:medical_app/src/presentation/patient_registration/presentation/patient_registration.dart';
-import 'package:medical_app/src/presentation/settings/settings_global.dart';
 
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
-import '../../../../core/resources/style_manager.dart';
-import '../../../../core/resources/value_manager.dart';
 import '../../../../data/provider/common_provider.dart';
-import '../../../../dummy_datas/dummy_datas.dart';
-import '../../../notices/presentation/notices.dart';
 
 
 

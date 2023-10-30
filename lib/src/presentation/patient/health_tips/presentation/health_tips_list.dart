@@ -2,15 +2,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/presentation/patient/health_tips/data/tagList_provider.dart';
 import 'package:medical_app/src/presentation/patient/health_tips/domain/services/health_tips_services.dart';
 
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/value_manager.dart';
-import '../domain/model/health_tips_model.dart';
-import 'health_pop_up.dart';
 
 
 class HealthTipsList extends ConsumerStatefulWidget {

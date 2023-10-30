@@ -2,7 +2,6 @@
 
 
 import 'package:animate_do/animate_do.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,7 +13,6 @@ import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/presentation/notification/presentation/notification_page.dart';
 
 import '../../../../core/resources/value_manager.dart';
-import '../../../common/snackbar.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../login/domain/service/login_service.dart';
 import '../../../login/presentation/status_page.dart';

@@ -8,11 +8,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
-import 'package:medical_app/src/core/resources/font_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../../core/resources/value_manager.dart';
 import '../../patient_dashboard/presentation/patient_main_page.dart';
@@ -39,7 +37,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
   void initState() {
     super.initState();
     checkGeolocationStatus().then((_) {
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         _showAlertDialog();
       });
     });

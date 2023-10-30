@@ -1,5 +1,4 @@
 
-import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -70,7 +69,7 @@ class DoctorDocumentServices {
           .toList();
 
       return data;
-    } on DioException catch(e){
+    } on DioException {
       throw Exception('Unable to fetch data');
     }
 

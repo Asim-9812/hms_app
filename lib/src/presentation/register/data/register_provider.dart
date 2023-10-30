@@ -1,8 +1,5 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:medical_app/src/presentation/common/common_state.dart';
-import 'package:medical_app/src/presentation/common/common_state.dart';
 import 'package:medical_app/src/presentation/common/common_state.dart';
 import 'package:medical_app/src/presentation/register/domain/register_service.dart';
 

@@ -7,7 +7,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
-import 'package:medical_app/src/core/utils/shimmer.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../core/resources/value_manager.dart';

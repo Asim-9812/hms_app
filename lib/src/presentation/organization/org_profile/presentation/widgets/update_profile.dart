@@ -10,13 +10,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_app/src/core/api.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/data/services/user_services.dart';
 import 'package:medical_app/src/data/services/update_profile_service.dart';
-import 'package:medical_app/src/presentation/login/domain/service/login_service.dart';
 
 import '../../../../../core/resources/style_manager.dart';
 import '../../../../../core/resources/value_manager.dart';

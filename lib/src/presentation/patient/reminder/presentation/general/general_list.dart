@@ -11,6 +11,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:medical_app/src/presentation/patient/reminder/domain/model/general_reminder_model.dart';
+import 'package:medical_app/src/presentation/patient/reminder/presentation/general/generalDetails.dart';
 import 'package:medical_app/src/presentation/patient/reminder/presentation/medicine/medDetails.dart';
 
 import '../../../../../core/resources/color_manager.dart';
@@ -21,19 +23,19 @@ import '../../domain/model/reminder_model.dart';
 
 
 
-class MedReminders extends ConsumerStatefulWidget {
+class GeneralReminders extends ConsumerStatefulWidget {
 
 
   @override
-  ConsumerState<MedReminders> createState() => _MedRemindersState();
+  ConsumerState<GeneralReminders> createState() => _MedRemindersState();
 }
 
-class _MedRemindersState extends ConsumerState<MedReminders> {
+class _MedRemindersState extends ConsumerState<GeneralReminders> {
 
 
 
-  late Box<Reminder> reminderBox;
-  late ValueListenable<Box<Reminder>> reminderBoxListenable;
+  late Box<GeneralReminderModel> reminderBox;
+  late ValueListenable<Box<GeneralReminderModel>> reminderBoxListenable;
 
   @override
   void initState() {
@@ -44,7 +46,7 @@ class _MedRemindersState extends ConsumerState<MedReminders> {
     // notificationServices.initializeNotifications();
 
     // Open the Hive box
-    reminderBox = Hive.box<Reminder>('med_reminder');
+    reminderBox = Hive.box<GeneralReminderModel>('general_reminder_box');
 
     // Create a ValueListenable for the box
     reminderBoxListenable = reminderBox.listenable();
@@ -75,27 +77,9 @@ class _MedRemindersState extends ConsumerState<MedReminders> {
 
   @override
   Widget build(BuildContext context) {
-    final reminderList = Hive.box<Reminder>('med_reminder').values.toList();
+    final reminderList = Hive.box<GeneralReminderModel>('general_reminder_box').values.toList();
 
-    String findClosestIntakeTime(List<String> intakeTimes) {
-      final now = DateTime.now();
-      DateTime? closestTime;
 
-      for (final intakeTime in intakeTimes) {
-        final time = DateFormat('hh:mm a').parse(intakeTime);
-
-        if (time.isAfter(now) && (closestTime == null || time.isBefore(closestTime))) {
-          closestTime = time;
-        }
-      }
-
-      if (closestTime != null) {
-        return DateFormat('hh:mm a').format(closestTime);
-      } else {
-        // If no intake time is found, return the first intake time of the day
-        return intakeTimes[0];
-      }
-    }
 
     if (reminderList.isNotEmpty) {
       return ListView.builder(
@@ -104,7 +88,6 @@ class _MedRemindersState extends ConsumerState<MedReminders> {
       itemCount: reminderList.length,
       itemBuilder: (context, index) {
 
-        final closestIntakeTime = findClosestIntakeTime(reminderList[index].scheduleTime);
         return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -115,17 +98,17 @@ class _MedRemindersState extends ConsumerState<MedReminders> {
             onTap: ()async{
               // NotificationService().scheduleNotification();
               ref.read(itemProvider.notifier).updateMenu(false);
-              Get.to(()=>MedDetails(reminderList[index]));
+              Get.to(()=>GeneralDetails(reminderList[index]));
             },
             // leading: CircleAvatar(
             //   backgroundColor:reminder.startDate.difference(DateTime.now()) <= Duration(days: 0) ? ColorManager.primaryDark : ColorManager.dotGrey,
             //   child: FaIcon(medicineType.firstWhere((element) => element.id == reminder.medicineType).icon,color: ColorManager.white.withOpacity(0.5),),
             // ),
             title: Text(
-              '${reminderList[index].medicineName}',
+              '${reminderList[index].title}',
               style: getMediumStyle(color: ColorManager.black, fontSize: 20),
             ),
-            subtitle: Text('${reminderList[index].strength} ${reminderList[index].unit} | ${reminderList[index].meal}',
+            subtitle: Text('${reminderList[index].reminderPattern.patternName}',
               style: getRegularStyle(
                   color: ColorManager.black.withOpacity(0.7), fontSize: 12),
             ),
@@ -136,7 +119,7 @@ class _MedRemindersState extends ConsumerState<MedReminders> {
               ),
               padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.h),
               child: Text(
-                closestIntakeTime,
+                reminderList[index].time,
                 style: getRegularStyle(color: ColorManager.white, fontSize: 12),
               ),
             ),

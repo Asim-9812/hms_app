@@ -160,7 +160,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
               minute: selectedTime.minute,
             );
             final formattedTime = selectedTime.format(context);
-            scheduleTime!.add(formattedTime);
+            scheduleTime.add(formattedTime);
           }
         }
         setState(() {});
@@ -591,7 +591,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                 ).toList(),
                 onChanged: (value){
                   setState(() {
-                    scheduleTime?.clear();
+                    scheduleTime.clear();
                     _startTimeController.clear();
                     selectedFrequencyName = value!;
                     frequencyId = frequencyType.firstWhere((element) => element.frequencyName == value).id;
@@ -691,12 +691,12 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
               ],
             ),
             h10,
-            if(scheduleTime != [] && scheduleTime!.length> 1)
+            if(scheduleTime != [] && scheduleTime.length> 1)
               h10,
-            if(scheduleTime!= [] && scheduleTime!.length> 1)
+            if(scheduleTime!= [] && scheduleTime.length> 1)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: scheduleTime!.map((e) {
+                children: scheduleTime.map((e) {
                   return Container(
                     padding: EdgeInsets.symmetric(vertical: 8.h,horizontal: 8.w),
                     decoration: BoxDecoration(
@@ -707,7 +707,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                   );
                 }).toList(),
               ),
-            if(scheduleTime!= [] && scheduleTime!.length> 1)
+            if(scheduleTime!= [] && scheduleTime.length> 1)
               h20,
 
             Form(
@@ -1398,7 +1398,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                                   frequencyName: selectedFrequencyName!,
                                   intervals: intervals!
                               ) ,
-                              scheduleTime: scheduleTime!,
+                              scheduleTime: scheduleTime,
                               medicationDuration: int.parse(_medicationDurationController.text.trim()),
                               startDate: startDateIntake!,
                               endDate: endDateIntake!,

@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
-import 'package:medical_app/src/data/model/department_model.dart';
 import 'package:medical_app/src/data/services/department_services.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:medical_app/src/presentation/organization/patient_reports/domain/services/patient_report_services.dart';

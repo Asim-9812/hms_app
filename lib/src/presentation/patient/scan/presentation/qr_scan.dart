@@ -1,18 +1,13 @@
-import 'dart:convert';
 import 'dart:developer' as dev;
 import 'dart:io';
-import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/presentation/patient/scan/presentation/scanner_error_widget.dart';
-import 'package:mobile_scanner/mobile_scanner.dart' as mobile_scanner;
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart' as qr_scanner;
@@ -152,8 +147,8 @@ class _QRViewExampleState extends State<QRViewExample> {
               setState(() {
                 this.barcode = barcode;
                 // Check if image is not null and barcode.rawValue is not null
-                if (image != null && barcode?.barcodes.first.rawValue != null) {
-                  redirectUrl(barcode!.barcodes.first.rawValue!);
+                if (image != null && barcode.barcodes.first.rawValue != null) {
+                  redirectUrl(barcode.barcodes.first.rawValue!);
                 }
               });
             },

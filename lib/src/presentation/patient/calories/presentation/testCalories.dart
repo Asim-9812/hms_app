@@ -166,7 +166,7 @@ class _UserProfileFormState extends State<UserProfileForm> {
       lastDate: DateTime(2101),
     ))!;
 
-    if (picked != null && picked != selectedDate) {
+    if (picked != selectedDate) {
       setState(() {
         selectedDate = picked;
       });

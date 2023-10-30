@@ -2,7 +2,6 @@
 
 import 'dart:io';
 
-import 'package:animate_do/animate_do.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +22,6 @@ import '../../../../common/date_input_formatter.dart';
 import '../../../../common/snackbar.dart';
 import '../../../../doctor/documents/domain/model/document_model.dart';
 import '../../../../login/domain/model/user.dart';
-import '../../domain/model/document_model.dart';
 import '../../domain/services/document_services.dart';
 
 

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
-import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
-import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
-import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 

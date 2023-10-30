@@ -13,7 +13,7 @@ class PatientDocumentModel {
   int? duration;
   String? durationType;
   DateTime? completedDate;
-  dynamic? attachmentsData;
+  dynamic attachmentsData;
 
   PatientDocumentModel({
     this.documentID,

@@ -5,8 +5,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:medical_app/src/app/app.dart';
 import 'package:medical_app/src/presentation/login/domain/model/user.dart';
 import 'package:medical_app/src/presentation/patient/calories/model/calorie_model.dart';
+import 'package:medical_app/src/presentation/patient/reminder/domain/model/general_reminder_model.dart';
 import 'package:medical_app/src/presentation/patient/reminder/domain/model/reminder_model.dart';
-import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_services.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
@@ -69,11 +69,14 @@ void main() async {
   Hive.registerAdapter<Reminder>(ReminderAdapter());
   Hive.registerAdapter<Frequency>(FrequencyAdapter());
   Hive.registerAdapter<ReminderPattern>(ReminderPatternAdapter());
+  Hive.registerAdapter(GeneralReminderModelAdapter());
+
   final userBox = await Hive.openBox<String>('user1');
   await Hive.openBox<String>('tokenBox');
   final userSession = await Hive.openBox< User>('session');
-  userBox2 = await Hive.openBox('user');
+  await Hive.openBox('user');
   await Hive.openBox<Reminder>('med_reminder');
+  await Hive.openBox<GeneralReminderModel>('general_reminder_box');
   runApp(ProviderScope(
       overrides: [
         box.overrideWithValue(userBox.get('userData')),

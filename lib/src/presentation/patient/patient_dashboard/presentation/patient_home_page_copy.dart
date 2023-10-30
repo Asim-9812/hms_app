@@ -1,19 +1,14 @@
-import 'dart:convert';
 import 'package:animate_do/animate_do.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:intl/intl.dart';
-import 'package:medical_app/src/data/provider/common_provider.dart';
 import 'package:medical_app/src/presentation/patient/health_tips/data/tagList_provider.dart';
 import 'package:medical_app/src/presentation/patient/health_tips/presentation/health_tips_list.dart';
-import 'package:medical_app/src/presentation/patient_registration/domain/services/patient_registration_service.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
@@ -23,10 +18,8 @@ import '../../../login/domain/model/user.dart';
 import '../../../notices/presentation/notices.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../../patient_registration/presentation/patient_registration.dart';
-import '../../health_tips/domain/model/health_tips_dummy_tags.dart';
 import '../../health_tips/domain/model/health_tips_model.dart';
 import '../../health_tips/domain/services/health_tips_services.dart';
-import '../../profile/presentation/profile_page.dart';
 import '../../search-near-by/presentation/search_for_page.dart';
 
 

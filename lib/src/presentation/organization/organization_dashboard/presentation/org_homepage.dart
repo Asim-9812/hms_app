@@ -1,34 +1,21 @@
 
-import 'package:animate_do/animate_do.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:intl/intl.dart';
-import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:medical_app/src/data/model/registered_patient_model.dart';
 import 'package:medical_app/src/data/services/user_services.dart';
-import 'package:medical_app/src/presentation/organization/doctor_statistics/presentation/doctor_stat_page.dart';
-import 'package:medical_app/src/presentation/organization/org_profile/presentation/org_profile_page.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
-import '../../../../dummy_datas/dummy_datas.dart';
 
 import '../../../login/domain/model/user.dart';
 import '../../../notices/presentation/notices.dart';
 import '../../../notification/presentation/notification_page.dart';
-import '../../charts_graphs/doctor_charts.dart';
-import '../../charts_graphs/financial_charts.dart';
 
 class OrgHomePage extends StatefulWidget {
   final bool isWideScreen;

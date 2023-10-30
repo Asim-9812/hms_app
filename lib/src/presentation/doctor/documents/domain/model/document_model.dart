@@ -82,7 +82,7 @@ class DocumentModel {
   int? duration;
   String? durationType;
   DateTime? completedDate;
-  dynamic? attachmentsData;
+  dynamic attachmentsData;
 
   DocumentModel({
     this.documentID,

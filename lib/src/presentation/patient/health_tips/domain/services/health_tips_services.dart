@@ -6,8 +6,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medical_app/src/core/api.dart';
-import 'package:medical_app/src/data/model/registered_patient_model.dart';
-import 'package:medical_app/src/data/services/update_profile_service.dart';
 import 'package:medical_app/src/presentation/patient/health_tips/domain/model/health_tips_model.dart';
 
 

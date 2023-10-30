@@ -2,7 +2,6 @@
 
 
 
-import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,13 +15,10 @@ import 'package:medical_app/src/presentation/register/domain/checkEmailCode/chec
 import 'package:medical_app/src/presentation/register/domain/register_model/register_model.dart';
 import 'package:medical_app/src/presentation/subscription-plan/presentation/subscription_page_doctor.dart';
 
-import '../../../core/api.dart';
 import '../../../core/resources/color_manager.dart';
 import '../../../core/resources/style_manager.dart';
 import '../../../core/resources/value_manager.dart';
 import '../../common/snackbar.dart';
-import '../../subscription-plan/presentation/subscription_page_organization.dart';
-import '../data/register_provider.dart';
 
 class RegisterDoctor extends ConsumerStatefulWidget {
   final int accountId;
@@ -207,11 +203,9 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
             height: 18.h,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: 60.h,
-                width: 180.w,
+              Expanded(
                 child: TextFormField(
                   controller: _firstNameController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -237,9 +231,8 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
                   ),
                 ),
               ),
-              Container(
-                height: 60.h,
-                width: 180.w,
+              w10,
+              Expanded(
                 child: TextFormField(
                   controller: _lastNameController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,

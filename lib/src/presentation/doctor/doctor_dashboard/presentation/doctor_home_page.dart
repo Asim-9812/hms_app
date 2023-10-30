@@ -1,24 +1,18 @@
 
 
 import 'package:animate_do/animate_do.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:intl/intl.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
-import 'package:medical_app/src/presentation/doctor/profile/presentation/profile_page.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../../core/resources/value_manager.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../notices/presentation/notices.dart';
-import '../../../notification/presentation/notification_page.dart';
-import '../../patient_profile/presentation/doctor_patient_profile_page.dart';
 
 
 class DoctorHomePage extends StatefulWidget {

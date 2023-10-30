@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -21,9 +20,7 @@ class NotificationService {
         requestSoundPermission: true,
         onDidReceiveLocalNotification:
             (int id, String? title, String? body, String? payload) async {
-          if(payload == 'Snooze'){
-            print('snooze');
-          }
+          print('$id,$title,$body,$payload');            
 
             });
 
@@ -32,9 +29,7 @@ class NotificationService {
     await notificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse:
             (NotificationResponse notificationResponse) async {
-      if(notificationResponse.actionId == '1'){
-        print('snooze');
-      }
+      print(notificationResponse);
             });
   }
 
@@ -49,10 +44,7 @@ class NotificationService {
             //     'Taken',
             //     'Taken',
             // ),
-            AndroidNotificationAction(
-              '1', 'Snooze',
-
-            )
+            AndroidNotificationAction('1', 'Snooze',)
 
           ]
 

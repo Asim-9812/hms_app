@@ -5,7 +5,6 @@
 
 
 import 'dart:io';
-import 'dart:math';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -15,7 +14,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/value_manager.dart';
@@ -23,12 +21,10 @@ import 'package:medical_app/src/data/model/country_model.dart';
 import 'package:medical_app/src/data/model/department_model.dart';
 import 'package:medical_app/src/data/provider/common_provider.dart';
 import 'package:medical_app/src/data/services/country_services.dart';
-import 'package:medical_app/src/data/services/department_services.dart';
 import 'package:medical_app/src/presentation/common/date_input_formatter.dart';
 import 'package:medical_app/src/presentation/login/domain/model/user.dart';
 import 'package:medical_app/src/presentation/patient_registration/domain/services/address_list_services.dart';
 import '../../../core/resources/style_manager.dart';
-import '../../../data/services/user_services.dart';
 import '../../common/snackbar.dart';
 import '../domain/model/cost_category_model.dart';
 import '../domain/services/cost_category_services.dart';

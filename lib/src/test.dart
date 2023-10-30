@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:medical_app/src/data/provider/common_provider.dart';
 
 class TestPage extends ConsumerStatefulWidget {
   const TestPage({Key? key});

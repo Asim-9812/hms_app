@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 
 
-import '../../core/resources/string_manager.dart';
 import '../../core/resources/style_manager.dart';
 import '../../core/resources/value_manager.dart';
 import 'list_of_bmi_category/bmi_list.dart';

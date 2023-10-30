@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,17 +10,10 @@ import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/core/resources/value_manager.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:medical_app/src/presentation/doctor/doctor_dashboard/presentation/doctor_main_page.dart';
-import 'package:medical_app/src/presentation/login/domain/model/user.dart';
 import 'package:medical_app/src/presentation/login/presentation/status_page.dart';
-import 'package:medical_app/src/presentation/organization/organization_dashboard/presentation/org_mainpage.dart';
 import 'package:medical_app/src/presentation/register/presentation/register.dart';
 
 import '../../common/snackbar.dart';
-import '../../doctor/profile/presentation/widgets/update_profile.dart';
-import '../../organization/organization_dashboard/presentation/org_homepage.dart';
-import '../../organization/patient_reports/presentation/patients_lists.dart';
-import '../../patient/patient_dashboard/presentation/patient_main_page.dart';
 import '../domain/service/login_service.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -205,6 +197,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           onTap: () {
                             setState(() {
                               selectedOption = 1;
+                              _emailController.clear();
+                              _usernameController.clear();
+                              _passController.clear();
                             });
                           },
                           child: Column(
@@ -241,6 +236,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           onTap: () {
                             setState(() {
                               selectedOption = 3;
+                              _emailController.clear();
+                              _usernameController.clear();
+                              _passController.clear();
                             });
                           },
                           child: Column(
@@ -277,6 +275,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           onTap: () {
                             setState(() {
                               selectedOption = 4;
+                              _emailController.clear();
+                              _usernameController.clear();
+                              _passController.clear();
                             });
                           },
                           child: Column(
