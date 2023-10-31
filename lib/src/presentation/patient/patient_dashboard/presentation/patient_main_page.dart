@@ -1,12 +1,13 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+//import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
+import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_controller.dart';
 import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_services.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
@@ -23,6 +24,8 @@ class PatientMainPage extends ConsumerStatefulWidget {
   const PatientMainPage({
     Key? key,
   }) : super(key: key);
+
+
 
   @override
   ConsumerState<PatientMainPage> createState() => _AnimatedBarExampleState();
@@ -44,16 +47,20 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
   @override
   void initState(){
     super.initState();
-    _permission();
+    // _permission();
 
 
   }
 
-  Future<void> _permission() async {
-    final request = await NotificationService().notificationsPlugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
-    print(request);
-  }
+  // Future<void> _permission() async {
+  //   final request = await NotificationController.displayNotificationRationale();
+  //   print(request);
+  // }
+  // Future<void> _permission() async {
+  //   final request = await NotificationService().notificationsPlugin.resolvePlatformSpecificImplementation<
+  //       AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
+  //   print(request);
+  // }
 
 
 

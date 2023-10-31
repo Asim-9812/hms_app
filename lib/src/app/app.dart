@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 
 import '../core/resources/route_manager.dart';
+import '../presentation/patient/reminder/notifications/notification_controller.dart';
 
 
 
@@ -16,11 +17,22 @@ class MyApp extends StatefulWidget {
 
   factory MyApp() => instance; // factory for the class instance
 
+  static final GlobalKey<NavigatorState> navigatorKey =
+  GlobalKey<NavigatorState>();
+
   @override
   MyAppState createState() => MyAppState();
 }
 
 class MyAppState extends State<MyApp> {
+
+
+  @override
+  void initState() {
+    NotificationController.startListeningNotificationEvents();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(

@@ -50,7 +50,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
     super.initState();
 
     checkGeolocationStatus();
-    NotificationService().initNotification();
+    // NotificationService().initNotification();
 
 
 

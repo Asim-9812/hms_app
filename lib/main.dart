@@ -7,7 +7,8 @@ import 'package:medical_app/src/presentation/login/domain/model/user.dart';
 import 'package:medical_app/src/presentation/patient/calories/model/calorie_model.dart';
 import 'package:medical_app/src/presentation/patient/reminder/domain/model/general_reminder_model.dart';
 import 'package:medical_app/src/presentation/patient/reminder/domain/model/reminder_model.dart';
-import 'package:timezone/data/latest.dart' as tz;
+import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_controller.dart';
+// import 'package:timezone/data/latest.dart' as tz;
 
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
@@ -27,14 +28,16 @@ late Box userBox2;
 
 
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  tz.initializeTimeZones();
+  // tz.initializeTimeZones();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
 
+  await NotificationController.initializeLocalNotifications();
+  await NotificationController.initializeIsolateReceivePort();
 
 
 

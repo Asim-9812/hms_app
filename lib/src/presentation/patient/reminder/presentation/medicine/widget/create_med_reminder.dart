@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_app/src/presentation/patient/reminder/domain/model/reminder_model.dart';
+import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_controller.dart';
 import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_services.dart';
 
 import '../../../../../../core/resources/color_manager.dart';
@@ -295,7 +296,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                       ),
                     ),
                   ),
-                  Center(child: Text('Update Reminder',style: getHeadBoldStyle(color: ColorManager.white),)),
+                  Center(child: Text('Set a Reminder',style: getHeadBoldStyle(color: ColorManager.white),)),
                 ],
               )),
 
@@ -1335,6 +1336,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                           backgroundColor: ColorManager.primaryDark
                       ),
                       onPressed: () async {
+                        print('executed');
                         final userBox = Hive.box<User>('session').values.toList();
                         int userId = userBox[0].id!;
 
@@ -1415,19 +1417,24 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                               summary: _summaryController.text.trim(),
                             );
 
-                            if(selectedPatternId == 1){
-                              NotificationService().scheduleEverydayNotification(reminder: reminder);
-                            }
-                            else if(selectedPatternId == 2){
-                              NotificationService().scheduleSpecificDaysNotification(reminder: reminder);
-                            }
-                            else if(selectedPatternId == 3){
-                              NotificationService().scheduleIntervalSNotification(reminder: reminder);
-                            }
+                            // if(selectedPatternId == 1){
+                            //   NotificationService().scheduleEverydayNotification(reminder: reminder);
+                            // }
+                            // else if(selectedPatternId == 2){
+                            //   NotificationService().scheduleSpecificDaysNotification(reminder: reminder);
+                            // }
+                            // else if(selectedPatternId == 3){
+                            //   NotificationService().scheduleIntervalSNotification(reminder: reminder);
+                            // }
 
 
+                            await  NotificationController.scheduleNewNotification(reminder: reminder);
 
                             _addReminder(reminder);
+
+
+                            print('pressed!');
+
                           }
 
 

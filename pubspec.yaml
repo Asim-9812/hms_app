@@ -191,11 +191,15 @@ dependencies:
 
   easy_image_viewer: ^1.2.1
 
-  flutter_local_notifications: ^16.0.0+1
+#  flutter_local_notifications: ^16.0.0+1
 
 #  timezone: ^0.9.2
 
 #  flutter_expandable_fab: ^2.0.0
+
+  awesome_notifications: ^0.8.2
+  awesome_notifications_core: ^0.8.1
+  http: ^1.1.0
 
 
 
