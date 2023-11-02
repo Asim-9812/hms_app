@@ -20,6 +20,7 @@ class Api{
    static const getUsers = '$baseUrl/api/Users/GetUser';
    static const getUserById = '$baseUrl/api/Users/GetUserById/';
    static const userUpdate = '$baseUrl/api/Users/UpdateUser/profileImageUrl/signaturImageUrl';
+   static const changePwdUser = '$baseUrl/api/Users/ChangePwd';
 
 
 

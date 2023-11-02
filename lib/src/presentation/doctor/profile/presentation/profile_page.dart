@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
+import 'package:medical_app/src/presentation/change_password_doc_org/presentation/change_password.dart';
 import 'package:medical_app/src/presentation/doctor/profile/presentation/widgets/update_profile.dart';
 import 'package:medical_app/src/presentation/notification/presentation/notification_page.dart';
 
@@ -130,7 +131,9 @@ class DocProfilePage extends ConsumerWidget {
                         _profileItems2(title: 'Education & Experiences', icon: FontAwesomeIcons.graduationCap, onTap: (){},trailing: true),
                         _profileItems2(title: 'Certifications', icon: FontAwesomeIcons.certificate, onTap: (){},trailing: true),
                         _profileItems2(title: 'Patient Reviews (253)', icon: FontAwesomeIcons.solidStar, onTap: (){},trailing: true),
-                        _profileItems2(title: 'Change Password', icon: FontAwesomeIcons.key, onTap: (){},trailing: true),
+                        _profileItems2(title: 'Change Password', icon: FontAwesomeIcons.key,
+                            onTap: ()=>Get.to(()=>ChangePwdDocOrg(userBox.first)),
+                            trailing: true),
                         _profileItems2(title: 'Permissions', icon: FontAwesomeIcons.universalAccess, onTap: (){},trailing: true),
                         _profileItems2(title: 'Help Center', icon: Icons.question_mark, onTap: (){},trailing: true),
                         _profileItems2(title: 'Terms & Policies', icon: FontAwesomeIcons.book, onTap: (){},trailing: true),

@@ -8,6 +8,9 @@ import '../core/resources/route_manager.dart';
 import '../presentation/patient/reminder/notifications/notification_controller.dart';
 
 
+final GlobalKey<ScaffoldMessengerState> snackBarKey =
+GlobalKey<ScaffoldMessengerState>();
+
 
 class MyApp extends StatefulWidget {
   MyApp._internal(); // private named constructor
@@ -43,6 +46,7 @@ class MyAppState extends State<MyApp> {
           enabledDebugging: true,
           builder: (context,navKey) {
             return GetMaterialApp(
+              scaffoldMessengerKey: snackBarKey,
               supportedLocales:const [
                 Locale('en', 'US'),
                 Locale('ne', 'NP'),

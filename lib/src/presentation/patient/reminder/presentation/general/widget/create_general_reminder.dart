@@ -17,6 +17,7 @@ import '../../../../../../core/resources/value_manager.dart';
 import '../../../../../common/snackbar.dart';
 import '../../../../../login/domain/model/user.dart';
 import '../../../data/reminder_db.dart';
+import '../../../notifications/notification_controller.dart';
 
 
 class CreateGeneralReminder extends ConsumerStatefulWidget {
@@ -379,109 +380,7 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
                   ],
                 ),
 
-                h20,
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(' Remind me before (optional)',style: getRegularStyle(color: ColorManager.black,fontSize: 16.sp),)),
-                h10,
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
 
-
-                    Expanded(
-                      child: TextFormField(
-                        controller: _initialReminderController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: ColorManager.blueText
-                              )
-                          ),
-                          enabledBorder:  OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: ColorManager.primaryDark
-                              )
-                          ),
-
-                        ),
-                        validator: (value){
-                          if(value!.isEmpty){
-                            return null;
-                          }
-                          if (!value.contains(RegExp(r'^\d+$'))) {
-                            return 'Invalid value';
-                          }
-                          else if (int.parse(value) <= 0) {
-                            return 'Must be greater than 0';
-                          }
-                          return null;
-                        },
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        onChanged: (value){
-                          // ref.read(itemProvider.notifier).updateStrength(value);
-                        },
-                      ),
-                    ),
-                    w10,
-                    Expanded(
-                      child: DropdownButtonFormField(
-                        menuMaxHeight: 200,
-                        isDense: true,
-                        value:selectedInitialReminderType ,
-                        decoration: InputDecoration(
-
-                            isDense: true,
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
-                                    color: ColorManager.primaryDark
-                                )
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
-                                    color: ColorManager.primaryDark
-                                )
-                            )
-                        ),
-
-                        items: initialReminderType
-                            .map(
-                              (String item) => DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(
-                              item,
-                              style: getRegularStyle(color: Colors.black,fontSize: 16.sp),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ).toList(),
-                        onChanged: (value){
-                          setState(() {
-                            selectedInitialReminderType = value!;
-                            selectedInitialReminderTypeId = initialReminderType.indexOf(value);
-                          });
-                          // ref.read(itemProvider.notifier).updateStrengthUnit(value!);
-
-                        },
-                        validator: (value){
-                          if(_initialReminderController.text.isNotEmpty){
-                            if(selectedInitialReminderType == null){
-                              return 'Please select a unit';
-                            }
-
-                          }
-                          return null;
-                        },
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                      ),
-                    ),
-                  ],
-                ),
                 h10,
                 DropdownButtonFormField(
 
@@ -625,10 +524,134 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
                 if(selectDaysValidation == true)
                   Text('Select at least one day',style: TextStyle(color: ColorManager.red.withOpacity(0.7)),),
 
+                h10,
 
 
                 if(selectedPatternId == 3)
                   h10,
+
+                if(selectedPatternId == 1 || selectedPatternId == 2)
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(' Remind me before (optional)',style: getRegularStyle(color: ColorManager.black,fontSize: 16.sp),)),
+                if(selectedPatternId == 1 || selectedPatternId == 2)
+                h10,
+                if(selectedPatternId == 1 || selectedPatternId == 2)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+
+                    Expanded(
+                      child: TextFormField(
+                        controller: _initialReminderController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                  color: ColorManager.blueText
+                              )
+                          ),
+                          enabledBorder:  OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                  color: ColorManager.primaryDark
+                              )
+                          ),
+
+                        ),
+                        validator: (value){
+                          if(value!.isEmpty){
+                            return null;
+                          }
+                          if(selectedInitialReminderTypeId == 3){
+                            if(int.parse(value)>7){
+                              return 'Days must be less than 8';
+                            }
+                          }
+                          if(selectedInitialReminderTypeId == 2){
+                            if(int.parse(value)>24){
+                              return 'Hours must be less than 24';
+                            }
+                          }
+                          if(selectedInitialReminderTypeId == 1){
+                            if(int.parse(value)>60){
+                              return 'Minutes must be less than 60';
+                            }
+                          }
+                          if (!value.contains(RegExp(r'^\d+$'))) {
+                            return 'Invalid value';
+                          }
+                          else if (int.parse(value) <= 0) {
+                            return 'Must be greater than 0';
+                          }
+                          return null;
+                        },
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        onChanged: (value){
+                          // ref.read(itemProvider.notifier).updateStrength(value);
+                        },
+                      ),
+                    ),
+                    w10,
+                    Expanded(
+                      child: DropdownButtonFormField(
+                        menuMaxHeight: 200,
+                        isDense: true,
+                        value:selectedInitialReminderType ,
+                        decoration: InputDecoration(
+
+                            isDense: true,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: ColorManager.primaryDark
+                                )
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: ColorManager.primaryDark
+                                )
+                            )
+                        ),
+
+                        items: initialReminderType
+                            .map(
+                              (String item) => DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(
+                              item,
+                              style: getRegularStyle(color: Colors.black,fontSize: 16.sp),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ).toList(),
+                        onChanged: (value){
+                          setState(() {
+                            selectedInitialReminderType = value!;
+                            selectedInitialReminderTypeId = initialReminderType.indexOf(value);
+                          });
+                          // ref.read(itemProvider.notifier).updateStrengthUnit(value!);
+
+                        },
+                        validator: (value){
+                          if(_initialReminderController.text.isNotEmpty){
+                            if(selectedInitialReminderType == null){
+                              return 'Please select a unit';
+                            }
+
+                          }
+                          return null;
+                        },
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                      ),
+                    ),
+                  ],
+                ),
+                if(selectedPatternId == 1 || selectedPatternId == 2)
+                h10,
                 h10,
                 Row(
                   children: [
@@ -646,7 +669,7 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
                           style: ElevatedButton.styleFrom(
                               backgroundColor: ColorManager.primaryDark
                           ),
-                          onPressed: (){
+                          onPressed: ()async{
 
                             final scaffoldMessage = ScaffoldMessenger.of(context);
                             final userBox = Hive.box<User>('session').values.toList();
@@ -725,6 +748,7 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
                                 // print(reminder.startDate);
                                 // print(reminder.reminderPattern.patternName);
 
+                                await  NotificationController.scheduleGeneralNotification(reminder: reminder);
 
 
                                 _addReminder(reminder);

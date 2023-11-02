@@ -164,72 +164,7 @@ class _ReminderState extends ConsumerState<ReminderTabs>with TickerProviderState
                   ),
                 ],
               ),
-              if(isMenuOpen)
-                Positioned(
-                  bottom: 110,
-                  right: 120.w,
-                  child: Column(
-                      children: [
-                        FadeInUp(
-                          duration: Duration(milliseconds: 200),
-                          child: InkWell(
-                            splashColor: MaterialStateColor.resolveWith((states) => ColorManager.primaryDark),
-                            onTap: (){
 
-                              Get.to(()=>CreateMedReminder());
-                              ref.read(itemProvider.notifier).updateMenu(false);
-
-                            },
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    color: ColorManager.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                        color: ColorManager.primaryDark
-                                    )
-                                ),
-                                padding: EdgeInsets.symmetric(vertical: 5.h,horizontal: 18.w),
-                                child: Row(
-                                  children: [
-                                    FaIcon(Icons.add_alarm,color: ColorManager.primaryDark,),
-                                    w10,
-                                    Text('Medicine Reminder',style: getRegularStyle(color: ColorManager.primaryDark),)
-                                  ],
-                                )),
-                          ),
-                        ),
-                        h20,
-                        FadeInUp(
-                          duration: Duration(milliseconds: 300),
-                          child: InkWell(
-                            splashColor: MaterialStateColor.resolveWith((states) => ColorManager.primaryDark),
-                            onTap: (){
-                              Get.to(()=>CreateGeneralReminder());
-                              ref.read(itemProvider.notifier).updateMenu(false);
-                            },
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    color: ColorManager.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                        color: ColorManager.primaryDark
-                                    )
-                                ),
-                                padding: EdgeInsets.symmetric(vertical: 5.h,horizontal: 18.w),
-                                child: Row(
-                                  children: [
-                                    FaIcon(Icons.add_alert_outlined,color: ColorManager.primaryDark,),
-                                    w10,
-                                    Text('General Reminder',style: getRegularStyle(color: ColorManager.primaryDark),)
-                                  ],
-                                )),
-                          ),
-                        ),
-                        h10,
-
-                      ]
-                  ),
-                ),
 
             ],
           )

@@ -94,27 +94,19 @@ class UpdateProfile{
         String? profileImg = response.data['result']['profileImage'];
         String? signatureImg = response.data['result']['signatureImage'];
 
-        (profileImg);
-        (signatureImg);
-
         final userBox = Hive.box<User>('session').values.toList();
 
         userBox[0].profileImage = profileImg??'';
         userBox[0].signatureImage = signatureImg??'';
 
-        (userBox[0].firstName);
-        (userBox[0].lastName);
-        (userBox[0].profileImage);
-        (userBox[0].signatureImage);
-        (userBox[0].liscenceNo);
 
         return Right(response.data);
       } else {
-        (' error : ${response.data}');
+        //print(' error : ${response.data}');
         return Left('Unable to register.');
       }
     } on DioException catch (e) {
-      ('${e.response}');
+     // print('${e.response}');
       return Left('Something went wrong');
     }
   }

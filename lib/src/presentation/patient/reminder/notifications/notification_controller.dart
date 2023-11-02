@@ -7,8 +7,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:medical_app/src/presentation/patient/reminder/domain/model/general_reminder_model.dart';
+import 'package:path/path.dart';
+import 'package:snackbar/snackbar.dart';
 import '../../../../app/app.dart';
 import '../domain/model/reminder_model.dart';
+
+
+
+
+
+
 
 
 ///  *********************************************
@@ -76,8 +85,16 @@ class NotificationController {
         receivedAction.actionType == ActionType.SilentBackgroundAction) {
       // For background actions, you must hold the execution until the end
       if(receivedAction.buttonKeyPressed == 'SNOOZE'){
-        await snoozeNotification();
-        // print('SNOOZED!!!');
+        // final SnackBar snackBar = SnackBar(content: Text("Snoozed for 5 minutes"));
+        // snackBarKey.currentState?.showSnackBar(snackBar);
+        await snoozeMedNotification();
+
+      }
+      else if(receivedAction.buttonKeyPressed == 'SNOOZE2'){
+        // final SnackBar snackBar = SnackBar(content: Text("Snoozed for 5 minutes"));
+        // snackBarKey.currentState?.showSnackBar(snackBar);
+        await snoozeGeneralNotification();
+
       }
       // print(
       //     'Message sent via notification input: "${receivedAction.buttonKeyInput}"');
@@ -176,17 +193,27 @@ class NotificationController {
   }
 
 
-  static Future<void> scheduleNewNotification({required Reminder reminder}) async {
+  static Future<void> scheduleMedicalNotification({required Reminder reminder}) async {
     bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
     if (!isAllowed) isAllowed = await displayNotificationRationale();
     if (!isAllowed) return;
 
-    await myNotifyScheduleInHours(
+    await myNotifyMedSchedule(
         reminder: reminder);
   }
 
 
-  static Future<void> snoozeNotification() async {
+  static Future<void> scheduleGeneralNotification({required GeneralReminderModel reminder}) async {
+    bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
+    if (!isAllowed) isAllowed = await displayNotificationRationale();
+    if (!isAllowed) return;
+
+    await myNotifyGeneralSchedule(
+        reminder: reminder);
+  }
+
+
+  static Future<void> snoozeMedNotification() async {
 
     print('executed snooze');
     await snoozeAlarm(
@@ -197,68 +224,610 @@ class NotificationController {
         repeatNotif: false);
   }
 
+  static Future<void> snoozeGeneralNotification() async {
 
+    print('executed snooze');
+    await snoozeNotification(
+        title: 'test',
+        msg: 'test message',
+        hoursFromNow: 5,
+        username: 'test user',
+        repeatNotif: false);
+  }
 
-  // static Future<void> resetBadgeCounter() async {
-  //   await AwesomeNotifications().resetGlobalBadge();
-  // }
-  //
-  // static Future<void> cancelNotifications() async {
-  //   await AwesomeNotifications().cancelAll();
-  // }
 }
 
-Future<void> myNotifyScheduleInHours({
+Future<void> myNotifyMedSchedule({
   required Reminder reminder
 }) async {
   int loop = 0;
   List daysOfWeek = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
   int daysIndex = daysOfWeek.indexOf(DateFormat('EEEE').format(reminder.startDate));
   // var nowDate = DateTime.now().add(Duration(hours: hoursFromNow, seconds: 5));
-  for(int s=0; s<reminder.medicationDuration;s++){
-    for(var i in reminder.scheduleTime){
-      var date = DateFormat('hh:mm a').parse(i);
-      await AwesomeNotifications().createNotification(
-        schedule: NotificationCalendar(
-          weekday: (daysIndex+s)%7 == 0? daysIndex : (daysIndex+s)%7,
-          hour: date.hour,
-          minute: date.minute,
-          // second: 5,
-          repeats: false,
-          //allowWhileIdle: true,
-        ),
-        // schedule: NotificationCalendar.fromDate(
-        //    date: DateTime.now().add(const Duration(seconds: 10))),
-        content: NotificationContent(
-          id: -1,
-          channelKey: 'alerts',
-          title: '${Emojis.medical_pill} Reminder!!!',
-          body: 'Time for your medicine',
-          notificationLayout: NotificationLayout.Default,
-          //actionType : ActionType.DismissAction,
-          color: Colors.black,
-          backgroundColor: Colors.black,
-          // customSound: 'resource://raw/notif',
-          payload: {'actPag': 'myAct', 'actType': 'medicine'},
-        ),
-        actionButtons: [
-          NotificationActionButton(
-              key: 'SNOOZE',
-              label: 'Snooze',
-              actionType: ActionType.SilentAction
+
+  /// for everyday...
+  if(reminder.reminderPattern.reminderPatternId==1){
+    for(int s=0; s<reminder.medicationDuration;s++){
+      for(var i in reminder.scheduleTime){
+        var date = DateFormat('hh:mm a').parse(i);
+        await AwesomeNotifications().createNotification(
+          schedule: NotificationCalendar(
+
+            weekday: (daysIndex+s)%7 == 0? daysIndex : (daysIndex+s)%7,
+            hour: date.hour,
+            minute: date.minute,
+            // second: 5,
+            repeats: true,
+            //allowWhileIdle: true,
           ),
-          NotificationActionButton(
-              key: 'DISMISSED',
-              label: 'Dismiss',
-              actionType: ActionType.DismissAction
+          // schedule: NotificationCalendar.fromDate(
+          //    date: DateTime.now().add(const Duration(seconds: 10))),
+          content: NotificationContent(
+            id: -1,
+            channelKey: 'alerts',
+            title: '${Emojis.medical_pill} ${reminder.medicineName} ${reminder.strength} ${reminder.unit}',
+            body: 'Time for your medicine',
+            notificationLayout: NotificationLayout.Default,
+            //actionType : ActionType.DismissAction,
+            color: Colors.black,
+            category: NotificationCategory.Alarm,
+            backgroundColor: Colors.black,
+            // customSound: 'resource://raw/notif',
+            payload: {'actPag': 'myAct', 'actType': 'medicine'},
           ),
-        ],
-      );
+          actionButtons: [
+            NotificationActionButton(
+                key: 'SNOOZE',
+                label: 'Snooze',
+                actionType: ActionType.SilentAction
+            ),
+            NotificationActionButton(
+                key: 'DISMISSED',
+                label: 'Dismiss',
+                actionType: ActionType.DismissAction
+            ),
+          ],
+        );
+      }
+
+      loop++;
+    }
+  }
+
+  /// for specific days...
+  if(reminder.reminderPattern.reminderPatternId==2){
+    for(int s=0; s<reminder.medicationDuration;s++){
+      for(var days in reminder.reminderPattern.daysOfWeek!){
+        int weekdays = daysOfWeek.indexOf(days);
+        for(var i in reminder.scheduleTime){
+          var date = DateFormat('hh:mm a').parse(i);
+          await AwesomeNotifications().createNotification(
+            schedule: NotificationCalendar(
+              weekday: weekdays,
+              hour: date.hour,
+              minute: date.minute,
+              // second: 5,
+              repeats: true,
+              //allowWhileIdle: true,
+            ),
+            // schedule: NotificationCalendar.fromDate(
+            //    date: DateTime.now().add(const Duration(seconds: 10))),
+            content: NotificationContent(
+              id: -1,
+              channelKey: 'alerts',
+              title: '${Emojis.medical_pill} Reminder!!!',
+              body: 'Time for your medicine',
+              notificationLayout: NotificationLayout.Default,
+              //actionType : ActionType.DismissAction,
+              color: Colors.black,
+              category: NotificationCategory.Alarm,
+              backgroundColor: Colors.black,
+              // customSound: 'resource://raw/notif',
+              payload: {'actPag': 'myAct', 'actType': 'medicine'},
+            ),
+            actionButtons: [
+              NotificationActionButton(
+                  key: 'SNOOZE',
+                  label: 'Snooze',
+                  actionType: ActionType.SilentAction
+              ),
+              NotificationActionButton(
+                  key: 'DISMISSED',
+                  label: 'Dismiss',
+                  actionType: ActionType.DismissAction
+              ),
+            ],
+          );
+        }
+      }
+
+
+      loop++;
+    }
+  }
+
+
+  /// for intervals...
+  if(reminder.reminderPattern.reminderPatternId==3){
+    for(int s=0; s<(reminder.medicationDuration/reminder.reminderPattern.interval!);s++){
+      for(var i in reminder.scheduleTime){
+        var date = DateFormat('hh:mm a').parse(i);
+        await AwesomeNotifications().createNotification(
+          schedule: NotificationCalendar(
+
+            hour: date.hour,
+            minute: date.minute,
+            // second: 5,
+            repeats: true,
+            //allowWhileIdle: true,
+          ),
+          // schedule: NotificationCalendar.fromDate(
+          //    date: DateTime.now().add(const Duration(seconds: 10))),
+          content: NotificationContent(
+            id: -1,
+            channelKey: 'alerts',
+            title: '${Emojis.medical_pill} Reminder!!!',
+            body: 'Time for your medicine',
+            notificationLayout: NotificationLayout.Default,
+            //actionType : ActionType.DismissAction,
+            color: Colors.black,
+            category: NotificationCategory.Alarm,
+            backgroundColor: Colors.black,
+            // customSound: 'resource://raw/notif',
+            payload: {'actPag': 'myAct', 'actType': 'medicine'},
+          ),
+          actionButtons: [
+            NotificationActionButton(
+                key: 'SNOOZE',
+                label: 'Snooze',
+                actionType: ActionType.SilentAction
+            ),
+            NotificationActionButton(
+                key: 'DISMISSED',
+                label: 'Dismiss',
+                actionType: ActionType.DismissAction
+            ),
+          ],
+        );
+
+      }
+      await Future.delayed(Duration(days: reminder.reminderPattern.interval!));
+
+      loop++;
+    }
+  }
+
+  print(loop);
+
+
+
+}
+
+
+Future<void> myNotifyGeneralSchedule({
+  required GeneralReminderModel reminder
+}) async {
+  int loop = 0;
+  List daysOfWeek = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  int daysIndex = daysOfWeek.indexOf(DateFormat('EEEE').format(reminder.startDate));
+  // var nowDate = DateTime.now().add(Duration(hours: hoursFromNow, seconds: 5));
+
+  /// for once...
+  if(reminder.reminderPattern.reminderPatternId==1){
+    var date = DateFormat('hh:mm a').parse(reminder.time);
+    if(reminder.initialReminder != null){
+      if(reminder.initialReminder!.initialReminderTypeId == 3){
+        DateTime remind = reminder.startDate.subtract(Duration(days: reminder.initialReminder!.initialReminder));
+        await AwesomeNotifications().createNotification(
+          schedule:
+          NotificationCalendar(
+              year: remind.year,
+              month: remind.month,
+              day: remind.day,
+              hour: date.hour,
+              minute: date.minute,
+              repeats: false
+          ),
+          content: NotificationContent(
+            id: -1,
+            channelKey: 'alerts',
+            title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+            body: '${reminder.description}',
+            notificationLayout: NotificationLayout.Default,
+            //actionType : ActionType.DismissAction,
+            color: Colors.black,
+            // category: NotificationCategory.Alarm,
+            backgroundColor: Colors.black,
+            // customSound: 'resource://raw/notif',
+            payload: {'actPag': 'myAct', 'actType': 'medicine'},
+          ),
+          actionButtons: [
+            NotificationActionButton(
+                key: 'SNOOZE2',
+                label: 'Snooze',
+                actionType: ActionType.SilentAction
+            ),
+            NotificationActionButton(
+                key: 'DISMISSED',
+                label: 'Dismiss',
+                actionType: ActionType.DismissAction
+            ),
+          ],
+        );
+      }
+      else if(reminder.initialReminder!.initialReminderTypeId == 2){
+        DateTime remind = date.subtract(Duration(hours: reminder.initialReminder!.initialReminder));
+        await AwesomeNotifications().createNotification(
+          schedule:
+          NotificationCalendar(
+              year: reminder.startDate.year,
+              month: reminder.startDate.month,
+              day: reminder.startDate.day,
+              hour: remind.hour,
+              minute: remind.minute,
+              repeats: false
+          ),
+          content: NotificationContent(
+            id: -1,
+            channelKey: 'alerts',
+            title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+            body: '${reminder.description}',
+            notificationLayout: NotificationLayout.Default,
+            //actionType : ActionType.DismissAction,
+            color: Colors.black,
+            // category: NotificationCategory.Alarm,
+            backgroundColor: Colors.black,
+            // customSound: 'resource://raw/notif',
+            payload: {'actPag': 'myAct', 'actType': 'medicine'},
+          ),
+          actionButtons: [
+            NotificationActionButton(
+                key: 'SNOOZE2',
+                label: 'Snooze',
+                actionType: ActionType.SilentAction
+            ),
+            NotificationActionButton(
+                key: 'DISMISSED',
+                label: 'Dismiss',
+                actionType: ActionType.DismissAction
+            ),
+          ],
+        );
+      }
+      else {
+        DateTime remind = date.subtract(Duration(minutes: reminder.initialReminder!.initialReminder));
+        await AwesomeNotifications().createNotification(
+          schedule:
+          NotificationCalendar(
+              year: reminder.startDate.year,
+              month: reminder.startDate.month,
+              day: reminder.startDate.day,
+              hour: remind.hour,
+              minute: remind.minute,
+              repeats: false
+          ),
+          content: NotificationContent(
+            id: -1,
+            channelKey: 'alerts',
+            title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+            body: '${reminder.description}',
+            notificationLayout: NotificationLayout.Default,
+            //actionType : ActionType.DismissAction,
+            color: Colors.black,
+            // category: NotificationCategory.Alarm,
+            backgroundColor: Colors.black,
+            // customSound: 'resource://raw/notif',
+            payload: {'actPag': 'myAct', 'actType': 'medicine'},
+          ),
+          actionButtons: [
+            NotificationActionButton(
+                key: 'SNOOZE2',
+                label: 'Snooze',
+                actionType: ActionType.SilentAction
+            ),
+            NotificationActionButton(
+                key: 'DISMISSED',
+                label: 'Dismiss',
+                actionType: ActionType.DismissAction
+            ),
+          ],
+        );
+      }
+
     }
 
-    loop++;
+    await AwesomeNotifications().createNotification(
+      schedule:
+      NotificationCalendar.fromDate(
+          date: DateTime(reminder.startDate.year,reminder.startDate.month,reminder.startDate.day,date.hour,date.minute)),
+      // schedule: NotificationCalendar.fromDate(
+      //    date: DateTime.now().add(const Duration(seconds: 10))),
+      content: NotificationContent(
+        id: -1,
+        channelKey: 'alerts',
+        title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+        body: '${reminder.description}',
+        notificationLayout: NotificationLayout.Default,
+        //actionType : ActionType.DismissAction,
+        color: Colors.black,
+        // category: NotificationCategory.Alarm,
+        backgroundColor: Colors.black,
+        // customSound: 'resource://raw/notif',
+        payload: {'actPag': 'myAct', 'actType': 'medicine'},
+      ),
+      actionButtons: [
+        NotificationActionButton(
+            key: 'SNOOZE2',
+            label: 'Snooze',
+            actionType: ActionType.SilentAction
+        ),
+        NotificationActionButton(
+            key: 'DISMISSED',
+            label: 'Dismiss',
+            actionType: ActionType.DismissAction
+        ),
+      ],
+    );
   }
-  print(loop);
+
+  /// for everyday...
+  if(reminder.reminderPattern.reminderPatternId==2){
+    var date = DateFormat('hh:mm a').parse(reminder.time);
+    if(reminder.initialReminder != null){
+      if(reminder.initialReminder!.initialReminderTypeId == 3){
+        DateTime remind = reminder.startDate.subtract(Duration(days: reminder.initialReminder!.initialReminder));
+        await AwesomeNotifications().createNotification(
+          schedule:
+          NotificationCalendar(
+              year: remind.year,
+              month: remind.month,
+              day: remind.day,
+            hour: date.hour,
+            minute: date.minute,
+            repeats: true
+          ),
+          content: NotificationContent(
+            id: -1,
+            channelKey: 'alerts',
+            title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+            body: '${reminder.description}',
+            notificationLayout: NotificationLayout.Default,
+            //actionType : ActionType.DismissAction,
+            color: Colors.black,
+            // category: NotificationCategory.Alarm,
+            backgroundColor: Colors.black,
+            // customSound: 'resource://raw/notif',
+            payload: {'actPag': 'myAct', 'actType': 'medicine'},
+          ),
+          actionButtons: [
+            NotificationActionButton(
+                key: 'SNOOZE2',
+                label: 'Snooze',
+                actionType: ActionType.SilentAction
+            ),
+            NotificationActionButton(
+                key: 'DISMISSED',
+                label: 'Dismiss',
+                actionType: ActionType.DismissAction
+            ),
+          ],
+        );
+      }
+      else if(reminder.initialReminder!.initialReminderTypeId == 2){
+        DateTime remind = date.subtract(Duration(hours: reminder.initialReminder!.initialReminder));
+        await AwesomeNotifications().createNotification(
+          schedule:
+          NotificationCalendar(
+              year: reminder.startDate.year,
+              month: reminder.startDate.month,
+              day: reminder.startDate.day,
+              hour: remind.hour,
+              minute: remind.minute,
+              repeats: true
+          ),
+          content: NotificationContent(
+            id: -1,
+            channelKey: 'alerts',
+            title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+            body: '${reminder.description}',
+            notificationLayout: NotificationLayout.Default,
+            //actionType : ActionType.DismissAction,
+            color: Colors.black,
+            // category: NotificationCategory.Alarm,
+            backgroundColor: Colors.black,
+            // customSound: 'resource://raw/notif',
+            payload: {'actPag': 'myAct', 'actType': 'medicine'},
+          ),
+          actionButtons: [
+            NotificationActionButton(
+                key: 'SNOOZE',
+                label: 'Snooze',
+                actionType: ActionType.SilentAction
+            ),
+            NotificationActionButton(
+                key: 'DISMISSED',
+                label: 'Dismiss',
+                actionType: ActionType.DismissAction
+            ),
+          ],
+        );
+      }
+      else {
+        DateTime remind = date.subtract(Duration(minutes: reminder.initialReminder!.initialReminder));
+        await AwesomeNotifications().createNotification(
+          schedule:
+          NotificationCalendar(
+              year: reminder.startDate.year,
+              month: reminder.startDate.month,
+              day: reminder.startDate.day,
+              hour: remind.hour,
+              minute: remind.minute,
+              repeats: true
+          ),
+          content: NotificationContent(
+            id: -1,
+            channelKey: 'alerts',
+            title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+            body: '${reminder.description}',
+            notificationLayout: NotificationLayout.Default,
+            //actionType : ActionType.DismissAction,
+            color: Colors.black,
+            // category: NotificationCategory.Alarm,
+            backgroundColor: Colors.black,
+            // customSound: 'resource://raw/notif',
+            payload: {'actPag': 'myAct', 'actType': 'medicine'},
+          ),
+          actionButtons: [
+            NotificationActionButton(
+                key: 'SNOOZE',
+                label: 'Snooze',
+                actionType: ActionType.SilentAction
+            ),
+            NotificationActionButton(
+                key: 'DISMISSED',
+                label: 'Dismiss',
+                actionType: ActionType.DismissAction
+            ),
+          ],
+        );
+      }
+
+    }
+
+    await AwesomeNotifications().createNotification(
+      schedule:
+      NotificationCalendar.fromDate(
+          date: DateTime(reminder.startDate.year,reminder.startDate.month,reminder.startDate.day,date.hour,date.minute),
+      repeats: true
+      ),
+      // schedule: NotificationCalendar.fromDate(
+      //    date: DateTime.now().add(const Duration(seconds: 10))),
+      content: NotificationContent(
+        id: -1,
+        channelKey: 'alerts',
+        title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+        body: '${reminder.description}',
+        notificationLayout: NotificationLayout.Default,
+        //actionType : ActionType.DismissAction,
+        color: Colors.black,
+        // category: NotificationCategory.Alarm,
+        backgroundColor: Colors.black,
+        // customSound: 'resource://raw/notif',
+        payload: {'actPag': 'myAct', 'actType': 'medicine'},
+      ),
+      actionButtons: [
+        NotificationActionButton(
+            key: 'SNOOZE',
+            label: 'Snooze',
+            actionType: ActionType.SilentAction
+        ),
+        NotificationActionButton(
+            key: 'DISMISSED',
+            label: 'Dismiss',
+            actionType: ActionType.DismissAction
+        ),
+      ],
+    );
+  }
+
+  /// for specific days...
+  if(reminder.reminderPattern.reminderPatternId==3){
+
+      for(var days in reminder.reminderPattern.daysOfWeek!){
+        int weekdays = daysOfWeek.indexOf(days);
+
+          var date = DateFormat('hh:mm a').parse(reminder.time);
+          await AwesomeNotifications().createNotification(
+            schedule: NotificationCalendar(
+              weekday: weekdays,
+              hour: date.hour,
+              minute: date.minute,
+              // second: 5,
+              repeats: true,
+              //allowWhileIdle: true,
+            ),
+            // schedule: NotificationCalendar.fromDate(
+            //    date: DateTime.now().add(const Duration(seconds: 10))),
+            content: NotificationContent(
+              id: -1,
+              channelKey: 'alerts',
+              title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+              body: '${reminder.description}',
+              notificationLayout: NotificationLayout.Default,
+              //actionType : ActionType.DismissAction,
+              color: Colors.black,
+              // category: NotificationCategory.Alarm,
+              backgroundColor: Colors.black,
+              // customSound: 'resource://raw/notif',
+              payload: {'actPag': 'myAct', 'actType': 'medicine'},
+            ),
+            actionButtons: [
+              NotificationActionButton(
+                  key: 'SNOOZE2',
+                  label: 'Snooze',
+                  actionType: ActionType.SilentAction
+              ),
+              NotificationActionButton(
+                  key: 'DISMISSED',
+                  label: 'Dismiss',
+                  actionType: ActionType.DismissAction
+              ),
+            ],
+          );
+
+      }
+
+
+
+
+  }
+
+
+  /// for intervals...
+  if(reminder.reminderPattern.reminderPatternId==4){
+
+        var date = DateFormat('hh:mm a').parse(reminder.time);
+        await AwesomeNotifications().createNotification(
+          schedule: NotificationCalendar(
+            hour: date.hour,
+            minute: date.minute,
+            // second: 5,
+            repeats: true,
+            //allowWhileIdle: true,
+          ),
+          // schedule: NotificationCalendar.fromDate(
+          //    date: DateTime.now().add(const Duration(seconds: 10))),
+          content: NotificationContent(
+            id: -1,
+            channelKey: 'alerts',
+            title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+            body: '${reminder.description}',
+            notificationLayout: NotificationLayout.Default,
+            //actionType : ActionType.DismissAction,
+            color: Colors.black,
+            // category: NotificationCategory.Alarm,
+            backgroundColor: Colors.black,
+            // customSound: 'resource://raw/notif',
+            payload: {'actPag': 'myAct', 'actType': 'medicine'},
+          ),
+          actionButtons: [
+            NotificationActionButton(
+                key: 'SNOOZE2',
+                label: 'Snooze',
+                actionType: ActionType.SilentAction
+            ),
+            NotificationActionButton(
+                key: 'DISMISSED',
+                label: 'Dismiss',
+                actionType: ActionType.DismissAction
+            ),
+          ],
+        );
+
+      }
+      await Future.delayed(Duration(days: reminder.reminderPattern.interval!));
+
+
 
 
 
@@ -283,7 +852,7 @@ Future<void> snoozeAlarm({
     //   //allowWhileIdle: true,
     // ),
     schedule: NotificationCalendar.fromDate(
-       date: DateTime.now().add(const Duration(seconds: 10))),
+       date: DateTime.now().add(const Duration(minutes: 5))),
     content: NotificationContent(
       id: -1,
       channelKey: 'alerts',
@@ -293,6 +862,7 @@ Future<void> snoozeAlarm({
       //actionType : ActionType.DismissAction,
       color: Colors.black,
       backgroundColor: Colors.black,
+      category: NotificationCategory.Alarm,
       // customSound: 'resource://raw/notif',
       payload: {'actPag': 'myAct', 'actType': 'medicine', 'username': username},
     ),
@@ -303,10 +873,59 @@ Future<void> snoozeAlarm({
           actionType: ActionType.SilentAction
       ),
       NotificationActionButton(
-          key: 'TAKEN',
-          label: 'taken',
-          actionType: ActionType.SilentAction
+          key: 'DISMISS',
+          label: 'Dismiss',
+          actionType: ActionType.DismissAction
       ),
     ],
   );
 }
+
+
+
+Future<void> snoozeNotification({
+  required int hoursFromNow,
+  required String username,
+  required String title,
+  required String msg,
+  bool repeatNotif = false,
+}) async {
+  // var nowDate = DateTime.now().add(Duration(hours: hoursFromNow, seconds: 5));
+  await AwesomeNotifications().createNotification(
+    // schedule: NotificationCalendar(
+    //   //weekday: nowDate.day,
+    //   // hour: nowDate.hour,
+    //   // minute: 0,
+    //   second: 5,
+    //   repeats: repeatNotif,
+    //   //allowWhileIdle: true,
+    // ),
+    schedule: NotificationCalendar.fromDate(
+        date: DateTime.now().add(const Duration(minutes: 5))),
+    content: NotificationContent(
+      id: -1,
+      channelKey: 'alerts',
+      title: '${Emojis.activites_reminder_ribbon} Reminder!!!',
+      notificationLayout: NotificationLayout.Default,
+      //actionType : ActionType.DismissAction,
+      color: Colors.black,
+      backgroundColor: Colors.black,
+      // category: NotificationCategory.Alarm,
+      // customSound: 'resource://raw/notif',
+      payload: {'actPag': 'myAct', 'actType': 'medicine', 'username': username},
+    ),
+    actionButtons: [
+      NotificationActionButton(
+          key: 'SNOOZE2',
+          label: 'Snooze',
+          actionType: ActionType.SilentAction
+      ),
+      NotificationActionButton(
+          key: 'DISMISS',
+          label: 'Dismiss',
+          actionType: ActionType.DismissAction
+      ),
+    ],
+  );
+}
+

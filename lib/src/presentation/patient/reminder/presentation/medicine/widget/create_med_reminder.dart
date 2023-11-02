@@ -1428,7 +1428,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                             // }
 
 
-                            await  NotificationController.scheduleNewNotification(reminder: reminder);
+                            await  NotificationController.scheduleMedicalNotification(reminder: reminder);
 
                             _addReminder(reminder);
 

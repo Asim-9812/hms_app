@@ -180,7 +180,7 @@ class _AddDocumentPageState extends ConsumerState<AddPatientDocuments> {
                                   documentID: 1,
                                   userID: userBox[0].username!,
                                   documentTypeID: selectedDocumentTypeId,
-                                  folderName: folderList.first,
+                                  folderName: 'Patient',
                                   doctorAttachmentID: 1,
                                   documentTitle: _nameController.text.trim(),
                                   documentDescription:_descController.text.trim() ,

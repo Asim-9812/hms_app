@@ -9,6 +9,7 @@ import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../../widgets/bmi.dart';
+import '../../../widgets/bmi.dart';
 import '../../../widgets/bmr.dart';
 import '../../../widgets/edd.dart';
 

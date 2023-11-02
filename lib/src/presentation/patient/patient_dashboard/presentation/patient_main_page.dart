@@ -7,10 +7,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
+import 'package:medical_app/src/core/resources/value_manager.dart';
 import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_controller.dart';
 import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_services.dart';
+import 'package:medical_app/src/presentation/patient/reminder/presentation/general/widget/create_general_reminder.dart';
+import 'package:medical_app/src/presentation/patient/reminder/presentation/medicine/widget/create_med_reminder.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
+import '../../../../core/resources/style_manager.dart';
 import '../../../../data/provider/common_provider.dart';
 import '../../profile/presentation/profile_page.dart';
 import '../../reminder/presentation/reminder_tabs.dart';
@@ -182,12 +186,78 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
           },
         ),
         floatingActionButton: FloatingActionButton(
-            onPressed: () {
+            onPressed: () async {
               if(selected == 1){
 
 
 
-                ref.read(itemProvider.notifier).updateMenu(!isMenuOpen);
+                {
+                  await showModalBottomSheet(
+
+                      backgroundColor: ColorManager.primary,
+                      context: context,
+                      builder: (context){
+                        return Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(10),
+                              topLeft: Radius.circular(10)
+                            )
+                          ),
+                          height: 150,
+                          padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                children: [
+                                  InkWell(
+                                    onTap : (){
+                                      Navigator.pop(context);
+                                      Get.to(()=>CreateMedReminder());
+
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                          color: ColorManager.white
+                                      ),
+                                      padding: EdgeInsets.symmetric(horizontal: 30.w,vertical: 30.h),
+                                      child: Icon(FontAwesomeIcons.pills,color: ColorManager.primary,),
+                                    ),
+                                  ),
+                                  h10,
+                                  Text('Medical Reminder',style: getRegularStyle(color: ColorManager.white,fontSize: 16.sp),)
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  InkWell(
+                                    onTap:(){
+                                      Navigator.pop(context);
+                                      Get.to(()=>CreateGeneralReminder());
+
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                         color: ColorManager.white
+                                      ),
+                                      padding: EdgeInsets.symmetric(horizontal: 30.w,vertical: 30.h),
+                                      child: Icon(Icons.alarm_add,color: ColorManager.primary,),
+                                    ),
+                                  ),
+                                  h10,
+                                  Text('General Reminder',style: getRegularStyle(color: ColorManager.white,fontSize: 16.sp),)
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                  );
+                }
 
                 //Get.to(()=>CreateReminder(),transition: Transition.fade,curve: Curves.easeIn)
               }

@@ -118,7 +118,7 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
           folderList.when(
               data: (data){
                 if(data.isEmpty){
-                  return Text('No folders.',style:getRegularStyle(color: ColorManager.black,fontSize: 20));
+                  return Center(child: Text('No files',style:getRegularStyle(color: ColorManager.black,fontSize: 20)));
                 }
                 else{
                   return documentList.when(
@@ -297,22 +297,7 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
     return documentList.when(
         data: (data){
           if(data.isEmpty){
-            return Padding(
-              padding: EdgeInsets.symmetric(horizontal: 18.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Recent Files',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
-                  Divider(
-                    thickness: 0.5,
-                    color: ColorManager.black.withOpacity(0.8),
-                  ),
-                  Center(
-                    child: Text('No files',style: getMediumStyle(color: ColorManager.black),),
-                  ),
-                ],
-              ),
-            );
+            return SizedBox();
           }
           else{
             final reversedList = data.reversed.toList();

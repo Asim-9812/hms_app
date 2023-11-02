@@ -97,7 +97,7 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
       _lastNameController.text = widget.user.lastName ?? '';
       _mobileController.text = widget.user.contactNo ?? '';
       _emailController.text = widget.user.email ?? '';
-      _wardController.text = widget.user.wardNo.toString() ?? '';
+      _wardController.text = widget.user.wardNo == null ? '' :widget.user.wardNo.toString();
       _addressController.text = widget.user.localAddress ?? '';
       _licenseController.text = widget.user.liscenceNo.toString() ?? '';
     });
@@ -350,29 +350,60 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                           ),
                           onPressed: ()async{
                             await showModalBottomSheet(
-                              isDismissible: true,
+
+                                backgroundColor: ColorManager.white,
                                 context: context,
                                 builder: (context){
                                   return Container(
-                                    padding: EdgeInsets.all(16),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
+                                    height: 150,
+                                    padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        ListTile(
-                                          leading: Icon(Icons.photo_library),
-                                          title: Text('Pick from Gallery'),
-                                          onTap: () {
-                                             ref.read(imageProvider.notifier).pickAnImage();
-                                            Navigator.pop(context); // Close the bottom sheet after selection
-                                          },
+                                        Column(
+                                          children: [
+                                            InkWell(
+                                              onTap : (){
+                                                ref.read(imageProvider.notifier).camera();
+                                                Navigator.pop(context);
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(10),
+                                                    border: Border.all(
+                                                        color: ColorManager.black.withOpacity(0.5)
+                                                    )
+                                                ),
+                                                padding: EdgeInsets.symmetric(horizontal: 30.w,vertical: 30.h),
+                                                child: Icon(FontAwesomeIcons.camera,color: ColorManager.black,),
+                                              ),
+                                            ),
+                                            h10,
+                                            Text('Camera',style: getRegularStyle(color: ColorManager.black,fontSize: 16),)
+                                          ],
                                         ),
-                                        ListTile(
-                                          leading: Icon(Icons.camera_alt),
-                                          title: Text('Capture from Camera'),
-                                          onTap: () {
-                                           ref.read(imageProvider.notifier).camera();
-                                            Navigator.pop(context); // Close the bottom sheet after selection
-                                          },
+                                        Column(
+                                          children: [
+                                            InkWell(
+                                              onTap:(){
+                                                ref.read(imageProvider.notifier).pickAnImage();
+                                                Navigator.pop(context);
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(10),
+                                                    border: Border.all(
+                                                        color: ColorManager.black.withOpacity(0.5)
+                                                    )
+                                                ),
+                                                padding: EdgeInsets.symmetric(horizontal: 30.w,vertical: 30.h),
+                                                child: Icon(FontAwesomeIcons.image,color: ColorManager.black,),
+                                              ),
+                                            ),
+                                            h10,
+                                            Text('Gallery',style: getRegularStyle(color: ColorManager.black,fontSize: 16),)
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -940,9 +971,7 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                         child: Column(
                           children: [
                             Image.file(File(selectImage.path),width: 250,height: 150,),
-                            h10,
-                            Text('${selectImage.path}',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?14.sp:14),overflow: TextOverflow.fade,maxLines: 1,)
-                          ],
+                            ],
                         ),
                       ),
                       Align(

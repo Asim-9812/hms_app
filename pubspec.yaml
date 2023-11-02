@@ -168,6 +168,8 @@ dependencies:
 
   syncfusion_flutter_charts: ^22.1.39
 
+  syncfusion_flutter_sliders: any
+
   linear_progress_bar: ^1.1.0
 
   khalti_flutter: ^3.0.0

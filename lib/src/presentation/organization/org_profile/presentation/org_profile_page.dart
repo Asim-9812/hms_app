@@ -13,6 +13,7 @@ import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/presentation/notification/presentation/notification_page.dart';
 
 import '../../../../core/resources/value_manager.dart';
+import '../../../change_password_doc_org/presentation/change_password.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../login/domain/service/login_service.dart';
 import '../../../login/presentation/status_page.dart';
@@ -125,7 +126,9 @@ class OrgProfilePage extends ConsumerWidget {
                         //
                         // _profileItems2(title: 'Phone Number', icon: FontAwesomeIcons.phone, onTap: (){},subtitle: '98XXXXXXXX'),
                         // _profileItems2(title: 'E-Mail', icon: Icons.email_outlined, onTap: (){},subtitle: 'user@gmail.com'),
-                        _profileItems2(title: 'Change Password', icon: FontAwesomeIcons.key, onTap: (){},trailing: true),
+                        _profileItems2(title: 'Change Password', icon: FontAwesomeIcons.key,
+                            onTap: ()=>Get.to(()=>ChangePwdDocOrg(userBox.first)),
+                            trailing: true),
                         _profileItems2(title: 'Permissions', icon: FontAwesomeIcons.universalAccess, onTap: (){},trailing: true),
                         _profileItems2(title: 'Help Center', icon: Icons.question_mark, onTap: (){},trailing: true),
                         _profileItems2(title: 'Terms & Policies', icon: FontAwesomeIcons.book, onTap: (){},trailing: true),
