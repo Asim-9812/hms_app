@@ -4,6 +4,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
@@ -13,6 +14,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../notices/presentation/notices.dart';
+import '../../doctor_tasks/presentation/add_tasks.dart';
 
 
 class DoctorHomePage extends StatefulWidget {
@@ -143,8 +145,8 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                 // ),
                 h20,
                 _overallStat(),
-                h20,
-                _patientGraph(),
+                // h20,
+                // _patientGraph(),
 
                 h20,
                 _myTasks(),
@@ -464,48 +466,6 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
   }
 
 
-  Widget _patientGraph(){
-    return Container(
-      height: 300.h,
-      padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 8.h),
-      margin: EdgeInsets.symmetric(horizontal: 18.w),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: ColorManager.black.withOpacity(0.5)
-        )
-      ),
-      child: SfCartesianChart(
-        zoomPanBehavior: ZoomPanBehavior(
-          enablePinching: true,
-          enablePanning: true,
-          zoomMode: ZoomMode.xy,
-        ),
-        legend: Legend(
-          isVisible: true,
-          position: LegendPosition.top
-        ),
-        title: ChartTitle(text: 'Patient Stats',alignment:ChartAlignment.near ),
-        primaryXAxis: CategoryAxis(),
-        series: <ChartSeries>[
-          LineSeries<Map<String, dynamic>, String>(
-            dataSource: newPatientsData,
-            xValueMapper: (Map<String, dynamic> data, _) => data['date']!,
-            yValueMapper: (Map<String, dynamic> data, _) => double.parse(data['total']!.toString()),
-            name: 'New Patients',
-          ),
-          LineSeries<Map<String, dynamic>, String>(
-            dataSource: followUpsData,
-            xValueMapper: (Map<String, dynamic> data, _) => data['date']!,
-            yValueMapper: (Map<String, dynamic> data, _) => double.parse(data['total']!.toString()),
-            name: 'Follow-ups',
-          ),
-        ],
-        tooltipBehavior: TooltipBehavior(enable: true),
-      ),
-    );
-  }
-
 
   Widget _myTasks(){
     return Container(
@@ -530,7 +490,9 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('My Tasks',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
-                FaIcon(Icons.add,color: ColorManager.white,),
+                InkWell(
+                    onTap: ()=>Get.to(()=>AddTasks()),
+                    child: FaIcon(Icons.add,color: ColorManager.white,)),
               ],
             ),
 

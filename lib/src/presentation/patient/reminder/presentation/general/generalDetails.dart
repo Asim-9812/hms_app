@@ -13,6 +13,7 @@ import 'package:medical_app/src/presentation/patient/reminder/presentation/gener
 import '../../../../../core/resources/color_manager.dart';
 import '../../../../../core/resources/style_manager.dart';
 import '../../../../../core/resources/value_manager.dart';
+import '../../notifications/notification_controller.dart';
 
 class GeneralDetails extends StatefulWidget {
   final GeneralReminderModel reminder;
@@ -230,7 +231,8 @@ class _GeneralDetailsState extends State<GeneralDetails> {
                                        style: ElevatedButton.styleFrom(
                                            backgroundColor: ColorManager.primaryDark
                                        ),
-                                       onPressed: (){
+                                       onPressed: ()async{
+                                         await NotificationController.cancelNotifications(id: reminderBox.reminderId);
                                          reminder.deleteAt(index);
                                          setState(() {
                                            back = 1;

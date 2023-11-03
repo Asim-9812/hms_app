@@ -11,6 +11,7 @@ import 'package:image/image.dart' as img;
 import 'package:intl/intl.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:medical_app/src/presentation/patient/reminder/domain/model/reminder_model.dart';
+import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_controller.dart';
 import 'package:medical_app/src/presentation/patient/reminder/presentation/medicine/widget/edit_med_page.dart';
 
 import '../../../../../core/resources/color_manager.dart';
@@ -404,7 +405,8 @@ class _MedDetailsState extends State<MedDetails> {
                                        style: ElevatedButton.styleFrom(
                                            backgroundColor: ColorManager.primaryDark
                                        ),
-                                       onPressed: (){
+                                       onPressed: ()async{
+                                         await NotificationController.cancelNotifications(id: reminderBox.reminderId);
                                          reminder.deleteAt(index);
                                          setState(() {
                                            back = 1;

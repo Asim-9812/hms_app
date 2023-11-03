@@ -127,11 +127,10 @@ class _BMRState extends State<BMR> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text('Calculated BMR',style: getMediumStyle(color: Colors.black),),
-                  h20,
                   Text('${result.round()} calories/day',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
-                  h20,
-                  Text('Daily calorie needs based on activity level',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
                   h10,
+                  Text('Daily calorie needs based on activity level',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
+
                   ListTile(
                     tileColor: ColorManager.primary,
                     title: Text('Activity Level',style: getRegularStyle(color: ColorManager.white,fontSize: 20),),
@@ -203,13 +202,13 @@ class _BMRState extends State<BMR> {
                 children: [
 
                   Container(
-                    height: MediaQuery.of(context).size.height*1.3/2,
+                    height: MediaQuery.of(context).size.height*1.6/2,
                     width: MediaQuery.of(context).size.width*0.8/2,
                     padding: EdgeInsets.only(left: 8.w,top: 8.h,right: 8.w),
                     child: Form(
                       key: _formKey,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Container(
@@ -302,126 +301,124 @@ class _BMRState extends State<BMR> {
                             ),
                           ),
                           h10,
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: ColorManager.white,
-                                  borderRadius: BorderRadius.circular(10)
-                              ),
-                              padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: ColorManager.white,
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
 
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text('Age',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
-                                  h10,
-                                  Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 18.w),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: TextFormField(
-                                            autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
-                                            validator: (value){
-                                              if(value!.isEmpty){
-                                                return 'Required';
-                                              }
-                                              else if (int.tryParse(value) == null || int.parse(value) <= 0) {
-                                                return 'Invalid';
-                                              }
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('Age',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                                h10,
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 18.w),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextFormField(
+                                          autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                                          validator: (value){
+                                            if(value!.isEmpty){
+                                              return 'Required';
+                                            }
+                                            else if (int.tryParse(value) == null || int.parse(value) <= 0) {
+                                              return 'Invalid';
+                                            }
 
-                                              else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                                                return 'Invalid';
-                                              }
-                                              else if (int.parse(value) > 100){
-                                                return 'Invalid';
-                                              }
-                                              else{
+                                            else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                                              return 'Invalid';
+                                            }
+                                            else if (int.parse(value) > 100){
+                                              return 'Invalid';
+                                            }
+                                            else{
 
-                                                return null;
-                                              }
-                                            },
-                                            controller: _ageController,
-                                            keyboardType: TextInputType.number,
-                                            style: getMediumStyle(color: ColorManager.black),
-                                            decoration: InputDecoration(
-                                              filled: true,
-                                              fillColor: ColorManager.dotGrey.withOpacity(0.2),
-                                              enabledBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: ColorManager.black.withOpacity(0.5)
-                                                  )
-                                              ),
-                                              border: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: ColorManager.black.withOpacity(0.5)
-                                                  )
-                                              ),
+                                              return null;
+                                            }
+                                          },
+                                          controller: _ageController,
+                                          keyboardType: TextInputType.number,
+                                          style: getMediumStyle(color: ColorManager.black,fontSize: 16),
+                                          decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: ColorManager.black.withOpacity(0.5)
+                                                )
+                                            ),
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: ColorManager.black.withOpacity(0.5)
+                                                )
                                             ),
                                           ),
                                         ),
-                                        w05,
-                                        Text('yrs old')
-                                      ],
-                                    ),
+                                      ),
+                                      w05,
+                                      Text('yrs old')
+                                    ],
                                   ),
-                                  h20,
-                                  Text('Weight',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
-                                  h10,
-                                  Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 18.w),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: TextFormField(
-                                            autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
-                                            validator: (value) {
-                                              if (value!.isEmpty) {
-                                                return 'Required';
-                                              } else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value) || RegExp(r'^(?=.*?[a-z])').hasMatch(value) || RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
-                                                return 'Invalid';
-                                              } else {
-                                                try {
-                                                  final numericValue = double.tryParse(value.replaceAll(',', '.').trim());
-                                                  if (numericValue == null || numericValue <= 0) {
-                                                    return 'Invalid';
-                                                  }
-                                                } catch (e) {
+                                ),
+                                h20,
+                                Text('Weight',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                                h10,
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 18.w),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextFormField(
+                                          autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return 'Required';
+                                            } else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value) || RegExp(r'^(?=.*?[a-z])').hasMatch(value) || RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
+                                              return 'Invalid';
+                                            } else {
+                                              try {
+                                                final numericValue = double.tryParse(value.replaceAll(',', '.').trim());
+                                                if (numericValue == null || numericValue <= 0) {
                                                   return 'Invalid';
                                                 }
-                                                return null;
+                                              } catch (e) {
+                                                return 'Invalid';
                                               }
-                                            },
-                                            controller: _weightController,
-                                            keyboardType: TextInputType.numberWithOptions(decimal: true),
-                                            style: getMediumStyle(color: ColorManager.black),
-                                            decoration: InputDecoration(
-                                              filled: true,
-                                              fillColor: ColorManager.dotGrey.withOpacity(0.2),
-                                              enabledBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: ColorManager.black.withOpacity(0.5)
-                                                  )
-                                              ),
-
-                                              border: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: ColorManager.black.withOpacity(0.5)
-                                                  )
-                                              ),
-
+                                              return null;
+                                            }
+                                          },
+                                          controller: _weightController,
+                                          keyboardType: TextInputType.numberWithOptions(decimal: true),
+                                          style: getMediumStyle(color: ColorManager.black,fontSize: 16),
+                                          decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: ColorManager.black.withOpacity(0.5)
+                                                )
                                             ),
+
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: ColorManager.black.withOpacity(0.5)
+                                                )
+                                            ),
+
                                           ),
                                         ),
-                                        w05,
-                                        Text('in Kgs')
-                                      ],
-                                    ),
+                                      ),
+                                      w05,
+                                      Text('in Kgs')
+                                    ],
                                   ),
+                                ),
 
 
-                                ],
-                              ),
+                              ],
                             ),
                           ),
                           h10,
@@ -438,53 +435,51 @@ class _BMRState extends State<BMR> {
                                 unit == 1
                                     ?Container(
                                   padding: EdgeInsets.symmetric(horizontal: 18.w),
-                                  child:  Expanded(
-                                    child: TextFormField(
-                                      autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
-                                      validator: (value){
-                                        if (value == null || value.isEmpty) {
-                                          return 'Required';
-                                        } else {
-                                          try {
-                                            double parsedValue = double.parse(value);
-                                            if (parsedValue >= maxHeight || parsedValue < minHeight) {
-                                              return 'Invalid';
-                                            }
-                                          } catch (e) {
+                                  child:  TextFormField(
+                                    autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                                    validator: (value){
+                                      if (value == null || value.isEmpty) {
+                                        return 'Required';
+                                      } else {
+                                        try {
+                                          double parsedValue = double.parse(value);
+                                          if (parsedValue >= maxHeight || parsedValue < minHeight) {
                                             return 'Invalid';
                                           }
+                                        } catch (e) {
+                                          return 'Invalid';
                                         }
-                                        return null;
-                                      },
-                                      onChanged: (value){
-                                        setState(() {
-                                          _value = double.parse(value);
-                                        });
-                                      },
-                                      controller: _cmController,
-                                      keyboardType: TextInputType.number,
-                                      style: getMediumStyle(color: ColorManager.black),
-                                      decoration: InputDecoration(
-                                          filled: true,
-                                          fillColor: ColorManager.dotGrey.withOpacity(0.2),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: ColorManager.black.withOpacity(0.5)
-                                              )
-                                          ),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: ColorManager.black.withOpacity(0.5)
-                                              )
-                                          ),
-                                          labelText: 'cm'
+                                      }
+                                      return null;
+                                    },
+                                    onChanged: (value){
+                                      setState(() {
+                                        _value = double.parse(value);
+                                      });
+                                    },
+                                    controller: _cmController,
+                                    keyboardType: TextInputType.number,
+                                    style: getMediumStyle(color: ColorManager.black,fontSize: 16),
+                                    decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: ColorManager.black.withOpacity(0.5)
+                                            )
+                                        ),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: ColorManager.black.withOpacity(0.5)
+                                            )
+                                        ),
+                                        labelText: 'cm'
 
 
-                                      ),
-                                      inputFormatters: [
-                                        LengthLimitingTextInputFormatter(6)
-                                      ],
                                     ),
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(6)
+                                    ],
                                   ),
                                 )
                                     :Container(
@@ -513,7 +508,7 @@ class _BMRState extends State<BMR> {
                                           },
                                           controller: _ftController, // Controller for feet
                                           keyboardType: TextInputType.number,
-                                          style: getMediumStyle(color: ColorManager.black),
+                                          style: getMediumStyle(color: ColorManager.black,fontSize: 16),
                                           decoration: InputDecoration(
                                               filled: true,
                                               fillColor: ColorManager.dotGrey.withOpacity(0.2),
@@ -562,7 +557,7 @@ class _BMRState extends State<BMR> {
                                           },
                                           controller: _inchController, // Controller for inches
                                           keyboardType: TextInputType.number,
-                                          style: getMediumStyle(color: ColorManager.black),
+                                          style: getMediumStyle(color: ColorManager.black,fontSize: 16),
                                           decoration: InputDecoration(
                                             filled: true,
                                             fillColor: ColorManager.dotGrey.withOpacity(0.2),
@@ -648,7 +643,7 @@ class _BMRState extends State<BMR> {
                       //     )
                       //   )
                       // ),
-                      height: MediaQuery.of(context).size.height*1.3/2,
+                      height: MediaQuery.of(context).size.height*1.6/2,
                       child: Container(
                         margin: EdgeInsets.only(right: 12.w,top: 8.h),
                         padding: EdgeInsets.only(bottom: 8.w),

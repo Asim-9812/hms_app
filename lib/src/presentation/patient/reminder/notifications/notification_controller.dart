@@ -235,6 +235,12 @@ class NotificationController {
         repeatNotif: false);
   }
 
+
+  static Future<void> cancelNotifications({
+    required int id
+}) async {
+    await AwesomeNotifications().cancel(id);
+  }
 }
 
 Future<void> myNotifyMedSchedule({
@@ -263,7 +269,7 @@ Future<void> myNotifyMedSchedule({
           // schedule: NotificationCalendar.fromDate(
           //    date: DateTime.now().add(const Duration(seconds: 10))),
           content: NotificationContent(
-            id: -1,
+            id: reminder.reminderId,
             channelKey: 'alerts',
             title: '${Emojis.medical_pill} ${reminder.medicineName} ${reminder.strength} ${reminder.unit}',
             body: 'Time for your medicine',
@@ -313,7 +319,7 @@ Future<void> myNotifyMedSchedule({
             // schedule: NotificationCalendar.fromDate(
             //    date: DateTime.now().add(const Duration(seconds: 10))),
             content: NotificationContent(
-              id: -1,
+              id: reminder.reminderId,
               channelKey: 'alerts',
               title: '${Emojis.medical_pill} Reminder!!!',
               body: 'Time for your medicine',
@@ -364,7 +370,7 @@ Future<void> myNotifyMedSchedule({
           // schedule: NotificationCalendar.fromDate(
           //    date: DateTime.now().add(const Duration(seconds: 10))),
           content: NotificationContent(
-            id: -1,
+            id: reminder.reminderId,
             channelKey: 'alerts',
             title: '${Emojis.medical_pill} Reminder!!!',
             body: 'Time for your medicine',
@@ -429,7 +435,7 @@ Future<void> myNotifyGeneralSchedule({
               repeats: false
           ),
           content: NotificationContent(
-            id: -1,
+            id: reminder.reminderId,
             channelKey: 'alerts',
             title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
             body: '${reminder.description}',
@@ -468,7 +474,7 @@ Future<void> myNotifyGeneralSchedule({
               repeats: false
           ),
           content: NotificationContent(
-            id: -1,
+            id: reminder.reminderId,
             channelKey: 'alerts',
             title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
             body: '${reminder.description}',
@@ -507,7 +513,7 @@ Future<void> myNotifyGeneralSchedule({
               repeats: false
           ),
           content: NotificationContent(
-            id: -1,
+            id: reminder.reminderId,
             channelKey: 'alerts',
             title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
             body: '${reminder.description}',
@@ -543,7 +549,7 @@ Future<void> myNotifyGeneralSchedule({
       // schedule: NotificationCalendar.fromDate(
       //    date: DateTime.now().add(const Duration(seconds: 10))),
       content: NotificationContent(
-        id: -1,
+        id: reminder.reminderId,
         channelKey: 'alerts',
         title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
         body: '${reminder.description}',
@@ -587,7 +593,7 @@ Future<void> myNotifyGeneralSchedule({
             repeats: true
           ),
           content: NotificationContent(
-            id: -1,
+            id: reminder.reminderId,
             channelKey: 'alerts',
             title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
             body: '${reminder.description}',
@@ -626,7 +632,7 @@ Future<void> myNotifyGeneralSchedule({
               repeats: true
           ),
           content: NotificationContent(
-            id: -1,
+            id: reminder.reminderId,
             channelKey: 'alerts',
             title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
             body: '${reminder.description}',
@@ -665,7 +671,7 @@ Future<void> myNotifyGeneralSchedule({
               repeats: true
           ),
           content: NotificationContent(
-            id: -1,
+            id: reminder.reminderId,
             channelKey: 'alerts',
             title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
             body: '${reminder.description}',
@@ -703,7 +709,7 @@ Future<void> myNotifyGeneralSchedule({
       // schedule: NotificationCalendar.fromDate(
       //    date: DateTime.now().add(const Duration(seconds: 10))),
       content: NotificationContent(
-        id: -1,
+        id: reminder.reminderId,
         channelKey: 'alerts',
         title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
         body: '${reminder.description}',
@@ -749,7 +755,7 @@ Future<void> myNotifyGeneralSchedule({
             // schedule: NotificationCalendar.fromDate(
             //    date: DateTime.now().add(const Duration(seconds: 10))),
             content: NotificationContent(
-              id: -1,
+              id: reminder.reminderId,
               channelKey: 'alerts',
               title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
               body: '${reminder.description}',
@@ -798,7 +804,7 @@ Future<void> myNotifyGeneralSchedule({
           // schedule: NotificationCalendar.fromDate(
           //    date: DateTime.now().add(const Duration(seconds: 10))),
           content: NotificationContent(
-            id: -1,
+            id: reminder.reminderId,
             channelKey: 'alerts',
             title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
             body: '${reminder.description}',

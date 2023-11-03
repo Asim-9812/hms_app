@@ -3,7 +3,9 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
@@ -46,6 +48,7 @@ class _PatientReportPageDoctorState extends State<PatientReportPageDoctor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DataTable(
@@ -107,11 +110,58 @@ class _PatientReportPageDoctorState extends State<PatientReportPageDoctor> {
       ),
       body: Column(
         children: [
+          h10,
+          _patientGraph(),
+          h20,
           _patientTable()
         ],
       ),
     );
   }
+
+
+  Widget _patientGraph(){
+    return Container(
+      height: 300.h,
+      padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 8.h),
+      margin: EdgeInsets.symmetric(horizontal: 18.w),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+              color: ColorManager.black.withOpacity(0.5)
+          )
+      ),
+      child: SfCartesianChart(
+        zoomPanBehavior: ZoomPanBehavior(
+          enablePinching: true,
+          enablePanning: true,
+          zoomMode: ZoomMode.xy,
+        ),
+        legend: Legend(
+            isVisible: true,
+            position: LegendPosition.top
+        ),
+        title: ChartTitle(text: 'Patient Stats',alignment:ChartAlignment.near ),
+        primaryXAxis: CategoryAxis(),
+        series: <ChartSeries>[
+          LineSeries<Map<String, dynamic>, String>(
+            dataSource: newPatientsData,
+            xValueMapper: (Map<String, dynamic> data, _) => data['date']!,
+            yValueMapper: (Map<String, dynamic> data, _) => double.parse(data['total']!.toString()),
+            name: 'New Patients',
+          ),
+          LineSeries<Map<String, dynamic>, String>(
+            dataSource: followUpsData,
+            xValueMapper: (Map<String, dynamic> data, _) => data['date']!,
+            yValueMapper: (Map<String, dynamic> data, _) => double.parse(data['total']!.toString()),
+            name: 'Follow-ups',
+          ),
+        ],
+        tooltipBehavior: TooltipBehavior(enable: true),
+      ),
+    );
+  }
+
 
 
 }

@@ -155,7 +155,7 @@ class _IBWState extends State<IBW> {
                 children: [
 
                   Container(
-                    height: MediaQuery.of(context).size.height*1.3/2,
+                    height: MediaQuery.of(context).size.height*1.6/2,
                     width: MediaQuery.of(context).size.width*0.8/2,
                     padding: EdgeInsets.only(left: 8.w,top: 8.h,right: 8.w),
                     child: Form(
@@ -267,53 +267,51 @@ class _IBWState extends State<IBW> {
                                 unit == 1
                                     ?Container(
                                   padding: EdgeInsets.symmetric(horizontal: 18.w),
-                                  child:  Expanded(
-                                    child: TextFormField(
-                                      autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
-                                      validator: (value){
-                                        if (value == null || value.isEmpty) {
-                                          return 'Required';
-                                        } else {
-                                          try {
-                                            double parsedValue = double.parse(value);
-                                            if (parsedValue >= maxHeight || parsedValue < minHeight) {
-                                              return 'Invalid';
-                                            }
-                                          } catch (e) {
+                                  child:  TextFormField(
+                                    autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                                    validator: (value){
+                                      if (value == null || value.isEmpty) {
+                                        return 'Required';
+                                      } else {
+                                        try {
+                                          double parsedValue = double.parse(value);
+                                          if (parsedValue > maxHeight || parsedValue < minHeight) {
                                             return 'Invalid';
                                           }
+                                        } catch (e) {
+                                          return 'Invalid';
                                         }
-                                        return null;
-                                      },
-                                      onChanged: (value){
-                                        setState(() {
-                                          _value = double.parse(value);
-                                        });
-                                      },
-                                      controller: _cmController,
-                                      keyboardType: TextInputType.number,
-                                      style: getMediumStyle(color: ColorManager.black),
-                                      decoration: InputDecoration(
-                                          filled: true,
-                                          fillColor: ColorManager.dotGrey.withOpacity(0.2),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: ColorManager.black.withOpacity(0.5)
-                                              )
-                                          ),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: ColorManager.black.withOpacity(0.5)
-                                              )
-                                          ),
-                                          labelText: 'cm'
+                                      }
+                                      return null;
+                                    },
+                                    onChanged: (value){
+                                      setState(() {
+                                        _value = double.parse(value);
+                                      });
+                                    },
+                                    controller: _cmController,
+                                    keyboardType: TextInputType.number,
+                                    style: getMediumStyle(color: ColorManager.black,fontSize: 16),
+                                    decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: ColorManager.black.withOpacity(0.5)
+                                            )
+                                        ),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: ColorManager.black.withOpacity(0.5)
+                                            )
+                                        ),
+                                        labelText: 'cm'
 
 
-                                      ),
-                                      inputFormatters: [
-                                        LengthLimitingTextInputFormatter(6)
-                                      ],
                                     ),
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(6)
+                                    ],
                                   ),
                                 )
                                     :Container(
@@ -342,7 +340,7 @@ class _IBWState extends State<IBW> {
                                           },
                                           controller: _ftController, // Controller for feet
                                           keyboardType: TextInputType.number,
-                                          style: getMediumStyle(color: ColorManager.black),
+                                          style: getMediumStyle(color: ColorManager.black,fontSize: 16),
                                           decoration: InputDecoration(
                                               filled: true,
                                               fillColor: ColorManager.dotGrey.withOpacity(0.2),
@@ -391,7 +389,7 @@ class _IBWState extends State<IBW> {
                                           },
                                           controller: _inchController, // Controller for inches
                                           keyboardType: TextInputType.number,
-                                          style: getMediumStyle(color: ColorManager.black),
+                                          style: getMediumStyle(color: ColorManager.black,fontSize: 16),
                                           decoration: InputDecoration(
                                             filled: true,
                                             fillColor: ColorManager.dotGrey.withOpacity(0.2),
@@ -494,7 +492,7 @@ class _IBWState extends State<IBW> {
                       //     )
                       //   )
                       // ),
-                      height: MediaQuery.of(context).size.height*1.3/2,
+                      height: MediaQuery.of(context).size.height*1.6/2,
                       child: Container(
                         margin: EdgeInsets.only(right: 12.w,top: 8.h),
                         padding: EdgeInsets.only(bottom: 8.w),
