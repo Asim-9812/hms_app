@@ -22,9 +22,6 @@ class EDD extends StatefulWidget {
 }
 
 class _EDDState extends State<EDD> {
-  final TextEditingController? _dayController = TextEditingController();
-  final TextEditingController? _monthController = TextEditingController();
-  final TextEditingController? _yearController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? calculatedEDD;
   String? calculatedNepEDD;
@@ -180,8 +177,11 @@ class _EDDState extends State<EDD> {
                       height: 50,
                       width: 200,
                       decoration: BoxDecoration(
-                          color: ColorManager.lightBlueAccent.withOpacity(0.7),
-                          borderRadius: BorderRadius.circular(10)
+                          // color: ColorManager.lightBlueAccent.withOpacity(0.7),
+                          borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: ColorManager.black
+                        )
                       ),
                       child: Align(
                         alignment: Alignment.center,
@@ -341,7 +341,17 @@ class _EDDState extends State<EDD> {
                             style: getMediumStyle(color: ColorManager.primaryDark, fontSize: 18),
                           ),
                           SizedBox(height: 30.h),
+                          Text(
+                            'Estimated Due Date Range :',
+                            style: getMediumStyle(color: ColorManager.black, fontSize: 18),
+                          ),
+                          SizedBox(height: 10.h),
                           Text(calculateEDDRange(),style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                          SizedBox(height: 30.h),
+                          Text(
+                            'Disclaimer :',
+                            style: getMediumStyle(color: ColorManager.black, fontSize: 18),
+                          ),
                           SizedBox(height: 10.h),
                           Text(
                             'Please note that due dates are estimates and can vary for each individual. Factors such as menstrual cycle length, ovulation, and other medical considerations can influence the actual delivery date. Consult with a healthcare professional for personalized guidance.',
@@ -369,7 +379,17 @@ class _EDDState extends State<EDD> {
                             style: getMediumStyle(color: ColorManager.primaryDark, fontSize: 18),
                           ),
                           SizedBox(height: 30.h),
+                          Text(
+                            'Estimated Due Date Range:',
+                            style: getMediumStyle(color: ColorManager.black, fontSize: 18),
+                          ),
+                          SizedBox(height: 10.h),
                           Text(calculateNepEDDRange(),style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                          SizedBox(height: 30.h),
+                          Text(
+                            'Disclaimer :',
+                            style: getMediumStyle(color: ColorManager.black, fontSize: 18),
+                          ),
                           SizedBox(height: 10.h),
                           Text(
                             'Please note that due dates are estimates and can vary for each individual. Factors such as menstrual cycle length, ovulation, and other medical considerations can influence the actual delivery date. Consult with a healthcare professional for personalized guidance.',

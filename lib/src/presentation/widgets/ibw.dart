@@ -1,62 +1,55 @@
-import 'package:flutter/cupertino.dart';
+
+
+
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
-
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 import '../../core/resources/style_manager.dart';
 import '../../core/resources/value_manager.dart';
 import 'list_of_bmi_category/bmi_list.dart';
 
-
 class IBW extends StatefulWidget {
+  const IBW({super.key});
+
   @override
-  IBWState createState() => IBWState();
+  State<IBW> createState() => _IBWState();
 }
 
-class IBWState extends State<IBW> {
-  double _linePositionY = 200.0;
-  double y = 0.4; // Initial Y position of the line
-  int selectedOption = 1;
-  final TextEditingController weightController = TextEditingController();
-  final TextEditingController ageController = TextEditingController();
-  // final TextEditingController feetController = TextEditingController();
-  // final TextEditingController inchController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-  bool isLoading = false;
+class _IBWState extends State<IBW> {
+
+
+
+
   double result = 0.0;
-  List bmiList = bmiCategories;
-  int category = 0;
-  int unit =1;
-  int invalidType = 0;
+
+  double minHeight = 91.44;
+  double maxHeight = 243.84;
+  double _value = (243.84+91.44)/2; //initial value i.e. avg of max and min height
+
+  int gender = 1;
+
   bool disableValidate = true;
 
-  double _calculateHeight(double y){
-    double res = 10 - (y * 10).toPrecision(1);
-    return res;
-  }
-
-  double _convertCM(double y){
-    double res = 11.75*y+55.75 ;
-    return res;
-  }
+  int unit =1;
 
 
-  int _calculateIBW({
-    required double h,
-    required double g
-  }) {
-    double m = g + 0.9 * (h-152.4);
-    setState(() {
-      result = m;
-      isLoading = false;
-    });
-    return m.round();
-  }
+  List bmiList = bmiCategories;
 
+
+  final _formKey = GlobalKey<FormState>();
+
+
+  TextEditingController _ageController = TextEditingController();
+  TextEditingController _weightController = TextEditingController();
+  TextEditingController _cmController = TextEditingController();
+  TextEditingController _ftController = TextEditingController();
+  TextEditingController _inchController = TextEditingController();
 
 
   (String,int,int) _convertCmToFeetAndInches(double cm) {
@@ -67,16 +60,23 @@ class IBWState extends State<IBW> {
     return ('$feet\'$inches"',feet,inches);
   }
 
-  double convertFeetAndInchesToCm(int feet, int inches) {
-    double totalCm = (feet * 30.48) + (inches * 2.54);
-    return totalCm;
+
+  int _calculateIBW({
+    required double h,
+    required double g
+  }) {
+    double m = g + 0.9 * (h-152.4);
+    setState(() {
+      result = m;
+    });
+    return m.round();
   }
 
 
 
 
 
-  Future<void> _showDialog(int height,bool isWideScreen,bool isNarrowScreen) async {
+  Future<void> _showDialog(int weight) async {
 
     showDialog(
         context: context,
@@ -96,7 +96,7 @@ class IBWState extends State<IBW> {
                 children: [
                   Text('Your Ideal Body Weight is',style: getMediumStyle(color: Colors.black),),
                   h20,
-                  Text('$height Kg',style: getMediumStyle(color: Colors.black),),
+                  Text('$weight Kg',style: getMediumStyle(color: Colors.black),),
                   h20,
                   h20,
                   Text('Please keep in mind that this is an approximate estimate and individual factors may vary.',style: getRegularStyle(color: ColorManager.black),textAlign: TextAlign.justify,)
@@ -112,7 +112,6 @@ class IBWState extends State<IBW> {
                   ),
                   onPressed: () {
                     setState(() {
-                      isLoading = false;
                       _formKey.currentState!.reset();
                       disableValidate = true;
                     });
@@ -128,34 +127,20 @@ class IBWState extends State<IBW> {
 
   }
 
-  bool weightValid = true;
-  bool ageValid = true;
+
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-
-    // Check if width is greater than height
-    bool isWideScreen = screenSize.width > 500;
-    bool isNarrowScreen = screenSize.width < 420;
-
-    double fontSize = isWideScreen?14: 14.sp;
-    double height = _calculateHeight(y);
-    double heightCM = _convertCM(height);
-    double convertToCm = convertFeetAndInchesToCm(_convertCmToFeetAndInches(heightCM).$2,_convertCmToFeetAndInches(heightCM).$3);
-    double size = isWideScreen? ((_calculateHeight(y).toPrecision(1) * 25)+40):((_calculateHeight(y).toPrecision(1) * 25)+40).sp;
-    (size);
-    // Get the screen size
-
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
+      onTap: ()=>FocusScope.of(context).unfocus(),
       child: Scaffold(
+        backgroundColor: ColorManager.white.withOpacity(0.9),
         appBar: AppBar(
           elevation: 3,
           backgroundColor: ColorManager.primary,
           title: Text('IBW Calculator'),
-          centerTitle: true,
           titleTextStyle: getMediumStyle(color: ColorManager.white),
+          centerTitle: true,
           leading: IconButton(
             onPressed: ()=>Get.back(),
             icon: FaIcon(Icons.chevron_left,color: ColorManager.white,),
@@ -164,171 +149,274 @@ class IBWState extends State<IBW> {
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
+
             children: [
-              Container(
-                height: MediaQuery.of(context).size.height * 1.4 / 2,
-                child: GestureDetector(
-                  onVerticalDragUpdate: (value) {
-                    double yValue = value.delta.dy;
-                    if ((y > -1.0 && y <= 0.7) || (yValue > 0 && y <= 0.7)) {
-                      // Only allow dragging if y is in the range of -0.1 to 0.5
-                      setState(() {
-                        y += yValue * 0.004;
+              Row(
+                children: [
 
-                        // Limit y within the range of -0.1 to 0.5
-                        y = y.clamp(-1.0, 0.7);
+                  Container(
+                    height: MediaQuery.of(context).size.height*1.3/2,
+                    width: MediaQuery.of(context).size.width*0.8/2,
+                    padding: EdgeInsets.only(left: 8.w,top: 8.h,right: 8.w),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                color: ColorManager.white,
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
 
-
-                      });
-                      // (yValue > 0 ? 'downward' : 'upward');
-                    }
-                  },
-                  child: Row(
-                    children: [
-                      Form(
-                        key:_formKey,
-                        child: Container(
-                          width:MediaQuery.of(context).size.width * 1/ 2 ,
-                          padding: EdgeInsets.symmetric(vertical: 24.h),
-                          height: MediaQuery.of(context).size.height ,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text('Gender',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
-                              h20,
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-
-                                  Container(
-                                    height: 100,
-                                    width: 90.w,
-                                    child: InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          selectedOption = 1;
-                                        });
-                                      },
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              border: Border.all(color: selectedOption == 1 ? ColorManager.primaryDark : ColorManager.dotGrey),
-                                              shape: BoxShape.circle,
-                                              color: selectedOption == 1 ? ColorManager.primary : Colors.transparent,
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Image.asset(
-                                                'assets/icons/man.png',
-                                                width: 40,
-                                                height: 40,
-                                              ),
-                                            ),
-                                          ),
-                                          h10,
-                                          Text(
-                                            'Male',
-                                            style: getRegularStyle(color: selectedOption == 1 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  w05,
-                                  Container(
-                                    height: 100,
-                                    width: 90.w,
-                                    child: InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          selectedOption = 2;
-                                        });
-                                      },
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              border: Border.all(color: selectedOption == 2 ? ColorManager.primaryDark : ColorManager.dotGrey),
-                                              shape: BoxShape.circle,
-                                              color: selectedOption ==2 ? ColorManager.primary : Colors.transparent,
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Image.asset(
-                                                'assets/icons/woman.png',
-                                                width: 40,
-                                                height: 40,
-                                              ),
-                                            ),
-                                          ),
-                                          h10,
-                                          Text(
-                                            'Female',
-                                            style: getRegularStyle(color: selectedOption == 2 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-
-                                ],
-                              ),
-                              h20,
-                              Text('Age',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
-                              h10,
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 18.w),
-                                child: Row(
+                            child: Column(
+                              children: [
+                                Text('Gender',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                                h20,
+                                Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Expanded(
-                                      child: TextFormField(
-                                        autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
-                                        validator: (value){
-                                          if(value!.isEmpty){
-                                            return 'Required';
-                                          }
-                                          else if (int.tryParse(value) == null || int.parse(value) <= 0) {
-                                            return 'Invalid';
-                                          }
 
-                                          else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                                            return 'Invalid';
-                                          }
-                                          else if (int.parse(value) <= 0){
-                                            return 'Invalid';
-                                          }
-                                          else{
-
-                                            return null;
-                                          }
+                                    Container(
+                                      child: InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            gender = 1;
+                                          });
                                         },
-                                        controller: ageController,
-                                        keyboardType: TextInputType.numberWithOptions(decimal: true),
-                                        style: getMediumStyle(color: ColorManager.black),
-                                        decoration: InputDecoration(
-                                            filled: true,
-                                            fillColor: ColorManager.dotGrey.withOpacity(0.2),
-                                            border: OutlineInputBorder(
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                border: Border.all(color: gender ==1 ? ColorManager.primary: ColorManager.dotGrey),
+                                                shape: BoxShape.circle,
+                                                color: gender ==1 ?ColorManager.primary :Colors.transparent,
+                                              ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Image.asset(
+                                                  'assets/icons/man.png',
+                                                  width: 40,
+                                                  height: 40,
+                                                ),
+                                              ),
+                                            ),
+                                            h10,
+                                            Text(
+                                              'Male',
+                                              style: getRegularStyle(color:gender ==1 ?ColorManager.black:  ColorManager.textGrey, fontSize: 16),
                                             )
+                                          ],
                                         ),
                                       ),
                                     ),
                                     w10,
-                                    Text('yrs old')
+                                    Container(
+                                      child: InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            gender = 2;
+                                          });
+                                        },
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                border: Border.all(color: gender ==2 ? ColorManager.primary: ColorManager.dotGrey),
+                                                shape: BoxShape.circle,
+                                                color: gender ==2 ? ColorManager.primary: Colors.transparent,
+                                              ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Image.asset(
+                                                  'assets/icons/woman.png',
+                                                  width: 40,
+                                                  height: 40,
+                                                ),
+                                              ),
+                                            ),
+                                            h10,
+                                            Text(
+                                              'Female',
+                                              style: getRegularStyle(color: gender == 2? ColorManager.black: ColorManager.textGrey, fontSize: 16),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+
                                   ],
                                 ),
-                              ),
-                              h20,
-                              Text('Height',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
-                              h10,
-                              Container(
-                                margin: EdgeInsets.symmetric(horizontal: 18.w),
-                                color: ColorManager.dotGrey.withOpacity(0.2),
-                                padding:EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h) ,
-                                child: Row(
+                              ],
+                            ),
+                          ),
+                          h10,
+                          Container(
+                            decoration: BoxDecoration(
+                                color: ColorManager.white,
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
+                            child: Column(
+                              children: [
+                                Text('Height',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                                h10,
+                                unit == 1
+                                    ?Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 18.w),
+                                  child:  Expanded(
+                                    child: TextFormField(
+                                      autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                                      validator: (value){
+                                        if (value == null || value.isEmpty) {
+                                          return 'Required';
+                                        } else {
+                                          try {
+                                            double parsedValue = double.parse(value);
+                                            if (parsedValue >= maxHeight || parsedValue < minHeight) {
+                                              return 'Invalid';
+                                            }
+                                          } catch (e) {
+                                            return 'Invalid';
+                                          }
+                                        }
+                                        return null;
+                                      },
+                                      onChanged: (value){
+                                        setState(() {
+                                          _value = double.parse(value);
+                                        });
+                                      },
+                                      controller: _cmController,
+                                      keyboardType: TextInputType.number,
+                                      style: getMediumStyle(color: ColorManager.black),
+                                      decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: ColorManager.black.withOpacity(0.5)
+                                              )
+                                          ),
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: ColorManager.black.withOpacity(0.5)
+                                              )
+                                          ),
+                                          labelText: 'cm'
+
+
+                                      ),
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(6)
+                                      ],
+                                    ),
+                                  ),
+                                )
+                                    :Container(
+                                  // padding: EdgeInsets.symmetric(horizontal: 18.w),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextFormField(
+                                          autovalidateMode: disableValidate ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                                          validator: (value) {
+                                            if (value == null || value.isEmpty) {
+                                              return 'Required';
+                                            }
+                                            if (!value.contains(RegExp(r'^\d+$'))) {
+                                              return 'Invalid';
+                                            }
+                                            if(int.parse(value) > 8){
+                                              return 'Invalid';
+                                            }
+                                            return null;
+                                          },
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _value = (int.parse(_ftController.text) * 30.48) + ((_inchController.text.isNotEmpty ? int.parse(_inchController.text) : 0) * 2.54);
+                                            });
+                                          },
+                                          controller: _ftController, // Controller for feet
+                                          keyboardType: TextInputType.number,
+                                          style: getMediumStyle(color: ColorManager.black),
+                                          decoration: InputDecoration(
+                                              filled: true,
+                                              fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: ColorManager.black.withOpacity(0.5),
+                                                ),
+                                              ),
+                                              border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: ColorManager.black.withOpacity(0.5),
+                                                ),
+                                              ),
+                                              labelText: 'ft'
+                                          ),
+                                          inputFormatters: [
+                                            LengthLimitingTextInputFormatter(2),
+                                          ],
+                                        ),
+                                      ),
+                                      w10,
+                                      Expanded(
+                                        child: TextFormField(
+                                          autovalidateMode: disableValidate ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                                          validator: (value) {
+                                            if (value == null || value.isEmpty) {
+                                              return 'Required';
+                                            }
+                                            if (!value.contains(RegExp(r'^\d+$'))) {
+                                              return 'Invalid';
+                                            }
+                                            if(int.parse(value) > 11){
+                                              return 'Invalid';
+                                            }
+                                            if(_ftController.text.isNotEmpty){
+                                              if(int.parse(_ftController.text)== 8 && int.parse(_inchController.text)>0){
+                                                return 'Invalid';
+                                              }
+                                            }
+                                            return null;
+                                          },
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _value = (int.parse(_ftController.text) * 30.48) + (int.parse(_inchController.text) * 2.54);
+                                            });
+                                          },
+                                          controller: _inchController, // Controller for inches
+                                          keyboardType: TextInputType.number,
+                                          style: getMediumStyle(color: ColorManager.black),
+                                          decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: ColorManager.black.withOpacity(0.5),
+                                              ),
+                                            ),
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: ColorManager.black.withOpacity(0.5),
+                                              ),
+                                            ),
+                                            labelText: 'in',
+                                          ),
+                                          inputFormatters: [
+                                            LengthLimitingTextInputFormatter(2),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                h10,
+                                Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
@@ -367,187 +455,114 @@ class IBWState extends State<IBW> {
                                       ),
                                     ),
                                   ],
-                                ),
-                              ),
+                                )
+                              ],
+                            ),
 
-                            ],
                           ),
-                        ),
-                      ),
-                      Container(
-                        width:MediaQuery.of(context).size.width * 1/ 2 ,
-                        padding: EdgeInsets.symmetric(vertical: 24.h),
-                        height: MediaQuery.of(context).size.height ,
-                        decoration: BoxDecoration(
-                            color: ColorManager.primary,
-                            border: BorderDirectional(
-                              start: BorderSide(
-                                color: ColorManager.primaryDark,
-                              ),
-                              bottom: BorderSide(
-                                  color: ColorManager.primaryDark
-                              ),
-
+                          h10,
+                          Container(
+                            decoration: BoxDecoration(
+                                color: ColorManager.white,
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
+                            child: Column(
+                              children: [
+                                Text('Disclaimer',style: getMediumStyle(color: ColorManager.black,fontSize: 18.sp),),
+                                h10,
+                                Text('The IBW calculator provided is for informational purposes only and should not be used as a substitute for professional medical advice; consult with a healthcare professional for personalized guidance.'
+                                  ,maxLines: null,style: getRegularStyle(color: ColorManager.black,fontSize: 16.sp,),textAlign: TextAlign.justify,),
+                              ],
                             )
-                        ),
-                        child: Container(
-                          color: ColorManager.white,
-                          child: Stack(
-                            children: [
 
-                              Align(
-                                alignment: Alignment.bottomLeft,
-                                child:  Container(
-                                  width: 50,
-                                  height: MediaQuery.of(context).size.height*0.8,
-                                  decoration: BoxDecoration(
-                                      color: ColorManager.primary,
-                                      border: Border.all(
-                                          color: ColorManager.primaryDark
-                                      )
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+
+                      // decoration: BoxDecoration(
+                      //   border: BorderDirectional(
+                      //     start: BorderSide(
+                      //       color: ColorManager.black
+                      //     ),
+                      //     bottom: BorderSide(
+                      //       color: ColorManager.black
+                      //     )
+                      //   )
+                      // ),
+                      height: MediaQuery.of(context).size.height*1.3/2,
+                      child: Container(
+                        margin: EdgeInsets.only(right: 12.w,top: 8.h),
+                        padding: EdgeInsets.only(bottom: 8.w),
+                        decoration: BoxDecoration(
+                            color: ColorManager.white,
+                            borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: Column(
+                          children: [
+                            h10,
+                            Text(unit == 1  ? 'HEIGHT (in cm)':'HEIGHT (in ft)',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                            h10,
+                            Expanded(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SfSlider.vertical(
+                                    activeColor: ColorManager.primary,
+                                    inactiveColor: ColorManager.primary.withOpacity(0.2),
+                                    min: minHeight,
+                                    max: maxHeight,
+                                    value: _value < minHeight? minHeight : _value > maxHeight ? maxHeight : _value,
+                                    interval: 30.48,
+                                    showTicks: true,
+                                    showLabels: true,
+                                    enableTooltip: true,
+                                    labelFormatterCallback: (actualValue, formattedText) => unit == 1 ? '${actualValue.round()}' : '${_convertCmToFeetAndInches(actualValue).$1}',
+                                    tooltipPosition: SliderTooltipPosition.right,
+                                    tooltipTextFormatterCallback: (actualValue, formattedText) => unit == 1 ? '${actualValue.round()} cm' :'${_convertCmToFeetAndInches(actualValue).$1} FT' ,
+                                    minorTicksPerInterval: 1,
+                                    onChanged: (dynamic value) {
+                                      setState(() {
+                                        _value = value;
+                                        _cmController.text = _value.toPrecision(2).toString();
+                                        _ftController.text = _convertCmToFeetAndInches(value).$2.toString();
+                                        _inchController.text = _convertCmToFeetAndInches(value).$3.toString();
+                                      });
+                                    },
                                   ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: List.generate(
-                                      50, // Number of scale divisions
-                                          (index) {
-                                        double position =  index *0.01;
-                                        return Container(
-                                          height: 5,
-                                          color: Colors.white,
-                                          margin: EdgeInsets.only(top: position),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
+                                  w20,
+                                  Image.asset(gender == 1 ?'assets/icons/man.png':'assets/icons/woman.png',width: 150.w,height : _value < 91 ? (91*91/120) : _value > 243 ? (243*243/120) : (_value*_value/120),fit: BoxFit.fitHeight,),
+                                ],
                               ),
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 24.w,vertical: 5.h),
-                                  child: Image.asset(selectedOption == 1 ? 'assets/icons/man.png':'assets/icons/woman.png',width: 120.w,height: size,fit: BoxFit.fitHeight,),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment(0, y*1.03),
-                                child: Container(
-                                  height: 100,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Container(
-                                        color: ColorManager.primary,
-                                        height: 50,
-                                        width: 70,
-                                        child: Center(
-                                          child: Text(unit ==1 ?
-                                          '${ heightCM.toPrecision(1)} cm':'${_convertCmToFeetAndInches(heightCM).$1} ft' ,
-                                            style: getRegularStyle(color: ColorManager.white),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 0.5,
-                                        width: double.infinity,
-                                        color: ColorManager.primaryDark,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
+                            )
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-              h20,
-              Center(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: ColorManager.primary,
-                      fixedSize: Size.fromWidth(250.w)
-                  ),
-                  onPressed: () async {
-                    if(_formKey.currentState!.validate()){
-                      if(ageValid == true && weightValid == true){
-                        if(selectedOption == 1){
-                          if(unit == 1){
-                            int x=  _calculateIBW(h:heightCM.toPrecision(1),g: 50 );
-                            _showDialog(x,isWideScreen,isNarrowScreen);
-                            setState(() {
-                              disableValidate = false;
-                            });
-                            weightController.clear();
-                            ageController.clear();
-                          }
-                          else{
-                            int x=  _calculateIBW( h:convertToCm.toPrecision(1),g: 50 );
-                            _showDialog(x,isWideScreen,isNarrowScreen);
-                            setState(() {
-                              disableValidate = false;
-                            });
-                            weightController.clear();
-                            ageController.clear();
-                          }
-
-                        } else {
-                          if(unit == 1){
-                            int x=  _calculateIBW(h:heightCM.toPrecision(1),g: 45.5 );
-                            _showDialog(x,isWideScreen,isNarrowScreen);
-                            setState(() {
-                              disableValidate = false;
-                            });
-                            weightController.clear();
-                            ageController.clear();
-                          }
-                          else{
-                            int x=  _calculateIBW(h:convertToCm.toPrecision(1),g: 45.5 );
-                            _showDialog(x,isWideScreen,isNarrowScreen);
-                            setState(() {
-                              disableValidate = false;
-                            });
-                            weightController.clear();
-                            ageController.clear();
-                          }
-                        }
-                      }
-
-
-
-                    }
-                  },
-                  child:isLoading? SpinKitDualRing(color: ColorManager.white): Text('Calculate'),
-                ),
+                ],
               ),
               h10,
-              Container(
-                height: 140,
-                padding:EdgeInsets.symmetric(horizontal: 8.w) ,
-                child:  Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        FaIcon(CupertinoIcons.info,color: ColorManager.black,),
-                        w10,
-                        Text('Disclaimer',style: getMediumStyle(color: ColorManager.black,fontSize: 20.sp),)
-                      ],
-                    ),
-                    h10,
-                    Expanded(child: Text('The calculator employs the B.J. Devine Formula (1974) for estimating ideal body weight based on limited input parameters; its results are indicative and not a substitute for professional medical advice.'
-                      ,textAlign: TextAlign.justify,
-                    )),
-                  ],
-                ),
-              )
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: ColorManager.primary,
+                      fixedSize : Size.fromWidth(300.w)
+
+                  ),
+                  onPressed: (){
+                    if(_formKey.currentState!.validate()){
+                      final result = _calculateIBW(h: _value, g: gender==1 ? 50 : 45.5);
+
+                      _showDialog(result);
+                    }
+                  },
+                  child: Text('Calculate',style: TextStyle(color: ColorManager.white),))
+
             ],
           ),
         ),

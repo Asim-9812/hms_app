@@ -22,7 +22,11 @@ class BMI extends StatefulWidget {
 
 class _BMIState extends State<BMI> {
 
-  double _value = (245+91)/2;
+  double minHeight = 91.44;
+  double maxHeight = 243.84;
+  double _value = (243.84+91.44)/2; //initial value i.e. avg of max and min height
+
+
 
 
   double result = 0.0;
@@ -385,6 +389,11 @@ class _BMIState extends State<BMI> {
                                                       color: ColorManager.black.withOpacity(0.5)
                                                   )
                                               ),
+                                              border: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: ColorManager.black.withOpacity(0.5)
+                                                  )
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -432,6 +441,12 @@ class _BMIState extends State<BMI> {
                                                     )
                                                 ),
 
+                                              border: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: ColorManager.black.withOpacity(0.5)
+                                                  )
+                                              ),
+
                                             ),
                                           ),
                                         ),
@@ -469,7 +484,7 @@ class _BMIState extends State<BMI> {
                                         } else {
                                           try {
                                             double parsedValue = double.parse(value);
-                                            if (parsedValue >= 244 || parsedValue < 91) {
+                                            if (parsedValue >= maxHeight || parsedValue < minHeight) {
                                               return 'Invalid';
                                             }
                                           } catch (e) {
@@ -691,9 +706,9 @@ class _BMIState extends State<BMI> {
                                   SfSlider.vertical(
                                     activeColor: ColorManager.primary,
                                     inactiveColor: ColorManager.primary.withOpacity(0.2),
-                                    min: 91.44,
-                                    max: 243.84,
-                                    value: _value < 91? 91.44 : _value > 243 ? 243.84 : _value,
+                                    min: minHeight,
+                                    max: maxHeight,
+                                    value: _value < minHeight? minHeight : _value > maxHeight ? maxHeight : _value,
                                     interval: 30.48,
                                     showTicks: true,
                                     showLabels: true,

@@ -36,7 +36,7 @@ if (keystorePropertiesFile.exists()) {
 
 
 android {
-    namespace "com.searchtech.meroupachar"
+    namespace "com.example.medical_app"
     compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
