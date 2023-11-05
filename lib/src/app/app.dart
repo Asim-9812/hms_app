@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 
 import '../core/resources/route_manager.dart';
-import '../presentation/patient/reminder/notifications/notification_controller.dart';
+import '../presentation/notification_controller/notification_controller.dart';
 
 
 final GlobalKey<ScaffoldMessengerState> snackBarKey =

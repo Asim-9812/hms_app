@@ -19,7 +19,6 @@ import '../../../notices/presentation/notices.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../health_tips/domain/model/health_tips_model.dart';
 import '../../health_tips/domain/services/health_tips_services.dart';
-import '../../reminder/notifications/notification_services.dart';
 import '../../search-near-by/presentation/search_for_page.dart';
 
 

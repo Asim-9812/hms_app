@@ -7,11 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:medical_app/src/presentation/doctor/doctor_tasks/domain/model/task_model.dart';
 import 'package:medical_app/src/presentation/patient/reminder/domain/model/general_reminder_model.dart';
 import 'package:path/path.dart';
 import 'package:snackbar/snackbar.dart';
-import '../../../../app/app.dart';
-import '../domain/model/reminder_model.dart';
+
+import '../../app/app.dart';
+import '../patient/reminder/domain/model/reminder_model.dart';
 
 
 
@@ -209,6 +211,15 @@ class NotificationController {
     if (!isAllowed) return;
 
     await myNotifyGeneralSchedule(
+        reminder: reminder);
+  }
+
+  static Future<void> scheduleTaskNotification({required TaskModel reminder}) async {
+    bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
+    if (!isAllowed) isAllowed = await displayNotificationRationale();
+    if (!isAllowed) return;
+
+    await myNotifyTaskSchedule(
         reminder: reminder);
   }
 
@@ -840,6 +851,8 @@ Future<void> myNotifyGeneralSchedule({
 }
 
 
+
+
 Future<void> snoozeAlarm({
   required int hoursFromNow,
   required String username,
@@ -935,3 +948,51 @@ Future<void> snoozeNotification({
   );
 }
 
+
+
+
+Future<void> myNotifyTaskSchedule({
+  required TaskModel reminder
+}) async {
+
+  DateTime remind = DateFormat('hh:mm a, yyyy-MM-dd').parse(reminder.remindDate!);
+  await AwesomeNotifications().createNotification(
+    schedule:
+    NotificationCalendar(
+        year: remind.year,
+        month: remind.month,
+        day: remind.day,
+        hour: remind.hour,
+        minute: remind.minute,
+        repeats: false
+    ),
+    content: NotificationContent(
+      id: reminder.taskId,
+      channelKey: 'alerts',
+      title: '${reminder.taskName}',
+      body: '${reminder.remindDate}',
+      notificationLayout: NotificationLayout.Default,
+      //actionType : ActionType.DismissAction,
+      color: Colors.black,
+      // category: NotificationCategory.Alarm,
+      backgroundColor: Colors.black,
+      // customSound: 'resource://raw/notif',
+      payload: {'actPag': 'myAct', 'actType': 'medicine'},
+    ),
+    actionButtons: [
+      NotificationActionButton(
+          key: 'SNOOZE2',
+          label: 'Snooze',
+          actionType: ActionType.SilentAction
+      ),
+      NotificationActionButton(
+          key: 'DISMISSED',
+          label: 'Dismiss',
+          actionType: ActionType.DismissAction
+      ),
+    ],
+  );
+
+
+
+}

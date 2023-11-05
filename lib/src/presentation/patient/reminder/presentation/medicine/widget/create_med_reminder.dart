@@ -12,8 +12,6 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_app/src/presentation/patient/reminder/domain/model/reminder_model.dart';
-import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_controller.dart';
-import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_services.dart';
 
 import '../../../../../../core/resources/color_manager.dart';
 import '../../../../../../core/resources/style_manager.dart';
@@ -21,6 +19,7 @@ import '../../../../../../core/resources/value_manager.dart';
 import '../../../../../../data/provider/common_provider.dart';
 import '../../../../../common/snackbar.dart';
 import '../../../../../login/domain/model/user.dart';
+import '../../../../../notification_controller/notification_controller.dart';
 import '../../../data/reminder_db.dart';
 
 

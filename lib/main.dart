@@ -3,11 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:medical_app/src/app/app.dart';
+import 'package:medical_app/src/presentation/doctor/doctor_tasks/domain/model/task_model.dart';
 import 'package:medical_app/src/presentation/login/domain/model/user.dart';
+import 'package:medical_app/src/presentation/notification_controller/notification_controller.dart';
 import 'package:medical_app/src/presentation/patient/calories/model/calorie_model.dart';
 import 'package:medical_app/src/presentation/patient/reminder/domain/model/general_reminder_model.dart';
 import 'package:medical_app/src/presentation/patient/reminder/domain/model/reminder_model.dart';
-import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_controller.dart';
 // import 'package:timezone/data/latest.dart' as tz;
 
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
@@ -74,6 +75,9 @@ Future<void> main() async {
   Hive.registerAdapter<ReminderPattern>(ReminderPatternAdapter());
   Hive.registerAdapter(GeneralReminderModelAdapter());
   Hive.registerAdapter(InitialReminderAdapter());
+  Hive.registerAdapter(TaskModelAdapter());
+
+
 
   final userBox = await Hive.openBox<String>('user1');
   await Hive.openBox<String>('tokenBox');
@@ -81,6 +85,7 @@ Future<void> main() async {
   await Hive.openBox('user');
   await Hive.openBox<Reminder>('med_reminder');
   await Hive.openBox<GeneralReminderModel>('general_reminder_box');
+  await Hive.openBox<TaskModel>('doc_tasks');
   runApp(ProviderScope(
       overrides: [
         box.overrideWithValue(userBox.get('userData')),

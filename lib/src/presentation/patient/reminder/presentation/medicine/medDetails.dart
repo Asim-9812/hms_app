@@ -11,12 +11,12 @@ import 'package:image/image.dart' as img;
 import 'package:intl/intl.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:medical_app/src/presentation/patient/reminder/domain/model/reminder_model.dart';
-import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_controller.dart';
 import 'package:medical_app/src/presentation/patient/reminder/presentation/medicine/widget/edit_med_page.dart';
 
 import '../../../../../core/resources/color_manager.dart';
 import '../../../../../core/resources/style_manager.dart';
 import '../../../../../core/resources/value_manager.dart';
+import '../../../../notification_controller/notification_controller.dart';
 import '../../data/reminder_db.dart';
 
 class MedDetails extends StatefulWidget {

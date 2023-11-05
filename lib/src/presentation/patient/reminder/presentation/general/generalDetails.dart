@@ -13,7 +13,7 @@ import 'package:medical_app/src/presentation/patient/reminder/presentation/gener
 import '../../../../../core/resources/color_manager.dart';
 import '../../../../../core/resources/style_manager.dart';
 import '../../../../../core/resources/value_manager.dart';
-import '../../notifications/notification_controller.dart';
+import '../../../../notification_controller/notification_controller.dart';
 
 class GeneralDetails extends StatefulWidget {
   final GeneralReminderModel reminder;

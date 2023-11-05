@@ -16,8 +16,8 @@ import '../../../../../../core/resources/style_manager.dart';
 import '../../../../../../core/resources/value_manager.dart';
 import '../../../../../common/snackbar.dart';
 import '../../../../../login/domain/model/user.dart';
+import '../../../../../notification_controller/notification_controller.dart';
 import '../../../data/reminder_db.dart';
-import '../../../notifications/notification_controller.dart';
 
 
 class CreateGeneralReminder extends ConsumerStatefulWidget {

@@ -8,8 +8,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/value_manager.dart';
-import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_controller.dart';
-import 'package:medical_app/src/presentation/patient/reminder/notifications/notification_services.dart';
 import 'package:medical_app/src/presentation/patient/reminder/presentation/general/widget/create_general_reminder.dart';
 import 'package:medical_app/src/presentation/patient/reminder/presentation/medicine/widget/create_med_reminder.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
