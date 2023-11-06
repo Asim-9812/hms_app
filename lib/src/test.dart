@@ -1,5 +1,6 @@
 import 'package:dropdown_text_search/dropdown_text_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TestPage extends ConsumerStatefulWidget {
@@ -11,34 +12,50 @@ class TestPage extends ConsumerStatefulWidget {
 
 class _TestPageState extends ConsumerState<TestPage> {
 
-  List<String> usernames = ['Username','ram','shyam','hari'];
   TextEditingController _usernameController = TextEditingController();
 
+  double overlayHeight = 0; // Initialize overlayHeight to 0
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-              width: 250,
-              child: DropdownTextSearch(
-                onChange: (val){
-                  print(val);
-                  _usernameController.text = val;
-                },
-                noItemFoundText: "Invalid Search",
-                controller: _usernameController,
-                overlayHeight: 300,
-                items: usernames,
-                filterFnc: (String a,String b){
-                  return a.toLowerCase().startsWith(b.toLowerCase());
-                },
-              )
-          )
-        ],
+      body: Container(
+        padding: EdgeInsets.all(30),
+        child: AutofillGroup(
+            child:Column(
+              children: [
+
+                TextFormField(
+                  autofillHints: [AutofillHints.email],
+
+                  decoration: InputDecoration(
+                      hintText: "Username"
+                  ),
+                ),
+
+                TextField(
+                  obscureText: true,
+                  autofillHints: [AutofillHints.password],
+                  decoration: InputDecoration(
+                      hintText: "Password"
+                  ),
+                ),
+
+                ElevatedButton(
+                    onPressed: (){
+                      //--- trigger Password Save
+                      TextInput.finishAutofillContext();
+
+                      //--- OR ----
+
+                    },
+                    child:Text("Log In")
+                )
+              ],
+            )
+        ),
       ),
     );
   }

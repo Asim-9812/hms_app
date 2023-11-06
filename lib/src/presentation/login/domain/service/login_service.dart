@@ -52,7 +52,6 @@ class LoginProvider{
 
               }
             else{
-              (response.data);
               return Left('Invalid Credential');
             }
 
@@ -101,7 +100,7 @@ class LoginProvider{
 
       } on DioException catch(err){
         print(err);
-        return Left('Something went wrong');
+        return Left('${err.response!.data['message']}');
       }
     }else{
       return Left('No internet connection');

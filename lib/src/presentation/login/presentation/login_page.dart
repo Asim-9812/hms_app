@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -180,151 +181,179 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           child: Form(
             key: formKey,
             child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  h10,
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
+              child: AutofillGroup(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    h10,
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
 
-                      Container(
-                        height: 100,
-                        width: 90.w,
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              selectedOption = 1;
-                              _emailController.clear();
-                              _usernameController.clear();
-                              _passController.clear();
-                            });
-                          },
-                          child: Column(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: selectedOption == 1 ? ColorManager.primaryDark : ColorManager.dotGrey),
-                                  shape: BoxShape.circle,
-                                  color: selectedOption == 1 ? ColorManager.primary : Colors.transparent,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset(
-                                    'assets/icons/org_login.png',
-                                    width: selectedOption == 1 ?50:30,
-                                    height: selectedOption == 1 ?50:30,
+                        Container(
+                          height: 100,
+                          width: 90.w,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                selectedOption = 1;
+                                _emailController.clear();
+                                _usernameController.clear();
+                                _passController.clear();
+                              });
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: selectedOption == 1 ? ColorManager.primaryDark : ColorManager.dotGrey),
+                                    shape: BoxShape.circle,
+                                    color: selectedOption == 1 ? ColorManager.primary : Colors.transparent,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Image.asset(
+                                      'assets/icons/org_login.png',
+                                      width: selectedOption == 1 ?50:30,
+                                      height: selectedOption == 1 ?50:30,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              h10,
-                              Text(
-                                'Organization',
-                                style: getRegularStyle(color: selectedOption == 1 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize2),
-                              )
-                            ],
+                                h10,
+                                Text(
+                                  'Organization',
+                                  style: getRegularStyle(color: selectedOption == 1 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize2),
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      w05,
-                      Container(
-                        height: 100,
-                        width: 90.w,
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              selectedOption = 3;
-                              _emailController.clear();
-                              _usernameController.clear();
-                              _passController.clear();
-                            });
-                          },
-                          child: Column(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: selectedOption == 3 ? ColorManager.primaryDark : ColorManager.dotGrey),
-                                  shape: BoxShape.circle,
-                                  color: selectedOption ==3 ? ColorManager.primary : Colors.transparent,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset(
-                                    'assets/icons/doctor_login.png',
-                                    width: selectedOption == 3 ?50:30,
-                                    height: selectedOption == 3 ?50:30,
+                        w05,
+                        Container(
+                          height: 100,
+                          width: 90.w,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                selectedOption = 3;
+                                _emailController.clear();
+                                _usernameController.clear();
+                                _passController.clear();
+                              });
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: selectedOption == 3 ? ColorManager.primaryDark : ColorManager.dotGrey),
+                                    shape: BoxShape.circle,
+                                    color: selectedOption ==3 ? ColorManager.primary : Colors.transparent,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Image.asset(
+                                      'assets/icons/doctor_login.png',
+                                      width: selectedOption == 3 ?50:30,
+                                      height: selectedOption == 3 ?50:30,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              h10,
-                              Text(
-                                'Doctor',
-                                style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize2),
-                              )
-                            ],
+                                h10,
+                                Text(
+                                  'Doctor',
+                                  style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize2),
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      w05,
-                      Container(
-                        height: 100,
-                        width: 90.w,
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              selectedOption = 4;
-                              _emailController.clear();
-                              _usernameController.clear();
-                              _passController.clear();
-                            });
-                          },
-                          child: Column(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: selectedOption == 4 ? ColorManager.primaryDark : ColorManager.dotGrey),
-                                  shape: BoxShape.circle,
-                                  color: selectedOption == 4 ? ColorManager.primary : Colors.transparent,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset(
-                                    'assets/icons/patient_login.png',
-                                    width: selectedOption == 4 ?50:30,
-                                    height: selectedOption == 4 ?50:30,
+                        w05,
+                        Container(
+                          height: 100,
+                          width: 90.w,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                selectedOption = 4;
+                                _emailController.clear();
+                                _usernameController.clear();
+                                _passController.clear();
+                              });
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: selectedOption == 4 ? ColorManager.primaryDark : ColorManager.dotGrey),
+                                    shape: BoxShape.circle,
+                                    color: selectedOption == 4 ? ColorManager.primary : Colors.transparent,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Image.asset(
+                                      'assets/icons/patient_login.png',
+                                      width: selectedOption == 4 ?50:30,
+                                      height: selectedOption == 4 ?50:30,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              h10,
-                              Text(
-                                'Patient',
-                                style: getRegularStyle(color: selectedOption == 4 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize2),
-                              )
-                            ],
+                                h10,
+                                Text(
+                                  'Patient',
+                                  style: getRegularStyle(color: selectedOption == 4 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize2),
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
 
-                    ],
-                  ),
-                  h20,
-                  if(selectedOption != 4)
+                      ],
+                    ),
+                    h20,
+                    if(selectedOption != 4)
+                      TextFormField(
+                        // autofillHints: [AutofillHints.givenName] ,
+                        controller: _codeController,
+                        autovalidateMode:
+                        AutovalidateMode.onUserInteraction,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Code is required';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                            floatingLabelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 14),
+                            labelText: 'Code',
+                            labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 14),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: ColorManager.black
+                                )
+                            )
+                        ),
+                      ),
+                    if(selectedOption != 4)
+                      h20,
+                    if(selectedOption!=4)
                     TextFormField(
-                      controller: _codeController,
+                      autofillHints: [AutofillHints.email],
+                      controller: _emailController,
                       autovalidateMode:
                       AutovalidateMode.onUserInteraction,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'Code is required';
+                          return 'Email is required';
                         }
                         return null;
                       },
                       decoration: InputDecoration(
                           floatingLabelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 14),
-                          labelText: 'Code',
+                          labelText: 'E-mail',
                           labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 14),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -334,206 +363,190 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           )
                       ),
                     ),
-                  if(selectedOption != 4)
-                    h20,
-                  selectedOption!=4
-                  ?TextFormField(
-                    controller: _emailController,
-                    autovalidateMode:
-                    AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Email is required';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                        floatingLabelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 14),
-                        labelText: 'E-mail',
-                        labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 14),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                                color: ColorManager.black
-                            )
-                        )
+                    if(selectedOption == 4)
+                    TextFormField(
+                      autofillHints: [AutofillHints.username],
+                      controller: _usernameController,
+                      autovalidateMode:
+                      AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Username is required';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                          floatingLabelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 14),
+                          labelText: 'Username',
+                          labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 14),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                  color: ColorManager.black
+                              )
+                          )
+                      ),
                     ),
-                  )
-                      : TextFormField(
-                    controller: _usernameController,
-                    autovalidateMode:
-                    AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Username is required';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                        floatingLabelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 14),
-                        labelText: 'Username',
-                        labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 14),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                                color: ColorManager.black
-                            )
-                        )
+                    SizedBox(
+                      height: 18.h,
                     ),
-                  ),
-                  SizedBox(
-                    height: 18.h,
-                  ),
-                  TextFormField(
-                    controller: _passController,
-                    obscureText: _obscureText,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Password is required';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                        floatingLabelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 14),
-                        labelText: 'Password',
-                        labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 14),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                                color: ColorManager.black
-                            )
-                        ),
-                        suffixIcon: IconButton(
-                          onPressed: (){
-                            setState(() {
-                              _obscureText = !_obscureText;
-                            });
-                          },
-                          icon: _obscureText? FaIcon(CupertinoIcons.eye,color: ColorManager.black,):FaIcon(CupertinoIcons.eye_slash,color: ColorManager.black,),
-                        )
+                    TextFormField(
+                      autofillHints: [AutofillHints.password],
+                      controller: _passController,
+                      obscureText: _obscureText,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Password is required';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                          floatingLabelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 14),
+                          labelText: 'Password',
+                          labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 14),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                  color: ColorManager.black
+                              )
+                          ),
+                          suffixIcon: IconButton(
+                            onPressed: (){
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                            icon: _obscureText? FaIcon(CupertinoIcons.eye,color: ColorManager.black,):FaIcon(CupertinoIcons.eye_slash,color: ColorManager.black,),
+                          )
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 18.h,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Transform.scale(
-                            scale: 1,
-                            child: Checkbox(
-                              value: _isChecked,
-                              onChanged: (value) {
-                                _isChecked = !_isChecked;
-                                setState(() {});
-                              },
-                              checkColor: Colors.white,
-                              fillColor: MaterialStateProperty.resolveWith(
-                                      (states) => getColor(states)),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(3),
+                    SizedBox(
+                      height: 18.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Transform.scale(
+                              scale: 1,
+                              child: Checkbox(
+                                value: _isChecked,
+                                onChanged: (value) {
+                                  _isChecked = !_isChecked;
+                                  setState(() {});
+                                },
+                                checkColor: Colors.white,
+                                fillColor: MaterialStateProperty.resolveWith(
+                                        (states) => getColor(states)),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
                               ),
                             ),
-                          ),
-                          Text(
-                            'Remember me',
-                            style: getRegularStyle(
-                                color: ColorManager.textGrey,
-                                fontSize: 14),
-                          )
-                        ],
-                      ),
-                      GestureDetector(
-                        onTap: () { },
-                        child: Text(
-                          'Forgot Password?',
-                          style: getMediumStyle(
-                              color: ColorManager.blue, fontSize: 14),
+                            Text(
+                              'Remember me',
+                              style: getRegularStyle(
+                                  color: ColorManager.textGrey,
+                                  fontSize: 14),
+                            )
+                          ],
                         ),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 18.h,
-                  ),
-                  ElevatedButton(
-                    onPressed: isLoading? null :
-                        () async {
-                          final scaffoldMessage = ScaffoldMessenger.of(context);
-                          if (formKey.currentState!.validate()) {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            login();
-                            final response = await ref.read(userLoginProvider).userLogin(
-                              code: selectedOption == 4 ? 'N/A':_codeController.text.trim(),
-                              accountId: selectedOption,
-                              email: selectedOption==4? _usernameController.text.trim():_emailController.text.trim(),
-                              password: _passController.text.trim(),
-                            );
-                            if (response.isLeft()) {
-                              final leftValue = response.fold(
-                                    (left) => left,
-                                    (right) => '', // Empty string here as we are only interested in the left value
-                              );
-
-                              scaffoldMessage.showSnackBar(
-                                SnackbarUtil.showFailureSnackbar(
-                                  message: leftValue,
-                                  duration: const Duration(milliseconds: 1400),
-                                ),
-                              );
-                              setState(() {
-                                isLoading = false;
-                              });
-                            }
-                            else {
-                              await ref.read(userProvider.notifier).getUserInfo(response:response.getOrElse(() => {}));
-                              scaffoldMessage.showSnackBar(
-                                  SnackbarUtil.showSuccessSnackbar(
-                                      message: 'Login Successful',
-                                      duration: const Duration(milliseconds: 1200)
-                                  )
-                              );
-                              setState(() {
-                                isLoading = false;
-                              });
-                              Get.offAll(()=>StatusPage(accountId: selectedOption,));
-                            }
-                          }
-                    },
-                    style: TextButton.styleFrom(
-                        backgroundColor: ColorManager.primary,
-                        foregroundColor: Colors.white,
-                        fixedSize: Size(380.w, 50.h),
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                          BorderRadius.circular(10),
-                        )),
-                    child:isLoading ?
-                        SpinKitDualRing(color: ColorManager.white,size: iconSize,)
-                        :Text(
-                      'Sign In',
-                      style: getMediumStyle(
-                          color: ColorManager.white,
-                          fontSize: 18),
+                        GestureDetector(
+                          onTap: () { },
+                          child: Text(
+                            'Forgot Password?',
+                            style: getMediumStyle(
+                                color: ColorManager.blue, fontSize: 14),
+                          ),
+                        )
+                      ],
                     ),
-                  ),
+                    SizedBox(
+                      height: 18.h,
+                    ),
+                    ElevatedButton(
+                      onPressed: isLoading? null :
+                          () async {
+                            final scaffoldMessage = ScaffoldMessenger.of(context);
+                            if (formKey.currentState!.validate()) {
+                              setState(() {
+                                isLoading = true;
+                              });
 
-                  SizedBox(height: 50.h,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Don\'t have an account yet?',style: getRegularStyle(color: ColorManager.black,fontSize: fontSize),),
-                      TextButton(
-                          onPressed: ()=>Get.to(()=>RegisterPage(),transition: Transition.fadeIn),
-                          child: Text('Register.',style: getRegularStyle(color: ColorManager.blue,fontSize: fontSize),))
-                    ],
-                  )
-                ],
+                              // login();
+                              final response = await ref.read(userLoginProvider).userLogin(
+                                code: selectedOption == 4 ? 'N/A':_codeController.text.trim(),
+                                accountId: selectedOption,
+                                email: selectedOption==4? _usernameController.text.trim():_emailController.text.trim(),
+                                password: _passController.text.trim(),
+                              );
+                              if (response.isLeft()) {
+                                final leftValue = response.fold(
+                                      (left) => left,
+                                      (right) => '', // Empty string here as we are only interested in the left value
+                                );
+
+                                scaffoldMessage.showSnackBar(
+                                  SnackbarUtil.showFailureSnackbar(
+                                    message: leftValue,
+                                    duration: const Duration(milliseconds: 1400),
+                                  ),
+                                );
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              }
+                              else {
+
+                                  TextInput.finishAutofillContext(shouldSave: _isChecked);
+
+                                await ref.read(userProvider.notifier).getUserInfo(response:response.getOrElse(() => {}));
+                                scaffoldMessage.showSnackBar(
+                                    SnackbarUtil.showSuccessSnackbar(
+                                        message: 'Login Successful',
+                                        duration: const Duration(milliseconds: 1200)
+                                    )
+                                );
+                                setState(() {
+                                  isLoading = false;
+                                });
+
+                                Get.offAll(()=>StatusPage(accountId: selectedOption,));
+                              }
+                            }
+                      },
+                      style: TextButton.styleFrom(
+                          backgroundColor: ColorManager.primary,
+                          foregroundColor: Colors.white,
+                          fixedSize: Size(380.w, 50.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                            BorderRadius.circular(10),
+                          )),
+                      child:isLoading ?
+                          SpinKitDualRing(color: ColorManager.white,size: iconSize,)
+                          :Text(
+                        'Sign In',
+                        style: getMediumStyle(
+                            color: ColorManager.white,
+                            fontSize: 18),
+                      ),
+                    ),
+
+                    SizedBox(height: 50.h,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Don\'t have an account yet?',style: getRegularStyle(color: ColorManager.black,fontSize: fontSize),),
+                        TextButton(
+                            onPressed: ()=>Get.to(()=>RegisterPage(),transition: Transition.fadeIn),
+                            child: Text('Register.',style: getRegularStyle(color: ColorManager.blue,fontSize: fontSize),))
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),

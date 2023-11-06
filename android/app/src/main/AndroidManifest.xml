@@ -13,7 +13,7 @@
 
 
     <application
-        android:label="Cure Connect"
+        android:label="Mero Upachar"
         android:name="${applicationName}"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:icon="@mipmap/launcher_icon">
