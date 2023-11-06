@@ -530,7 +530,8 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
 
 
   Widget _myTasks(){
-    final taskList = Hive.box<TaskModel>('doc_tasks').values.toList();
+    final userBox = Hive.box<User>('session').values.toList();
+    final taskList = Hive.box<TaskModel>('doc_tasks').values.where((element) => element.userId == userBox[0].userID).toList();
 
     taskList.sort((a, b) {
       // First, compare based on priorityLevel

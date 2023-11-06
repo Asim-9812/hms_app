@@ -17,7 +17,7 @@ class LoginProvider{
 
 
 
-  Future<Either<String,Map<String,dynamic>>> userLogin({required int accountId,required String email, required String password}) async{
+  Future<Either<String,Map<String,dynamic>>> userLogin({required int accountId,required String email, required String password,required String code}) async{
     var connectivityResult = await (Connectivity().checkConnectivity());
 
     if(connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi){
@@ -28,10 +28,12 @@ class LoginProvider{
         }
         else{
           if(accountId == 4){
-            final response = await dio.post(Api.patientLogin, data: {
+            final response = await dio.post(Api.patientLogin, data:
+            {
               "username": email,
               "password": password,
-            });
+            }
+            );
 
             if(response.statusCode == 200 && response.data["result"]["id"] != 0){
               print(response.data['result']['contact']);
@@ -58,12 +60,15 @@ class LoginProvider{
 
           }
           else{
-            final response = await dio.post(Api.userLogin, data: {
-              "key":'12',
+            final response = await dio.post(Api.userLogin, data:
+            {
+              "key": "wL65|[R7+VGB7-m",
+              "code":code,
               "email": email,
               "password": password,
-              "flag":'Login'
-            });
+              "flag": "Login"
+            }
+            );
 
 
 
@@ -95,7 +100,7 @@ class LoginProvider{
 
 
       } on DioException catch(err){
-        (err);
+        print(err);
         return Left('Something went wrong');
       }
     }else{

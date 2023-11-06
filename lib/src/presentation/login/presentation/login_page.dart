@@ -29,6 +29,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   bool _obscureText = true ;
   int selectedOption = 1;
 
+  final TextEditingController _codeController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
@@ -310,6 +311,31 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ],
                   ),
                   h20,
+                  if(selectedOption != 4)
+                    TextFormField(
+                      controller: _codeController,
+                      autovalidateMode:
+                      AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Code is required';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                          floatingLabelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 14),
+                          labelText: 'Code',
+                          labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 14),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                  color: ColorManager.black
+                              )
+                          )
+                      ),
+                    ),
+                  if(selectedOption != 4)
+                    h20,
                   selectedOption!=4
                   ?TextFormField(
                     controller: _emailController,
@@ -443,6 +469,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             });
                             login();
                             final response = await ref.read(userLoginProvider).userLogin(
+                              code: selectedOption == 4 ? 'N/A':_codeController.text.trim(),
                               accountId: selectedOption,
                               email: selectedOption==4? _usernameController.text.trim():_emailController.text.trim(),
                               password: _passController.text.trim(),

@@ -97,7 +97,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
 
       return dartz.Right(response.data);
     } on DioException catch (err) {
-      (err.response);
+      print(err.response);
       throw Exception('1. ${err.response!.data['message']}');
     }}
 
@@ -125,7 +125,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
       (response.data);
       return dartz.Right(response.data);
     } on DioException catch (err) {
-      (err.response);
+      print(err.response);
 
 
       throw Exception('2. ${err.response!.data['message']}');
@@ -160,10 +160,10 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
           }
       );
 
-      (response.data);
+
       return dartz.Right(response.data);
     } on DioException catch (err) {
-      (err.response);
+      print(err.response);
 
 
       throw Exception('3. ${err.response!.data['message']}');
@@ -610,6 +610,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
         ),
       );
     } else{
+      print('verification done');
       final rightValue = response.fold(
               (l) => '',
               (r) => r
@@ -637,6 +638,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
           isPostingData = false;
         });
       }else{
+        print('payment done');
         subscriptionPlanDoctor(
             schemePlanId: selectedScheme?.schemeplanID ?? 0
         ).then((value) async => await userRegisterDoctor()).then((value) {
@@ -651,9 +653,11 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
           });
           Get.offAll(()=>LoginPage());
         }).catchError((e){
+          print(e);
+
           scaffoldMessage.showSnackBar(
             SnackbarUtil.showFailureSnackbar(
-                message: '$e',
+                message: 'here is the error',
                 duration: const Duration(seconds: 2)
             ),
           );

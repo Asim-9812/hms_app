@@ -88,10 +88,10 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
           }
       );
 
-      (response.data);
+      print(response.data);
       return dartz.Right(response.data);
     } on DioException catch (err) {
-      (err.response);
+      print(err.response);
 
 
       throw Exception('Dio error: ${err.message}');
@@ -142,7 +142,6 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
   @override
   Widget build(BuildContext context) {
 
-    ('output: ${widget.outputValue}');
     final schemeData = ref.watch(schemeList);
     return Scaffold(
       backgroundColor: ColorManager.white,
@@ -819,7 +818,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
             ),
           );
         },
-        error: (error,stack)=>Center(child: Text('error',style: getRegularStyle(color: ColorManager.black),),),
+        error: (error,stack)=>Center(child: Text('$error',style: getRegularStyle(color: ColorManager.black),),),
         loading: ()=>buildShimmerEffect()
     );
 
