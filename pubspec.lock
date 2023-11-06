@@ -337,6 +337,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.6"
+  dropdown_text_search:
+    dependency: "direct main"
+    description:
+      name: dropdown_text_search
+      sha256: "480489de1870f44a37192e75d204cc6faee28b5fb6b6242a87176c0fb4dbadb4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   easy_image_viewer:
     dependency: "direct main"
     description:

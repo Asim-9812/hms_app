@@ -10,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:medical_app/src/presentation/doctor/doctor_tasks/presentation/add_tasks.dart';
+import 'package:medical_app/src/presentation/doctor/doctor_tasks/presentation/edit_task.dart';
 
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
@@ -162,7 +163,9 @@ class _TaskListState extends State<TaskList> {
                         ),
                         Row(
                           children: [
-                            FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primary,size: 20.sp,),
+                            InkWell(
+                                onTap: ()=>Get.to(()=>EditTask(e)),
+                                child: FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primary,size: 20.sp,)),
                             w10,
                             InkWell(
                                 onTap: () async {

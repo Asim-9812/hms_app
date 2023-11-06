@@ -203,6 +203,8 @@ dependencies:
   awesome_notifications_core: ^0.8.1
   http: ^1.1.0
 
+  dropdown_text_search: ^0.0.1
+
 
 
 

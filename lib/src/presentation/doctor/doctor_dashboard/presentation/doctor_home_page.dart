@@ -12,6 +12,7 @@ import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
 import 'package:medical_app/src/presentation/doctor/doctor_tasks/domain/model/task_model.dart';
+import 'package:medical_app/src/presentation/doctor/doctor_tasks/presentation/task_detail.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../../core/resources/value_manager.dart';
@@ -587,55 +588,65 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ...taskList.take(6).map((e) =>  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
-                    decoration:BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                              color: ColorManager.black.withOpacity(0.5),
-                              width: 0.5
+                  ...taskList.take(6).map((e) =>  InkWell(
+                    onTap: ()async{
+                      await showDialog(
+                          context: context,
+                          builder: (context){
+                            return TaskDetail(e);
+                          }
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
+                      decoration:BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                                color: ColorManager.black.withOpacity(0.5),
+                                width: 0.5
+                            ),
+                            right: BorderSide(
+                                color: ColorManager.black.withOpacity(0.5),
+                                width: 0.5
+                            ),
+                            left: BorderSide(
+                                color: ColorManager.black.withOpacity(0.5),
+                                width: 0.5
+                            ),
+                          )
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text('${taskList.indexOf(e) + 1}.',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?16.sp:16),),
+                              w10,
+                              Container(
+                                  width: widget.isNarrowScreen?150: widget.isWideScreen? 275:200,
+                                  child: Text('${e.taskName}',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),)),
+
+
+                            ],
                           ),
-                          right: BorderSide(
-                              color: ColorManager.black.withOpacity(0.5),
-                              width: 0.5
+                          Row(
+                            children: [
+                              Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: e.priorityLevel == 'High'?ColorManager.red.withOpacity(0.4):ColorManager.primary.withOpacity(0.4),
+                                  ),
+                                  padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 5.h),
+                                  child: Text(e.priorityLevel,style: getRegularStyle(color: ColorManager.black,fontSize:  widget.isNarrowScreen?16.sp:16))),
+                              w10,
+                              Text('${e.createdDate}',style: getRegularStyle(color: ColorManager.black,fontSize: 12),),
+                            ],
                           ),
-                          left: BorderSide(
-                              color: ColorManager.black.withOpacity(0.5),
-                              width: 0.5
-                          ),
-                        )
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text('${taskList.indexOf(e) + 1}.',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?16.sp:16),),
-                            w10,
-                            Container(
-                                width: widget.isNarrowScreen?150: widget.isWideScreen? 275:200,
-                                child: Text('${e.taskName}',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),)),
 
 
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: e.priorityLevel == 'High'?ColorManager.red.withOpacity(0.4):ColorManager.primary.withOpacity(0.4),
-                                ),
-                                padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 5.h),
-                                child: Text(e.priorityLevel,style: getRegularStyle(color: ColorManager.black,fontSize:  widget.isNarrowScreen?16.sp:16))),
-                            w10,
-                            Text('${e.createdDate}',style: getRegularStyle(color: ColorManager.black,fontSize: 12),),
-                          ],
-                        ),
-
-
-                      ],
+                        ],
+                      ),
                     ),
                   )).toList(),
                     // Container(

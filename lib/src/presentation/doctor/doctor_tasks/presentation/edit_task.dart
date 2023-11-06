@@ -32,14 +32,6 @@ class _DocMyTasksState extends State<EditTask> {
 
   late TaskModel task;
 
-  Map<String,dynamic> tasks = {
-    'taskId' : 1,
-    'userId' : '1001',
-    'taskName' : 'Re-up with new patients',
-    'taskDesc' : null,
-    'priorityLevel' : 'High',
-    'createdDate' : '2080-09-09'
-  };
 
 
 
@@ -52,9 +44,11 @@ class _DocMyTasksState extends State<EditTask> {
 
   int limiter = 0;
 
-  int selectPriority = 1;
+  late int selectPriority;
 
-  bool reminder = false;
+  late bool reminder;
+
+  late int id ;
 
 
 
@@ -62,8 +56,13 @@ class _DocMyTasksState extends State<EditTask> {
   void initState(){
     super.initState();
     task = widget.task;
+    id = task.taskId;
     _dateController.text =task.remindDate?? DateFormat('hh:mm a, yyyy-MM-dd').format(DateTime.now());
     _nameController.text = task.taskName;
+    reminder = task.remindMe;
+
+    selectPriority = task.priorityLevel == 'High'? 0 : 1;
+
     if(task.taskDesc != null){
       _descController.text = task.taskDesc!;
     }
@@ -71,22 +70,23 @@ class _DocMyTasksState extends State<EditTask> {
   }
 
 
-  void _addTask(TaskModel task) async {
-    final scaffoldMessage = ScaffoldMessenger.of(context);
+  void _updateTask(TaskModel task) {
     final taskBox = Hive.box<TaskModel>('doc_tasks');
 
-    await taskBox.add(task);
-    scaffoldMessage.showSnackBar(
-      SnackbarUtil.showSuccessSnackbar(
-        message: 'Reminder saved !',
-        duration: const Duration(milliseconds: 1400),
-      ),
-    );
+    final int indexToUpdate = taskBox.values.toList().indexWhere((element) => element.taskId == task.taskId);
 
-    Navigator.pop(context,true); // Optionally, you can navigate back to the previous screen
-
+    
+    print('$indexToUpdate , ${task.taskId},${taskBox.values.toList()[2].taskId}');
+    if (indexToUpdate != -1) {
+      taskBox.putAt(indexToUpdate, task);
+      Navigator.pop(context,true); // Optionally, you can navigate back to the previous screen
+    } else {
+      // Handle the case where the reminder is not found
+      // You might want to show an error message or take appropriate action
+      // based on your app's requirements.
+      print('Reminder not found for update.');
+    }
   }
-
 
 
 
@@ -285,8 +285,8 @@ class _DocMyTasksState extends State<EditTask> {
                           if(formKey.currentState!.validate()){
 
                             final userBox = Hive.box<User>('session').values.toList();
-                            TaskModel task = TaskModel(
-                                taskId: Random().nextInt(1000),
+                            TaskModel newTask = TaskModel(
+                                taskId: id,
                                 userId: userBox[0].userID!,
                                 taskName: _nameController.text,
                                 priorityLevel: priority[selectPriority],
@@ -296,16 +296,17 @@ class _DocMyTasksState extends State<EditTask> {
                                 remindDate: reminder? _dateController.text : null
                             );
 
-                            if(reminder){
-                              await NotificationController.scheduleTaskNotification(reminder: task);
+                            if(reminder && _dateController.text != task.remindDate){
+                                await NotificationController.scheduleTaskNotification(reminder: task);
                             }
 
-                            _addTask(task);
+
+                            _updateTask(newTask);
 
                           }
 
                         },
-                        child: Text('Add Task',style: getRegularStyle(color: ColorManager.white),)
+                        child: Text('Update Task',style: getRegularStyle(color: ColorManager.white),)
                     ),
                   )
 
