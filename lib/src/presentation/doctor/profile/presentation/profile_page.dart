@@ -1,6 +1,8 @@
 
 
 
+import 'dart:io';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,7 +16,9 @@ import 'package:medical_app/src/presentation/change_password_doc_org/presentatio
 import 'package:medical_app/src/presentation/doctor/profile/presentation/widgets/update_profile.dart';
 import 'package:medical_app/src/presentation/notification/presentation/notification_page.dart';
 
+import '../../../../core/api.dart';
 import '../../../../core/resources/value_manager.dart';
+import '../../../../data/provider/common_provider.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../login/domain/service/login_service.dart';
 import '../../../login/presentation/status_page.dart';
@@ -35,6 +39,8 @@ class DocProfilePage extends ConsumerWidget {
     String firstName = userBox[0].firstName!;
     String mobileNo = userBox[0].contactNo!;
     String email = userBox[0].email!;
+
+
     return Scaffold(
       backgroundColor: ColorManager.white.withOpacity(0.99),
       appBar: AppBar(
@@ -56,7 +62,7 @@ class DocProfilePage extends ConsumerWidget {
         children: [
           FadeIn(
               duration: Duration(milliseconds: 500),
-              child: profileBanner(context)),
+              child: profileBanner(context,ref)),
           Container(
             height: MediaQuery.of(context).size.height * 3.5/5,
             child: SingleChildScrollView(
@@ -189,7 +195,7 @@ class DocProfilePage extends ConsumerWidget {
 
   /// Profile...
 
-  Widget profileBanner(BuildContext context) {
+  Widget profileBanner(BuildContext context,ref) {
     final screenSize = MediaQuery.of(context).size;
 
     bool isNarrowScreen = screenSize.width < 420;
@@ -197,6 +203,16 @@ class DocProfilePage extends ConsumerWidget {
 
     final userBox = Hive.box<User>('session').values.toList();
     String firstName = userBox[0].firstName!;
+    final profileImg = ref.watch(imageProvider);
+    ImageProvider<Object>? profileImage;
+
+    if (profileImg != null) {
+      profileImage = Image.file(File(profileImg.path)).image;
+    } else if (userBox[0].profileImage == null) {
+      profileImage = AssetImage('assets/icons/user.png');
+    } else {
+      profileImage = NetworkImage('${Api.baseUrl}/${userBox[0].profileImage}');
+    }
 
 
 
@@ -215,16 +231,16 @@ class DocProfilePage extends ConsumerWidget {
             Row(
               children: [
                 Card(
-                  shape: CircleBorder(),
-                  elevation: 5,
+                  shape: CircleBorder(
+                      side: BorderSide(
+                          color: ColorManager.white,
+                          width: 1
+                      )
+                  ),
                   child: CircleAvatar(
                     backgroundColor: ColorManager.white,
-                    radius: isNarrowScreen? 50.r:50,
-                    child: CircleAvatar(
-                      backgroundColor: ColorManager.black,
-                      radius: isNarrowScreen? 45.r:45,
-                      child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
-                    ),
+                    backgroundImage: profileImage,
+                    radius: 30,
                   ),
                 ),
                 w10,

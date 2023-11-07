@@ -173,14 +173,14 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
           //Init Floating Action Bubble
           floatingActionButton: FloatingActionButton(
               onPressed: (){
-                Get.to(()=>TestPage());
-                // final scaffoldMessage = ScaffoldMessenger.of(context);
-                // scaffoldMessage.showSnackBar(
-                //     SnackbarUtil.showSuccessSnackbar(
-                //         message: 'Coming Soon',
-                //         duration: const Duration(milliseconds: 1200)
-                //     )
-                // );
+                // Get.to(()=>TestPage());
+                final scaffoldMessage = ScaffoldMessenger.of(context);
+                scaffoldMessage.showSnackBar(
+                    SnackbarUtil.showSuccessSnackbar(
+                        message: 'Coming Soon',
+                        duration: const Duration(milliseconds: 1200)
+                    )
+                );
               },
             backgroundColor: ColorManager.primary,
             child: FaIcon(CupertinoIcons.chat_bubble_2_fill,color: ColorManager.white,),

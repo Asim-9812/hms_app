@@ -45,8 +45,8 @@ class _SplashViewState extends ConsumerState<SplashView> {
     );
 
     return AnimatedSplashScreen(
-      backgroundColor: ColorManager.white,
-      splash: 'assets/images/logo5.jpg',
+      backgroundColor: ColorManager.primary,
+      splash: 'assets/images/Icon.png',
       nextScreen: StatusPage(accountId:accountId),
       splashIconSize: 360.h,
       centered: true,

@@ -90,7 +90,9 @@ class UpdateProfile{
       final response = await dio.put('${Api.userUpdate}', data: formData);
 
 
+
       if (response.statusCode == 200) {
+        print('This is also executed');
         String? profileImg = response.data['result']['profileImage'];
         String? signatureImg = response.data['result']['signatureImage'];
 
@@ -106,7 +108,7 @@ class UpdateProfile{
         return Left('Unable to register.');
       }
     } on DioException catch (e) {
-     // print('${e.response}');
+     print('${e.response}');
       return Left('Something went wrong');
     }
   }

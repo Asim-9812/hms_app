@@ -177,7 +177,10 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
       appBar: AppBar(
         elevation: 1,
         backgroundColor: ColorManager.white,
-        leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
+        leading: IconButton(onPressed: (){
+          ref.invalidate(imageProvider);
+          Get.back();
+        }, icon: Icon(Icons.chevron_left,color: Colors.black,)),
         title: Text('Update your Profile',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen? 20.sp:24),),
         centerTitle: true,
 
@@ -932,9 +935,6 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                           return 'Address is required';
                         }
 
-                        if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                          return 'Please enter a valid Address';
-                        }
                         return null;
                       },
                       decoration: InputDecoration(

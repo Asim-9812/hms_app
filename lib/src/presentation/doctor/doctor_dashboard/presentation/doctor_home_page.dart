@@ -1,8 +1,11 @@
 
 
+import 'dart:io';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -15,24 +18,26 @@ import 'package:medical_app/src/presentation/doctor/doctor_tasks/domain/model/ta
 import 'package:medical_app/src/presentation/doctor/doctor_tasks/presentation/task_detail.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../../../../core/api.dart';
 import '../../../../core/resources/value_manager.dart';
+import '../../../../data/provider/common_provider.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../notices/presentation/notices.dart';
 import '../../doctor_tasks/presentation/add_tasks.dart';
 import '../../doctor_tasks/presentation/task_list.dart';
 
 
-class DoctorHomePage extends StatefulWidget {
+class DoctorHomePage extends ConsumerStatefulWidget {
   final bool isWideScreen;
   final bool isNarrowScreen;
   final bool noticeBool;
   DoctorHomePage(this.isWideScreen,this.isNarrowScreen,this.noticeBool);
 
   @override
-  State<DoctorHomePage> createState() => _DoctorHomePageState();
+  ConsumerState<DoctorHomePage> createState() => _DoctorHomePageState();
 }
 
-class _DoctorHomePageState extends State<DoctorHomePage> {
+class _DoctorHomePageState extends ConsumerState<DoctorHomePage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
 
@@ -109,6 +114,17 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
 
     final userBox = Hive.box<User>('session').values.toList();
     String firstName = userBox[0].firstName!;
+    final profileImg = ref.watch(imageProvider);
+    ImageProvider<Object>? profileImage;
+
+    if (profileImg != null) {
+      profileImage = Image.file(File(profileImg.path)).image;
+    } else if (userBox[0].profileImage == null) {
+      profileImage = AssetImage('assets/icons/user.png');
+    } else {
+      profileImage = NetworkImage('${Api.baseUrl}/${userBox[0].profileImage}');
+    }
+
 
 
     return FadeIn(
@@ -135,10 +151,18 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    CircleAvatar(
-                      backgroundColor: ColorManager.black,
-                      radius:30,
-                      child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
+                    Card(
+                      shape: CircleBorder(
+                          side: BorderSide(
+                              color: ColorManager.primary,
+                              width: 1
+                          )
+                      ),
+                      child: CircleAvatar(
+                        backgroundColor: ColorManager.white,
+                        backgroundImage: profileImage,
+                        radius: 30,
+                      ),
                     ),
                     w10,
                     Column(

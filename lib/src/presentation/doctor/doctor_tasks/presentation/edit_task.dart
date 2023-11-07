@@ -75,8 +75,7 @@ class _DocMyTasksState extends State<EditTask> {
 
     final int indexToUpdate = taskBox.values.toList().indexWhere((element) => element.taskId == task.taskId);
 
-    
-    print('$indexToUpdate , ${task.taskId},${taskBox.values.toList()[2].taskId}');
+
     if (indexToUpdate != -1) {
       taskBox.putAt(indexToUpdate, task);
       Navigator.pop(context,true); // Optionally, you can navigate back to the previous screen
@@ -296,8 +295,10 @@ class _DocMyTasksState extends State<EditTask> {
                                 remindDate: reminder? _dateController.text : null
                             );
 
+
                             if(reminder && _dateController.text != task.remindDate){
-                                await NotificationController.scheduleTaskNotification(reminder: task);
+                              // print(newTask);
+                                await NotificationController.scheduleTaskNotification(reminder: newTask);
                             }
 
 
