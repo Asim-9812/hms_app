@@ -285,7 +285,7 @@ Future<void> myNotifyMedSchedule({
             title: '${Emojis.medical_pill} ${reminder.medicineName} ${reminder.strength} ${reminder.unit}',
             body: 'Time for your medicine',
             notificationLayout: NotificationLayout.Default,
-            //actionType : ActionType.DismissAction,
+            //actionType : ActionType.DisabledAction,
             color: Colors.black,
             category: NotificationCategory.Alarm,
             backgroundColor: Colors.black,
@@ -301,7 +301,7 @@ Future<void> myNotifyMedSchedule({
             NotificationActionButton(
                 key: 'DISMISSED',
                 label: 'Dismiss',
-                actionType: ActionType.DismissAction
+                actionType: ActionType.DisabledAction
             ),
           ],
         );
@@ -335,7 +335,7 @@ Future<void> myNotifyMedSchedule({
               title: '${Emojis.medical_pill} Reminder!!!',
               body: 'Time for your medicine',
               notificationLayout: NotificationLayout.Default,
-              //actionType : ActionType.DismissAction,
+              //actionType : ActionType.DisabledAction,
               color: Colors.black,
               category: NotificationCategory.Alarm,
               backgroundColor: Colors.black,
@@ -351,7 +351,7 @@ Future<void> myNotifyMedSchedule({
               NotificationActionButton(
                   key: 'DISMISSED',
                   label: 'Dismiss',
-                  actionType: ActionType.DismissAction
+                  actionType: ActionType.DisabledAction
               ),
             ],
           );
@@ -386,7 +386,7 @@ Future<void> myNotifyMedSchedule({
             title: '${Emojis.medical_pill} Reminder!!!',
             body: 'Time for your medicine',
             notificationLayout: NotificationLayout.Default,
-            //actionType : ActionType.DismissAction,
+            //actionType : ActionType.DisabledAction,
             color: Colors.black,
             category: NotificationCategory.Alarm,
             backgroundColor: Colors.black,
@@ -402,7 +402,7 @@ Future<void> myNotifyMedSchedule({
             NotificationActionButton(
                 key: 'DISMISSED',
                 label: 'Dismiss',
-                actionType: ActionType.DismissAction
+                actionType: ActionType.DisabledAction
             ),
           ],
         );
@@ -451,7 +451,7 @@ Future<void> myNotifyGeneralSchedule({
             title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
             body: '${reminder.description}',
             notificationLayout: NotificationLayout.Default,
-            //actionType : ActionType.DismissAction,
+            //actionType : ActionType.DisabledAction,
             color: Colors.black,
             // category: NotificationCategory.Alarm,
             backgroundColor: Colors.black,
@@ -467,7 +467,7 @@ Future<void> myNotifyGeneralSchedule({
             NotificationActionButton(
                 key: 'DISMISSED',
                 label: 'Dismiss',
-                actionType: ActionType.DismissAction
+                actionType: ActionType.DisabledAction
             ),
           ],
         );
@@ -490,7 +490,7 @@ Future<void> myNotifyGeneralSchedule({
             title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
             body: '${reminder.description}',
             notificationLayout: NotificationLayout.Default,
-            //actionType : ActionType.DismissAction,
+            //actionType : ActionType.DisabledAction,
             color: Colors.black,
             // category: NotificationCategory.Alarm,
             backgroundColor: Colors.black,
@@ -506,7 +506,7 @@ Future<void> myNotifyGeneralSchedule({
             NotificationActionButton(
                 key: 'DISMISSED',
                 label: 'Dismiss',
-                actionType: ActionType.DismissAction
+                actionType: ActionType.DisabledAction
             ),
           ],
         );
@@ -529,7 +529,7 @@ Future<void> myNotifyGeneralSchedule({
             title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
             body: '${reminder.description}',
             notificationLayout: NotificationLayout.Default,
-            //actionType : ActionType.DismissAction,
+            //actionType : ActionType.DisabledAction,
             color: Colors.black,
             // category: NotificationCategory.Alarm,
             backgroundColor: Colors.black,
@@ -545,7 +545,7 @@ Future<void> myNotifyGeneralSchedule({
             NotificationActionButton(
                 key: 'DISMISSED',
                 label: 'Dismiss',
-                actionType: ActionType.DismissAction
+                actionType: ActionType.DisabledAction
             ),
           ],
         );
@@ -565,7 +565,7 @@ Future<void> myNotifyGeneralSchedule({
         title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
         body: '${reminder.description}',
         notificationLayout: NotificationLayout.Default,
-        //actionType : ActionType.DismissAction,
+        //actionType : ActionType.DisabledAction,
         color: Colors.black,
         // category: NotificationCategory.Alarm,
         backgroundColor: Colors.black,
@@ -581,7 +581,7 @@ Future<void> myNotifyGeneralSchedule({
         NotificationActionButton(
             key: 'DISMISSED',
             label: 'Dismiss',
-            actionType: ActionType.DismissAction
+            actionType: ActionType.DisabledAction
         ),
       ],
     );
@@ -609,7 +609,7 @@ Future<void> myNotifyGeneralSchedule({
             title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
             body: '${reminder.description}',
             notificationLayout: NotificationLayout.Default,
-            //actionType : ActionType.DismissAction,
+            //actionType : ActionType.DisabledAction,
             color: Colors.black,
             // category: NotificationCategory.Alarm,
             backgroundColor: Colors.black,
@@ -625,7 +625,7 @@ Future<void> myNotifyGeneralSchedule({
             NotificationActionButton(
                 key: 'DISMISSED',
                 label: 'Dismiss',
-                actionType: ActionType.DismissAction
+                actionType: ActionType.DisabledAction
             ),
           ],
         );
@@ -648,7 +648,7 @@ Future<void> myNotifyGeneralSchedule({
             title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
             body: '${reminder.description}',
             notificationLayout: NotificationLayout.Default,
-            //actionType : ActionType.DismissAction,
+            //actionType : ActionType.DisabledAction,
             color: Colors.black,
             // category: NotificationCategory.Alarm,
             backgroundColor: Colors.black,
@@ -664,7 +664,7 @@ Future<void> myNotifyGeneralSchedule({
             NotificationActionButton(
                 key: 'DISMISSED',
                 label: 'Dismiss',
-                actionType: ActionType.DismissAction
+                actionType: ActionType.DisabledAction
             ),
           ],
         );
@@ -687,7 +687,7 @@ Future<void> myNotifyGeneralSchedule({
             title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
             body: '${reminder.description}',
             notificationLayout: NotificationLayout.Default,
-            //actionType : ActionType.DismissAction,
+            //actionType : ActionType.DisabledAction,
             color: Colors.black,
             // category: NotificationCategory.Alarm,
             backgroundColor: Colors.black,
@@ -703,7 +703,7 @@ Future<void> myNotifyGeneralSchedule({
             NotificationActionButton(
                 key: 'DISMISSED',
                 label: 'Dismiss',
-                actionType: ActionType.DismissAction
+                actionType: ActionType.DisabledAction
             ),
           ],
         );
@@ -725,7 +725,7 @@ Future<void> myNotifyGeneralSchedule({
         title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
         body: '${reminder.description}',
         notificationLayout: NotificationLayout.Default,
-        //actionType : ActionType.DismissAction,
+        //actionType : ActionType.DisabledAction,
         color: Colors.black,
         // category: NotificationCategory.Alarm,
         backgroundColor: Colors.black,
@@ -741,7 +741,7 @@ Future<void> myNotifyGeneralSchedule({
         NotificationActionButton(
             key: 'DISMISSED',
             label: 'Dismiss',
-            actionType: ActionType.DismissAction
+            actionType: ActionType.DisabledAction
         ),
       ],
     );
@@ -771,7 +771,7 @@ Future<void> myNotifyGeneralSchedule({
               title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
               body: '${reminder.description}',
               notificationLayout: NotificationLayout.Default,
-              //actionType : ActionType.DismissAction,
+              //actionType : ActionType.DisabledAction,
               color: Colors.black,
               // category: NotificationCategory.Alarm,
               backgroundColor: Colors.black,
@@ -787,7 +787,7 @@ Future<void> myNotifyGeneralSchedule({
               NotificationActionButton(
                   key: 'DISMISSED',
                   label: 'Dismiss',
-                  actionType: ActionType.DismissAction
+                  actionType: ActionType.DisabledAction
               ),
             ],
           );
@@ -820,7 +820,7 @@ Future<void> myNotifyGeneralSchedule({
             title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
             body: '${reminder.description}',
             notificationLayout: NotificationLayout.Default,
-            //actionType : ActionType.DismissAction,
+            //actionType : ActionType.DisabledAction,
             color: Colors.black,
             // category: NotificationCategory.Alarm,
             backgroundColor: Colors.black,
@@ -836,13 +836,15 @@ Future<void> myNotifyGeneralSchedule({
             NotificationActionButton(
                 key: 'DISMISSED',
                 label: 'Dismiss',
-                actionType: ActionType.DismissAction
+                actionType: ActionType.DisabledAction
             ),
           ],
         );
 
+
+        await Future.delayed(Duration(days: reminder.reminderPattern.interval!));
       }
-      await Future.delayed(Duration(days: reminder.reminderPattern.interval!));
+
 
 
 
@@ -878,7 +880,7 @@ Future<void> snoozeAlarm({
       title: '${Emojis.medical_pill} Reminder!!!',
       body: 'Time for your medicine',
       notificationLayout: NotificationLayout.Default,
-      //actionType : ActionType.DismissAction,
+      //actionType : ActionType.DisabledAction,
       color: Colors.black,
       backgroundColor: Colors.black,
       category: NotificationCategory.Alarm,
@@ -894,7 +896,7 @@ Future<void> snoozeAlarm({
       NotificationActionButton(
           key: 'DISMISS',
           label: 'Dismiss',
-          actionType: ActionType.DismissAction
+          actionType: ActionType.DisabledAction
       ),
     ],
   );
@@ -926,7 +928,7 @@ Future<void> snoozeNotification({
       channelKey: 'alerts',
       title: '${Emojis.activites_reminder_ribbon} Reminder!!!',
       notificationLayout: NotificationLayout.Default,
-      //actionType : ActionType.DismissAction,
+      //actionType : ActionType.DisabledAction,
       color: Colors.black,
       backgroundColor: Colors.black,
       // category: NotificationCategory.Alarm,
@@ -942,7 +944,7 @@ Future<void> snoozeNotification({
       NotificationActionButton(
           key: 'DISMISS',
           label: 'Dismiss',
-          actionType: ActionType.DismissAction
+          actionType: ActionType.DisabledAction
       ),
     ],
   );
@@ -973,7 +975,7 @@ Future<void> myNotifyTaskSchedule({
       title: '${reminder.taskName}',
       body: '${reminder.remindDate}',
       notificationLayout: NotificationLayout.Default,
-      //actionType : ActionType.DismissAction,
+      //actionType : ActionType.DisabledAction,
       color: Colors.black,
       // category: NotificationCategory.Alarm,
       backgroundColor: Colors.black,
@@ -989,7 +991,7 @@ Future<void> myNotifyTaskSchedule({
       NotificationActionButton(
           key: 'DISMISSED',
           label: 'Dismiss',
-          actionType: ActionType.DismissAction
+          actionType: ActionType.DisabledAction
       ),
     ],
   );

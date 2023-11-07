@@ -88,23 +88,28 @@ class _TaskListState extends State<TaskList> {
     final taskList = Hive.box<TaskModel>('doc_tasks').values.toList();
     final taskList2 = Hive.box<TaskModel>('doc_tasks').values.toList();
 
-    taskList.sort((a, b) {
-      // First, compare based on priorityLevel
-      final priorityComparison = _comparePriority(a.priorityLevel, b.priorityLevel);
+    if(sort == 0){
+      taskList.sort((a, b) {
+        // First, compare based on priorityLevel
+        final priorityComparison = _comparePriority(a.priorityLevel, b.priorityLevel);
 
-      if (priorityComparison != 0) {
-        // If priority is different, return the comparison result
-        return priorityComparison;
-      } else {
-        // If priority is the same, compare based on createdDate
-        return a.createdDate.compareTo(b.createdDate);
-      }
-    });
-
-    // The taskList is now sorted by priority and then by createdDate
-    for (final task in taskList) {
-      print(task);
+        if (priorityComparison != 0) {
+          // If priority is different, return the comparison result
+          return priorityComparison;
+        } else {
+          // If priority is the same, compare based on createdDate
+          return a.createdDate.compareTo(b.createdDate);
+        }
+      });
     }
+    else if(sort == 1 ){
+      taskList.sort((a, b) {
+        return a.createdDate.compareTo(b.createdDate);
+      });
+    }
+
+
+
 
     return Scaffold(
       backgroundColor: ColorManager.primary,
@@ -120,9 +125,46 @@ class _TaskListState extends State<TaskList> {
         actions: [
           IconButton(onPressed: (){
             Get.to(()=>AddTasks());
-          } , icon: Icon(Icons.add_box_outlined,size: 20,)),
-          IconButton(onPressed: (){
+          } , icon: Icon(Icons.add_circle_outline,size: 20,)),
+          IconButton(onPressed: ()async{
+            await showDialog(context: context, builder: (context){
 
+              return AlertDialog(
+                backgroundColor: ColorManager.white,
+                contentPadding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Task Sort Order',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
+                    h10,
+                    ListTile(
+                      tileColor: ColorManager.dotGrey.withOpacity(0.2),
+                      onTap: (){
+                        setState(() {
+                          sort = 0;
+                        });
+                        Navigator.pop(context);
+                      },
+                      title: Text('By Priority'),
+                    ),
+                    h10,
+                    ListTile(
+                      tileColor: ColorManager.dotGrey.withOpacity(0.2),
+                      onTap: (){
+                        setState(() {
+                          sort = 1;
+                        });
+                        Navigator.pop(context);
+                      },
+                      title: Text('By Date'),
+                    )
+                  ],
+
+                ),
+              );
+
+            });
           } , icon: Icon(FontAwesomeIcons.filter,size: 18.sp,))
         ],
 

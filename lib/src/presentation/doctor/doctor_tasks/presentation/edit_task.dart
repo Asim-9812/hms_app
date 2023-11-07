@@ -51,12 +51,16 @@ class _DocMyTasksState extends State<EditTask> {
   late int id ;
 
 
+  late DateTime date;
+
+
 
   @override
   void initState(){
     super.initState();
     task = widget.task;
     id = task.taskId;
+    date = task.remindMe ? DateFormat('hh:mm a, yyyy-MM-dd').parse(task.remindDate!) : DateTime.now();
     _dateController.text =task.remindDate?? DateFormat('hh:mm a, yyyy-MM-dd').format(DateTime.now());
     _nameController.text = task.taskName;
     reminder = task.remindMe;
@@ -143,12 +147,13 @@ class _DocMyTasksState extends State<EditTask> {
                       });
                     },
                     validator: (value){
-                      if(value!.isEmpty){
+                      if(value!.trim().isEmpty){
                         return 'Title is required';
 
                       }
                       return null;
                     },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(50)
                     ],
@@ -264,6 +269,9 @@ class _DocMyTasksState extends State<EditTask> {
                                   if (value!.isEmpty) {
                                     return 'Please select a start date';
                                   }
+                                  if(date.isBefore(DateTime.now())){
+                                    return 'Invalid time';
+                                  }
                                   return null;
                                 },
                                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -307,7 +315,7 @@ class _DocMyTasksState extends State<EditTask> {
                           }
 
                         },
-                        child: Text('Update Task',style: getRegularStyle(color: ColorManager.white),)
+                        child: Text('Update',style: getRegularStyle(color: ColorManager.white),)
                     ),
                   )
 
@@ -342,6 +350,9 @@ class _DocMyTasksState extends State<EditTask> {
 
       if(picked != null){
         DateTime remindDate = DateTime(selectedDate.year,selectedDate.month,selectedDate.day,picked.hour,picked.minute);
+        setState(() {
+          date = remindDate;
+        });
         _dateController.text = DateFormat('hh:mm a, yyyy-MM-dd').format(remindDate);
       }
 

@@ -38,6 +38,8 @@ class _DocMyTasksState extends State<AddTasks> {
   };
 
 
+  DateTime date = DateTime.now();
+
 
   final formKey = GlobalKey<FormState>();
 
@@ -135,12 +137,13 @@ class _DocMyTasksState extends State<AddTasks> {
                       });
                     },
                     validator: (value){
-                      if(value!.isEmpty){
+                      if(value!.trim().isEmpty){
                         return 'Title is required';
 
                       }
                       return null;
                     },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(50)
                     ],
@@ -256,6 +259,9 @@ class _DocMyTasksState extends State<AddTasks> {
                                 if (value!.isEmpty) {
                                   return 'Please select a start date';
                                 }
+                                if(date.isBefore(DateTime.now())){
+                                  return 'Invalid Time';
+                                }
                                 return null;
                               },
                               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -296,7 +302,7 @@ class _DocMyTasksState extends State<AddTasks> {
                         }
 
                         },
-                        child: Text('Add Task',style: getRegularStyle(color: ColorManager.white),)
+                        child: Text('Add',style: getRegularStyle(color: ColorManager.white),)
                     ),
                   )
 
@@ -327,10 +333,14 @@ class _DocMyTasksState extends State<AddTasks> {
         final TimeOfDay? picked = await showTimePicker(
           context: context,
           initialTime:TimeOfDay.now(),
+
         );
         
         if(picked != null){
           DateTime remindDate = DateTime(selectedDate.year,selectedDate.month,selectedDate.day,picked.hour,picked.minute);
+          setState(() {
+            date = remindDate;
+          });
           _dateController.text = DateFormat('hh:mm a, yyyy-MM-dd').format(remindDate);
         }
         

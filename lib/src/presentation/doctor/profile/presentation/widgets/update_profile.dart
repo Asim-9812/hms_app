@@ -260,7 +260,7 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                     else {
                       scaffoldMessage.showSnackBar(
                         SnackbarUtil.showSuccessSnackbar(
-                          message: 'Successfully Registered',
+                          message: 'Successfully Updated',
                           duration: const Duration(milliseconds: 1400),
                         ),
                       );
@@ -268,6 +268,7 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                       setState(() {
                         isPostingData = false;
                       });
+                      ref.invalidate(imageProvider);
                       ref.refresh(userInfoProvider(widget.user.userID!));
                       Get.back();
                     }
