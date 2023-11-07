@@ -294,7 +294,7 @@ class _DocMyTasksState extends State<AddTasks> {
                           );
 
                           if(reminder){
-                            await NotificationController.scheduleTaskNotification(reminder: task);
+                            await NotificationController.scheduleTaskNotification(context,reminder: task);
                           }
 
                           _addTask(task);

@@ -135,9 +135,9 @@ class NotificationController {
   ///     REQUESTING NOTIFICATION PERMISSIONS
   ///  *********************************************
 
-  static Future<bool> displayNotificationRationale() async {
+  static Future<bool> displayNotificationRationale(BuildContext context) async {
     bool userAuthorized = false;
-    BuildContext context = MyApp.navigatorKey.currentContext!;
+    // BuildContext context = MyApp.navigatorKey.currentContext!;
     await showDialog(
         context: context,
         builder: (BuildContext ctx) {
@@ -147,18 +147,6 @@ class NotificationController {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Image.asset(
-                        'assets/images/animated-bell.gif',
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        fit: BoxFit.fitWidth,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
                 const Text(
                     'Allow Awesome Notifications to send you beautiful notifications!'),
               ],
@@ -195,9 +183,9 @@ class NotificationController {
   }
 
 
-  static Future<void> scheduleMedicalNotification({required Reminder reminder}) async {
+  static Future<void> scheduleMedicalNotification(BuildContext context,{required Reminder reminder}) async {
     bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
-    if (!isAllowed) isAllowed = await displayNotificationRationale();
+    if (!isAllowed) isAllowed = await displayNotificationRationale(context);
     if (!isAllowed) return;
 
     await myNotifyMedSchedule(
@@ -205,18 +193,18 @@ class NotificationController {
   }
 
 
-  static Future<void> scheduleGeneralNotification({required GeneralReminderModel reminder}) async {
+  static Future<void> scheduleGeneralNotification(BuildContext context,{required GeneralReminderModel reminder}) async {
     bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
-    if (!isAllowed) isAllowed = await displayNotificationRationale();
+    if (!isAllowed) isAllowed = await displayNotificationRationale(context);
     if (!isAllowed) return;
 
     await myNotifyGeneralSchedule(
         reminder: reminder);
   }
 
-  static Future<void> scheduleTaskNotification({required TaskModel reminder}) async {
+  static Future<void> scheduleTaskNotification(BuildContext context,{required TaskModel reminder}) async {
     bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
-    if (!isAllowed) isAllowed = await displayNotificationRationale();
+    if (!isAllowed) isAllowed = await displayNotificationRationale(context);
     if (!isAllowed) return;
 
     await myNotifyTaskSchedule(

@@ -748,7 +748,7 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
                                 // print(reminder.startDate);
                                 // print(reminder.reminderPattern.patternName);
 
-                                await  NotificationController.scheduleGeneralNotification(reminder: reminder);
+                                await  NotificationController.scheduleGeneralNotification(context,reminder: reminder);
 
 
                                 _addReminder(reminder);

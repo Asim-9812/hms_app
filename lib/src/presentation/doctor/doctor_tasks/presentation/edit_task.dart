@@ -306,7 +306,7 @@ class _DocMyTasksState extends State<EditTask> {
 
                             if(reminder && _dateController.text != task.remindDate){
                               // print(newTask);
-                                await NotificationController.scheduleTaskNotification(reminder: newTask);
+                                await NotificationController.scheduleTaskNotification(context,reminder: newTask);
                             }
 
 
