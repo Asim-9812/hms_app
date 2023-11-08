@@ -434,6 +434,17 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
 
   Widget _buildUpdate(){
     final selectImage = ref.watch(imageProvider2);
+    ImageProvider<Object>? signImage;
+
+    if (selectImage != null) {
+      signImage = Image.file(File(selectImage.path)).image;
+    } else if (widget.user.signatureImage == null) {
+      signImage = AssetImage('assets/icons/user.png');
+    } else {
+      signImage = NetworkImage('${Api.baseUrl}/${widget.user.signatureImage}');
+    }
+
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 12.h),
       child: Form(
@@ -958,7 +969,20 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
               ),
               h20,
               Center(
-                child:selectImage != null
+                child:widget.user.signatureImage != null ?
+                Container(
+                  height: 200,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    image: DecorationImage(image: signImage,fit: BoxFit.contain),
+                    color: ColorManager.textGrey.withOpacity(0.1),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 12.h,horizontal: 12.w),
+                  child: SizedBox(),
+                )
+
+                :selectImage != null
                     ? Container(
                   height: 200,
                   decoration: BoxDecoration(

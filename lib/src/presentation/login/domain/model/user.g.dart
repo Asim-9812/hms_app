@@ -46,7 +46,7 @@ class UserAdapter extends TypeAdapter<User> {
       token: fields[26] as String?,
       panNo: fields[27] as int?,
       natureID: fields[28] as int?,
-      liscenceNo: fields[29] as int?,
+      liscenceNo: fields[29] as String?,
       flag: fields[30] as String?,
       code: fields[31] as String?,
       username: fields[32] as String?,

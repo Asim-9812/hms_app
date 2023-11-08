@@ -93,7 +93,7 @@ class User extends HiveObject {
   int? natureID;
 
   @HiveField(29)
-  int? liscenceNo;
+  String? liscenceNo;
 
   @HiveField(30)
   String? flag;
@@ -172,7 +172,7 @@ class User extends HiveObject {
       token: json['token'] as String?,
       panNo: json['panNo'] as int?,
       natureID: json['natureID'] as int?,
-      liscenceNo: json['liscenceNo'] as int?,
+      liscenceNo: json['liscenceNo'] as String?,
       flag: json['flag'] as String?,
       code: json['code'] as String?,
       username: json['userName'] as String?,

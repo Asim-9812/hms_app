@@ -1,8 +1,3 @@
-
-
-
-
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,12 +6,14 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:medical_app/src/presentation/doctor/doctor_tasks/presentation/add_tasks.dart';
 import 'package:medical_app/src/presentation/doctor/doctor_tasks/presentation/edit_task.dart';
-
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../../notification_controller/notification_controller.dart';
 import '../domain/model/task_model.dart';
+
+
+
 
 class TaskList extends StatefulWidget {
   const TaskList({super.key});
@@ -84,7 +81,6 @@ class _TaskListState extends State<TaskList> {
 
   @override
   Widget build(BuildContext context) {
-    final sortList = ['by Date','by Priority'];
     final taskList = Hive.box<TaskModel>('doc_tasks').values.toList();
     final taskList2 = Hive.box<TaskModel>('doc_tasks').values.toList();
 

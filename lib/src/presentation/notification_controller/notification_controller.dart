@@ -147,8 +147,7 @@ class NotificationController {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                    'Allow Awesome Notifications to send you beautiful notifications!'),
+                const Text('Allow Awesome Notifications to send you beautiful notifications!'),
               ],
             ),
             actions: [
@@ -436,7 +435,7 @@ Future<void> myNotifyGeneralSchedule({
           content: NotificationContent(
             id: reminder.reminderId,
             channelKey: 'alerts',
-            title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+            title: '${reminder.title}',
             body: '${reminder.description}',
             notificationLayout: NotificationLayout.Default,
             //actionType : ActionType.DisabledAction,
@@ -475,7 +474,7 @@ Future<void> myNotifyGeneralSchedule({
           content: NotificationContent(
             id: reminder.reminderId,
             channelKey: 'alerts',
-            title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+            title: '${reminder.title}',
             body: '${reminder.description}',
             notificationLayout: NotificationLayout.Default,
             //actionType : ActionType.DisabledAction,
@@ -514,7 +513,7 @@ Future<void> myNotifyGeneralSchedule({
           content: NotificationContent(
             id: reminder.reminderId,
             channelKey: 'alerts',
-            title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+            title: '${reminder.title}',
             body: '${reminder.description}',
             notificationLayout: NotificationLayout.Default,
             //actionType : ActionType.DisabledAction,
@@ -550,7 +549,7 @@ Future<void> myNotifyGeneralSchedule({
       content: NotificationContent(
         id: reminder.reminderId,
         channelKey: 'alerts',
-        title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+        title: '${reminder.title}',
         body: '${reminder.description}',
         notificationLayout: NotificationLayout.Default,
         //actionType : ActionType.DisabledAction,
@@ -594,7 +593,7 @@ Future<void> myNotifyGeneralSchedule({
           content: NotificationContent(
             id: reminder.reminderId,
             channelKey: 'alerts',
-            title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+            title: '${reminder.title}',
             body: '${reminder.description}',
             notificationLayout: NotificationLayout.Default,
             //actionType : ActionType.DisabledAction,
@@ -633,7 +632,7 @@ Future<void> myNotifyGeneralSchedule({
           content: NotificationContent(
             id: reminder.reminderId,
             channelKey: 'alerts',
-            title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+            title: '${reminder.title}',
             body: '${reminder.description}',
             notificationLayout: NotificationLayout.Default,
             //actionType : ActionType.DisabledAction,
@@ -672,7 +671,7 @@ Future<void> myNotifyGeneralSchedule({
           content: NotificationContent(
             id: reminder.reminderId,
             channelKey: 'alerts',
-            title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+            title: '${reminder.title}',
             body: '${reminder.description}',
             notificationLayout: NotificationLayout.Default,
             //actionType : ActionType.DisabledAction,
@@ -710,7 +709,7 @@ Future<void> myNotifyGeneralSchedule({
       content: NotificationContent(
         id: reminder.reminderId,
         channelKey: 'alerts',
-        title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+        title: '${reminder.title}',
         body: '${reminder.description}',
         notificationLayout: NotificationLayout.Default,
         //actionType : ActionType.DisabledAction,
@@ -756,7 +755,7 @@ Future<void> myNotifyGeneralSchedule({
             content: NotificationContent(
               id: reminder.reminderId,
               channelKey: 'alerts',
-              title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+              title: '${reminder.title}',
               body: '${reminder.description}',
               notificationLayout: NotificationLayout.Default,
               //actionType : ActionType.DisabledAction,
@@ -805,7 +804,7 @@ Future<void> myNotifyGeneralSchedule({
           content: NotificationContent(
             id: reminder.reminderId,
             channelKey: 'alerts',
-            title: '${Emojis.activites_reminder_ribbon} ${reminder.title}',
+            title: '${reminder.title}',
             body: '${reminder.description}',
             notificationLayout: NotificationLayout.Default,
             //actionType : ActionType.DisabledAction,
@@ -914,7 +913,8 @@ Future<void> snoozeNotification({
     content: NotificationContent(
       id: -1,
       channelKey: 'alerts',
-      title: '${Emojis.activites_reminder_ribbon} Reminder!!!',
+      title: 'Reminder!!!',
+      body: '${DateFormat('yyyy-MM-dd hh:mm a').format(DateTime.now())}',
       notificationLayout: NotificationLayout.Default,
       //actionType : ActionType.DisabledAction,
       color: Colors.black,
