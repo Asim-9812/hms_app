@@ -226,7 +226,7 @@ class OrgProfilePage extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 32.sp:32),),
+                    Text('${firstName.substring(0,5)}',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 32.sp:32),),
                     h10,
                     Row(
                       children: [
