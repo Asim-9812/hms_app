@@ -15,10 +15,7 @@ class StatusPage extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final auth = ref.watch(userProvider);
     if(auth.isNotEmpty){
-      if(auth[0].typeID == 1 && accountId == 1){
-        return const OrgMainPage();
-      }
-      else if(auth[0].typeID == 2 && accountId == 2){
+      if((auth[0].typeID == 1 || auth[0].typeID == 2)  && (accountId == 1 || accountId == 2)){
         return const OrgMainPage();
       }
       else if(auth[0].typeID == 3 && accountId == 3){

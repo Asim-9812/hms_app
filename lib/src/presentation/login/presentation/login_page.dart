@@ -28,7 +28,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   // List<String> accountType = ['Merchant','Organization','Professional', 'Patient'];
   // String selectedValue = 'Professional';
   bool _obscureText = true ;
-  int selectedOption = 2;
+  int selectedOption = 1;
 
   final TextEditingController _codeController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
