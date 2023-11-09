@@ -16,6 +16,7 @@ class PatientReportServices{
     required String fromDate,
     required String toDate,
     required String departmentId,
+    required String userId,
 }) async {
     try{
       final response = await dio.post('${Api.getPatientReport}',
@@ -24,7 +25,7 @@ class PatientReportServices{
         "todate": toDate,
         "typeid": 0,
         "departmentId": departmentId,
-        "userid": 0,
+        "userid": userId,
         "flag": "Report"
       }
       );

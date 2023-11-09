@@ -226,7 +226,7 @@ class OrgProfilePage extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('${firstName.substring(0,5)}',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 32.sp:32),),
+                    Text('${firstName.split(' ').first}',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 32.sp:32),),
                     h10,
                     Row(
                       children: [
@@ -243,7 +243,9 @@ class OrgProfilePage extends ConsumerWidget {
               ],
             ),
             w10,
-            FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primaryDark,)
+            InkWell(
+                // onTap: ()=>Get.to(()=>),
+                child: FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primaryDark,))
           ],
         ),
       ),

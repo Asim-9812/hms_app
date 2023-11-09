@@ -155,7 +155,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
 
                     Text('Welcome,',style: getRegularStyle(color: ColorManager.white,fontSize: 16),),
 
-                    Text('${firstName.substring(0,5)}',style: getMediumStyle(color: ColorManager.white,fontSize: 28),),
+                    Text('${firstName.split(' ').first}',style: getMediumStyle(color: ColorManager.white,fontSize: 28),),
                   ],
                 ),
               ],

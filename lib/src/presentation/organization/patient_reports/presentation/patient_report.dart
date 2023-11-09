@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
@@ -12,6 +13,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:medical_app/src/presentation/organization/patient_reports/domain/services/patient_report_services.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../../common/snackbar.dart';
+import '../../../login/domain/model/user.dart';
 import '../domain/model/patient_report_model.dart';
 
 class PatientReports extends ConsumerStatefulWidget {
@@ -266,6 +268,10 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
 
                       ),
                       onPressed: ()async{
+                        final userBox = Hive.box<User>('session').values.toList();
+                        // String firstName = userBox[0].firstName!;
+
+
 
                         final scaffoldMessage = ScaffoldMessenger.of(context);
 
@@ -273,7 +279,8 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
                             final response = await PatientReportServices().getReportList(
                                 fromDate: dateFrom.text,
                                 toDate: dateTo.text,
-                                departmentId: departmentId.toString()
+                                departmentId: departmentId.toString(),
+                              userId: userBox[0].userID!
                             );
                             if(response.isEmpty){
 
