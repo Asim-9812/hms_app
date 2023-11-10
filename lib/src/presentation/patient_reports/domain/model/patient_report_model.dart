@@ -1,5 +1,6 @@
 class PatientReportModel {
   final int? id;
+  final String? typeId;
   final int? patientVisitID;
   final String? patientID;
   final String? firstName;
@@ -23,6 +24,7 @@ class PatientReportModel {
   final int? costCategoryID;
   final String? costCategoryType;
   final String? entrydate;
+  final String? contact;
 
   PatientReportModel({
     this.id,
@@ -49,6 +51,8 @@ class PatientReportModel {
     this.costCategoryID,
     this.costCategoryType,
     this.entrydate,
+    this.contact,
+    this.typeId
   });
 
   factory PatientReportModel.fromJson(Map<String, dynamic> json) {
@@ -77,6 +81,8 @@ class PatientReportModel {
       costCategoryID: json['costCategoryID'],
       costCategoryType: json['costCategoryType'],
       entrydate: json['entrydate'],
+      contact: json['contact'],
+      typeId: json['typeId']
     );
   }
 }

@@ -374,153 +374,22 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Name',style: getMediumStyle(color: ColorManager.black,fontSize:widget.isNarrowScreen?16.sp: 18),),
-              h10,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    height: widget.isNarrowScreen?60.h:60,
-                    width: 180.w,
-                    child: TextFormField(
-                      controller: _firstNameController,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: (value){
-                        if (value!.isEmpty) {
-                          return 'First Name is required';
-                        }
-                        if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
-                          return 'Invalid Name. Only use letters';
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                          floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                          hintText:'Enter first name',
-                          hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: ColorManager.black
-                              )
-                          )
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              h20,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Email',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
-                      h10,
-                      Container(
-                        height: 60,
-                        width: 180.w,
-                        child: TextFormField(
-                          controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          autovalidateMode:
-                          AutovalidateMode.onUserInteraction,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Email is required';
-                            }
-                            if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                              return 'Please enter a valid email address';
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                              floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                              hintText: 'E-mail',
-                              hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                      color: ColorManager.black
-                                  )
-                              )
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Mobile No.',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
-                      h10,
-                      Container(
-                        height: 60,
-                        width: 180.w,
-                        child: TextFormField(
-                          controller: _mobileController,
-                          keyboardType: TextInputType.number,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value){
-                            if (value!.isEmpty) {
-                              return 'Mobile number is required';
-                            }
-                            if (value.length!=10) {
-                              return 'Enter a valid number';
-                            }
 
-                            if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                              return 'Please enter a valid Mobile Number';
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                            hintText: 'Mobile Number',
-                            hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
-                                    color: ColorManager.black
-                                )
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                ],
-              ),
-              h20,
-              Text('PAN No',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
-              h10,
-              Container(
-                height: 60,
-                width: 400.w,
-                child: TextFormField(
-                  controller: _PANController,
-                  keyboardType: TextInputType.number,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (value){
-                    if (value!.isEmpty) {
-                      return 'PAN number is required';
-                    }
-                    else  if (value.length>9||value.length<9) {
-                      return 'Invalid PAN number';
-                    }
-
-                    else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                      return 'Please enter a valid PAN Number';
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
+              TextFormField(
+                controller: _firstNameController,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value){
+                  if (value!.isEmpty) {
+                    return 'Name is required';
+                  }
+                  if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
+                    return 'Invalid Name. Only use letters';
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
                     floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                    hintText: 'PAN Number',
+                    hintText:'Enter name',
                     hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -528,7 +397,112 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                             color: ColorManager.black
                         )
                     ),
+                  labelText: 'Name',
+                  labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
+                ),
+              ),
+              h20,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      autovalidateMode:
+                      AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Email is required';
+                        }
+                        if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                          return 'Please enter a valid email address';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                          floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                          hintText: 'E-mail',
+                          hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                  color: ColorManager.black
+                              )
+                          ),
+                        labelText: 'Email',
+                        labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
+                      ),
+                    ),
                   ),
+                  w10,
+                  Expanded(
+                    child: TextFormField(
+                      controller: _mobileController,
+                      keyboardType: TextInputType.number,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value){
+                        if (value!.isEmpty) {
+                          return 'Mobile number is required';
+                        }
+                        if (value.length!=10) {
+                          return 'Enter a valid number';
+                        }
+
+                        if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                          return 'Please enter a valid Mobile Number';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                        hintText: 'Mobile Number',
+                        hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                                color: ColorManager.black
+                            )
+                        ),
+                        labelText: 'Mobile no.',
+                        labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
+                      ),
+                    ),
+                  ),
+
+                ],
+              ),
+              h20,
+
+              TextFormField(
+                controller: _PANController,
+                keyboardType: TextInputType.number,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value){
+                  if (value!.isEmpty) {
+                    return 'PAN number is required';
+                  }
+                  else  if (value.length>9||value.length<9) {
+                    return 'Invalid PAN number';
+                  }
+
+                  else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                    return 'Please enter a valid PAN Number';
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                  floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                  hintText: 'PAN Number',
+                  hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                          color: ColorManager.black
+                      )
+                  ),
+                  labelText: 'PAN',
+                  labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
                 ),
               ),
 
@@ -537,313 +511,285 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Country',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
-                      h10,
-                      Container(
-                        height: 60,
-                        width: 180.w,
-                        child: DropdownButtonFormField<String>(
-                          menuMaxHeight: widget.isWideScreen?200:400.h,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          padding: EdgeInsets.zero,
-                          value: selectedCountry,
-                          validator: (value){
-                            if(selectedCountry == 'Select a Country'){
-                              return 'Please select a Country';
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
-                            ),
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      menuMaxHeight: widget.isWideScreen?200:400.h,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      padding: EdgeInsets.zero,
+                      value: selectedCountry,
+                      validator: (value){
+                        if(selectedCountry == 'Select a Country'){
+                          return 'Please select a Country';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
+                        ),
+                        labelText: 'Country',
+                        labelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 16),
+                      ),
+                      items: countries
+                          .map(
+                            (Country item) => DropdownMenuItem<String>(
+                          value: item.countryName,
+                          child: Text(
+                            item.countryName,
+                            style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          items: countries
-                              .map(
-                                (Country item) => DropdownMenuItem<String>(
-                              value: item.countryName,
-                              child: Text(
-                                item.countryName,
-                                style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          )
-                              .toList(),
-                          onChanged: (String? value) {
-                            setState(() {
-                              selectedCountry = value!;
-                              countryId = countries.firstWhere(
-                                    (country) => country.countryName == value,
-                                orElse: () => Country(countryId: 0, countryName: '', isActive: false),
-                              ).countryId;
-                            });
-                            _getProvince();
-                            _getDistrict();
-                            _getMunicipality();
+                        ),
+                      )
+                          .toList(),
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedCountry = value!;
+                          countryId = countries.firstWhere(
+                                (country) => country.countryName == value,
+                            orElse: () => Country(countryId: 0, countryName: '', isActive: false),
+                          ).countryId;
+                        });
+                        _getProvince();
+                        _getDistrict();
+                        _getMunicipality();
 
-                          },
-                        ),
-                      ),
-                    ],
+                      },
+                    ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Province',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
-                      h10,
-                      Container(
-                        height: 60,
-                        width: 180.w,
-                        child: DropdownButtonFormField<String>(
-                          menuMaxHeight: widget.isWideScreen?200:400.h,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          padding: EdgeInsets.zero,
-                          value: selectedProvince,
-                          validator: (value){
-                            if(selectedProvince == 'Select a Province'){
-                              return 'Please select a Province';
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
-                            ),
-                          ),
-                          items: provinces.where((element) => element.countryId == countryId)
-                              .map(
-                                (ProvinceModel item) => DropdownMenuItem<String>(
-                              value: item.provinceName,
-                              child: Text(
-                                item.provinceName,
-                                style: getRegularStyle(color: Colors.black),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          )
-                              .toList(),
-                          onChanged: (String? value) {
-                            setState(() {
-                              selectedProvince = value!;
-                              provinceId = provinces.firstWhere(
-                                    (province) => province.provinceName == value,
-                                orElse: () => ProvinceModel(provinceId: 0, provinceName: '', isActive: false, countryId: 0),
-                              ).provinceId;
-                            });
-                            _getDistrict();
-                            _getMunicipality();
-                          },
+                  w10,
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      menuMaxHeight: widget.isWideScreen?200:400.h,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      padding: EdgeInsets.zero,
+                      value: selectedProvince,
+                      validator: (value){
+                        if(selectedProvince == 'Select a Province'){
+                          return 'Please select a Province';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
                         ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
+                        ),
+                        labelText: 'Province',
+                        labelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 16),
                       ),
-                    ],
+                      items: provinces.where((element) => element.countryId == countryId)
+                          .map(
+                            (ProvinceModel item) => DropdownMenuItem<String>(
+                          value: item.provinceName,
+                          child: Text(
+                            item.provinceName,
+                            style: getRegularStyle(color: Colors.black),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      )
+                          .toList(),
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedProvince = value!;
+                          provinceId = provinces.firstWhere(
+                                (province) => province.provinceName == value,
+                            orElse: () => ProvinceModel(provinceId: 0, provinceName: '', isActive: false, countryId: 0),
+                          ).provinceId;
+                        });
+                        _getDistrict();
+                        _getMunicipality();
+                      },
+                    ),
                   ),
                 ],
               ),
               h20,
-              Text('District',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
-              h10,
-              Container(
-                height: 60,
-                width: 400.w,
-                child: DropdownButtonFormField<String>(
-                  menuMaxHeight: widget.isWideScreen?200:400.h,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  padding: EdgeInsets.zero,
-                  value: selectedDistrict,
-                  validator: (value){
-                    if(selectedDistrict == 'Select a District'){
-                      return 'Please select a District';
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      menuMaxHeight: widget.isWideScreen?200:400.h,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      padding: EdgeInsets.zero,
+                      value: selectedDistrict,
+                      validator: (value){
+                        if(selectedDistrict == 'Select a District'){
+                          return 'Please select a District';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
+                        ),
+                        labelText: 'District',
+                        labelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 16),
+                      ),
+                      items:districts
+                          .map(
+                            (DistrictModel item) => DropdownMenuItem<String>(
+                          value: item.districtName,
+                          child: Text(
+                            item.districtName,
+                            style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      )
+                          .toList(),
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedDistrict = value!;
+                          districtId = districts.firstWhere(
+                                (district) => district.districtName == value,
+                            orElse: () => DistrictModel(districtId: 0, districtName: '', provinceId: 0, provinceName: ''),
+                          ).districtId;
+                        });
+                        _getMunicipality();
+                      },
                     ),
                   ),
-                  items:districts
-                      .map(
-                        (DistrictModel item) => DropdownMenuItem<String>(
-                      value: item.districtName,
-                      child: Text(
-                        item.districtName,
-                        style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
-                        overflow: TextOverflow.ellipsis,
+                  w10,
+
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      menuMaxHeight: widget.isWideScreen?200:400.h,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      padding: EdgeInsets.zero,
+                      value: selectedMunicipality,
+                      validator: (value){
+                        if(selectedMunicipality == 'Select a Municipality'){
+                          return 'Please select a Municipality';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
+                        ),
+                        labelText: 'Municipality',
+                        labelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 16),
                       ),
-                    ),
-                  )
-                      .toList(),
-                  onChanged: (String? value) {
-                    setState(() {
-                      selectedDistrict = value!;
-                      districtId = districts.firstWhere(
-                            (district) => district.districtName == value,
-                        orElse: () => DistrictModel(districtId: 0, districtName: '', provinceId: 0, provinceName: ''),
-                      ).districtId;
-                    });
-                    _getMunicipality();
-                  },
-                ),
-              ),
-              h20,
-              Text('Municipality',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
-              h10,
-              Container(
-                height: 60,
-                width: 400.w,
-                child: DropdownButtonFormField<String>(
-                  menuMaxHeight: widget.isWideScreen?200:400.h,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  padding: EdgeInsets.zero,
-                  value: selectedMunicipality,
-                  validator: (value){
-                    if(selectedMunicipality == 'Select a Municipality'){
-                      return 'Please select a Municipality';
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
+                      items:municipalities
+                          .map(
+                            (MunicipalityModel item) => DropdownMenuItem<String>(
+                          value: item.municipalityName,
+                          child: Text(
+                            item.municipalityName,
+                            style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      )
+                          .toList(),
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedMunicipality = value!;
+                          municipalityId = municipalities.firstWhere(
+                                (municipality) => municipality.municipalityName == value,
+                            orElse: () => MunicipalityModel(municipalityId: 0, municipalityName: '', districtId: 0, districtName: ''),
+                          ).municipalityId;
+                        });
+                      },
                     ),
                   ),
-                  items:municipalities
-                      .map(
-                        (MunicipalityModel item) => DropdownMenuItem<String>(
-                      value: item.municipalityName,
-                      child: Text(
-                        item.municipalityName,
-                        style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  )
-                      .toList(),
-                  onChanged: (String? value) {
-                    setState(() {
-                      selectedMunicipality = value!;
-                      municipalityId = municipalities.firstWhere(
-                            (municipality) => municipality.municipalityName == value,
-                        orElse: () => MunicipalityModel(municipalityId: 0, municipalityName: '', districtId: 0, districtName: ''),
-                      ).municipalityId;
-                    });
-                  },
-                ),
+                ],
               ),
               h20,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Ward No.',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
-                      h10,
-                      Container(
-                        height: 60,
-                        width: 180.w,
-                        child: TextFormField(
-                          controller: _wardController,
-                          keyboardType: TextInputType.number,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value){
-                            if (value!.isEmpty) {
-                              return 'Ward no. is required';
-                            }
+                  Expanded(
+                    child: TextFormField(
+                      controller: _wardController,
+                      keyboardType: TextInputType.number,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value){
+                        if (value!.isEmpty) {
+                          return 'Ward no. is required';
+                        }
 
-                            if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                              return 'Please enter a valid Ward no.';
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                              floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                              hintText: 'Ward No.',
-                              hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                      color: ColorManager.black
-                                  )
+                        if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                          return 'Please enter a valid Ward no.';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                          floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                          hintText: 'Ward No.',
+                          hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                  color: ColorManager.black
                               )
                           ),
-                        ),
+                        labelText: 'Ward',
+                        labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
                       ),
-                    ],
+                    ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Local Address',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
-                      h10,
-                      Container(
-                        height: 60,
-                        width: 180.w,
-                        child: TextFormField(
-                          controller: _addressController,
-                          keyboardType: TextInputType.text,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value){
-                            if (value!.isEmpty) {
-                              return 'Address is required';
-                            }
+                  w10,
+                  Expanded(
+                    child: TextFormField(
+                      controller: _addressController,
+                      keyboardType: TextInputType.text,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value){
+                        if (value!.isEmpty) {
+                          return 'Address is required';
+                        }
 
-                            if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                              return 'Please enter a valid Address';
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                              floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                              hintText: 'Local Address',
-                              hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                      color: ColorManager.black
-                                  )
+                        if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                          return 'Please enter a valid Address';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                          floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                          hintText: 'Local Address',
+                          hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                  color: ColorManager.black
                               )
                           ),
-                        ),
+                        labelText: 'Local Address',
+                        labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
                       ),
-                    ],
+                    ),
                   ),
                 ],
               ),
@@ -896,7 +842,6 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                     },
                     child: Container(
                       height: 200,
-                      width: 300,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color: ColorManager.textGrey.withOpacity(0.1),

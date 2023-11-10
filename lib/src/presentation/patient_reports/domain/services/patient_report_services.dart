@@ -19,20 +19,24 @@ class PatientReportServices{
     required String userId,
 }) async {
     try{
-      final response = await dio.post('${Api.getPatientReport}',
-      data: {
+      Map<String,dynamic> data2 = {
         "fromdate": fromDate,
         "todate": toDate,
         "typeid": 0,
         "departmentId": departmentId,
         "userid": userId,
         "flag": "Report"
-      }
+      };
+      print(data2);
+      final response = await dio.post('${Api.getPatientReport}',
+      data: data2
       );
 
       final data = (response.data['result'] as List)
           .map((e) => PatientReportModel.fromJson(e))
           .toList();
+
+      // print(response.data['result']);
 
       return data;
 

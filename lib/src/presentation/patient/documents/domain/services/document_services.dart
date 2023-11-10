@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart';
 
 import '../../../../../core/api.dart';
-import '../../../../doctor/documents/domain/model/document_model.dart';
+import '../../../../documents/domain/model/document_model.dart';
 import '../model/document_model.dart';
 
 
@@ -31,6 +31,7 @@ class PatientDocumentServices {
 
       return data;
     } on DioException catch(e){
+      print(e);
       throw Exception(e);
     }
 

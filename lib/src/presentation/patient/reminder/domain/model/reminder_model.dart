@@ -9,7 +9,7 @@ class Reminder {
   @HiveField(0)
   int reminderId;
   @HiveField(1)
-  int userId;
+  String userId;
   @HiveField(2)
   int medTypeId;
   @HiveField(3)

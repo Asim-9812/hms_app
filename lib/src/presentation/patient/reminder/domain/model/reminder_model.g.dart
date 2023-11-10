@@ -18,7 +18,7 @@ class ReminderAdapter extends TypeAdapter<Reminder> {
     };
     return Reminder(
       reminderId: fields[0] as int,
-      userId: fields[1] as int,
+      userId: fields[1] as String,
       medTypeId: fields[2] as int,
       medTypeName: fields[3] as String,
       medicineName: fields[4] as String,

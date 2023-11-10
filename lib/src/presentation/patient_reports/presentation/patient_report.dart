@@ -10,11 +10,13 @@ import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/data/services/department_services.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:medical_app/src/presentation/organization/patient_reports/domain/services/patient_report_services.dart';
-import '../../../../core/resources/value_manager.dart';
-import '../../../common/snackbar.dart';
-import '../../../login/domain/model/user.dart';
+
+import '../../../core/resources/value_manager.dart';
+import '../../common/snackbar.dart';
+import '../../login/domain/model/user.dart';
+import '../../patient_documents/add_documents/presentation/add_document_page.dart';
 import '../domain/model/patient_report_model.dart';
+import '../domain/services/patient_report_services.dart';
 
 class PatientReports extends ConsumerStatefulWidget {
   const PatientReports({Key? key}) : super(key: key);
@@ -26,14 +28,14 @@ class PatientReports extends ConsumerStatefulWidget {
 class _PatientReportsState extends ConsumerState<PatientReports> {
   TextEditingController dateFrom = TextEditingController();
   TextEditingController dateTo = TextEditingController();
-  int departmentId = -1;
+  int departmentId = 0;
   List<PatientReportModel> reportList = [];
   int currentPage = 0;
   int itemsPerPage = 5;
   final formKey = GlobalKey<FormState>();
   GlobalKey<DropdownSearchState<String>> dropdownSearchKey = GlobalKey();
   String resetList = '';
-  String selectedItem = 'Select a department';
+  String selectedItem = 'All';
   bool validate = false;
 
 
@@ -85,12 +87,14 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
 
   @override
   Widget build(BuildContext context) {
+    final userBox = Hive.box<User>('session').values.toList().first;
     final departmentList = ref.watch(getDepartmentList);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: ColorManager.primaryDark,
         title: Text('Patient Reports'),
         centerTitle: true,
-        leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.white,)),
+        leading: userBox.typeID == 3 ? null:IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.white,)),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 18.w),
@@ -182,11 +186,11 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
                     }
                     else{
                       setState(() {
-                        resetList = 'Select a department';
+                        resetList = 'All';
                       });
                       return DropdownSearch<String>(
 
-                        items: ['Select a department',...data.map((e) => e.departmentName).toList()],
+                        items: ['All',...data.map((e) => e.departmentName).toList()],
                         dropdownDecoratorProps: DropDownDecoratorProps(
                           dropdownSearchDecoration: InputDecoration(
                               border: OutlineInputBorder(
@@ -282,6 +286,7 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
                                 departmentId: departmentId.toString(),
                               userId: userBox[0].userID!
                             );
+
                             if(response.isEmpty){
 
 
@@ -315,8 +320,8 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
                           reportList = [];
                           dateFrom.text = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 7)));
                           dateTo.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
-                          selectedItem = 'Select a department';
-                          departmentId = -1 ;
+                          selectedItem = 'All';
+                          departmentId = 0 ;
 
                         });
 
@@ -330,18 +335,23 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: DataTable(
-                    border: TableBorder.all(
-                      color: ColorManager.black.withOpacity(0.3),
+                    border: TableBorder.symmetric(
+                      outside: BorderSide(
+                        color: ColorManager.black.withOpacity(0.5)
+                      )
                     ),
                     headingRowColor: MaterialStateColor.resolveWith((states) => ColorManager.blue),
                     headingTextStyle: getMediumStyle(color: ColorManager.white,fontSize: 18),
                     columns: [
                       DataColumn(label: Text('S.N.')),
+                      DataColumn(label: Text('Patient Id')),
                       DataColumn(label: Text('Name')),
-                      DataColumn(label: Text('Information')),
+                      DataColumn(label: Text('Age/Sex')),
+                      DataColumn(label: Text('Address')),
+                      DataColumn(label: Text('Contact')),
                       DataColumn(label: Text('Department')),
-                      DataColumn(label: Text('Entry Date')),
-                      DataColumn(label: Text('Action')),
+                      DataColumn(label: Text('Type')),
+                      DataColumn(label: Text('Action/View')),
                     ],
                     rows: reportList
                         .asMap()
@@ -353,14 +363,22 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
                       return DataRow(
                         cells: [
                           DataCell(Text(index.toString())),
-                          DataCell(
-                              Text('${patient.fullName}')),
+                          DataCell(Text('${patient.patientID}')),
+                          DataCell(Text('${patient.fullName}')),
                           DataCell(Text('${patient.patientinfo}')),
+                          DataCell(Text('${patient.address}')),
+                          DataCell(Text('${patient.contact}')),
                           DataCell(Text('${patient.departmentName}')),
-                          DataCell(Text(patient.entrydate.toString())),
+                          DataCell(Text('${patient.typeId}')),
                           DataCell(
-                              IconButton(onPressed: (){ },
-                                  icon: FaIcon(CupertinoIcons.eye_fill,color: ColorManager.blue,))
+                              Row(
+                                children: [
+                                  IconButton(onPressed: ()=>Get.to(()=>AddDocuPatients(userId:patient.patientID!)),
+                                      icon: FaIcon(Icons.edit,color: ColorManager.orange.withOpacity(0.7),)),
+                                  IconButton(onPressed: (){},
+                                      icon: FaIcon(CupertinoIcons.eye_fill,color: ColorManager.blue,)),
+                                ],
+                              )
                           ),
                         ],
                       );

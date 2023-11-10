@@ -8,12 +8,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/presentation/organization/doctor_statistics/presentation/doctor_stat_page.dart';
 import 'package:medical_app/src/presentation/organization/organization_dashboard/presentation/org_homepage.dart';
-import 'package:medical_app/src/presentation/organization/patient_reports/presentation/patients_lists.dart';
-
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
 import '../../../../data/provider/common_provider.dart';
+import '../../../patient_reports/presentation/patients_lists.dart';
 
 
 

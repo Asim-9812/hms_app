@@ -14,13 +14,13 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
-import 'package:medical_app/src/presentation/doctor/documents/presentation/pdfView.dart';
 import 'package:medical_app/src/presentation/patient/documents/domain/services/document_services.dart';
 import 'package:medical_app/src/presentation/patient/documents/presentation/folder_page.dart';
 
 import '../../../../core/api.dart';
 import '../../../../core/pdf_api.dart';
 import '../../../../core/resources/value_manager.dart';
+import '../../../documents/presentation/pdfView.dart';
 import '../../../login/domain/model/user.dart';
 import '../add_documents/presentation/add_document_page.dart';
 import '../domain/model/document_model.dart';

@@ -9,6 +9,7 @@ import 'package:medical_app/src/presentation/doctor/doctor_tasks/presentation/ed
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
+import '../../../login/domain/model/user.dart';
 import '../../../notification_controller/notification_controller.dart';
 import '../domain/model/task_model.dart';
 
@@ -81,7 +82,8 @@ class _TaskListState extends State<TaskList> {
 
   @override
   Widget build(BuildContext context) {
-    final taskList = Hive.box<TaskModel>('doc_tasks').values.toList();
+    final userBox = Hive.box<User>('session').values.toList().first;
+    final taskList = Hive.box<TaskModel>('doc_tasks').values.where((element) => element.userId == userBox.userID).toList();
     final taskList2 = Hive.box<TaskModel>('doc_tasks').values.toList();
 
     if(sort == 0){
@@ -221,6 +223,8 @@ class _TaskListState extends State<TaskList> {
                                               if(e.remindMe){
                                                 await NotificationController.cancelNotifications(id: e.taskId);
                                               }
+                                              // print(e.taskId);
+                                              // print(taskList2.firstWhere((element) => element==e).taskId);
 
                                               taskBox.deleteAt(taskList2.indexOf(e));
 

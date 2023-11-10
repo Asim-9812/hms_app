@@ -14,27 +14,27 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../../core/resources/color_manager.dart';
-import '../../../../../core/resources/style_manager.dart';
-import '../../../../../core/resources/value_manager.dart';
-import '../../../../../data/provider/common_provider.dart';
-import '../../../../common/date_input_formatter.dart';
-import '../../../../common/snackbar.dart';
-import '../../../../documents/domain/model/document_model.dart';
-import '../../../../login/domain/model/user.dart';
-import '../../domain/services/document_services.dart';
+import '../../../../core/resources/color_manager.dart';
+import '../../../../core/resources/style_manager.dart';
+import '../../../../core/resources/value_manager.dart';
+import '../../../../data/provider/common_provider.dart';
+import '../../../common/date_input_formatter.dart';
+import '../../../common/snackbar.dart';
+import '../../../documents/domain/model/document_model.dart';
+import '../../../login/domain/model/user.dart';
+import '../../../patient/documents/domain/services/document_services.dart';
 
 
 
-class AddPatientDocuments extends ConsumerStatefulWidget {
-  final String? existingFolder;
-  AddPatientDocuments({this.existingFolder});
+class AddDocuPatients extends ConsumerStatefulWidget {
+  final String userId;
+  AddDocuPatients({required this.userId});
 
   @override
-  ConsumerState<AddPatientDocuments> createState() => _AddDocumentPageState();
+  ConsumerState<AddDocuPatients> createState() => _AddDocumentPageState();
 }
 
-class _AddDocumentPageState extends ConsumerState<AddPatientDocuments> {
+class _AddDocumentPageState extends ConsumerState<AddDocuPatients> {
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _dateController = TextEditingController();
@@ -80,8 +80,8 @@ class _AddDocumentPageState extends ConsumerState<AddPatientDocuments> {
   void initState(){
     super.initState();
     _getDocumentTypes();
-    _folderNameController.text =widget.existingFolder ?? '';
-    selectedFolder = widget.existingFolder ?? 'Select a folder';
+    // _folderNameController.text =widget.existingFolder ?? '';
+    // selectedFolder = widget.existingFolder ?? 'Select a folder';
 
 
 
@@ -92,11 +92,11 @@ class _AddDocumentPageState extends ConsumerState<AddPatientDocuments> {
   void _getDocumentTypes() async {
 
     final userId = userBox[0].username;
-    final folders = await PatientDocumentServices().getFolderList(username: userId!);
+    // final folders = await PatientDocumentServices().getFolderList(username: userId!);
     final typeList = await PatientDocumentServices().getDocumentTypeList();
     setState(() {
-      folderList = folders;
-      docTypeList = [initial,...typeList];
+      // folderList = folders;
+      docTypeList = [initial,...typeList.where((element) => (element.documentType.toLowerCase() == 'pdf') || (element.documentType.toLowerCase() == 'image')).toList()];
     });
   }
 
@@ -178,7 +178,7 @@ class _AddDocumentPageState extends ConsumerState<AddPatientDocuments> {
                               });
                               final response = await PatientDocumentServices().addPatientDocuments(
                                   documentID: 1,
-                                  userID: userBox[0].username!,
+                                  userID: widget.userId!,
                                   documentTypeID: selectedDocumentTypeId,
                                   folderName: 'Patient',
                                   doctorAttachmentID: 1,
@@ -209,8 +209,8 @@ class _AddDocumentPageState extends ConsumerState<AddPatientDocuments> {
                                 setState(() {
                                   isPosting = false;
                                 });
-                                ref.refresh(patientDocumentProvider(userBox[0].username!));
-                                ref.refresh(patientFolderProvider(userBox[0].username!));
+                                ref.refresh(patientDocumentProvider(widget.userId));
+                                ref.refresh(patientFolderProvider(widget.userId));
                                 Navigator.pop(context);
                               }
                             }

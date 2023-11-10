@@ -11,9 +11,11 @@ import 'package:hive/hive.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/presentation/notification/presentation/notification_page.dart';
+import 'package:medical_app/src/presentation/organization/org_profile/presentation/widgets/update_profile.dart';
 
 import '../../../../core/resources/value_manager.dart';
 import '../../../change_password_doc_org/presentation/change_password.dart';
+import '../../../documents/presentation/document_page.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../login/domain/service/login_service.dart';
 import '../../../login/presentation/status_page.dart';
@@ -126,6 +128,10 @@ class OrgProfilePage extends ConsumerWidget {
                         //
                         // _profileItems2(title: 'Phone Number', icon: FontAwesomeIcons.phone, onTap: (){},subtitle: '98XXXXXXXX'),
                         // _profileItems2(title: 'E-Mail', icon: Icons.email_outlined, onTap: (){},subtitle: 'user@gmail.com'),
+
+                        _profileItems2(title: 'My Documents', icon: FontAwesomeIcons.folderClosed, onTap: (){
+                          Get.to(()=>DocumentPage(isWideScreen,isNarrowScreen));
+                        },trailing: true),
                         _profileItems2(title: 'Change Password', icon: FontAwesomeIcons.key,
                             onTap: ()=>Get.to(()=>ChangePwdDocOrg(userBox.first)),
                             trailing: true),
@@ -188,6 +194,7 @@ class OrgProfilePage extends ConsumerWidget {
     final screenSize = MediaQuery.of(context).size;
 
     bool isNarrowScreen = screenSize.width < 420;
+    bool isWideScreen = screenSize.width > 560;
 
     final userBox = Hive.box<User>('session').values.toList();
     String firstName = userBox[0].firstName!;
@@ -244,7 +251,7 @@ class OrgProfilePage extends ConsumerWidget {
             ),
             w10,
             InkWell(
-                // onTap: ()=>Get.to(()=>),
+                onTap: ()=>Get.to(()=>UpdateOrgProfile(isWideScreen,isNarrowScreen,userBox[0])),
                 child: FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primaryDark,))
           ],
         ),

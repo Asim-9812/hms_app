@@ -13,7 +13,8 @@ import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import '../../../../data/provider/common_provider.dart';
 import '../../../../test.dart';
 import '../../../common/snackbar.dart';
-import '../../documents/presentation/document_page.dart';
+import '../../../documents/presentation/document_page.dart';
+import '../../../patient_reports/presentation/patient_report.dart';
 import '../../patient_reports/presentation/report_page_doctor.dart';
 import '../../profile/presentation/profile_page.dart';
 
@@ -196,7 +197,7 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
           children: [
             DoctorHomePage(isWideScreen,isNarrowScreen,noticeBool),
             DocumentPage(isWideScreen,isNarrowScreen),
-            PatientReportPageDoctor(),
+            PatientReports(),
             DoctorUtilityPage(),
             DocProfilePage()
           ],

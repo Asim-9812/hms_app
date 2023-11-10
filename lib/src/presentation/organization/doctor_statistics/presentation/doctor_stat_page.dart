@@ -443,10 +443,11 @@ class _DoctorReportsPageState extends State<DoctorReportsPage> with TickerProvid
                   color: ColorManager.blue.withOpacity(0.7),
                   borderRadius: BorderRadius.circular(10)),
               tabs: [
+                Tab(text: 'Appointments'),
                 Tab(
                   text: 'Operations',
                 ),
-                Tab(text: 'Appointments'),
+
               ]),
         ),
         SizedBox(

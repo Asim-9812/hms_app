@@ -12,14 +12,13 @@ import 'package:get/get.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
-
-import '../../../../../core/resources/color_manager.dart';
-import '../../../../../core/resources/style_manager.dart';
-import '../../../../../core/resources/value_manager.dart';
-import '../../../../../data/provider/common_provider.dart';
-import '../../../../common/date_input_formatter.dart';
-import '../../../../common/snackbar.dart';
-import '../../../../login/domain/model/user.dart';
+import '../../../../core/resources/color_manager.dart';
+import '../../../../core/resources/style_manager.dart';
+import '../../../../core/resources/value_manager.dart';
+import '../../../../data/provider/common_provider.dart';
+import '../../../common/date_input_formatter.dart';
+import '../../../common/snackbar.dart';
+import '../../../login/domain/model/user.dart';
 import '../../domain/model/document_model.dart';
 import '../../domain/services/document_services.dart';
 

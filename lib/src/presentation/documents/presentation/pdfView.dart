@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 
-import '../../../common/snackbar.dart';
+import '../../common/snackbar.dart';
 
 
 class PDFViewerPage extends StatefulWidget {

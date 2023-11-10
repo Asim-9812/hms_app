@@ -14,14 +14,14 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
-import 'package:medical_app/src/presentation/doctor/documents/domain/services/document_services.dart';
-import 'package:medical_app/src/presentation/doctor/documents/presentation/folder_page.dart';
-import 'package:medical_app/src/presentation/doctor/documents/presentation/pdfView.dart';
+import 'package:medical_app/src/presentation/documents/domain/services/document_services.dart';
+import 'package:medical_app/src/presentation/documents/presentation/folder_page.dart';
+import 'package:medical_app/src/presentation/documents/presentation/pdfView.dart';
 
-import '../../../../core/api.dart';
-import '../../../../core/pdf_api.dart';
-import '../../../../core/resources/value_manager.dart';
-import '../../../login/domain/model/user.dart';
+import '../../../core/api.dart';
+import '../../../core/pdf_api.dart';
+import '../../../core/resources/value_manager.dart';
+import '../../login/domain/model/user.dart';
 import '../add_documents/presentation/add_document_page.dart';
 import '../domain/model/document_model.dart';
 import '../search_documents/presentation/search_document_page.dart';
@@ -50,7 +50,7 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
     return FadeIn(
       duration: Duration(milliseconds: 700),
       child: Scaffold(
-        backgroundColor: ColorManager.dotGrey.withOpacity(0.4),
+        backgroundColor: ColorManager.white.withOpacity(0.9),
         appBar: AppBar(
           automaticallyImplyLeading: false,
           centerTitle: true,

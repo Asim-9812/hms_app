@@ -17,6 +17,7 @@ import '../../../../../core/resources/color_manager.dart';
 import '../../../../../core/resources/style_manager.dart';
 import '../../../../../core/resources/value_manager.dart';
 import '../../../../../data/provider/common_provider.dart';
+import '../../../../login/domain/model/user.dart';
 import '../../domain/model/reminder_model.dart';
 
 
@@ -75,7 +76,10 @@ class _MedRemindersState extends ConsumerState<MedReminders> {
 
   @override
   Widget build(BuildContext context) {
-    final reminderList = Hive.box<Reminder>('med_reminder').values.toList();
+    final userBox = Hive.box<User>('session').values.toList();
+
+    final reminderList = Hive.box<Reminder>('med_reminder').values.where((element) => element.userId == userBox[0].username).toList();
+
 
     String findClosestIntakeTime(List<String> intakeTimes) {
       final now = DateTime.now();

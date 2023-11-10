@@ -6,8 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 
-import '../../../../core/resources/style_manager.dart';
-import '../../../../core/resources/value_manager.dart';
+import '../../../core/resources/style_manager.dart';
+import '../../../core/resources/value_manager.dart';
+
 
 class PatientProfileOrg extends StatefulWidget {
   final bool isWideScreen;

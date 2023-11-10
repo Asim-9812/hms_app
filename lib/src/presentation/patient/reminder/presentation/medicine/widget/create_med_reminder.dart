@@ -1337,7 +1337,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                       onPressed: () async {
                         print('executed');
                         final userBox = Hive.box<User>('session').values.toList();
-                        int userId = userBox[0].id!;
+                        String userId = userBox[0].username!;
 
                         Uint8List? reminderImage;
                         List<String> list = [];

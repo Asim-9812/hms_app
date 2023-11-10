@@ -6,7 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart';
 
-import '../../../../../core/api.dart';
+import '../../../../core/api.dart';
 import '../model/document_model.dart';
 
 

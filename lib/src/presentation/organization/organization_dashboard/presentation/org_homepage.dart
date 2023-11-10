@@ -43,10 +43,13 @@ class _OrgHomePageState extends State<OrgHomePage> {
   @override
   void initState() {
     super.initState();
-    checkGeolocationStatus();
-    _getDoctorsList();
 
   }
+
+
+
+
+
 
 
   @override
@@ -54,6 +57,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
     super.didChangeDependencies();
 
     if(widget.noticeBool){
+      print('showdialog');
       // Schedule the _showAlertDialog method to be called after the build is complete.
       Future.delayed(Duration.zero, () {
         showAlertDialog(context);
@@ -61,56 +65,6 @@ class _OrgHomePageState extends State<OrgHomePage> {
     }
 
   }
-
-
-
-
-
-  Future<void> _refreshData() async {
-    // Implement the logic to refresh the data here
-    _getDoctorsList();
-    // You can add more functions to update other data if needed
-  }
-
-
-  ///geolocator settings...
-
-  Future<void> checkGeolocationStatus() async {
-    _geolocationStatus = await Geolocator.isLocationServiceEnabled();
-    if (_geolocationStatus == LocationPermission.denied) {
-      setState(() {
-        _geolocationStatus = false;
-      });
-    } else {
-      checkLocationPermission();
-    }
-  }
-
-  Future<void> checkLocationPermission() async {
-    _locationPermission = await Geolocator.requestPermission();
-    if (_locationPermission == LocationPermission.denied) {
-      ('permission denied');
-    } else if (_locationPermission == LocationPermission.deniedForever) {
-      ('permission denied');
-    } else if (_locationPermission == LocationPermission.always ||
-        _locationPermission == LocationPermission.whileInUse) {
-      ('permission given');
-
-      final _currentPosition = await Geolocator.getCurrentPosition();
-
-      _userPosition = _currentPosition;
-      (_userPosition);
-    }
-  }
-
-  void _getDoctorsList() async {
-    final List<User> doctorList = await UserService().getDoctors();
-    setState(() {
-      doctors = doctorList;
-    });
-  }
-
-
 
 
 
@@ -162,15 +116,12 @@ class _OrgHomePageState extends State<OrgHomePage> {
             ),
           )
       ),
-      body: RefreshIndicator(
-        onRefresh: _refreshData,
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              buildBody(context)
-            ],
-          ),
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            buildBody(context)
+          ],
         ),
       ),
       extendBody: true,
@@ -189,8 +140,6 @@ class _OrgHomePageState extends State<OrgHomePage> {
         h10,
         _overallStat(),
         h20,
-        _notices(),
-        h100,
         h100, h100, h100, h100
 
       ],

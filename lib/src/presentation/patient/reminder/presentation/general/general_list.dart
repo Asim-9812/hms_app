@@ -17,6 +17,7 @@ import '../../../../../core/resources/color_manager.dart';
 import '../../../../../core/resources/style_manager.dart';
 import '../../../../../core/resources/value_manager.dart';
 import '../../../../../data/provider/common_provider.dart';
+import '../../../../login/domain/model/user.dart';
 
 
 
@@ -74,7 +75,8 @@ class _MedRemindersState extends ConsumerState<GeneralReminders> {
 
   @override
   Widget build(BuildContext context) {
-    final reminderList = Hive.box<GeneralReminderModel>('general_reminder_box').values.toList();
+    final userBox = Hive.box<User>('session').values.first;
+    final reminderList = Hive.box<GeneralReminderModel>('general_reminder_box').values.where((element) => element.userId == userBox.username).toList();
 
 
 
