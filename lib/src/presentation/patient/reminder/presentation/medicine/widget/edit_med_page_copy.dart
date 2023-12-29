@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/domain/model/reminder_model.dart';
+import '../../../../../notification_controller/notification_controller.dart';
 import '../../../../../notification_controller/notification_controller_copy.dart';
 
 import '../../../../../../core/resources/color_manager.dart';
@@ -63,6 +64,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPageCopy> {
   String? selectedStrengthUnit;
   late String selectedFrequencyName;
   late List<String> scheduleTime;
+  List<String> notifyScheduleTime =[];
   late String intervals;
   late int frequencyId;
   late DateTime endDateIntake;
@@ -76,7 +78,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPageCopy> {
   List<String>? days;
   late int imageSet;
 
-  late List<NotificationContent> contentList ;
+  late List<int> contentList ;
 
 
 
@@ -145,7 +147,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPageCopy> {
     _summaryController.text = '${selectedMedTypeName} ${_medicineNameController.text} ${_strengthController.text}${selectedStrengthUnit} ${selectedFrequencyName} ${selectedPatternName}';
 
 
-    contentList = widget.reminderTest.contentList!;
+    contentList = widget.reminderTest.contentIdList!;
 
 
 
@@ -212,6 +214,42 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPageCopy> {
             );
             final formattedTime = selectedTime.format(context);
             scheduleTime.add(formattedTime);
+          }
+        }
+        setState(() {});
+      }
+
+      if (picked != null) {
+        var selectedTime = TimeOfDay(
+          hour: picked.hour,
+          minute: picked.minute,
+        );
+
+        final formattedTime = DateFormat('HH:mm').format(
+          DateTime(2023, 1, 1, selectedTime.hour, selectedTime.minute),
+        );
+
+        // Calculate intake times based on selected frequencyId
+        notifyScheduleTime?.clear(); // Clear the list before adding new times
+
+        // Add the initial selected time
+        notifyScheduleTime?.add(formattedTime);
+
+        // Calculate additional times based on frequencyId
+        if (frequencyId! >= 1) {
+          // Calculate intervals based on frequencyId
+          int intervalHours = 24 ~/ frequencyId!;
+
+          for (int i = 1; i < frequencyId!; i++) {
+            // Add intervals to the selected time and add to the list
+            selectedTime = TimeOfDay(
+              hour: (selectedTime.hour + intervalHours) % 24,
+              minute: selectedTime.minute,
+            );
+            final formattedTime = DateFormat('HH:mm').format(
+              DateTime(2023, 1, 1, selectedTime.hour, selectedTime.minute),
+            );
+            notifyScheduleTime?.add(formattedTime);
           }
         }
         setState(() {});
@@ -833,8 +871,8 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPageCopy> {
                   else if (int.parse(value) <= 0 ) {
                     return 'Must be greater than 0';
                   }
-                  else if (int.parse(value) > 365 ) {
-                    return 'Must be less than a year';
+                  else if (int.parse(value) > 120 ) {
+                    return 'Must be less than 120 days or 4 months';
                   }
                   return null;
                 },
@@ -1516,7 +1554,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPageCopy> {
 
 
                         for(int i = 0; i < contentList.length ; i++){
-                          await NotificationControllerCopy.cancelNotifications(id: contentList[i].id!);
+                          await NotificationController.cancelNotifications(id: contentList[i]);
                         }
 
 
@@ -1550,17 +1588,17 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPageCopy> {
                         if(selectedPatternId == 1){
                           final int totalDays = int.parse(_medicationDurationController.text.trim());
                           final int totalInterval = scheduleTime.length;
-                          final DateTime firstDate = DateTime(startDateIntake!.year,startDateIntake!.month,startDateIntake!.day,int.parse(scheduleTime[0].split(':').first),int.parse(scheduleTime[0].split(':').last));
+                          final DateTime firstDate = DateTime(startDateIntake!.year,startDateIntake!.month,startDateIntake!.day,DateFormat('hh:mm').parse(notifyScheduleTime[0]).hour,DateFormat('hh:mm').parse(notifyScheduleTime[0]).minute);
 
                           List<DateTime> scheduleList = [firstDate];
 
                           final int notificationTimes = totalDays * totalInterval;
 
-                          for(int i = 1 ; i<notificationTimes; i++){
-                            for(int j = 0 ; j < scheduleTime.length ; j++){
+                          for(int i = 0 ; i<totalDays; i++){
+                            DateTime newDate = firstDate.add(Duration(days: i));
+                            for(int j = 0 ; j < totalInterval ; j++){
 
-                              DateTime newDate = firstDate.add(Duration(days: i));
-                              DateTime notificationDates = DateTime(newDate.year,newDate.month,newDate.day,int.parse(scheduleTime[i].split(':').first),int.parse(scheduleTime[i].split(':').last));
+                              DateTime notificationDates = DateTime(newDate.year,newDate.month,newDate.day,DateFormat('hh:mm').parse(notifyScheduleTime![j]).hour,DateFormat('hh:mm').parse(notifyScheduleTime![j]).minute);
                               scheduleList.add(notificationDates);
                             }
                           }
@@ -1588,9 +1626,9 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPageCopy> {
                                 minute: scheduleList[i].minute
                             );
 
-                            contentList.add(content);
+                            contentList.add(content.id!);
 
-                            await NotificationControllerCopy.scheduleNotifications(context, schedule: schedule, content: content);
+                            await NotificationController.scheduleNotifications(context, schedule: schedule, content: content);
                           }
 
                           Reminder reminder = Reminder(
@@ -1621,7 +1659,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPageCopy> {
                             reminderImage: imageSet == 1 ? updatedReminder.reminderImage : selectImage != null ? reminderImage : null,
                             notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
                             summary: _summaryController.text.trim(),
-                            contentList: contentList
+                            contentIdList: contentList
                           );
 
                           // NotificationService().scheduleEverydayNotification(reminder: reminder);
@@ -1637,26 +1675,33 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPageCopy> {
                         if(selectedPatternId == 2){
                           final int totalDays = int.parse(_medicationDurationController.text.trim());
                           final int totalInterval = scheduleTime.length;
-                          final DateTime firstDate = DateTime(startDateIntake!.year,startDateIntake!.month,startDateIntake!.day,int.parse(scheduleTime[0].split(':').first),int.parse(scheduleTime[0].split(':').last));
+                          final DateTime firstDate = DateTime(startDateIntake!.year,startDateIntake!.month,startDateIntake!.day,DateFormat('hh:mm').parse(notifyScheduleTime[0]).hour,DateFormat('hh:mm').parse(notifyScheduleTime[0]).minute);
 
                           List<DateTime> scheduleList = [firstDate];
 
                           final int notificationTimes = totalDays * totalInterval;
 
-                          for(int i = 1 ; i<notificationTimes; i++){
-                            for(int j = 0 ; j < scheduleTime.length ; j++){
+                          int addedDatesCount = 0;
 
-                              DateTime newDate = firstDate.add(Duration(days: 1));
-                              DateTime notificationDates = DateTime(newDate.year,newDate.month,newDate.day,int.parse(scheduleTime[i].split(':').first),int.parse(scheduleTime[i].split(':').last));
+                          do {
+                            DateTime newDate = firstDate.add(Duration(days: addedDatesCount ~/ totalInterval));
 
-                              if(days!.contains(DateFormat('EEEE').format(notificationDates))){
+                            for (int j = 0; j < totalInterval; j++) {
+                              DateTime notificationDates = DateTime(
+                                newDate.year,
+                                newDate.month,
+                                newDate.day,
+                                int.parse(scheduleTime[j].split(':').first),
+                                int.parse(scheduleTime[j].split(':').last.split(' ').first),
+                              );
+
+                              if (days!.contains(DateFormat('EEEE').format(notificationDates))) {
                                 scheduleList.add(notificationDates);
-                              }
-                              else{
-                                i--;
+                                addedDatesCount = scheduleList.length;
                               }
                             }
-                          }
+                          } while (addedDatesCount < totalDays * totalInterval);
+
 
                           for(int i = 0; i <scheduleList.length; i++){
                             final NotificationContent content = NotificationContent(
@@ -1681,9 +1726,9 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPageCopy> {
                                 minute: scheduleList[i].minute
                             );
 
-                            contentList.add(content);
+                            contentList.add(content.id!);
 
-                            await NotificationControllerCopy.scheduleNotifications(context, schedule: schedule, content: content);
+                            await NotificationController.scheduleNotifications(context, schedule: schedule, content: content);
                           }
 
                           Reminder reminder = Reminder(
@@ -1714,7 +1759,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPageCopy> {
                               reminderImage: imageSet == 1 ? updatedReminder.reminderImage : selectImage != null ? reminderImage : null,
                               notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
                               summary: _summaryController.text.trim(),
-                              contentList: contentList
+                              contentIdList: contentList
                           );
 
                           // NotificationService().scheduleEverydayNotification(reminder: reminder);
@@ -1727,17 +1772,16 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPageCopy> {
                         if(selectedPatternId == 3){
                           final int totalDays = int.parse(_medicationDurationController.text.trim());
                           final int totalInterval = scheduleTime.length;
-                          final DateTime firstDate = DateTime(startDateIntake!.year,startDateIntake!.month,startDateIntake!.day,int.parse(scheduleTime[0].split(':').first),int.parse(scheduleTime[0].split(':').last));
+                          final DateTime firstDate = DateTime(startDateIntake!.year,startDateIntake!.month,startDateIntake!.day,DateFormat('hh:mm').parse(notifyScheduleTime[0]).hour,DateFormat('hh:mm').parse(notifyScheduleTime[0]).minute);
 
                           List<DateTime> scheduleList = [firstDate];
 
                           final int notificationTimes = totalDays * totalInterval;
 
-                          for(int i = 1 ; i<notificationTimes; i++){
-                            for(int j = 0 ; j < scheduleTime.length ; j++){
-
-                              DateTime newDate = firstDate.add(Duration(days: int.parse(_intervalDurationController.text)));
-                              DateTime notificationDates = DateTime(newDate.year,newDate.month,newDate.day,int.parse(scheduleTime[i].split(':').first),int.parse(scheduleTime[i].split(':').last));
+                          for(int i = 0 ; i<totalDays; i++){
+                            DateTime newDate = firstDate.add(Duration(days: i == 0 ? 0 :int.parse(_intervalDurationController.text) ));
+                            for(int j = 0 ; j < totalInterval ; j++){
+                              DateTime notificationDates = DateTime(newDate.year,newDate.month,newDate.day,DateFormat('hh:mm').parse(notifyScheduleTime[j]).hour,DateFormat('hh:mm').parse(notifyScheduleTime[j]).minute);
                               scheduleList.add(notificationDates);
                             }
                           }
@@ -1765,9 +1809,9 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPageCopy> {
                                 minute: scheduleList[i].minute
                             );
 
-                            contentList.add(content);
+                            contentList.add(content.id!);
 
-                            await NotificationControllerCopy.scheduleNotifications(context, schedule: schedule, content: content);
+                            await NotificationController.scheduleNotifications(context, schedule: schedule, content: content);
                           }
                           Reminder reminder = Reminder(
                               reminderId: updatedReminder.reminderId,
@@ -1797,7 +1841,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPageCopy> {
                               reminderImage: imageSet == 1 ? updatedReminder.reminderImage : selectImage != null ? reminderImage : null,
                               notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
                               summary: _summaryController.text.trim(),
-                              contentList: contentList
+                              contentIdList: contentList
                           );
 
                           // NotificationService().scheduleEverydayNotification(reminder: reminder);

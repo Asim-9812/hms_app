@@ -35,7 +35,7 @@ class ReminderAdapter extends TypeAdapter<Reminder> {
       reminderImage: fields[15] as Uint8List?,
       notes: fields[16] as String?,
       summary: fields[17] as String,
-      contentList: (fields[18] as List?)?.cast<NotificationContent>(),
+      contentIdList: (fields[18] as List?)?.cast<int>(),
     );
   }
 
@@ -80,7 +80,7 @@ class ReminderAdapter extends TypeAdapter<Reminder> {
       ..writeByte(17)
       ..write(obj.summary)
       ..writeByte(18)
-      ..write(obj.contentList);
+      ..write(obj.contentIdList);
   }
 
   @override

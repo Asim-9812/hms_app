@@ -44,7 +44,7 @@ class Reminder {
   @HiveField(17)
   String summary;
   @HiveField(18)
-  List<NotificationContent>? contentList;
+  List<int>? contentIdList;
 
   Reminder({
     required this.reminderId,
@@ -65,7 +65,7 @@ class Reminder {
     required this.reminderImage,
     required this.notes,
     required this.summary,
-    this.contentList,
+    this.contentIdList,
   });
 }
 
@@ -103,3 +103,7 @@ class ReminderPattern {
     this.daysOfWeek,
   });
 }
+
+
+
+

@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/domain/model/reminder_model.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/medicine/widget/edit_med_page.dart';
+import 'package:meroupachar/src/presentation/patient/reminder/presentation/medicine/widget/edit_med_page_copy.dart';
 
 import '../../../../../core/resources/color_manager.dart';
 import '../../../../../core/resources/style_manager.dart';
@@ -375,7 +376,7 @@ class _MedDetailsState extends State<MedDetails> {
                        backgroundColor: ColorManager.primary,
                        elevation: 0
                      ),
-                       onPressed: ()=>Get.to(()=>EditMedReminderPage(reminderBox)),
+                       onPressed: ()=>Get.to(()=>EditMedReminderPageCopy(reminderBox)),
                        child: Row(
                          mainAxisAlignment: MainAxisAlignment.center,
                          crossAxisAlignment: CrossAxisAlignment.center,

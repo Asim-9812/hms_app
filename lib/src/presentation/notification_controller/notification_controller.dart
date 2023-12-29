@@ -215,6 +215,22 @@ class NotificationController {
   }
 
 
+  static Future<void> scheduleNotifications(BuildContext context,{
+    required NotificationSchedule schedule,
+    required NotificationContent content,
+  }) async {
+    bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
+    if (!isAllowed) isAllowed = await displayNotificationRationale(context);
+    if (!isAllowed) return;
+
+    await myNotificationSchedules(schedule: schedule,content: content);
+  }
+
+
+
+
+
+
   static Future<void> snoozeMedNotification() async {
 
     print('executed snooze');
@@ -1025,4 +1041,38 @@ Future<void> myNoticeNotification() async {
 
 
 }
+
+
+Future<void> myNotificationSchedules({
+  required NotificationSchedule schedule,
+  required NotificationContent content,
+}) async {
+
+
+  print(content.id!);
+  await AwesomeNotifications().createNotification(
+    schedule: schedule,
+
+    content: content,
+    actionButtons: [
+      NotificationActionButton(
+          key: 'SNOOZE',
+          label: 'Snooze',
+          actionType: ActionType.SilentAction
+      ),
+      NotificationActionButton(
+          key: 'DISMISSED',
+          label: 'Dismiss',
+          actionType: ActionType.DisabledAction
+      ),
+    ],
+  );
+
+
+
+}
+
+
+
+
 

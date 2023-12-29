@@ -33,9 +33,9 @@ class NotificationControllerCopy {
         null, //'resource://drawable/res_app_icon',//
         [
           NotificationChannel(
-              channelKey: 'alerts',
-              channelName: 'Alerts',
-              channelDescription: 'Notification tests as alerts',
+              channelKey: 'reminders',
+              channelName: 'Reminders',
+              channelDescription: 'Notifications for reminders',
               playSound: true,
               onlyAlertOnce: true,
               groupAlertBehavior: GroupAlertBehavior.Children,
@@ -207,6 +207,7 @@ Future<void> myNotificationSchedules({
 }) async {
 
 
+  print(content.id!);
   await AwesomeNotifications().createNotification(
     schedule: schedule,
 
