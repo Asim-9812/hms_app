@@ -32,6 +32,9 @@ class GeneralReminderModel {
   @HiveField(7)
   String userId;
 
+  @HiveField(8)
+  List<int>? contentIdList;
+
   GeneralReminderModel({
     required this.reminderId,
     required this.title,
@@ -41,6 +44,7 @@ class GeneralReminderModel {
     this.initialReminder,
     required this.reminderPattern,
     required this.userId,
+    this.contentIdList,
   });
 }
 

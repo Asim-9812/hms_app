@@ -25,13 +25,14 @@ class GeneralReminderModelAdapter extends TypeAdapter<GeneralReminderModel> {
       initialReminder: fields[5] as InitialReminder?,
       reminderPattern: fields[6] as ReminderPattern,
       userId: fields[7] as String,
+      contentIdList: (fields[8] as List?)?.cast<int>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, GeneralReminderModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.reminderId)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class GeneralReminderModelAdapter extends TypeAdapter<GeneralReminderModel> {
       ..writeByte(6)
       ..write(obj.reminderPattern)
       ..writeByte(7)
-      ..write(obj.userId);
+      ..write(obj.userId)
+      ..writeByte(8)
+      ..write(obj.contentIdList);
   }
 
   @override

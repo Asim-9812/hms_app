@@ -10,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/domain/model/general_reminder_model.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/general/generalDetails.dart';
 
@@ -51,6 +52,8 @@ class _MedRemindersState extends ConsumerState<GeneralReminders> {
 
     // Add a listener to update the UI when the box changes
     reminderBoxListenable.addListener(_onHiveBoxChanged);
+
+    _deleteOnce();
   }
 
   void _onHiveBoxChanged() {
@@ -59,6 +62,25 @@ class _MedRemindersState extends ConsumerState<GeneralReminders> {
     setState(() {
       // Update your data or UI as needed
     });
+  }
+
+
+  void _deleteOnce(){
+
+    final isOnceReminders = reminderBox.values.toList().where((element) => element.reminderPattern.reminderPatternId == 1).toList();
+
+    for(int i = 0 ; i < isOnceReminders.length ; i++){
+      DateTime isBefore = DateTime(isOnceReminders[i].startDate.year,isOnceReminders[i].startDate.month,isOnceReminders[i].startDate.day,DateFormat('hh:mm a').parse(isOnceReminders[i].time).hour, DateFormat('hh:mm a').parse(isOnceReminders[i].time).minute);
+
+
+      if(isBefore.isBefore(DateTime.now())){
+        final int indexToDelete = reminderBox.values.toList().indexWhere((element) => element.reminderId == isOnceReminders[i].reminderId);
+
+        reminderBox.deleteAt(indexToDelete);
+      }
+
+    }
+
   }
 
   @override

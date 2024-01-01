@@ -11,7 +11,7 @@ import 'package:meroupachar/src/core/resources/color_manager.dart';
 import 'package:meroupachar/src/core/resources/value_manager.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/general/widget/create_general_reminder.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/medicine/widget/create_med_reminder.dart';
-import 'package:meroupachar/src/presentation/patient/reminder/presentation/medicine/widget/create_med_reminder_copy.dart';
+import 'package:meroupachar/src/presentation/patient/reminder/presentation/medicine/widget/create_med_reminder.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import '../../../../core/resources/style_manager.dart';
@@ -217,7 +217,7 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
                                   InkWell(
                                     onTap : (){
                                       Navigator.pop(context);
-                                      Get.to(()=>CreateMedReminderCopy());
+                                      Get.to(()=>CreateMedReminder());
 
                                     },
                                     child: Container(

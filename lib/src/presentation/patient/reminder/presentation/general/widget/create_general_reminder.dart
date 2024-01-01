@@ -1,9 +1,11 @@
 import 'dart:math';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -61,11 +63,6 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
   DateTime? setTime ;
 
 
-  int? difference;
-
-
-  String selectedInitialReminderType=initialReminderType[0];
-  int selectedInitialReminderTypeId=0;
 
   List<String>? days;
 
@@ -78,6 +75,14 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
 
 
   bool selectDaysValidation = false;
+
+  List<DateTime> scheduledDate = [];
+
+  List<int> contentList = [];
+
+
+  bool isPostingData = false;
+
 
 
 
@@ -597,149 +602,7 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
                 if(selectedPatternId == 3)
                   h10,
 
-                if(selectedPatternId == 1 || selectedPatternId == 2)
-                  Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(' Remind me before (optional)',style: getRegularStyle(color: ColorManager.black,fontSize: 16.sp),)),
-                if(selectedPatternId == 1 || selectedPatternId == 2)
-                h10,
-                if(selectedPatternId == 1 || selectedPatternId == 2)
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
 
-
-                    Expanded(
-                      child: TextFormField(
-                        controller: _initialReminderController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                           focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ColorManager.black.withOpacity(0.5)
-                          )
-                      ),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: ColorManager.primary
-                              )
-                          ),
-                          enabledBorder:  OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: ColorManager.primaryDark
-                              )
-                          ),
-
-                        ),
-                        validator: (value){
-                          if(value!.isEmpty){
-                            return null;
-                          }
-                          if(selectedInitialReminderTypeId == 2){
-                            if(int.parse(value)>7){
-                              return 'Days must be less than 8';
-                            }
-                            if(startDateIntake!.difference(DateTime.now()).inDays < int.parse(value)){
-                              return 'Select a time that is at least a day from today';
-                            }
-                          }
-                          if(selectedInitialReminderTypeId == 1){
-                            if(int.parse(value)>24){
-                              return 'Hours must be less than 24';
-                            }
-                            if(setTime!.difference(DateTime.now()).inHours < int.parse(value)){
-                              return 'Select a time that is at least a hour from now';
-                            }
-                          }
-                          if(selectedInitialReminderTypeId == 0){
-                            if(int.parse(value)>60){
-                              return 'Minutes must be less than 60';
-                            }
-                            if(setTime!.difference(DateTime.now()).inMinutes < int.parse(value)){
-                              return 'Select a time that is at least a minute from now';
-                            }
-                          }
-                          if (!value.contains(RegExp(r'^\d+$'))) {
-                            return 'Invalid value';
-                          }
-                          else if (int.parse(value) <= 0) {
-                            return 'Must be greater than 0';
-                          }
-                          return null;
-                        },
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        onChanged: (value){
-                          // ref.read(itemProvider.notifier).updateStrength(value);
-                        },
-                      ),
-                    ),
-                    w10,
-                    Expanded(
-                      child: DropdownButtonFormField(
-                        menuMaxHeight: 200,
-                        isDense: true,
-                        value:selectedInitialReminderType ,
-                        decoration: InputDecoration(
-                           focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ColorManager.black.withOpacity(0.5)
-                          )
-                      ),
-
-                            isDense: true,
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
-                                    color: ColorManager.primaryDark
-                                )
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
-                                    color: ColorManager.primaryDark
-                                )
-                            )
-                        ),
-
-                        items: initialReminderType
-                            .map(
-                              (String item) => DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(
-                              item,
-                              style: getRegularStyle(color: Colors.black,fontSize: 16.sp),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ).toList(),
-                        onChanged: (value){
-                          setState(() {
-                            selectedInitialReminderType = value!;
-                            selectedInitialReminderTypeId = initialReminderType.indexOf(value);
-                          });
-                          // ref.read(itemProvider.notifier).updateStrengthUnit(value!);
-
-                        },
-                        validator: (value){
-                          if(_initialReminderController.text.isNotEmpty){
-                            if(selectedInitialReminderType == null){
-                              return 'Please select a unit';
-                            }
-
-                          }
-                          return null;
-                        },
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                      ),
-                    ),
-                  ],
-                ),
-                if(selectedPatternId == 1 || selectedPatternId == 2)
-                h10,
                 h10,
                 Row(
                   children: [
@@ -798,55 +661,384 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
                             }
                             else{
                               print('executed');
-                              if(formKey1.currentState!.validate()){
+                              if(formKey1.currentState!.validate()) {
+                                setState(() {
+                                  isPostingData = true;
+                                });
 
-                                GeneralReminderModel reminder = GeneralReminderModel(
-                                    reminderId: Random().nextInt(1000),
-                                    title: _titleController.text.trim(),
-                                    description: _descriptionController.text,
-                                    time: _startTimeController.text.trim(),
-                                    startDate: startDateIntake!,
-                                    initialReminder:_initialReminderController.text.isEmpty?null: InitialReminder(
-                                        initialReminderTypeId: selectedInitialReminderTypeId,
-                                        initialReminderTypeName: selectedInitialReminderType,
-                                        initialReminder:int.parse(_initialReminderController.text.trim())),
-                                    reminderPattern:ReminderPattern(
+                                /// FOR ONCE....
+                                if (selectedPatternId == 1) {
+                                  final DateTime firstDate = DateTime(
+                                      startDateIntake!.year,
+                                      startDateIntake!.month,
+                                      startDateIntake!.day,
+                                      DateFormat('hh:mm a')
+                                          .parse(_startTimeController.text)
+                                          .hour, DateFormat('hh:mm a')
+                                      .parse(_startTimeController.text)
+                                      .minute);
+
+                                  List<DateTime> scheduleList = [];
+
+                                  for (int i = 0; i < 1; i++) {
+                                    DateTime newDate = firstDate.add(
+                                        Duration(days: i));
+                                    print(newDate);
+                                    DateTime notificationDates = DateTime(
+                                        newDate.year, newDate.month,
+                                        newDate.day, DateFormat('hh:mm a')
+                                        .parse(_startTimeController.text)
+                                        .hour, DateFormat('hh:mm a')
+                                        .parse(_startTimeController.text)
+                                        .minute);
+                                    scheduleList.add(notificationDates);
+                                  }
+
+                                  print('scheduled list : ${scheduleList
+                                      .length}');
+                                  GeneralReminderModel reminder = GeneralReminderModel(
+                                      reminderId: Random().nextInt(9999),
+                                      title: _titleController.text.trim(),
+                                      description: _descriptionController.text,
+                                      time: _startTimeController.text.trim(),
+                                      startDate: startDateIntake!,
+                                      reminderPattern: ReminderPattern(
                                         reminderPatternId: selectedPatternId!,
                                         patternName: selectedPatternName!,
-                                        interval: selectedPatternId == 4 ? int.parse(_intervalDurationController.text) : null,
-                                        daysOfWeek: selectedPatternId == 3 ? days : null
-                                    ) ,
-                                    userId: userId
-                                );
+                                      ),
+                                      userId: userId,
+                                      contentIdList: contentList
+                                  );
 
-                                // if(selectedPatternId == 1){
-                                //   NotificationService().scheduleEverydayNotification(reminder: reminder);
-                                // }
-                                // else if(selectedPatternId == 2){
-                                //   NotificationService().scheduleSpecificDaysNotification(reminder: reminder);
-                                // }
-                                // else if(selectedPatternId == 3){
-                                //   NotificationService().scheduleIntervalSNotification(reminder: reminder);
-                                // }
+                                  for (int i = 0; i <
+                                      scheduleList.length; i++) {
+                                    final NotificationContent content = NotificationContent(
+                                      id: Random().nextInt(9999),
+                                      channelKey: 'alerts',
+                                      title: _titleController.text.trim(),
+                                      body: _descriptionController.text,
+                                      notificationLayout: NotificationLayout
+                                          .Default,
+                                      color: Colors.black,
+
+                                      //
+                                      backgroundColor: Colors.black,
+                                      // customSound: 'resource://raw/notif',
+                                      payload: {
+                                        'actPag': 'myAct',
+                                        'actType': 'medicine'
+                                      },
+                                    );
+
+                                    final NotificationCalendar schedule = NotificationCalendar(
+                                        year: scheduleList[i].year,
+                                        month: scheduleList[i].month,
+                                        day: scheduleList[i].day,
+                                        hour: scheduleList[i].hour,
+                                        minute: scheduleList[i].minute
+                                    );
+
+                                    contentList.add(content.id!);
+
+                                    await NotificationController
+                                        .scheduleNotifications(
+
+                                        context,
+                                        schedule: schedule,
+                                        content: content);
+                                  }
 
 
-                                // print(reminder.title);
-                                // print(reminder.description);
-                                // print(reminder.time);
-                                // print(reminder.startDate);
-                                // print(reminder.reminderPattern.patternName);
-
-                                await  NotificationController.scheduleGeneralNotification(context,reminder: reminder);
 
 
-                                _addReminder(reminder);
+                                  _addReminder(reminder);
+                                }
+
+                                /// FOR EVERYDAY....
+                                if (selectedPatternId == 2) {
+                                  final DateTime firstDate = DateTime(
+                                      startDateIntake!.year,
+                                      startDateIntake!.month,
+                                      startDateIntake!.day,
+                                      DateFormat('hh:mm a')
+                                          .parse(_startTimeController.text)
+                                          .hour, DateFormat('hh:mm a')
+                                      .parse(_startTimeController.text)
+                                      .minute);
+
+                                  List<DateTime> scheduleList = [];
+
+                                  for (int i = 0; i < 365; i++) {
+                                    DateTime newDate = firstDate.add(
+                                        Duration(days: i));
+                                    print(newDate);
+                                    DateTime notificationDates = DateTime(
+                                        newDate.year, newDate.month,
+                                        newDate.day, DateFormat('hh:mm a')
+                                        .parse(_startTimeController.text)
+                                        .hour, DateFormat('hh:mm a')
+                                        .parse(_startTimeController.text)
+                                        .minute);
+                                    scheduleList.add(notificationDates);
+                                  }
+
+                                  print('scheduled list : ${scheduleList
+                                      .length}');
+
+                                  for (int i = 0; i <
+                                      scheduleList.length; i++) {
+                                    final NotificationContent content = NotificationContent(
+                                      id: Random().nextInt(9999),
+                                      channelKey: 'alerts',
+                                      title: _titleController.text.trim(),
+                                      body: _descriptionController.text,
+                                      notificationLayout: NotificationLayout
+                                          .Default,
+                                      color: Colors.black,
+
+                                      //
+                                      backgroundColor: Colors.black,
+                                      // customSound: 'resource://raw/notif',
+                                      payload: {
+                                        'actPag': 'myAct',
+                                        'actType': 'medicine'
+                                      },
+                                    );
+
+                                    final NotificationCalendar schedule = NotificationCalendar(
+                                        year: scheduleList[i].year,
+                                        month: scheduleList[i].month,
+                                        day: scheduleList[i].day,
+                                        hour: scheduleList[i].hour,
+                                        minute: scheduleList[i].minute
+                                    );
+
+                                    contentList.add(content.id!);
+
+                                    await NotificationController
+                                        .scheduleNotifications(
+                                        context, schedule: schedule,
+                                        content: content);
+                                  }
+
+                                  GeneralReminderModel reminder = GeneralReminderModel(
+                                      reminderId: Random().nextInt(9999),
+                                      title: _titleController.text.trim(),
+                                      description: _descriptionController.text,
+                                      time: _startTimeController.text.trim(),
+                                      startDate: startDateIntake!,
+                                      reminderPattern: ReminderPattern(
+                                        reminderPatternId: selectedPatternId!,
+                                        patternName: selectedPatternName!,
+                                      ),
+                                      userId: userId,
+                                      contentIdList: contentList
+                                  );
+
+
+                                  _addReminder(reminder);
+                                }
+
+
+                                /// FOR Specific days....
+                                if (selectedPatternId == 3) {
+                                  final DateTime firstDate = DateTime(
+                                      startDateIntake!.year,
+                                      startDateIntake!.month,
+                                      startDateIntake!.day,
+                                      DateFormat('hh:mm a')
+                                          .parse(_startTimeController.text)
+                                          .hour, DateFormat('hh:mm a')
+                                      .parse(_startTimeController.text)
+                                      .minute);
+
+                                  List<DateTime> scheduleList = [];
+
+
+                                  int addedDatesCount = 0;
+
+                                  do {
+                                    DateTime newDate = firstDate.add(
+                                        Duration(days: addedDatesCount));
+
+                                    bool addedDate = false; // Flag to check if notificationDates is added
+
+                                    DateTime notificationDates = DateTime(
+                                        newDate.year, newDate.month,
+                                        newDate.day, DateFormat('hh:mm a')
+                                        .parse(_startTimeController.text)
+                                        .hour, DateFormat('hh:mm a')
+                                        .parse(_startTimeController.text)
+                                        .minute);
+
+                                    print(notificationDates);
+
+                                    if (days!.contains(
+                                        DateFormat('EEEE').format(
+                                            notificationDates))) {
+                                      scheduleList.add(notificationDates);
+                                      addedDate = true;
+                                    }
+
+                                    addedDatesCount++;
+                                  } while (scheduleList.length < 100);
+
+                                  print(scheduleList.length);
+
+                                  for (int i = 0; i <
+                                      scheduleList.length; i++) {
+                                    final NotificationContent content = NotificationContent(
+                                      id: Random().nextInt(9999),
+                                      channelKey: 'alerts',
+                                      title: _titleController.text.trim(),
+                                      body: _descriptionController.text,
+                                      notificationLayout: NotificationLayout
+                                          .Default,
+                                      color: Colors.black,
+
+                                      //
+                                      backgroundColor: Colors.black,
+                                      // customSound: 'resource://raw/notif',
+                                      payload: {
+                                        'actPag': 'myAct',
+                                        'actType': 'medicine'
+                                      },
+                                    );
+
+
+                                    final NotificationCalendar schedule = NotificationCalendar(
+                                        year: scheduleList[i].year,
+                                        month: scheduleList[i].month,
+                                        day: scheduleList[i].day,
+                                        hour: scheduleList[i].hour,
+                                        minute: scheduleList[i].minute
+                                    );
+
+                                    contentList.add(content.id!);
+
+                                    await NotificationController
+                                        .scheduleNotifications(
+                                        context, schedule: schedule,
+                                        content: content);
+                                  }
+
+                                  GeneralReminderModel reminder = GeneralReminderModel(
+                                      reminderId: Random().nextInt(1000),
+                                      title: _titleController.text.trim(),
+                                      description: _descriptionController.text,
+                                      time: _startTimeController.text.trim(),
+                                      startDate: startDateIntake!,
+                                      reminderPattern: ReminderPattern(
+                                          reminderPatternId: selectedPatternId!,
+                                          patternName: selectedPatternName!,
+                                          daysOfWeek: selectedPatternId == 3
+                                              ? days
+                                              : null
+                                      ),
+                                      userId: userId,
+                                      contentIdList: contentList
+                                  );
+
+
+                                  _addReminder(reminder);
+                                }
+
+
+                                /// FOR INTERVALS....
+                                if (selectedPatternId == 4) {
+                                  final DateTime firstDate = DateTime(
+                                      startDateIntake!.year,
+                                      startDateIntake!.month,
+                                      startDateIntake!.day,
+                                      DateFormat('hh:mm a')
+                                          .parse(_startTimeController.text)
+                                          .hour, DateFormat('hh:mm a')
+                                      .parse(_startTimeController.text)
+                                      .minute);
+
+                                  List<DateTime> scheduleList = [];
+
+                                  for (int i = 0; i < 100; i++) {
+                                    DateTime newDate = firstDate.add(Duration(
+                                        days: i == 0 ? 0 : int.parse(
+                                            _intervalDurationController.text)));
+
+
+                                    DateTime notificationDates = DateTime(
+                                        newDate.year, newDate.month,
+                                        newDate.day, DateFormat('hh:mm a')
+                                        .parse(_startTimeController.text)
+                                        .hour, DateFormat('hh:mm a')
+                                        .parse(_startTimeController.text)
+                                        .minute);
+                                    scheduleList.add(notificationDates);
+                                  }
+
+                                  for (int i = 0; i <
+                                      scheduleList.length; i++) {
+                                    final NotificationContent content = NotificationContent(
+                                      id: Random().nextInt(9999),
+                                      channelKey: 'alerts',
+                                      title: _titleController.text.trim(),
+                                      body: _descriptionController.text,
+                                      notificationLayout: NotificationLayout
+                                          .Default,
+                                      color: Colors.black,
+
+                                      //
+                                      backgroundColor: Colors.black,
+                                      // customSound: 'resource://raw/notif',
+                                      payload: {
+                                        'actPag': 'myAct',
+                                        'actType': 'medicine'
+                                      },
+                                    );
+
+
+                                    final NotificationCalendar schedule = NotificationCalendar(
+                                        year: scheduleList[i].year,
+                                        month: scheduleList[i].month,
+                                        day: scheduleList[i].day,
+                                        hour: scheduleList[i].hour,
+                                        minute: scheduleList[i].minute
+                                    );
+
+                                    contentList.add(content.id!);
+
+                                    await NotificationController
+                                        .scheduleNotifications(
+                                        context, schedule: schedule,
+                                        content: content);
+                                  }
+
+                                  GeneralReminderModel reminder = GeneralReminderModel(
+                                      reminderId: Random().nextInt(1000),
+                                      title: _titleController.text.trim(),
+                                      description: _descriptionController.text,
+                                      time: _startTimeController.text.trim(),
+                                      startDate: startDateIntake!,
+                                      reminderPattern: ReminderPattern(
+                                        reminderPatternId: selectedPatternId!,
+                                        patternName: selectedPatternName!,
+                                        interval: selectedPatternId == 4
+                                            ? int.parse(
+                                            _intervalDurationController.text)
+                                            : null,
+                                      ),
+                                      userId: userId,
+                                      contentIdList: contentList
+                                  );
+
+
+                                  _addReminder(reminder);
+                                }
                               }
 
 
                             }
 
 
-                          }, child: Text('Save',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
+                          }, child:isPostingData? SpinKitDualRing(color: ColorManager.white,size: 16,): Text('Save',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
                     ),
                   ],
                 ),

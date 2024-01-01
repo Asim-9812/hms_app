@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/domain/model/reminder_model.dart';
+import '../../../../../notification_controller/notification_controller.dart';
 
 
 import '../../../../../../core/resources/color_manager.dart';
@@ -61,6 +64,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
   String? selectedStrengthUnit;
   late String selectedFrequencyName;
   late List<String> scheduleTime;
+  List<String> notifyScheduleTime =[];
   late String intervals;
   late int frequencyId;
   late DateTime endDateIntake;
@@ -73,6 +77,8 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
 
   List<String>? days;
   late int imageSet;
+
+  late List<int> contentList ;
 
 
 
@@ -141,6 +147,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
     _summaryController.text = '${selectedMedTypeName} ${_medicineNameController.text} ${_strengthController.text}${selectedStrengthUnit} ${selectedFrequencyName} ${selectedPatternName}';
 
 
+    contentList = widget.reminderTest.contentIdList!;
 
 
 
@@ -207,6 +214,42 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
             );
             final formattedTime = selectedTime.format(context);
             scheduleTime.add(formattedTime);
+          }
+        }
+        setState(() {});
+      }
+
+      if (picked != null) {
+        var selectedTime = TimeOfDay(
+          hour: picked.hour,
+          minute: picked.minute,
+        );
+
+        final formattedTime = DateFormat('HH:mm').format(
+          DateTime(2023, 1, 1, selectedTime.hour, selectedTime.minute),
+        );
+
+        // Calculate intake times based on selected frequencyId
+        notifyScheduleTime?.clear(); // Clear the list before adding new times
+
+        // Add the initial selected time
+        notifyScheduleTime?.add(formattedTime);
+
+        // Calculate additional times based on frequencyId
+        if (frequencyId! >= 1) {
+          // Calculate intervals based on frequencyId
+          int intervalHours = 24 ~/ frequencyId!;
+
+          for (int i = 1; i < frequencyId!; i++) {
+            // Add intervals to the selected time and add to the list
+            selectedTime = TimeOfDay(
+              hour: (selectedTime.hour + intervalHours) % 24,
+              minute: selectedTime.minute,
+            );
+            final formattedTime = DateFormat('HH:mm').format(
+              DateTime(2023, 1, 1, selectedTime.hour, selectedTime.minute),
+            );
+            notifyScheduleTime?.add(formattedTime);
           }
         }
         setState(() {});
@@ -828,8 +871,8 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
                   else if (int.parse(value) <= 0 ) {
                     return 'Must be greater than 0';
                   }
-                  else if (int.parse(value) > 365 ) {
-                    return 'Must be less than a year';
+                  else if (int.parse(value) > 120 ) {
+                    return 'Must be less than 120 days or 4 months';
                   }
                   return null;
                 },
@@ -1509,6 +1552,12 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
 
                         // selectedDays.clear(); // Clear the list before populating it
 
+
+                        for(int i = 0; i < contentList.length ; i++){
+                          await NotificationController.cancelNotifications(id: contentList[i]);
+                        }
+
+
                         if(isSelected != null){
                           for (int i = 0; i < isSelected!.length; i++) {
 
@@ -1533,68 +1582,286 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
                         }
 
 
-                        // Map<String,dynamic> reminderTest = {
-                        //   'reminderId' : updatedReminder['reminderId'],
-                        //   'userId' : updatedReminder['userId'],
-                        //   'medTypeId' : selectedMedTypeId,
-                        //   'medTypeName' : selectedMedTypeName,
-                        //   'medicineName' : _medicineNameController.text.trim(),
-                        //   'strength' : int.parse(_strengthController.text),
-                        //   'unit' : selectedStrengthUnit,
-                        //   'frequency' : {
-                        //     'frequencyId' : frequencyId,
-                        //     'frequencyName' : selectedFrequencyName,
-                        //     'intervals' : intervals
-                        //   } ,
-                        //   'scheduleTime' : scheduleTime,
-                        //   'medicationDuration' : _medicationDurationController.text.trim(),
-                        //   'startDate' : startDateIntake,
-                        //   'endDate' : endDateIntake,
-                        //   'mealTypeId' : selectedMealId,
-                        //   'meal' : selectedMealName,
-                        //   'reminderPattern' : {
-                        //     'reminderPatternId' : selectedPatternId,
-                        //     'patternName' : selectedPatternName,
-                        //     'interval' : selectedPatternId == 3 ? int.parse(_intervalDurationController.text):null,
-                        //     'daysOfWeek' : selectedPatternId == 2 ? days : null,
-                        //   } ,
-                        //   'reminderImage' : imageSet ==1 ? updatedReminder['reminderImage'] : selectImage != null ? reminderImage : null,
-                        //   'notes':null,
-                        //   'summary':'this is a summary'
-                        // };
 
-                        Reminder reminder = Reminder(
-                          reminderId: updatedReminder.reminderId,
-                          userId: updatedReminder.userId,
-                          medTypeId: selectedMedTypeId,
-                          medTypeName: selectedMedTypeName,
-                          medicineName: _medicineNameController.text.trim(),
-                          strength: int.parse(_strengthController.text),
-                          unit: selectedStrengthUnit!,
-                          frequency: Frequency(
-                              frequencyId: frequencyId,
-                              frequencyName: selectedFrequencyName,
-                              intervals: intervals
-                          ) ,
-                          scheduleTime: scheduleTime,
-                          medicationDuration: int.parse(_medicationDurationController.text.trim()),
-                          startDate: startDateIntake,
-                          endDate: endDateIntake,
-                          mealTypeId: selectedMealId,
-                          meal: selectedMealName,
-                          reminderPattern:ReminderPattern(
-                              reminderPatternId: selectedPatternId,
-                              patternName: selectedPatternName,
-                            interval: selectedPatternId == 3 ? int.parse(_intervalDurationController.text) : null,
-                            daysOfWeek: selectedPatternId == 2 ? days : null
-                          ) ,
-                          reminderImage: imageSet == 1 ? updatedReminder.reminderImage : selectImage != null ? reminderImage : null,
-                          notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
-                          summary: _summaryController.text.trim(),
-                        );
 
-                        // NotificationService().scheduleEverydayNotification(reminder: reminder);
-                        _updateReminder(reminder);
+                        /// FOR EVERYDAY....
+                        if(selectedPatternId == 1){
+                          final int totalDays = int.parse(_medicationDurationController.text.trim());
+                          final int totalInterval = scheduleTime.length;
+                          final DateTime firstDate = DateTime(startDateIntake!.year,startDateIntake!.month,startDateIntake!.day,DateFormat('hh:mm').parse(notifyScheduleTime[0]).hour,DateFormat('hh:mm').parse(notifyScheduleTime[0]).minute);
+
+                          List<DateTime> scheduleList = [firstDate];
+
+                          final int notificationTimes = totalDays * totalInterval;
+
+                          for(int i = 0 ; i<totalDays; i++){
+                            DateTime newDate = firstDate.add(Duration(days: i));
+                            for(int j = 0 ; j < totalInterval ; j++){
+
+                              DateTime notificationDates = DateTime(newDate.year,newDate.month,newDate.day,DateFormat('hh:mm').parse(notifyScheduleTime![j]).hour,DateFormat('hh:mm').parse(notifyScheduleTime![j]).minute);
+                              scheduleList.add(notificationDates);
+                            }
+                          }
+
+                          for(int i = 0; i <scheduleList.length; i++){
+                            final NotificationContent content = NotificationContent(
+                              id: Random().nextInt(9999),
+                              channelKey: 'alerts',
+                              title: _medicineNameController.text.trim(),
+                              body: '${_strengthController.text} ${selectedStrengthUnit} ${selectedMealName}',
+                              notificationLayout: NotificationLayout.Default,
+                              //actionType : ActionType.DisabledAction,
+                              color: Colors.black,
+                              //
+                              backgroundColor: Colors.black,
+                              // customSound: 'resource://raw/notif',
+                              payload: {'actPag': 'myAct', 'actType': 'medicine'},
+                            );
+
+                            final NotificationCalendar schedule = NotificationCalendar(
+                                year: scheduleList[i].year,
+                                month: scheduleList[i].month,
+                                day: scheduleList[i].day,
+                                hour: scheduleList[i].hour,
+                                minute: scheduleList[i].minute
+                            );
+
+                            contentList.add(content.id!);
+
+                            await NotificationController.scheduleNotifications(context, schedule: schedule, content: content);
+                          }
+
+                          Reminder reminder = Reminder(
+                            reminderId: updatedReminder.reminderId,
+                            userId: updatedReminder.userId,
+                            medTypeId: selectedMedTypeId,
+                            medTypeName: selectedMedTypeName,
+                            medicineName: _medicineNameController.text.trim(),
+                            strength: int.parse(_strengthController.text),
+                            unit: selectedStrengthUnit!,
+                            frequency: Frequency(
+                                frequencyId: frequencyId,
+                                frequencyName: selectedFrequencyName,
+                                intervals: intervals
+                            ) ,
+                            scheduleTime: scheduleTime,
+                            medicationDuration: int.parse(_medicationDurationController.text.trim()),
+                            startDate: startDateIntake,
+                            endDate: endDateIntake,
+                            mealTypeId: selectedMealId,
+                            meal: selectedMealName,
+                            reminderPattern:ReminderPattern(
+                                reminderPatternId: selectedPatternId,
+                                patternName: selectedPatternName,
+                                interval: selectedPatternId == 3 ? int.parse(_intervalDurationController.text) : null,
+                                daysOfWeek: selectedPatternId == 2 ? days : null
+                            ) ,
+                            reminderImage: imageSet == 1 ? updatedReminder.reminderImage : selectImage != null ? reminderImage : null,
+                            notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
+                            summary: _summaryController.text.trim(),
+                            contentIdList: contentList
+                          );
+
+                          // NotificationService().scheduleEverydayNotification(reminder: reminder);
+                          _updateReminder(reminder);
+
+
+
+
+                        }
+
+
+                        /// FOR Specific days....
+                        if(selectedPatternId == 2){
+                          final int totalDays = int.parse(_medicationDurationController.text.trim());
+                          final int totalInterval = scheduleTime.length;
+                          final DateTime firstDate = DateTime(
+                            startDateIntake!.year,
+                            startDateIntake!.month,
+                            startDateIntake!.day,
+                            DateFormat('hh:mm').parse(notifyScheduleTime[0]).hour,
+                            DateFormat('hh:mm').parse(notifyScheduleTime[0]).minute,
+                          );
+
+                          List<DateTime> scheduleList = [];
+
+                          final int notificationTimes = totalDays * totalInterval;
+
+                          int addedDatesCount = 0;
+
+                          do {
+                            DateTime newDate = firstDate.add(Duration(days: addedDatesCount));
+
+                            bool addedDate = false; // Flag to check if notificationDates is added
+
+                            for (int j = 0; j < totalInterval; j++) {
+                              DateTime notificationDates = DateTime(
+                                newDate.year,
+                                newDate.month,
+                                newDate.day,
+                                int.parse(scheduleTime[j].split(':').first),
+                                int.parse(scheduleTime[j].split(':').last.split(' ').first),
+                              );
+
+                              print(notificationDates);
+
+                              if (days!.contains(DateFormat('EEEE').format(notificationDates))) {
+                                scheduleList.add(notificationDates);
+                                addedDate = true;
+                              }
+                            }
+
+                            addedDatesCount++;
+
+                          } while (scheduleList.length < totalDays * totalInterval);
+
+                          for(int i = 0; i <scheduleList.length; i++){
+                            final NotificationContent content = NotificationContent(
+                              id: Random().nextInt(9999),
+                              channelKey: 'alerts',
+                              title: _medicineNameController.text.trim(),
+                              body: '${_strengthController.text} ${selectedStrengthUnit} ${selectedMealName}',
+                              notificationLayout: NotificationLayout.Default,
+                              //actionType : ActionType.DisabledAction,
+                              color: Colors.black,
+                              //
+                              backgroundColor: Colors.black,
+                              // customSound: 'resource://raw/notif',
+                              payload: {'actPag': 'myAct', 'actType': 'medicine'},
+                            );
+
+                            final NotificationCalendar schedule = NotificationCalendar(
+                                year: scheduleList[i].year,
+                                month: scheduleList[i].month,
+                                day: scheduleList[i].day,
+                                hour: scheduleList[i].hour,
+                                minute: scheduleList[i].minute
+                            );
+
+                            contentList.add(content.id!);
+
+                            await NotificationController.scheduleNotifications(context, schedule: schedule, content: content);
+                          }
+
+                          Reminder reminder = Reminder(
+                              reminderId: updatedReminder.reminderId,
+                              userId: updatedReminder.userId,
+                              medTypeId: selectedMedTypeId,
+                              medTypeName: selectedMedTypeName,
+                              medicineName: _medicineNameController.text.trim(),
+                              strength: int.parse(_strengthController.text),
+                              unit: selectedStrengthUnit!,
+                              frequency: Frequency(
+                                  frequencyId: frequencyId,
+                                  frequencyName: selectedFrequencyName,
+                                  intervals: intervals
+                              ) ,
+                              scheduleTime: scheduleTime,
+                              medicationDuration: int.parse(_medicationDurationController.text.trim()),
+                              startDate: startDateIntake,
+                              endDate: endDateIntake,
+                              mealTypeId: selectedMealId,
+                              meal: selectedMealName,
+                              reminderPattern:ReminderPattern(
+                                  reminderPatternId: selectedPatternId,
+                                  patternName: selectedPatternName,
+                                  interval: selectedPatternId == 3 ? int.parse(_intervalDurationController.text) : null,
+                                  daysOfWeek: selectedPatternId == 2 ? days : null
+                              ) ,
+                              reminderImage: imageSet == 1 ? updatedReminder.reminderImage : selectImage != null ? reminderImage : null,
+                              notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
+                              summary: _summaryController.text.trim(),
+                              contentIdList: contentList
+                          );
+
+                          // NotificationService().scheduleEverydayNotification(reminder: reminder);
+                          _updateReminder(reminder);
+
+                        }
+
+
+                        /// FOR INTERVALS....
+                        if(selectedPatternId == 3){
+                          final int totalDays = int.parse(_medicationDurationController.text.trim());
+                          final int totalInterval = scheduleTime.length;
+                          final DateTime firstDate = DateTime(startDateIntake!.year,startDateIntake!.month,startDateIntake!.day,DateFormat('hh:mm').parse(notifyScheduleTime[0]).hour,DateFormat('hh:mm').parse(notifyScheduleTime[0]).minute);
+
+                          List<DateTime> scheduleList = [firstDate];
+
+                          final int notificationTimes = totalDays * totalInterval;
+
+                          for(int i = 0 ; i<totalDays; i++){
+                            DateTime newDate = firstDate.add(Duration(days: i == 0 ? 0 :int.parse(_intervalDurationController.text) ));
+                            for(int j = 0 ; j < totalInterval ; j++){
+                              DateTime notificationDates = DateTime(newDate.year,newDate.month,newDate.day,DateFormat('hh:mm').parse(notifyScheduleTime[j]).hour,DateFormat('hh:mm').parse(notifyScheduleTime[j]).minute);
+                              scheduleList.add(notificationDates);
+                            }
+                          }
+
+                          for(int i = 0; i <scheduleList.length; i++){
+                            final NotificationContent content = NotificationContent(
+                              id: Random().nextInt(9999),
+                              channelKey: 'alerts',
+                              title: _medicineNameController.text.trim(),
+                              body: '${_strengthController.text} ${selectedStrengthUnit} ${selectedMealName}',
+                              notificationLayout: NotificationLayout.Default,
+                              //actionType : ActionType.DisabledAction,
+                              color: Colors.black,
+                              //
+                              backgroundColor: Colors.black,
+                              // customSound: 'resource://raw/notif',
+                              payload: {'actPag': 'myAct', 'actType': 'medicine'},
+                            );
+
+                            final NotificationCalendar schedule = NotificationCalendar(
+                                year: scheduleList[i].year,
+                                month: scheduleList[i].month,
+                                day: scheduleList[i].day,
+                                hour: scheduleList[i].hour,
+                                minute: scheduleList[i].minute
+                            );
+
+                            contentList.add(content.id!);
+
+                            await NotificationController.scheduleNotifications(context, schedule: schedule, content: content);
+                          }
+                          Reminder reminder = Reminder(
+                              reminderId: updatedReminder.reminderId,
+                              userId: updatedReminder.userId,
+                              medTypeId: selectedMedTypeId,
+                              medTypeName: selectedMedTypeName,
+                              medicineName: _medicineNameController.text.trim(),
+                              strength: int.parse(_strengthController.text),
+                              unit: selectedStrengthUnit!,
+                              frequency: Frequency(
+                                  frequencyId: frequencyId,
+                                  frequencyName: selectedFrequencyName,
+                                  intervals: intervals
+                              ) ,
+                              scheduleTime: scheduleTime,
+                              medicationDuration: int.parse(_medicationDurationController.text.trim()),
+                              startDate: startDateIntake,
+                              endDate: endDateIntake,
+                              mealTypeId: selectedMealId,
+                              meal: selectedMealName,
+                              reminderPattern:ReminderPattern(
+                                  reminderPatternId: selectedPatternId,
+                                  patternName: selectedPatternName,
+                                  interval: selectedPatternId == 3 ? int.parse(_intervalDurationController.text) : null,
+                                  daysOfWeek: selectedPatternId == 2 ? days : null
+                              ) ,
+                              reminderImage: imageSet == 1 ? updatedReminder.reminderImage : selectImage != null ? reminderImage : null,
+                              notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
+                              summary: _summaryController.text.trim(),
+                              contentIdList: contentList
+                          );
+
+                          // NotificationService().scheduleEverydayNotification(reminder: reminder);
+                          _updateReminder(reminder);
+
+                        }
+
+
 
                       }, child: Text('Save',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
                 ),

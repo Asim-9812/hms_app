@@ -232,7 +232,11 @@ class _GeneralDetailsState extends State<GeneralDetails> {
                                            backgroundColor: ColorManager.primaryDark
                                        ),
                                        onPressed: ()async{
-                                         await NotificationController.cancelNotifications(id: reminderBox.reminderId);
+
+                                         for(int i = 0 ; i < reminderBox.contentIdList!.length ; i++){
+                                           await NotificationController.cancelNotifications(id: reminderBox.contentIdList![i]);
+                                         }
+
                                          reminder.deleteAt(index);
                                          setState(() {
                                            back = 1;
