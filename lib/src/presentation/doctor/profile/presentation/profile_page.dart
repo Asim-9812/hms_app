@@ -60,13 +60,8 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       _scrollToEnd();
     });
-
     _getDistrict();
-
     _getMunicipality();
-
-
-
   }
 
 
@@ -111,8 +106,6 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
     setState(() {
       municipalities = municipalityList;
       mun = municipalities.firstWhere((element) => element.municipalityId == widget.user.municipalityID).municipalityName;
-
-
     });
   }
 
@@ -123,11 +116,6 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
   Widget build(BuildContext context) {
 
     final screenSize = MediaQuery.of(context).size;
-
-    bool isNarrowScreen = screenSize.width < 380;
-    bool isWideScreen = screenSize.width > 560;
-
-
     final userBox = Hive.box<User>('session').values.toList();
     String firstName = userBox[0].firstName!;
     String mobileNo = userBox[0].contactNo!;
@@ -135,9 +123,6 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
     String license = userBox[0].liscenceNo!;
     String address = userBox[0].localAddress!;
     String ward = userBox[0].wardNo!.toString();
-
-
-
 
     return Scaffold(
       backgroundColor: ColorManager.white.withOpacity(0.99),
@@ -152,7 +137,6 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
               onPressed:()=>Get.to(()=>NotificationPage(code: userBox[0].code!,)),
               icon: FaIcon(Icons.notifications,color: ColorManager.white,))
         ],
-
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -176,7 +160,6 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
                         h10,
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
@@ -184,7 +167,6 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
                           child: Row(
                             children: [
                               InkWell(
-
                                 onDoubleTap: (){
                                   Clipboard.setData(ClipboardData(text: mobileNo));
                                   Fluttertoast.showToast(
@@ -213,7 +195,6 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
                                       FaIcon(FontAwesomeIcons.phone,color: ColorManager.primaryDark,),
                                       w20,
                                       Text(mobileNo,style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
-
                                     ],
                                   ),
                                 ),
@@ -248,7 +229,6 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
                                       FaIcon(Icons.email_outlined,color: ColorManager.primaryDark,),
                                       w20,
                                       Text(email,style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),maxLines: 1,overflow: TextOverflow.ellipsis,),
-
                                     ],
                                   ),
                                 ),
@@ -299,10 +279,6 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
                           ),
                         ),
                         h10,
-                        //
-                        // _profileItems2(title: 'Phone Number', icon: FontAwesomeIcons.phone, onTap: (){},subtitle: '98XXXXXXXX'),
-                        // _profileItems2(title: 'E-Mail', icon: Icons.email_outlined, onTap: (){},subtitle: 'user@gmail.com'),
-
                         _profileItems2(title: 'Education & Experiences', icon: FontAwesomeIcons.graduationCap, onTap: (){},trailing: true),
                         _profileItems2(title: 'Certifications', icon: FontAwesomeIcons.certificate, onTap: (){},trailing: true),
                         _profileItems2(title: 'Patient Reviews (253)', icon: FontAwesomeIcons.solidStar, onTap: (){},trailing: true),

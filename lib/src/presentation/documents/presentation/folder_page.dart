@@ -40,10 +40,6 @@ class _PatientFolderPageState extends ConsumerState<FolderPage> {
   bool? isReady;
 
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
 
@@ -74,9 +70,6 @@ class _PatientFolderPageState extends ConsumerState<FolderPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               buildFile(context),
-
-
-
             ],
           ),
         ),
@@ -139,7 +132,6 @@ class _PatientFolderPageState extends ConsumerState<FolderPage> {
     required String docId,
   }) {
     return ListTile(
-
       onLongPress: () async {
         _showFileDialog(context,documentId.toString(),docId);
       },
@@ -151,7 +143,6 @@ class _PatientFolderPageState extends ConsumerState<FolderPage> {
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10)
         ),
-
         child: Container(
             padding: EdgeInsets.symmetric(horizontal: typeId == 2 ? 12.w:18.w,vertical: 12.h),
             child: FaIcon(typeId == 2 ? FontAwesomeIcons.images:FontAwesomeIcons.fileLines,color: ColorManager.primary.withOpacity(0.5),)),
@@ -220,7 +211,6 @@ class _PatientFolderPageState extends ConsumerState<FolderPage> {
                         }
                         else{
                           if(response.isLeft()){
-
                             scaffoldMessage.showSnackBar(
                                 SnackbarUtil.showSuccessSnackbar(
                                     message: 'Successful',
@@ -234,7 +224,6 @@ class _PatientFolderPageState extends ConsumerState<FolderPage> {
                         }
                       }
                   ),
-
                 ],
               ),
             ),
@@ -242,5 +231,4 @@ class _PatientFolderPageState extends ConsumerState<FolderPage> {
         }
     );
   }
-
 }

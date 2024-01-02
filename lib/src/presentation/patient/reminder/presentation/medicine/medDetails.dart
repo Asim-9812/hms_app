@@ -298,13 +298,13 @@ class _MedDetailsState extends State<MedDetails> {
                      children: [
                        Text('Progress:',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
                        w10,
-                       Text('${remainingDays.inDays} days left',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
+                       Text('${remainingDays.inDays * reminderBox.scheduleTime.length} medications left',style: getRegularStyle(color: ColorManager.white,fontSize: 18),),
                      ],
                    ),
                    h10,
                    LinearProgressBar(
-                       maxSteps: reminderBox.medicationDuration,
-                       currentStep: reminderBox.medicationDuration - remainingDays.inDays,
+                       maxSteps: (reminderBox.medicationDuration * reminderBox.scheduleTime.length),
+                       currentStep: (reminderBox.medicationDuration * reminderBox.scheduleTime.length) - (reminderBox.medicationDuration - remainingDays.inDays),
                        progressColor: ColorManager.orange,
                        backgroundColor: ColorManager.dotGrey
                    ),

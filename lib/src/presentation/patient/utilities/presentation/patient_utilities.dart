@@ -14,11 +14,9 @@ import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../widgets/bmi.dart';
-import '../../../widgets/bmi.dart';
 import '../../../widgets/bmr.dart';
 import '../../../widgets/edd.dart';
 import '../../calories/domain/model/calories_model.dart';
-import '../../calories/presentation/add_calories_burned.dart';
 import '../../calories/presentation/calories_detail.dart';
 
 class PatientUtilities extends StatefulWidget {
@@ -34,20 +32,15 @@ class PatientUtilities extends StatefulWidget {
 class _PatientUtilitiesState extends State<PatientUtilities> {
 
 
-   late CaloriesTrackingModel todayTracking;
-
-
+  late CaloriesTrackingModel todayTracking;
   late Box<CaloriesTrackingModel> caloriesInfoBox;
   late ValueListenable<Box<CaloriesTrackingModel>> caloriesInfoBoxListenable;
-
-
   late Box<UserInfoCalories> userInfoBox;
   late ValueListenable<Box<UserInfoCalories>> userInfoBoxListenable;
 
   @override
   void initState() {
     super.initState();
-
 
     todayTracking = CaloriesTrackingModel(
       id: Random().nextInt(9999),
@@ -471,19 +464,6 @@ class _PatientUtilitiesState extends State<PatientUtilities> {
             borderRadius: BorderRadius.circular(20),
           ),
           child: InkWell(
-            // onTap: ()async{
-            //   CaloriesTrackingModel caloriesTrackingModel = CaloriesTrackingModel(
-            //       id: Random().nextInt(9999),
-            //       userId: isUser.userId,
-            //       date: '2023-11-26',
-            //       totalCalories: 2200,
-            //       totalCaloriesIntake: 2800,
-            //       caloriesIntakeList: [],
-            //       totalCaloriesBurned: 600,
-            //       caloriesBurnedList: []
-            //   );
-            //  await caloriesInfoBox.add(caloriesTrackingModel);
-            // },
             onTap: () => Get.to(() => CaloriesPage(data: todayTracking, user: isUser)),
 
             child: Container(

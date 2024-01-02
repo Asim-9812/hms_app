@@ -107,7 +107,6 @@ class NotificationController {
           return;
         }
       }
-
       return onActionReceivedImplementationMethod(receivedAction);
     }
   }
@@ -179,7 +178,6 @@ class NotificationController {
     bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
     if (!isAllowed) isAllowed = await displayNotificationRationale(context);
     if (!isAllowed) return;
-
     await myNotifyTaskSchedule(
         reminder: reminder);
   }
@@ -188,21 +186,13 @@ class NotificationController {
 
 
   static Future<void> scheduleNotifications(BuildContext context,{
-
     required NotificationSchedule schedule,
     required NotificationContent content,
   }) async {
     bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
     if (!isAllowed) isAllowed = await displayNotificationRationale(context);
     if (!isAllowed) return;
-
-
-
     await myNotificationSchedules(schedule: schedule,content: content);
-
-
-
-
   }
 
 
@@ -211,8 +201,6 @@ class NotificationController {
 
 
   static Future<void> snoozeMedNotification() async {
-
-    print('executed snooze');
     await snoozeAlarm(
         title: 'test',
         msg: 'test message',
@@ -240,14 +228,6 @@ Future<void> snoozeAlarm({
 }) async {
   // var nowDate = DateTime.now().add(Duration(hours: hoursFromNow, seconds: 5));
   await AwesomeNotifications().createNotification(
-    // schedule: NotificationCalendar(
-    //   //weekday: nowDate.day,
-    //   // hour: nowDate.hour,
-    //   // minute: 0,
-    //   second: 5,
-    //   repeats: repeatNotif,
-    //   //allowWhileIdle: true,
-    // ),
     schedule: NotificationCalendar.fromDate(
        date: DateTime.now().add(const Duration(minutes: 5))),
     content: NotificationContent(
@@ -283,8 +263,6 @@ Future<void> snoozeAlarm({
 Future<void> myNotifyTaskSchedule({
   required TaskModel reminder
 }) async {
-
-
   DateTime remind = DateFormat('hh:mm a, yyyy-MM-dd').parse(reminder.remindDate!);
   await AwesomeNotifications().createNotification(
     schedule:
@@ -337,7 +315,6 @@ Future<void> myNotificationSchedules({
 
   await AwesomeNotifications().createNotification(
     schedule: schedule,
-
     content: content,
     actionButtons: [
       NotificationActionButton(

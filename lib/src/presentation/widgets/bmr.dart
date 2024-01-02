@@ -24,15 +24,13 @@ class _BMRState extends State<BMR> {
 
   double minHeight = 91.44;
   double maxHeight = 243.84;
-  double _value = (243.84+91.44)/2; //initial value i.e. avg of max and min height
+  double _value = (243.84+91.44)/2;
   double result = 0.0;
   int gender = 1;
   bool disableValidate = true;
   int unit =1;
   List bmiList = bmiCategories;
-
   final _formKey = GlobalKey<FormState>();
-
   TextEditingController _ageController = TextEditingController();
   TextEditingController _weightController = TextEditingController();
   TextEditingController _cmController = TextEditingController();
@@ -40,15 +38,12 @@ class _BMRState extends State<BMR> {
   TextEditingController _inchController = TextEditingController();
 
 
-
   (String,int,int) _convertCmToFeetAndInches(double cm) {
     final int totalInches = (cm * 0.393701).round();
     final int feet = totalInches ~/ 12;
     final int inches = totalInches % 12;
-
     return ('$feet\'$inches"',feet,inches);
   }
-
 
 
   void _calculateBMR({
@@ -71,7 +66,6 @@ class _BMRState extends State<BMR> {
     }
 
   }
-
 
 
   Future<void> _showDialog() async {
@@ -166,7 +160,6 @@ class _BMRState extends State<BMR> {
   }
 
 
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -187,11 +180,9 @@ class _BMRState extends State<BMR> {
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-
             children: [
               Row(
                 children: [
-
                   Container(
                     height: MediaQuery.of(context).size.height*1.6/2,
                     width: MediaQuery.of(context).size.width*0.8/2,

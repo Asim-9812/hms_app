@@ -20,32 +20,25 @@ class BMI extends StatefulWidget {
 class _BMIState extends State<BMI> {
   double minHeight = 91.44;
   double maxHeight = 243.84;
-  double _value =
-      (243.84 + 91.44) / 2; //initial value i.e. avg of max and min height
-
+  double _value = (243.84 + 91.44) / 2; //initial value i.e. avg of max and min height
   double result = 0.0;
-
   int gender = 1;
-
   bool disableValidate = true;
-
   int unit = 1;
-
   List bmiList = bmiCategories;
-
   final _formKey = GlobalKey<FormState>();
-
   TextEditingController _ageController = TextEditingController();
   TextEditingController _weightController = TextEditingController();
   TextEditingController _cmController = TextEditingController();
   TextEditingController _ftController = TextEditingController();
   TextEditingController _inchController = TextEditingController();
 
+
+
   (String, int, int) _convertCmToFeetAndInches(double cm) {
     final int totalInches = (cm * 0.393701).round();
     final int feet = totalInches ~/ 12;
     final int inches = totalInches % 12;
-
     return ('$feet\'$inches"', feet, inches);
   }
 
@@ -60,10 +53,6 @@ class _BMIState extends State<BMI> {
 
   void _getCategory() {
     final screenSize = MediaQuery.of(context).size;
-
-    // Check if width is greater than height
-    bool isWideScreen = screenSize.width > 500;
-    bool isNarrowScreen = screenSize.width < 420;
 
     if (result >= 0.0 && result < 16) {
       _showDialog(0);
