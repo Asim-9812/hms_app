@@ -20,7 +20,7 @@ import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
 
 
-final box = Provider<String?>((ref) => null);
+// final box = Provider<String?>((ref) => null);
 
 final boxA = Provider<List<User>>((ref) => []);
 
@@ -78,7 +78,7 @@ Future<void> main() async {
   Hive.registerAdapter(CaloriesTrackingModelAdapter());
 
 
-  final userBox = await Hive.openBox<String>('user1');
+  // final userBox = await Hive.openBox<String>('user1');
   await Hive.openBox<String>('tokenBox');
   final userSession = await Hive.openBox< User>('session');
   await Hive.openBox('user');
@@ -97,7 +97,7 @@ Future<void> main() async {
 
   runApp(ProviderScope(
       overrides: [
-        box.overrideWithValue(userBox.get('userData')),
+        // box.overrideWithValue(userBox.get('userData')),
         boxA.overrideWithValue(userSession.values.toList()),
       ],
 

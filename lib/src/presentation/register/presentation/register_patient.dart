@@ -240,9 +240,6 @@ class _RegisterPatientState extends ConsumerState<RegisterPatient> {
                     if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[a-zA-Z]{2,4}$').hasMatch(value)) {
                       return 'Please enter a valid email address';
                     }
-                    if (value.contains('__')) {
-                      return 'Only one underscore "_" is allowed';
-                    }
                     if (value.length > 50) {
                       return 'Email length must be 50 characters or less';
                     }

@@ -312,6 +312,7 @@ class _LoginPageCopyState extends ConsumerState<LoginPage>
                                 }
                                 return null;
                               },
+
                               decoration: InputDecoration(
                                   floatingLabelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 14),
                                   labelText: 'Password',
