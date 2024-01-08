@@ -259,7 +259,7 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
                                   children: [
                                     FaIcon(Icons.pin_drop_outlined,color: ColorManager.primaryDark,),
                                     w20,
-                                    Text('${mun}-${ward}, ${district}, ${address}',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),maxLines: 1,overflow: TextOverflow.ellipsis,),
+                                    Text('${address}',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),maxLines: 1,overflow: TextOverflow.ellipsis,),
 
                                   ],
                                 ),

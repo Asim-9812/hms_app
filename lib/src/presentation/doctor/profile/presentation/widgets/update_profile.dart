@@ -85,12 +85,14 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateDocProfile> {
     _localController.text = user.localAddress ?? '';
     _designationController.text = user.designation ?? '';
     _wardController.text = user.wardNo.toString();
+    countryId = user.countryID;
     districtId = user.districtID;
     provinceId = user.provinceID;
     municipalId = user.municipalityID;
     gender = user.genderID ?? 1;
     selectedGender = user.genderID == 1 ? 'Male' : user.genderID == 2 ? 'Female' : user.genderID == 3 ? 'Others' : null;
     _getProvince();
+    _designationController.text = user.designation ?? '' ;
   }
 
 
@@ -243,7 +245,7 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateDocProfile> {
                           userID: user.userID!,
                           typeID: user.typeID!,
                           referredID: user.referredID!,
-                          parentID: user.parentID!,
+                          parentID: user.parentID??'',
                           firstName: _firstNameController.text.trim(),
                           lastName: _lastNameController.text.trim(),
                           password: '',
@@ -252,12 +254,12 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateDocProfile> {
                           districtID: districtId!,
                           municipalityID: municipalId!,
                           wardNo: int.parse(_wardController.text),
-                          localAddress: _localController.text.trim(),
+                          localAddress: user.localAddress!,
                           genderID: gender,
                           contactNo: _numberController.text.trim(),
                           email: user.email!,
                           roleID: user.roleID!,
-                          designation: user.designation!,
+                          designation: _designationController.text.trim(),
                           joinedDate: DateFormat('yyyy-MM-dd').format(DateTime.parse(user.joinedDate!)),
                           validDate: DateFormat('yyyy-MM-dd').format(DateTime.now()),
                           signatureImage: 'signatureImage',
@@ -1042,83 +1044,38 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateDocProfile> {
                       ),
                     if(countryName == 'NEPAL')
                       h20,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            controller: _wardController,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                            validator: (value){
-                              if (value!.trim().isEmpty) {
-                                return 'Ward no. is required';
-                              }
+                    TextFormField(
+                      controller: _wardController,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value){
+                        if (value!.trim().isEmpty) {
+                          return 'Ward no. is required';
+                        }
 
-                              if (!value.contains(RegExp(r'^\d+$')))  {
-                                return 'Invalid Ward No.';
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                      color: ColorManager.black.withOpacity(0.5)
-                                  )
-                              ),
-                              floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                              hintText: 'Ward No.',
-                              hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                      color: ColorManager.black
-                                  )
-                              ),
-                              labelText: 'Ward',
-                              labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
-                            ),
-                          ),
+                        if (!value.contains(RegExp(r'^\d+$')))  {
+                          return 'Invalid Ward No.';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                                color: ColorManager.black.withOpacity(0.5)
+                            )
                         ),
-                        w10,
-                        Expanded(
-                          child: TextFormField(
-                            controller: _localController,
-                            keyboardType: TextInputType.text,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                            validator: (value){
-                              if (value!.trim().isEmpty) {
-                                return 'Address is required';
-                              }
-
-                              if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                                return 'Please enter a valid Address';
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                      color: ColorManager.black.withOpacity(0.5)
-                                  )
-                              ),
-                              floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                              hintText: 'Local Address',
-                              hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                      color: ColorManager.black
-                                  )
-                              ),
-                              labelText: 'Local Address',
-                              labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
-                            ),
-                          ),
+                        floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                        hintText: 'Ward No.',
+                        hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                                color: ColorManager.black
+                            )
                         ),
-                      ],
+                        labelText: 'Ward',
+                        labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
+                      ),
                     ),
                     h20,
                     Center(
