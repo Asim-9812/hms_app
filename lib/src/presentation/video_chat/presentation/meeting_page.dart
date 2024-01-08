@@ -6,10 +6,10 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:meroupachar/src/core/resources/color_manager.dart';
 import 'package:meroupachar/src/core/resources/style_manager.dart';
+import 'package:meroupachar/src/presentation/video_chat/presentation/whereby_create_meeting.dart';
+import 'package:meroupachar/src/presentation/video_chat/presentation/whereby_meeting_page.dart';
 
 import '../../login/domain/model/user.dart';
-import '../domain/services/jitsi_provider.dart';
-import 'create_meeting.dart';
 
 
 class MeetingPage extends ConsumerStatefulWidget {
@@ -21,13 +21,7 @@ class MeetingPage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<MeetingPage> {
 
-  JitsiProvider? _jitsiProvider ;
-
   TextEditingController _roomController = TextEditingController();
-
-  bool elevate = false;
-  bool elevate1= false;
-
 
   void _joinDialog() async {
 
@@ -57,7 +51,7 @@ class _HomePageState extends ConsumerState<MeetingPage> {
                     decoration: InputDecoration(
                       fillColor:ColorManager.white,
                       filled: true,
-                      hintText: 'Enter a room name',
+                      hintText: 'Enter a room url',
                       hintStyle: getRegularStyle(color: Colors.black.withOpacity(0.7),fontSize: 20,),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -91,13 +85,7 @@ class _HomePageState extends ConsumerState<MeetingPage> {
                             )
                         ),
                         onPressed: (){
-                          _jitsiProvider?.createMeeting(
-                            roomName: _roomController.text,
-                            isAudioMuted: true,
-                            isVideoMuted: true,
-                            username: firstName,
-                            email: email,
-                          );
+                          Get.to(()=>WhereByMeetingPage(_roomController.text.trim()));
                           Navigator.pop(context);
                         }, child: Text('Join',style: getMediumStyle(color:ColorManager.white,fontSize: 20),)),
                   )
@@ -115,7 +103,6 @@ class _HomePageState extends ConsumerState<MeetingPage> {
   @override
   Widget build(BuildContext context) {
 
-    _jitsiProvider = ref.read(jitsiProvider);
 
     return Scaffold(
       backgroundColor:ColorManager.white.withOpacity(0.9),
@@ -145,7 +132,7 @@ class _HomePageState extends ConsumerState<MeetingPage> {
                     ),
                     padding: EdgeInsets.symmetric(vertical: 12,horizontal: 18)
                 ),
-                onPressed: ()=>Get.to(()=>CreateMeeting()),
+                onPressed: ()=>Get.to(()=>WherebyCreateMeeting()),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,

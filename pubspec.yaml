@@ -99,6 +99,8 @@ dependencies:
   #permission_handler:
   permission_handler: ^10.4.3
 
+  flutter_inappwebview: ^6.0.0
+
   #dropdown_button2:
   dropdown_button2: any
   dropdown_search: ^5.0.6
@@ -163,7 +165,7 @@ dependencies:
   dropdown_text_search: ^0.0.1
 
   #  jitsi_meet_wrapper: ^0.2.0+1
-  jitsi_meet_flutter_sdk: ^0.1.8
+#  jitsi_meet_flutter_sdk: ^0.1.8
 
 
   flutter_html: any

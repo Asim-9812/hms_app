@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
+import 'package:meroupachar/src/core/resources/color_manager.dart';
 
 import '../core/resources/route_manager.dart';
 import '../presentation/notification_controller/notification_controller.dart';
@@ -48,7 +49,9 @@ class MyAppState extends State<MyApp> {
 
           builder: (context,navKey) {
             return GetMaterialApp(
-
+              theme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(seedColor: ColorManager.primary)
+              ),
               scaffoldMessengerKey: snackBarKey,
               supportedLocales:const [
                 Locale('en', 'US'),

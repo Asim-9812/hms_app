@@ -89,12 +89,17 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
   void _getDistrict() async {
 
     List<DistrictModel> districtList = await CountryService().getAllDistrict();
-    setState(() {
-      districts = districtList;
+    final isDistrict = districts.firstWhereOrNull((element) => element.districtId == widget.user.districtID);
 
-      district = districts.firstWhere((element) => element.districtId == widget.user.districtID).districtName;
+    if(isDistrict !=null){
+      setState(() {
+        districts = districtList;
 
-    });
+        district = isDistrict.districtName ;
+
+      });
+    }
+
   }
 
 
@@ -103,10 +108,15 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
   void _getMunicipality() async {
 
     List<MunicipalityModel> municipalityList = await CountryService().getAllMunicipality();
-    setState(() {
-      municipalities = municipalityList;
-      mun = municipalities.firstWhere((element) => element.municipalityId == widget.user.municipalityID).municipalityName;
-    });
+    final isMun = municipalities.firstWhereOrNull((element) => element.municipalityId == widget.user.municipalityID);
+
+    if(isMun != null){
+      setState(() {
+        municipalities = municipalityList;
+        mun = isMun.municipalityName;
+      });
+    }
+
   }
 
 
@@ -121,8 +131,8 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
     String mobileNo = userBox[0].contactNo!;
     String email = userBox[0].email!;
     String license = userBox[0].liscenceNo!;
-    String address = userBox[0].localAddress!;
-    String ward = userBox[0].wardNo!.toString();
+    String address = userBox[0].localAddress ?? 'N/A';
+    String ward = userBox[0].wardNo?.toString() ?? 'N/A';
 
     return Scaffold(
       backgroundColor: ColorManager.white.withOpacity(0.99),

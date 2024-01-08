@@ -10,6 +10,12 @@ class Api{
    static const baseUrl = 'https://api.meroupachar.com';
 
 
+   /// video call whereby api....
+   static const wherebyApiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmFwcGVhci5pbiIsImF1ZCI6Imh0dHBzOi8vYXBpLmFwcGVhci5pbi92MSIsImV4cCI6OTAwNzE5OTI1NDc0MDk5MSwiaWF0IjoxNzA0NjkxMDI0LCJvcmdhbml6YXRpb25JZCI6MjA3MjEwLCJqdGkiOiJmZGNjZWE3OS0wMzZhLTQ4ZDctODhjZC0yMzFiYjAyMWMzZDAifQ.bM7oDaf_qrtQhRFcIvvGPWsFp2_IC6njNblc8w_Zesk';
+   static const createMeeting = 'https://api.whereby.dev/v1/meetings';
+   static const deleteMeeting = 'https://api.whereby.dev/v1/meetings/';
+
+
    ///Activities list api...
    static const baseActivitiesUrl = 'https://api.api-ninjas.com/v1/caloriesburnedactivities';
    static const caloriesBurnInfo = 'https://api.api-ninjas.com/v1/caloriesburned?';

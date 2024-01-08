@@ -42,7 +42,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.searchtech.meroupachar.meroupachar"
+        applicationId "com.searchtech.meroupachar"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 24
@@ -71,10 +71,10 @@ android {
             signingConfig signingConfigs.release
         }
     }
-    packagingOptions {
-        pickFirst '**/libc++_shared.so'
-        pickFirst '**/libfbjni.so'
-    }
+//    packagingOptions {
+//        pickFirst '**/libc++_shared.so'
+//        pickFirst '**/libfbjni.so'
+//    }
 }
 
 flutter {
@@ -82,9 +82,9 @@ flutter {
 }
 
 dependencies {
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 34'androidx.window:window:1.2.0'
-    implementation 'androidx.window:window-java:1.2.0'
+//    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+//    implementation 'androidx.window:window:1.2.0'
+//    implementation 'androidx.window:window-java:1.2.0'
 }
 
