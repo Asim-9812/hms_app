@@ -8,7 +8,6 @@ import 'package:meroupachar/src/core/resources/color_manager.dart';
 import 'package:meroupachar/src/core/resources/style_manager.dart';
 import 'package:meroupachar/src/presentation/video_chat/presentation/whereby_create_meeting.dart';
 import 'package:meroupachar/src/presentation/video_chat/presentation/whereby_meeting_page.dart';
-
 import '../../login/domain/model/user.dart';
 
 
