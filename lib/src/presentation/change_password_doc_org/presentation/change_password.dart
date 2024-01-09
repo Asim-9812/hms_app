@@ -7,13 +7,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:meroupachar/src/presentation/change_password_doc_org/domain/service/change_user_pwd_services.dart';
 
 import '../../../core/resources/color_manager.dart';
 import '../../../core/resources/style_manager.dart';
 import '../../../core/resources/value_manager.dart';
 import '../../common/snackbar.dart';
 import '../../login/domain/model/user.dart';
+import '../domain/service/change_user_pwd_services.dart';
 
 class ChangePwdDocOrg extends StatefulWidget {
   final User userBox;

@@ -13,6 +13,7 @@ import 'package:hive/hive.dart';
 import 'package:meroupachar/src/presentation/patient/health_tips/data/tagList_provider.dart';
 import 'package:meroupachar/src/presentation/patient/health_tips/presentation/health_tips_list.dart';
 import 'package:meroupachar/src/presentation/patient/sliders/domain/services/slider_service.dart';
+import 'package:meroupachar/src/presentation/video_chat/presentation/meeting_page.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import '../../../../core/api.dart';
 import '../../../../core/resources/color_manager.dart';
@@ -25,6 +26,8 @@ import '../../../notices/presentation/notices.dart';
 import '../../../notification/presentation/notification_page.dart';
 
 import 'package:meroupachar/src/presentation/patient/health_tips/domain/model/health_tips_model.dart';
+import '../../../video_chat/presentation/whereby_join_page.dart';
+import '../../../video_chat/presentation/whereby_meeting_page.dart';
 import '../../health_tips/domain/services/health_tips_services.dart';
 import '../../search-near-by/presentation/search_for_page.dart';
 
@@ -47,6 +50,8 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
   LocationPermission? _locationPermission;
   Position? _userPosition;
   late bool check;
+
+  final _roomController = TextEditingController();
 
 
 
@@ -79,6 +84,83 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
     }
 
   }
+  //
+  // void joinDialog() async {
+  //
+  //   final userBox = Hive.box<User>('session').values.toList();
+  //   String firstName = userBox[0].firstName!;
+  //   String email = userBox[0].email!;
+  //   await showDialog(
+  //       context: context,
+  //       builder: (context){
+  //         return AlertDialog(
+  //           contentPadding: EdgeInsets.zero,
+  //           backgroundColor:ColorManager.white,
+  //           content: Container(
+  //             decoration: BoxDecoration(
+  //               color:ColorManager.white,
+  //               borderRadius: BorderRadius.circular(10),
+  //             ),
+  //             padding: EdgeInsets.symmetric(horizontal: 18,vertical: 12),
+  //             child: Column(
+  //               mainAxisSize: MainAxisSize.min,
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text('Join A Room',style: getMediumStyle(color: Colors.black,fontSize: 20),),
+  //                 const SizedBox(height: 10,),
+  //                 TextFormField(
+  //                   controller: _roomController,
+  //                   decoration: InputDecoration(
+  //                     fillColor:ColorManager.white,
+  //                     filled: true,
+  //                     hintText: 'Enter a room url',
+  //                     hintStyle: getRegularStyle(color: Colors.black.withOpacity(0.7),fontSize: 20,),
+  //                     border: OutlineInputBorder(
+  //                         borderRadius: BorderRadius.circular(10),
+  //                         borderSide: BorderSide(
+  //                           color: Colors.black,
+  //                         )
+  //                     ),
+  //                     enabledBorder: OutlineInputBorder(
+  //                         borderRadius: BorderRadius.circular(10),
+  //                         borderSide: BorderSide(
+  //                           color: Colors.black,
+  //                         )
+  //                     ),
+  //                     focusColor: Colors.black,
+  //                     focusedBorder: OutlineInputBorder(
+  //                         borderRadius: BorderRadius.circular(10),
+  //                         borderSide: BorderSide(
+  //                           color: Colors.black,
+  //                         )
+  //                     ),
+  //                   ),
+  //                   style: getMediumStyle(color: Colors.black,fontSize: 25),
+  //                 ),
+  //                 const SizedBox(height: 10,),
+  //                 Center(
+  //                   child: ElevatedButton(
+  //                       style: ElevatedButton.styleFrom(
+  //                           backgroundColor: ColorManager.primary,
+  //                           shape: ContinuousRectangleBorder(
+  //                               borderRadius: BorderRadius.circular(10)
+  //                           )
+  //                       ),
+  //                       onPressed: (){
+  //                         print(_roomController.text);
+  //                         Get.to(()=>WhereByMeetingPage(_roomController.text.trim()));
+  //                         Navigator.pop(context);
+  //                       }, child: Text('Join',style: getMediumStyle(color:ColorManager.white,fontSize: 20),)),
+  //                 )
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       }
+  //   );
+  // }
+  //
+
 
 
 
@@ -375,14 +457,15 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                 ),
                 w10,
                 InkWell(
-                  onTap: (){
-                    final scaffoldMessage = ScaffoldMessenger.of(context);
-                    scaffoldMessage.showSnackBar(
-                      SnackbarUtil.showComingSoonBar(
-                        message: 'Coming Soon !',
-                        duration: const Duration(milliseconds: 1400),
-                      ),
-                    );
+                  onTap: () {
+                    // final scaffoldMessage = ScaffoldMessenger.of(context);
+                    // scaffoldMessage.showSnackBar(
+                    //   SnackbarUtil.showComingSoonBar(
+                    //     message: 'Coming Soon !',
+                    //     duration: const Duration(milliseconds: 1400),
+                    //   ),
+                    // );
+                    Get.to(()=>WhereByJoinMeetingPage());
                   },
                       //()=>Get.to(()=>PatientRegistrationForm(widget.isWideScreen,widget.isNarrowScreen)),
                   child: Container(

@@ -7,6 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:meroupachar/src/core/resources/color_manager.dart';
 import 'package:meroupachar/src/core/resources/style_manager.dart';
 import 'package:meroupachar/src/presentation/video_chat/presentation/whereby_create_meeting.dart';
+import 'package:meroupachar/src/presentation/video_chat/presentation/whereby_join_page.dart';
 import 'package:meroupachar/src/presentation/video_chat/presentation/whereby_meeting_page.dart';
 import '../../login/domain/model/user.dart';
 
@@ -22,79 +23,6 @@ class _HomePageState extends ConsumerState<MeetingPage> {
 
   TextEditingController _roomController = TextEditingController();
 
-  void _joinDialog() async {
-
-    final userBox = Hive.box<User>('session').values.toList();
-    String firstName = userBox[0].firstName!;
-    String email = userBox[0].email!;
-    await showDialog(
-        context: context,
-        builder: (context){
-          return AlertDialog(
-            contentPadding: EdgeInsets.zero,
-            backgroundColor:ColorManager.white,
-            content: Container(
-              decoration: BoxDecoration(
-                color:ColorManager.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 18,vertical: 12),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Join A Room',style: getMediumStyle(color: Colors.black,fontSize: 20),),
-                  const SizedBox(height: 10,),
-                  TextFormField(
-                    controller: _roomController,
-                    decoration: InputDecoration(
-                      fillColor:ColorManager.white,
-                      filled: true,
-                      hintText: 'Enter a room url',
-                      hintStyle: getRegularStyle(color: Colors.black.withOpacity(0.7),fontSize: 20,),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                            color: Colors.black,
-                          )
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                            color: Colors.black,
-                          )
-                      ),
-                      focusColor: Colors.black,
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                            color: Colors.black,
-                          )
-                      ),
-                    ),
-                    style: getMediumStyle(color: Colors.black,fontSize: 25),
-                  ),
-                  const SizedBox(height: 10,),
-                  Center(
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: ColorManager.primary,
-                            shape: ContinuousRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)
-                            )
-                        ),
-                        onPressed: (){
-                          Get.to(()=>WhereByMeetingPage(_roomController.text.trim()));
-                          Navigator.pop(context);
-                        }, child: Text('Join',style: getMediumStyle(color:ColorManager.white,fontSize: 20),)),
-                  )
-                ],
-              ),
-            ),
-          );
-        }
-    );
-  }
 
 
 
@@ -154,7 +82,7 @@ class _HomePageState extends ConsumerState<MeetingPage> {
 
                 onPressed: ()  {
 
-                  _joinDialog();
+                  Get.to(()=>WhereByJoinMeetingPage());
 
                 },
                 child: Row(
