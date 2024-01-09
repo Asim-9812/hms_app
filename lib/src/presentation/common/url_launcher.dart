@@ -9,6 +9,7 @@ class UrlLauncher {
 
 
 
+
   Future<void> launchUrl() async {
     try {
       if (email == null) {

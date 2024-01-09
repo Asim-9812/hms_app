@@ -7,22 +7,23 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:meroupachar/src/core/resources/color_manager.dart';
-import 'package:meroupachar/src/core/resources/value_manager.dart';
-import 'package:meroupachar/src/presentation/patient/reminder/presentation/general/widget/create_general_reminder.dart';
-import 'package:meroupachar/src/presentation/patient/reminder/presentation/medicine/widget/create_med_reminder.dart';
-import 'package:meroupachar/src/presentation/patient/reminder/presentation/medicine/widget/create_med_reminder.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
+import '../../../../core/resources/value_manager.dart';
 import '../../../../data/provider/common_provider.dart';
 import '../../../login/domain/model/user.dart';
 import '../../profile/presentation/profile_page.dart';
+import '../../reminder/presentation/general/widget/create_general_reminder.dart';
+import '../../reminder/presentation/medicine/widget/create_med_reminder.dart';
 import '../../reminder/presentation/reminder_tabs.dart';
 import '../../utilities/presentation/patient_utilities.dart';
 import 'patient_home_page.dart';
-import '../../scan/presentation/qr_scan.dart';
-
+import 'package:qrscan/qrscan.dart' as scanner;
 
 
 class PatientMainPage extends ConsumerStatefulWidget {
@@ -40,7 +41,7 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
   dynamic selected;
 
   PageController controller = PageController();
-
+  TextEditingController outputController = TextEditingController();
 
 
   bool _isMenuOpen = false;
@@ -264,10 +265,11 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
                 //Get.to(()=>CreateReminder(),transition: Transition.fade,curve: Curves.easeIn)
               }
               else{
-
+                _scan();
 
               // Get.to(()=>NoticesUI());
-              Get.to(()=>QRViewExample());
+              // Get.to(()=>QrScanner());
+
               }
             },
             // shape: CircleBorder(),
@@ -294,5 +296,45 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
         ),
       ),
     );
+  }
+
+
+
+
+  Future _scan() async {
+    await Permission.camera.request();
+    String? barcode = await scanner.scan();
+    if (barcode == null) {
+      print('nothing return.');
+    } else {
+      this.outputController.text = barcode;
+      redirectUrl(this.outputController.text);
+    }
+  }
+
+  void redirectUrl(String url) {
+    if (url.startsWith('https://')) {
+      // url = url.replaceFirst('https://', '');
+      UrlLauncher.openUrl(url);
+    } else if (url.startsWith('http://')) {
+      url = url.replaceFirst('http://', '');
+      UrlLauncher.openUrl(url);
+    }
+  }
+
+
+
+}
+
+
+class UrlLauncher {
+  UrlLauncher._();
+
+  static Future<void> openUrl(String code) async {
+    // final Uri uri = Uri(
+    //     path: code,
+    //     scheme: 'https'
+    // );
+    launchUrlString(code,mode: LaunchMode.externalApplication);
   }
 }

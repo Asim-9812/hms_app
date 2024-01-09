@@ -1,6 +1,7 @@
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,9 +11,12 @@ import 'package:meroupachar/src/core/resources/color_manager.dart';
 import 'package:meroupachar/src/presentation/doctor/doctor_dashboard/presentation/doctor_home_page.dart';
 import 'package:meroupachar/src/presentation/doctor/doctor_utilities/presentation/doctor_utilities.dart';
 import 'package:meroupachar/src/presentation/video_chat/presentation/meeting_page.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
+// import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../../../../data/provider/common_provider.dart';
 import '../../../../test.dart';
 import '../../../common/snackbar.dart';
@@ -22,7 +26,7 @@ import '../../../patient_reports/presentation/patient_report.dart';
 import '../../../video_chat/presentation/whereby_create_meeting.dart';
 import '../../patient_reports/presentation/report_page_doctor.dart';
 import '../../profile/presentation/profile_page.dart';
-
+import 'package:qrscan/qrscan.dart' as scanner;
 
 
 
@@ -39,7 +43,7 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
   dynamic selected;
   PageController controller = PageController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  TextEditingController outputController = TextEditingController();
 
 
   late Animation<double> _animation;
@@ -254,6 +258,17 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
                   );
                 },
               ),
+              Bubble(
+                title:"Scan",
+                iconColor :ColorManager.white,
+                bubbleColor : ColorManager.primary,
+                icon:CupertinoIcons.qrcode_viewfinder,
+                titleStyle:TextStyle(fontSize: 16 , color: ColorManager.white),
+                onPress: () {
+                  _animationController.reverse();
+                  _scan();
+                },
+              ),
 
             ],
 
@@ -291,5 +306,43 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
         ),
       ),
     );
+  }
+
+
+  Future _scan() async {
+    await Permission.camera.request();
+    String? barcode = await scanner.scan();
+    if (barcode == null) {
+      print('nothing return.');
+    } else {
+      // print(barcode);
+      // this.outputController.text = barcode;
+      redirectUrl(barcode);
+    }
+  }
+
+  void redirectUrl(String url) {
+    if (url.startsWith('https://')) {
+      // url = url.replaceFirst('https://', '');
+      UrlLauncher.openUrl(url);
+    } else if (url.startsWith('http://')) {
+      url = url.replaceFirst('http://', '');
+      UrlLauncher.openUrl(url);
+    }
+  }
+
+
+}
+
+
+class UrlLauncher {
+  UrlLauncher._();
+
+  static Future<void> openUrl(String code) async {
+    // final Uri uri = Uri(
+    //     path: code,
+    //     scheme: 'https'
+    // );
+    launchUrlString(code,mode: LaunchMode.externalApplication);
   }
 }

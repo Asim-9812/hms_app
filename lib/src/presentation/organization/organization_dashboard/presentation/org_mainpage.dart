@@ -1,4 +1,5 @@
 
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:meroupachar/src/presentation/organization/org_profile/presentation/org_profile_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meroupachar/src/core/resources/color_manager.dart';
 import 'package:meroupachar/src/presentation/organization/doctor_statistics/presentation/doctor_stat_page.dart';
 import 'package:meroupachar/src/presentation/organization/organization_dashboard/presentation/org_homepage.dart';
+import 'package:meroupachar/src/presentation/video_chat/presentation/meeting_page.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
@@ -69,6 +71,11 @@ class _AnimatedBarExampleState extends ConsumerState<OrgMainPage> {
       extendBody: true, //to make floating action button notch transparent
 
 
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: ColorManager.primary,
+        onPressed: ()=>Get.to(()=>MeetingPage()),
+        child: Icon(CupertinoIcons.video_camera_solid,color: ColorManager.white,),),
       bottomNavigationBar: StylishBottomBar(
         option: AnimatedBarOptions(
           // iconSize: 32,
