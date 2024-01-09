@@ -720,6 +720,7 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
                                       notificationLayout: NotificationLayout
                                           .Default,
                                       color: Colors.black,
+                                      category: NotificationCategory.Alarm,
 
                                       //
                                       backgroundColor: Colors.black,
@@ -795,7 +796,7 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
                                       notificationLayout: NotificationLayout
                                           .Default,
                                       color: Colors.black,
-
+                                      category: NotificationCategory.Alarm,
                                       //
                                       backgroundColor: Colors.black,
                                       // customSound: 'resource://raw/notif',
@@ -898,6 +899,7 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
 
                                       //
                                       backgroundColor: Colors.black,
+                                      category: NotificationCategory.Alarm,
                                       // customSound: 'resource://raw/notif',
                                       payload: {
                                         'actPag': 'myAct',
@@ -984,7 +986,7 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
                                       notificationLayout: NotificationLayout
                                           .Default,
                                       color: Colors.black,
-
+                                      category: NotificationCategory.Alarm,
                                       //
                                       backgroundColor: Colors.black,
                                       // customSound: 'resource://raw/notif',
