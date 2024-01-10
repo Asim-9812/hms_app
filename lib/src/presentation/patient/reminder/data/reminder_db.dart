@@ -117,7 +117,7 @@ List<ReminderPatternModel> patternList = [
 ];
 
 
-List<String> daysOfWeekMedication = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+ List<String> daysOfWeekMedication = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
 List<ReminderPatternModel> generalPatternList = [
   ReminderPatternModel(id: 1, patternName: 'Once'),

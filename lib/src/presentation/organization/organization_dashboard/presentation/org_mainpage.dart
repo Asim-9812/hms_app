@@ -14,6 +14,8 @@ import 'package:meroupachar/src/presentation/video_chat/presentation/meeting_pag
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
+import '../../../../core/update_service/update_service.dart';
+import '../../../../core/update_service/update_service_impl.dart';
 import '../../../../data/provider/common_provider.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../patient_reports/presentation/patient_report.dart';
@@ -32,6 +34,63 @@ class _AnimatedBarExampleState extends ConsumerState<OrgMainPage> {
   dynamic selected;
   PageController controller = PageController();
 
+  final UpdateService _updateService = UpdateServiceImpl();
+
+
+  void _onUpdateSuccess() {
+    Widget alertDialogOkButton = TextButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: const Text("Ok")
+    );
+    AlertDialog alertDialog = AlertDialog(
+      title: const Text("Update Successfully Installed"),
+      content: const Text("Khata System has been updated successfully! ✔ "),
+      actions: [
+        alertDialogOkButton
+      ],
+    );
+    showDialog(context: context,
+        builder: (BuildContext context) {
+          return alertDialog;
+        }  );
+  }
+
+  void _onUpdateFailure(String error) {
+    Widget alertDialogTryAgainButton = TextButton(
+        onPressed: () {
+          _updateService.checkForInAppUpdate(_onUpdateSuccess, _onUpdateFailure);
+          Navigator.pop(context);
+        },
+        child: const Text("Try Again?")
+    );
+    Widget alertDialogCancelButton = TextButton(
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      child: const Text("Dismiss"),
+    );
+    AlertDialog alertDialog = AlertDialog(
+      title: const Text("Update Failed To Install ❌"),
+      content: Text("Khata System has failed to update because: \n $error"),
+      actions: [
+        alertDialogTryAgainButton,
+        alertDialogCancelButton
+      ],
+    );
+    showDialog(context: context,
+        builder: (BuildContext context) {
+          return alertDialog;
+        });
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    _updateService.checkForInAppUpdate(_onUpdateSuccess, _onUpdateFailure);
+  }
 
   // @override
   // void didChangeDependencies() {
