@@ -304,7 +304,7 @@ class _MedDetailsState extends State<MedDetails> {
                    h10,
                    LinearProgressBar(
                        maxSteps: (reminderBox.medicationDuration * reminderBox.scheduleTime.length),
-                       currentStep: (reminderBox.medicationDuration * reminderBox.scheduleTime.length) - (reminderBox.medicationDuration - remainingDays.inDays),
+                       currentStep: (reminderBox.medicationDuration - remainingDays.inDays),
                        progressColor: ColorManager.orange,
                        backgroundColor: ColorManager.dotGrey
                    ),
@@ -417,7 +417,7 @@ class _MedDetailsState extends State<MedDetails> {
                                            back = 1;
                                          });
                                          Navigator.pop(context);
-                                       }, child: Text('Yes')),
+                                       }, child: Text('Yes',style: getRegularStyle(color: ColorManager.white),)),
                                    ElevatedButton(
                                        style: ElevatedButton.styleFrom(
                                            elevation: 0,

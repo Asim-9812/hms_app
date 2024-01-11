@@ -20,7 +20,7 @@ class RegisterPage extends ConsumerStatefulWidget {
 }
 
 class _RegisterPageState extends ConsumerState<RegisterPage> {
-  List<String> accountType = ['Select Account Type','Organization','Professional','Patient'];
+  List<String> accountType = ['Select Account Type','Professional','Patient'];
   int accountId =0;
   String selectedAccountType = 'Select Account Type';
   final formKey = GlobalKey<FormState>();
@@ -195,18 +195,18 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                     onChanged: (String? value) {
                       setState(() {
                         selectedAccountType = value!;
-                        accountId = accountType.indexOf(value);
+                        accountId = accountType.indexOf(value)+1;
                       });
                     },
                   ),
+                  // if(selectedAccountType == accountType[1])
+                  //   RegisterOrganization(accountId: 1,),
+                  //
+
                   if(selectedAccountType == accountType[1])
-                    RegisterOrganization(accountId: 1,),
-
-
-                  if(selectedAccountType == accountType[2])
                     RegisterDoctor(accountId: accountId),
 
-                  if(selectedAccountType == accountType[3])
+                  if(selectedAccountType == accountType[2])
                     RegisterPatient(accountId:accountId),
 
 

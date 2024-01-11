@@ -228,7 +228,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
   Future<void> _selectStartDate(BuildContext context) async {
     if(formKey3.currentState!.validate()){
 
-      DateTime date = DateFormat('hh:mm a').parse(_startTimeController.text);
+      DateTime date = DateFormat('HH:mm').parse(_startTimeController.text);
       DateTime now = DateTime.now();
 
       date = DateTime(now.year, now.month, now.day, date.hour, date.minute);

@@ -235,9 +235,10 @@ class _SubscriptionPlanTestState extends ConsumerState<DoctorSubscriptionPlan> {
                       _controller.previousPage(duration: Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);
                       setState(() {
                         selectedPage = 0;
-                        _carouselController.jumpToPage(0);
+
                         _currentSlide = 0;
                       });
+                      _carouselController.jumpToPage(0);
                     },
                     child: Container(
                         decoration: BoxDecoration(
@@ -255,9 +256,10 @@ class _SubscriptionPlanTestState extends ConsumerState<DoctorSubscriptionPlan> {
                       _controller.nextPage(duration: Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);
                       setState(() {
                         selectedPage = 1;
-                        _carouselController.jumpToPage(0);
+
                         _currentSlide = 0;
                       });
+                      _carouselController.jumpToPage(0);
                     },
                     child: Container(
                         decoration: BoxDecoration(
@@ -401,7 +403,7 @@ class _SubscriptionPlanTestState extends ConsumerState<DoctorSubscriptionPlan> {
                                                   setState(() {
                                                     isPostingData = true; // Show loading spinner
                                                   });
-                                                  if(schemePlan.schemeId == 4){
+                                                  if(schemePlan.schemeName?.toLowerCase() == 'free trial'){
                                                     await userRegisterDoctor().then((value) {
                                                       if(value.isLeft()){
                                                         scaffoldMessage.showSnackBar(
@@ -543,7 +545,7 @@ class _SubscriptionPlanTestState extends ConsumerState<DoctorSubscriptionPlan> {
       child: ListView.builder(
           padding: EdgeInsets.zero,
           shrinkWrap: false,
-          itemCount: 4,
+          itemCount: data.length,
           itemBuilder: (context , index){
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 5.h),
@@ -584,13 +586,13 @@ class _SubscriptionPlanTestState extends ConsumerState<DoctorSubscriptionPlan> {
 
   }) {
 
-   final Color color = schemePlaneModel.schemeId == 1
+   final Color color = schemePlaneModel.schemeName?.toLowerCase() == 'gold'
        ? ColorManager.goldContainer
-       : schemePlaneModel.schemeId == 2
+       : schemePlaneModel.schemeName?.toLowerCase() == 'silver'
        ? ColorManager.silverContainer
-       :  schemePlaneModel.schemeId == 3
-       ? ColorManager.blackContainer
-       : ColorManager.primary ;
+       :  schemePlaneModel.schemeName?.toLowerCase() == 'free trial'
+       ? ColorManager.primary
+       : ColorManager.blackContainer ;
 
     return CustomBannerShimmer(
         width: 340.w,

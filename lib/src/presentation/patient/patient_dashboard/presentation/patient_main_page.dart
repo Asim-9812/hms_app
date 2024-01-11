@@ -371,9 +371,12 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
       // url = url.replaceFirst('https://', '');
       UrlLauncher.openUrl(url);
     } else if (url.startsWith('http://')) {
-      url = url.replaceFirst('http://', '');
+      url = url.replaceFirst('http://', 'https://');
+      UrlLauncher.openUrl(url);
+    }else{
       UrlLauncher.openUrl(url);
     }
+
   }
 
 

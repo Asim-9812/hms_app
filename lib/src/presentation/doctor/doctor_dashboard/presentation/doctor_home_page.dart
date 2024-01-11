@@ -11,7 +11,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meroupachar/src/core/resources/color_manager.dart';
 import 'package:meroupachar/src/core/resources/style_manager.dart';
@@ -20,7 +19,6 @@ import 'package:meroupachar/src/presentation/doctor/doctor_tasks/domain/model/ta
 import 'package:meroupachar/src/presentation/doctor/doctor_tasks/presentation/task_detail.dart';
 import 'package:meroupachar/src/presentation/patient_reports/domain/services/patient_report_services.dart';
 import 'package:meroupachar/src/presentation/patient_reports/domain/model/patient_report_model.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../../core/api.dart';
 import '../../../../core/resources/value_manager.dart';
@@ -76,6 +74,11 @@ class _DoctorHomePageState extends ConsumerState<DoctorHomePage> {
 
     // Add a listener to update the UI when the box changes
     taskBoxListenable.addListener(_onHiveBoxChanged);
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      showAlertDialog(context,widget.code);
+    });
+
   }
 
 
@@ -89,18 +92,18 @@ class _DoctorHomePageState extends ConsumerState<DoctorHomePage> {
 
 
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    if(widget.noticeBool){
-      // Schedule the _showAlertDialog method to be called after the build is complete.
-      Future.delayed(Duration.zero, () {
-        showAlertDialog(context,widget.code);
-      });
-    }
-
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //
+  //   if(widget.noticeBool){
+  //     // Schedule the _showAlertDialog method to be called after the build is complete.
+  //     Future.delayed(Duration.zero, () {
+  //       showAlertDialog(context,widget.code);
+  //     });
+  //   }
+  //
+  // }
 
 
   @override

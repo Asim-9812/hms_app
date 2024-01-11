@@ -1,7 +1,6 @@
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -20,13 +19,10 @@ import 'package:url_launcher/url_launcher_string.dart';
 import '../../../../core/update_service/update_service.dart';
 import '../../../../core/update_service/update_service_impl.dart';
 import '../../../../data/provider/common_provider.dart';
-import '../../../../test.dart';
 import '../../../common/snackbar.dart';
 import '../../../documents/presentation/document_page.dart';
 import 'package:meroupachar/src/presentation/login/domain/model/user.dart';
 import '../../../patient_reports/presentation/patient_report.dart';
-import '../../../video_chat/presentation/whereby_create_meeting.dart';
-import '../../patient_reports/presentation/report_page_doctor.dart';
 import '../../profile/presentation/profile_page.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 
@@ -389,6 +385,8 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
       UrlLauncher.openUrl(url);
     } else if (url.startsWith('http://')) {
       url = url.replaceFirst('http://', '');
+      UrlLauncher.openUrl(url);
+    } else{
       UrlLauncher.openUrl(url);
     }
   }

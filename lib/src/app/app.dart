@@ -44,6 +44,7 @@ class MyAppState extends State<MyApp> {
       builder: (context, child) {
         return KhaltiScope(
           publicKey: 'test_public_key_d5355c28fd984efabb516a5b832a769e',
+          // publicKey: 'live_public_key_ceead578475246fc83a9040d00610f93',
           enabledDebugging: true,
 
 

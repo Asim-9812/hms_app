@@ -64,6 +64,9 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
     checkGeolocationStatus();
     // NotificationService().initNotification();
 
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      showAlertDialog(context,widget.code);
+    });
 
 
 
@@ -71,100 +74,19 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
 
   }
 
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    if(widget.noticeBool){
-      // Schedule the _showAlertDialog method to be called after the build is complete.
-      Future.delayed(Duration.zero, () {
-        showAlertDialog(context,widget.code);
-      });
-    }
-
-  }
   //
-  // void joinDialog() async {
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
   //
-  //   final userBox = Hive.box<User>('session').values.toList();
-  //   String firstName = userBox[0].firstName!;
-  //   String email = userBox[0].email!;
-  //   await showDialog(
-  //       context: context,
-  //       builder: (context){
-  //         return AlertDialog(
-  //           contentPadding: EdgeInsets.zero,
-  //           backgroundColor:ColorManager.white,
-  //           content: Container(
-  //             decoration: BoxDecoration(
-  //               color:ColorManager.white,
-  //               borderRadius: BorderRadius.circular(10),
-  //             ),
-  //             padding: EdgeInsets.symmetric(horizontal: 18,vertical: 12),
-  //             child: Column(
-  //               mainAxisSize: MainAxisSize.min,
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 Text('Join A Room',style: getMediumStyle(color: Colors.black,fontSize: 20),),
-  //                 const SizedBox(height: 10,),
-  //                 TextFormField(
-  //                   controller: _roomController,
-  //                   decoration: InputDecoration(
-  //                     fillColor:ColorManager.white,
-  //                     filled: true,
-  //                     hintText: 'Enter a room url',
-  //                     hintStyle: getRegularStyle(color: Colors.black.withOpacity(0.7),fontSize: 20,),
-  //                     border: OutlineInputBorder(
-  //                         borderRadius: BorderRadius.circular(10),
-  //                         borderSide: BorderSide(
-  //                           color: Colors.black,
-  //                         )
-  //                     ),
-  //                     enabledBorder: OutlineInputBorder(
-  //                         borderRadius: BorderRadius.circular(10),
-  //                         borderSide: BorderSide(
-  //                           color: Colors.black,
-  //                         )
-  //                     ),
-  //                     focusColor: Colors.black,
-  //                     focusedBorder: OutlineInputBorder(
-  //                         borderRadius: BorderRadius.circular(10),
-  //                         borderSide: BorderSide(
-  //                           color: Colors.black,
-  //                         )
-  //                     ),
-  //                   ),
-  //                   style: getMediumStyle(color: Colors.black,fontSize: 25),
-  //                 ),
-  //                 const SizedBox(height: 10,),
-  //                 Center(
-  //                   child: ElevatedButton(
-  //                       style: ElevatedButton.styleFrom(
-  //                           backgroundColor: ColorManager.primary,
-  //                           shape: ContinuousRectangleBorder(
-  //                               borderRadius: BorderRadius.circular(10)
-  //                           )
-  //                       ),
-  //                       onPressed: (){
-  //                         print(_roomController.text);
-  //                         Get.to(()=>WhereByMeetingPage(_roomController.text.trim()));
-  //                         Navigator.pop(context);
-  //                       }, child: Text('Join',style: getMediumStyle(color:ColorManager.white,fontSize: 20),)),
-  //                 )
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       }
-  //   );
+  //   if(widget.noticeBool){
+  //     // Schedule the _showAlertDialog method to be called after the build is complete.
+  //     Future.delayed(Duration.zero, () {
+  //
+  //     });
+  //   }
+  //
   // }
-  //
-
-
-
-
-
 
 
   /// health tags...
@@ -504,7 +426,15 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                 ),
                 w10,
                 InkWell(
-                  onTap: (){},
+                  onTap: (){
+                    final scaffoldMessage = ScaffoldMessenger.of(context);
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showComingSoonBar(
+                        message: 'Coming Soon !',
+                        duration: const Duration(milliseconds: 1400),
+                      ),
+                    );
+                  },
                   child: Container(
                     height: height,
                     width: width,
@@ -540,37 +470,48 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                   ),
                 ),
                 w10,
-                Container(
-                  height: height,
-                  width: width,
-                  decoration: BoxDecoration(
-                      borderRadius:BorderRadius.circular(10),
-                      color: ColorManager.primary.withOpacity(0.5)
-                  ),
-                  child: Stack(
-                    children: [
-                      Center(child: Image.asset('assets/images/pharmacy.png')),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 20.h),
-                          child: Container(
-                            height: 25,
-                            width: 90,
-                            decoration: BoxDecoration(
-                              color: ColorManager.orange.withOpacity(0.8),
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  bottomLeft: Radius.circular(10)
+                InkWell(
+                  onTap: (){
+                    final scaffoldMessage = ScaffoldMessenger.of(context);
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showComingSoonBar(
+                        message: 'Coming Soon !',
+                        duration: const Duration(milliseconds: 1400),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    height: height,
+                    width: width,
+                    decoration: BoxDecoration(
+                        borderRadius:BorderRadius.circular(10),
+                        color: ColorManager.primary.withOpacity(0.5)
+                    ),
+                    child: Stack(
+                      children: [
+                        Center(child: Image.asset('assets/images/pharmacy.png')),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 20.h),
+                            child: Container(
+                              height: 25,
+                              width: 90,
+                              decoration: BoxDecoration(
+                                color: ColorManager.orange.withOpacity(0.8),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10)
+                                ),
+                              ),
+                              child: Center(
+                                child: Text('Pharmacy',style: getMediumStyle(color: ColorManager.white,fontSize: fontSize),),
                               ),
                             ),
-                            child: Center(
-                              child: Text('Pharmacy',style: getMediumStyle(color: ColorManager.white,fontSize: fontSize),),
-                            ),
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ],

@@ -56,6 +56,11 @@ class _OrgHomePageState extends ConsumerState<OrgHomePage> {
   void initState() {
     super.initState();
 
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      showAlertDialog(context,widget.code);
+    });
+
+
   }
 
 
@@ -63,20 +68,20 @@ class _OrgHomePageState extends ConsumerState<OrgHomePage> {
 
 
 
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    if(widget.noticeBool){
-      print('showdialog');
-      // Schedule the _showAlertDialog method to be called after the build is complete.
-      Future.delayed(Duration.zero, () {
-        showAlertDialog(context,widget.code);
-      });
-    }
-
-  }
+  //
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //
+  //   if(widget.noticeBool){
+  //     print('showdialog');
+  //     // Schedule the _showAlertDialog method to be called after the build is complete.
+  //     Future.delayed(Duration.zero, () {
+  //       showAlertDialog(context,widget.code);
+  //     });
+  //   }
+  //
+  // }
 
 
 

@@ -98,14 +98,14 @@ class RegisterService{
     required String email,
     required String password,
     required String mobileNo,
-    required String userName,
+    // required String userName,
     required int genderId
   }) async {
     try {
       final response = await dio.post(
           Api.registerPatient,
           data: {
-            "userName": userName,
+            // "userName": userName,
             "password": password,
             "firstName": firstName,
             "lastName": lastName,
@@ -115,7 +115,7 @@ class RegisterService{
           }
       );
 
-      (response.data['result']['id']);
+      // (response.data['result']['id']);
       
       if(response.data['result']['id']==0){
         return left('Username already exist');
@@ -128,8 +128,8 @@ class RegisterService{
 
 
     } on DioException catch (err) {
-      (err.response);
-      return Left('Something went wrong');
+      print(err.response?.data['message']);
+      return Left(err.response?.data['message'] ?? 'Something went wrong');
     }}
 
 

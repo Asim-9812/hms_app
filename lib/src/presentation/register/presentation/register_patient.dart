@@ -54,40 +54,7 @@ class _RegisterPatientState extends ConsumerState<RegisterPatient> {
       key: formKey,
       child: Column(
         children: [
-          SizedBox(
-            height: 18.h,
-          ),
-          TextFormField(
-            controller: _usernameController,
-            autovalidateMode:
-            AutovalidateMode.onUserInteraction,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Name is required';
-              }
-              if (value.length > 10) {
-                return 'Email length must be 10 characters or less';
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ColorManager.black.withOpacity(0.5)
-                          )
-                      ),
-                floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                labelText: 'Username',
-                labelStyle: getRegularStyle(color: ColorManager.black),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                        color: ColorManager.black
-                    )
-                )
-            ),
-          ),
+
           SizedBox(
             height: 18.h,
           ),
@@ -410,39 +377,48 @@ class _RegisterPatientState extends ConsumerState<RegisterPatient> {
           ElevatedButton(
             onPressed:isPostingData == true ? null :() async {
               final scaffoldMessage = ScaffoldMessenger.of(context);
-              setState(() {
-                isPostingData = true;
-              });
-              final response = await RegisterService().patientRegister(
-                  firstName: _firstNameController.text.trim(),
-                  lastName: _lastNameController.text.trim(),
-                  email: _emailController.text.trim(),
-                  password: _passController.text.trim(),
-                  mobileNo: _mobileController.text.trim(),
-                  userName: _usernameController.text.trim(),
-                  genderId: genderId
-              );
-              if(response.isLeft()){
-                final leftValue = response.fold((l) => l, (r) => null);
-                scaffoldMessage.showSnackBar(
-                  SnackbarUtil.showFailureSnackbar(
-                      message: '$leftValue',
-                      duration: const Duration(seconds: 2)
-                  ),
-                );
+              if(formKey.currentState!.validate()){
                 setState(() {
-                  isPostingData = false;
+                  isPostingData = true;
                 });
-              } else{
-                scaffoldMessage.showSnackBar(
-                  SnackbarUtil.showSuccessSnackbar(
-                      message: 'Registered Successfully',
-                      duration: const Duration(seconds: 2)
-                  ),
+                final response = await RegisterService().patientRegister(
+                    firstName: _firstNameController.text.trim(),
+                    lastName: _lastNameController.text.trim(),
+                    email: _emailController.text.trim(),
+                    password: _passController.text.trim(),
+                    mobileNo: _mobileController.text.trim(),
+                    // userName: _usernameController.text.trim(),
+                    genderId: genderId
                 );
-                setState(() {
-                  isPostingData = false;
-                });
+                if(response.isLeft()){
+                  final leftValue = response.fold((l) => l, (r) => null);
+                  scaffoldMessage.showSnackBar(
+                    SnackbarUtil.showFailureSnackbar(
+                        message: '$leftValue',
+                        duration: const Duration(seconds: 2)
+                    ),
+                  );
+                  setState(() {
+                    isPostingData = false;
+                  });
+                } else{
+                  scaffoldMessage.showSnackBar(
+                    SnackbarUtil.showSuccessSnackbar(
+                        message: 'Registered Successfully.',
+                        duration: const Duration(seconds: 2)
+                    ),
+                  );
+                  scaffoldMessage.showSnackBar(
+                    SnackbarUtil.showSuccessSnackbar(
+                        message: 'Please check your email for credentials.',
+                        duration: const Duration(seconds: 2)
+                    ),
+                  );
+                  setState(() {
+                    isPostingData = false;
+                  });
+              }
+
                 Get.offAll(()=>LoginPage());
               }
             },

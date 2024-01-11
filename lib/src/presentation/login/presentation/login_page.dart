@@ -12,6 +12,8 @@ import 'package:meroupachar/src/presentation/login/presentation/status_page.dart
 
 import '../../../core/resources/style_manager.dart';
 import '../../../core/resources/value_manager.dart';
+import '../../../core/update_service/update_service.dart';
+import '../../../core/update_service/update_service_impl.dart';
 import '../../common/snackbar.dart';
 import '../../register/presentation/register.dart';
 import '../domain/service/login_service.dart';
@@ -26,8 +28,12 @@ class LoginPage extends ConsumerStatefulWidget {
 class _LoginPageCopyState extends ConsumerState<LoginPage>
     with SingleTickerProviderStateMixin {
 
+
+  final UpdateService _updateService = UpdateServiceImpl();
+
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
+
 
 
   int selectedOption = 0;
@@ -42,10 +48,62 @@ class _LoginPageCopyState extends ConsumerState<LoginPage>
   bool isLoading = false;
 
 
+  void _onUpdateSuccess() {
+    Widget alertDialogOkButton = TextButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: const Text("Ok")
+    );
+    AlertDialog alertDialog = AlertDialog(
+      title: const Text("Update Successfully Installed"),
+      content: const Text("Khata System has been updated successfully! ✔ "),
+      actions: [
+        alertDialogOkButton
+      ],
+    );
+    showDialog(context: context,
+        builder: (BuildContext context) {
+          return alertDialog;
+        }  );
+  }
+
+  void _onUpdateFailure(String error) {
+    Widget alertDialogTryAgainButton = TextButton(
+        onPressed: () {
+          _updateService.checkForInAppUpdate(_onUpdateSuccess, _onUpdateFailure);
+          Navigator.pop(context);
+        },
+        child: const Text("Try Again?")
+    );
+    Widget alertDialogCancelButton = TextButton(
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      child: const Text("Dismiss"),
+    );
+    AlertDialog alertDialog = AlertDialog(
+      title: const Text("Update Failed To Install ❌"),
+      content: Text("Khata System has failed to update because: \n $error"),
+      actions: [
+        alertDialogTryAgainButton,
+        alertDialogCancelButton
+      ],
+    );
+    showDialog(context: context,
+        builder: (BuildContext context) {
+          return alertDialog;
+        });
+  }
+
+
+
 
   @override
   void initState() {
     super.initState();
+    _updateService.checkForInAppUpdate(_onUpdateSuccess, _onUpdateFailure);
+
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(seconds: 2),
