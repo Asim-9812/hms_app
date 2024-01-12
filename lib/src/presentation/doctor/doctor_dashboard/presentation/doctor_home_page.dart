@@ -75,9 +75,9 @@ class _DoctorHomePageState extends ConsumerState<DoctorHomePage> {
     // Add a listener to update the UI when the box changes
     taskBoxListenable.addListener(_onHiveBoxChanged);
 
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      showAlertDialog(context,widget.code);
-    });
+    // WidgetsBinding.instance?.addPostFrameCallback((_) {
+    //   showAlertDialog2(context,widget.code,ref);
+    // });
 
   }
 

@@ -68,6 +68,7 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
     dateFrom.text = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 7)));
     dateTo.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
     userCode = widget.userCode;
+    phController.text = userCode;
     _getUsers();
 
   }
@@ -167,7 +168,7 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: ColorManager.primaryDark,
-          title: Text('Patient Reports',style: getMediumStyle(color: ColorManager.white,fontSize: 20),),
+          title: Text('PH Reports',style: getMediumStyle(color: ColorManager.white,fontSize: 20),),
           centerTitle: true,
           automaticallyImplyLeading: false,
           //leading: userBox.typeID == 3 ? null:IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.white,)),
@@ -1043,8 +1044,8 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
                                     children: [
                                       IconButton(onPressed: ()=>Get.to(()=>AddDocuPatients(userId:patient.patientID!)),
                                           icon: FaIcon(CupertinoIcons.add_circled,color: ColorManager.orange.withOpacity(0.7),)),
-                                      IconButton(onPressed: ()=>Get.to(()=>ViewProfile(patientCode: patient.patientID!,colorCode: patient.colorCode == null? '#ffffff' : patient.colorCode!,patientAddress: patient.address!,)),
-                                          icon: FaIcon(CupertinoIcons.eye_fill,color: ColorManager.primary,)),
+                                      // IconButton(onPressed: ()=>Get.to(()=>ViewProfile(patientCode: patient.patientID!,colorCode: patient.colorCode == null? '#ffffff' : patient.colorCode!,patientAddress: patient.address!,)),
+                                      //     icon: FaIcon(CupertinoIcons.eye_fill,color: ColorManager.primary,)),
                                     ],
                                   )
                               ),

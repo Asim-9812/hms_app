@@ -53,7 +53,7 @@ class _MedRemindersState extends ConsumerState<GeneralReminders> {
     // Add a listener to update the UI when the box changes
     reminderBoxListenable.addListener(_onHiveBoxChanged);
 
-    _deleteOnce();
+    // _deleteOnce();
   }
 
   void _onHiveBoxChanged() {
@@ -65,23 +65,23 @@ class _MedRemindersState extends ConsumerState<GeneralReminders> {
   }
 
 
-  void _deleteOnce(){
-
-    final isOnceReminders = reminderBox.values.toList().where((element) => element.reminderPattern.reminderPatternId == 1).toList();
-
-    for(int i = 0 ; i < isOnceReminders.length ; i++){
-      DateTime isBefore = DateTime(isOnceReminders[i].startDate.year,isOnceReminders[i].startDate.month,isOnceReminders[i].startDate.day,DateFormat('hh:mm a').parse(isOnceReminders[i].time).hour, DateFormat('hh:mm a').parse(isOnceReminders[i].time).minute);
-
-
-      if(isBefore.isBefore(DateTime.now())){
-        final int indexToDelete = reminderBox.values.toList().indexWhere((element) => element.reminderId == isOnceReminders[i].reminderId);
-
-        reminderBox.deleteAt(indexToDelete);
-      }
-
-    }
-
-  }
+  // void _deleteOnce(){
+  //
+  //   final isOnceReminders = reminderBox.values.toList().where((element) => element.reminderPattern.reminderPatternId == 1).toList();
+  //
+  //   for(int i = 0 ; i < isOnceReminders.length ; i++){
+  //     DateTime isBefore = DateTime(isOnceReminders[i].startDate.year,isOnceReminders[i].startDate.month,isOnceReminders[i].startDate.day,DateFormat('hh:mm a').parse(isOnceReminders[i].time).hour, DateFormat('hh:mm a').parse(isOnceReminders[i].time).minute);
+  //
+  //
+  //     if(isBefore.isBefore(DateTime.now())){
+  //       final int indexToDelete = reminderBox.values.toList().indexWhere((element) => element.reminderId == isOnceReminders[i].reminderId);
+  //
+  //       reminderBox.deleteAt(indexToDelete);
+  //     }
+  //
+  //   }
+  //
+  // }
 
   @override
   void dispose() {

@@ -293,7 +293,7 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateDocProfile> {
                       else {
                         scaffoldMessage.showSnackBar(
                           SnackbarUtil.showSuccessSnackbar(
-                            message: 'Successfully Registered',
+                            message: 'Successfully Updated',
                             duration: const Duration(milliseconds: 1400),
                           ),
                         );
@@ -422,30 +422,30 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateDocProfile> {
                                 fontSize: widget.isWideScreen ? 14 : 14.sp),
                           ),
                         ),
-                        w10,
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: ColorManager.white,
-                            elevation: 5,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          onPressed: () {
-                            if (user.profileImage != null) {
-                              setState(() {
-                                tempProfileImage = null;
-                              });
-                            }
-                            ref.invalidate(imageProvider);
-                          },
-                          child: Text(
-                            'Remove Profile Picture',
-                            style: getRegularStyle(
-                                color: ColorManager.black,
-                                fontSize: widget.isWideScreen ? 14 : 14.sp),
-                          ),
-                        ),
+                        // w10,
+                        // ElevatedButton(
+                        //   style: ElevatedButton.styleFrom(
+                        //     backgroundColor: ColorManager.white,
+                        //     elevation: 5,
+                        //     shape: RoundedRectangleBorder(
+                        //       borderRadius: BorderRadius.circular(10),
+                        //     ),
+                        //   ),
+                        //   onPressed: () {
+                        //     if (user.profileImage != null) {
+                        //       setState(() {
+                        //         tempProfileImage = null;
+                        //       });
+                        //     }
+                        //     ref.invalidate(imageProvider);
+                        //   },
+                        //   child: Text(
+                        //     'Remove Profile Picture',
+                        //     style: getRegularStyle(
+                        //         color: ColorManager.black,
+                        //         fontSize: widget.isWideScreen ? 14 : 14.sp),
+                        //   ),
+                        // ),
                       ],
                     ),
                     h20,
@@ -1182,30 +1182,30 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateDocProfile> {
                                 fontSize: widget.isWideScreen ? 14 : 14.sp),
                           ),
                         ),
-                        w10,
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: ColorManager.white,
-                            elevation: 5,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          onPressed: () {
-                            if (user.signatureImage != null) {
-                              setState(() {
-                                tempSignImage = null;
-                              });
-                            }
-                            ref.invalidate(imageProvider2);
-                          },
-                          child: Text(
-                            'Remove Signature Picture',
-                            style: getRegularStyle(
-                                color: ColorManager.black,
-                                fontSize: widget.isWideScreen ? 14 : 14.sp),
-                          ),
-                        ),
+                        // w10,
+                        // ElevatedButton(
+                        //   style: ElevatedButton.styleFrom(
+                        //     backgroundColor: ColorManager.white,
+                        //     elevation: 5,
+                        //     shape: RoundedRectangleBorder(
+                        //       borderRadius: BorderRadius.circular(10),
+                        //     ),
+                        //   ),
+                        //   onPressed: () {
+                        //     if (user.signatureImage != null) {
+                        //       setState(() {
+                        //         tempSignImage = null;
+                        //       });
+                        //     }
+                        //     ref.invalidate(imageProvider2);
+                        //   },
+                        //   child: Text(
+                        //     'Remove Signature Picture',
+                        //     style: getRegularStyle(
+                        //         color: ColorManager.black,
+                        //         fontSize: widget.isWideScreen ? 14 : 14.sp),
+                        //   ),
+                        // ),
                       ],
                     ),
                     h20,

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,6 +15,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/domain/model/reminder_model.dart';
+import 'package:meroupachar/src/presentation/patient/reminder/domain/services/med_services.dart';
 import '../../../../../../core/resources/color_manager.dart';
 import '../../../../../../core/resources/style_manager.dart';
 import '../../../../../../core/resources/value_manager.dart';
@@ -59,8 +61,8 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
   TextEditingController _noteController = TextEditingController();
 
 
-  int selectedMedTypeId = 1;
-  String selectedMedTypeName='Tablet' ;
+  int selectedMedTypeId = 0;
+  String selectedMedTypeName='' ;
   String? selectedStrengthUnit;
   String? selectedFrequencyName;
   List<String> scheduleTime=[];
@@ -183,7 +185,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
           minute: picked.minute,
         );
 
-        final formattedTime = DateFormat('HH:mm').format(
+        final formattedTime = DateFormat('HH:mm a').format(
           DateTime(2023, 1, 1, selectedTime.hour, selectedTime.minute),
         );
 
@@ -204,7 +206,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
               hour: (selectedTime.hour + intervalHours) % 24,
               minute: selectedTime.minute,
             );
-            final formattedTime = DateFormat('HH:mm').format(
+            final formattedTime = DateFormat('HH:mm a').format(
               DateTime(2023, 1, 1, selectedTime.hour, selectedTime.minute),
             );
             notifyScheduleTime.add(formattedTime);
@@ -228,11 +230,12 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
   Future<void> _selectStartDate(BuildContext context) async {
     if(formKey3.currentState!.validate()){
 
-      DateTime date = DateFormat('HH:mm').parse(_startTimeController.text);
+      DateTime date = DateFormat('HH:mm a').parse(_startTimeController.text);
       DateTime now = DateTime.now();
 
-      date = DateTime(now.year, now.month, now.day, date.hour, date.minute);
 
+      date = DateTime(now.year, now.month, now.day, date.hour, date.minute);
+      print(date);
 
       final DateTime? selectedDate = await showDatePicker(
         context: context,
@@ -414,6 +417,9 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
   }
 
   Widget _form1(PageController _pageController){
+    final routes = ref.watch(routeProvider);
+    final units =ref.watch(unitProvider);
+    final frequencies =ref.watch(frequencyProvider);
 
     return Form(
       key: formKey1,
@@ -423,48 +429,87 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             h10,
-            Container(
-              // color: ColorManager.red,
-              width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: medicineType.map((e){
-                  return InkWell(
-                    splashColor: MaterialStateColor.resolveWith((states) => Colors.transparent),
-                    onTap: (){
-                      setState(() {
-                        selectedMedTypeId =e.id;
-                        selectedMedTypeName = e.name;
-                        selectedStrengthUnit = null;
+            routes.when(
+                data: (data){
+                  return DropdownSearch<String>(
 
+                    items: data.map((e) => e.name).toList(),
+                    dropdownDecoratorProps: DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color:  ColorManager.accentGreen.withOpacity(0.5)
+                              ),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color:  ColorManager.accentGreen.withOpacity(0.5)
+                              ),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          enabledBorder:  OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color:  ColorManager.primary
+                              ),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          labelText: "Routes",
+                          labelStyle: getRegularStyle(color: ColorManager.primary)
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedMedTypeName = value!;
                       });
-                      // ref.read(itemProvider.notifier).updateMedicineType(e.name);
+                      final selected = data.firstWhereOrNull((element) => element.name.contains(value!));
+                      if(selected != null){
+                        setState(() {
+                          selectedMedTypeId = selected.id;
+
+                        });
+                      }
+                      else if(selected == null){
+                        setState(() {
+                          selectedMedTypeId = 0;
+
+                        });
+                      }
+                      else{
+                        setState(() {
+                          selectedMedTypeId = -1;
+                        });
+                      }
 
                     },
-                    child: Container(
+                    validator: (value){
+                      if(selectedMedTypeId == 0){
+                        return 'Select a route';
+                      }
+                      return null;
+                    },
+                    autoValidateMode: AutovalidateMode.onUserInteraction,
 
-                      child: Column(
-                        children: [
-                          Container(
-                              decoration: BoxDecoration(
-                                  color: selectedMedTypeId ==e.id? ColorManager.primary.withOpacity(0.3):ColorManager.dotGrey.withOpacity(0.5),
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                      color:  selectedMedTypeId ==e.id? ColorManager.primary:ColorManager.dotGrey
-                                  )
-                              ),
-                              padding:EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                              child: FaIcon(e.icon,color:selectedMedTypeId ==e.id? ColorManager.primary.withOpacity(0.8):ColorManager.black.withOpacity(0.4),)),
-                          h10,
-                          Text(e.name,style: getRegularStyle(color: selectedMedTypeId ==e.id? ColorManager.primary.withOpacity(0.8):ColorManager.dotGrey,fontSize: 12),)
-                        ],
+
+                    // selectedItem: selectedDepartment,
+                    popupProps: const PopupProps<String>.menu(
+
+                      showSearchBox: true,
+                      fit: FlexFit.loose,
+                      constraints: BoxConstraints(maxHeight: 350),
+                      showSelectedItems: true,
+                      searchFieldProps: TextFieldProps(
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                   );
-                }).toList(),
-              ),
+                },
+                error: (error,stack)=>Text('Something went wrong. Try again later'),
+                loading: () => SpinKitDualRing(color: ColorManager.primary)
             ),
-            h20,
+            h10,
             TextFormField(
               controller: _medicineNameController,
               decoration: InputDecoration(
@@ -555,222 +600,193 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                   ),
                 ),
                 w10,
-                Expanded(
-                  child: DropdownButtonFormField(
-                    menuMaxHeight: 200,
-                    isDense: true,
-                    value:selectedStrengthUnit==null ? null :selectedStrengthUnit ,
-                    decoration: InputDecoration(
-                       focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ColorManager.black.withOpacity(0.5)
-                          )
-                      ),
+                units.when(
+                    data: (data){
+                      return Expanded(
+                        child: DropdownSearch<String>(
 
-                        isDense: true,
-                        labelText: 'Unit',
-                        labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                                color: ColorManager.primaryDark
-                            )
+                          items: data.map((e) => e).toList(),
+                          dropdownDecoratorProps: DropDownDecoratorProps(
+                            dropdownSearchDecoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color:  ColorManager.accentGreen.withOpacity(0.5)
+                                    ),
+                                    borderRadius: BorderRadius.circular(10)
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color:  ColorManager.accentGreen.withOpacity(0.5)
+                                    ),
+                                    borderRadius: BorderRadius.circular(10)
+                                ),
+                                enabledBorder:  OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color:  ColorManager.primary
+                                    ),
+                                    borderRadius: BorderRadius.circular(10)
+                                ),
+                                labelText: "Units",
+                                labelStyle: getRegularStyle(color: ColorManager.primary)
+                            ),
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedStrengthUnit = value!;
+                            });
+
+                          },
+                          validator: (value){
+                            if(selectedStrengthUnit == null){
+                              return 'Select a unit';
+                            }
+                            return null;
+                          },
+                          autoValidateMode: AutovalidateMode.onUserInteraction,
+
+
+                          // selectedItem: selectedDepartment,
+                          popupProps: const PopupProps<String>.menu(
+
+                            showSearchBox: true,
+                            fit: FlexFit.loose,
+                            constraints: BoxConstraints(maxHeight: 350),
+                            showSelectedItems: true,
+                            searchFieldProps: TextFieldProps(
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
                         ),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                                color: ColorManager.primaryDark
-                            )
-                        )
-                    ),
-
-                    items: strengthType.where((element) => element.typeId == selectedMedTypeId)
-                        .map(
-                          (StrengthModel item) => DropdownMenuItem<String>(
-                        value: item.unitName,
-                        child: Text(
-                          item.unitName,
-                          style: getRegularStyle(color: Colors.black,fontSize: 16.sp),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ).toList(),
-                    onChanged: (value){
-                      setState(() {
-                        selectedStrengthUnit = value!;
-                      });
-                      // ref.read(itemProvider.notifier).updateStrengthUnit(value!);
-
+                      );
                     },
-                    validator: (value){
-                      if(selectedStrengthUnit == null){
-                        return 'Please select a unit';
-                      }
-                      return null;
-                    },
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                  ),
-                )
+                    error: (error,stack)=>Text('Something went wrong. Try again later'),
+                    loading: () => SpinKitDualRing(color: ColorManager.primary)
+                ),
               ],
             ),
             h10,
-            Form(
-              key: formKey2,
-              child: DropdownButtonFormField(
+            frequencies.when(
+                data: (data){
+                  return Form(
+                    key: formKey2,
+                    child: DropdownSearch<String>(
 
-                menuMaxHeight: 250,
-                isDense: true,
-                value: selectedFrequencyName,
-                decoration: InputDecoration(
-                   focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ColorManager.black.withOpacity(0.5)
-                          )
+                      items: data.map((e) => e.frequencyName).toList(),
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color:  ColorManager.accentGreen.withOpacity(0.5)
+                                ),
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color:  ColorManager.accentGreen.withOpacity(0.5)
+                                ),
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            enabledBorder:  OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color:  ColorManager.primary
+                                ),
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            labelText: "Frequency",
+                            labelStyle: getRegularStyle(color: ColorManager.primary)
+                        ),
                       ),
+                      onChanged: (value){
+                        setState(() {
+                          scheduleTime.clear();
+                          _startTimeController.clear();
+                          selectedFrequencyName = value!;
+                          frequencyId = data.firstWhere((element) => element.frequencyName == value).id;
+                          intervals = value;
+                        });
+                        // ref.read(itemProvider.notifier).updateFrequency(selectedFrequencyName!);
+                      },
+                      validator: (value){
+                        if(value == null){
+                          return 'Please select a Frequency';
+                        }
 
-                    isDense: true,
-                    labelText: 'Frequency',
-                    labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                            color: ColorManager.primaryDark
-                        )
+
+                        return null;
+                      },
+                      autoValidateMode: AutovalidateMode.onUserInteraction,
+
+
+                      // selectedItem: selectedDepartment,
+                      popupProps: const PopupProps<String>.menu(
+
+                        showSearchBox: true,
+                        fit: FlexFit.loose,
+                        constraints: BoxConstraints(maxHeight: 350),
+                        showSelectedItems: true,
+                        searchFieldProps: TextFieldProps(
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
                     ),
+                  );
+                },
+                error: (error,stack)=>Text('Something went wrong. Try again later'),
+                loading: () => SpinKitDualRing(color: ColorManager.primary)
+            ),
 
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                            color: ColorManager.primaryDark
-                        )
+            h10,
+            TextFormField(
+              controller: _startTimeController,
+              readOnly: true, // Make the field read-only
+              onTap: ()=>  _selectTime(context), // Show time picker when tapped
+              decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                        color: ColorManager.black.withOpacity(0.5)
                     )
                 ),
-
-                items: frequencyType
-                    .map(
-                      (FrequencyModel item) => DropdownMenuItem<String>(
-                    value: item.frequencyName,
-                    child: Text(
-                      item.frequencyName,
-                      style: getRegularStyle(color: Colors.black,fontSize: 16.sp),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ).toList(),
-                onChanged: (value){
-                  setState(() {
-                    scheduleTime.clear();
-                    _startTimeController.clear();
-                    selectedFrequencyName = value!;
-                    frequencyId = frequencyType.firstWhere((element) => element.frequencyName == value).id;
-                    intervals = frequencyType.firstWhere((element) => element.frequencyName == value).frequencyInterval;
-                  });
-                  // ref.read(itemProvider.notifier).updateFrequency(selectedFrequencyName!);
-                },
-                validator: (value){
-                  if(value == null){
-                    return 'Please select a Frequency';
-                  }
-
-
-                  return null;
-                },
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-              ),
-            ),
-
-            h10,
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    readOnly: true,
-                    decoration: InputDecoration(
-                       focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ColorManager.black.withOpacity(0.5)
-                          )
-                      ),
-                        filled: true,
-                        fillColor: ColorManager.dotGrey.withOpacity(0.1),
-
-                        alignLabelWithHint: true,
-                        isDense: true,
-                        hintText:intervals==null? 'Intervals' : intervals,
-                        hintStyle: getSemiBoldStyle(color: ColorManager.black,fontSize: 16),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                                color: ColorManager.primaryDark
-                            )
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                                width: 2,
-                                color: ColorManager.primaryDark
-                            )
-                        )
-                    ),
+                suffixIconConstraints: BoxConstraints.tightForFinite(),
+                suffixIcon: Padding(
+                  padding: EdgeInsets.only(right: 18.w),
+                  child: FaIcon(
+                    Icons.access_time,
+                    color: ColorManager.primary,
+                    size: 24.sp,
                   ),
                 ),
-                w10,
-                Expanded(
-                  child: TextFormField(
-                    controller: _startTimeController,
-                    readOnly: true, // Make the field read-only
-                    onTap: ()=>  _selectTime(context), // Show time picker when tapped
-                    decoration: InputDecoration(
-                       focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ColorManager.black.withOpacity(0.5)
-                          )
-                      ),
-                      suffixIconConstraints: BoxConstraints.tightForFinite(),
-                      suffixIcon: Padding(
-                        padding: EdgeInsets.only(right: 18.w),
-                        child: FaIcon(
-                          Icons.access_time,
-                          color: ColorManager.primary,
-                          size: 24.sp,
-                        ),
-                      ),
-                      isDense: true,
-                      labelText: 'Schedule Time',
-                      labelStyle: getRegularStyle(color: ColorManager.black, fontSize: 16),
-                      hintText: 'hh:mm',
-                      hintStyle: getRegularStyle(color: ColorManager.black.withOpacity(0.7),fontSize: 16),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                          color: ColorManager.primaryDark,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                          color: ColorManager.primaryDark,
-                        ),
-                      ),
-                    ),
-                    validator: (value){
-                      if(value!.isEmpty){
-                        return 'Please select a Time';
-                      }
-
-
-                      return null;
-                    },
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                isDense: true,
+                labelText: 'Schedule Time',
+                labelStyle: getRegularStyle(color: ColorManager.black, fontSize: 16),
+                hintText: 'hh:mm',
+                hintStyle: getRegularStyle(color: ColorManager.black.withOpacity(0.7),fontSize: 16),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(
+                    color: ColorManager.primaryDark,
                   ),
-                )
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(
+                    color: ColorManager.primaryDark,
+                  ),
+                ),
+              ),
+              validator: (value){
+                if(value!.isEmpty){
+                  return 'Please select a Time';
+                }
 
-              ],
+
+                return null;
+              },
+              autovalidateMode: AutovalidateMode.onUserInteraction,
             ),
             h10,
             if(scheduleTime != [] && scheduleTime.length> 1)

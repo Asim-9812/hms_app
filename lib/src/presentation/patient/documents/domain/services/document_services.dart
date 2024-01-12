@@ -135,7 +135,7 @@ class PatientDocumentServices {
       }
 
     } on DioException catch(e){
-      print('$e');
+      print(e.response?.data);
       return Left('Something went wrong');
     }
   }

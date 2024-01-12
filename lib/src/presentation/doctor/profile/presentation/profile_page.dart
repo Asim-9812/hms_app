@@ -24,6 +24,7 @@ import '../../../../data/model/country_model.dart';
 import '../../../../data/provider/common_provider.dart';
 import '../../../../data/services/country_services.dart';
 import 'package:meroupachar/src/presentation/login/domain/model/user.dart';
+import '../../../common/url_launcher.dart';
 import '../../../login/domain/service/login_service.dart';
 import '../../../login/presentation/status_page.dart';
 
@@ -130,7 +131,7 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
     String firstName = userBox[0].firstName!;
     String mobileNo = userBox[0].contactNo!;
     String email = userBox[0].email!;
-    String license = userBox[0].liscenceNo!;
+    String license = userBox[0].liscenceNo=='0' || userBox[0].liscenceNo==null? 'N/A' : userBox[0].liscenceNo!;
     String address = userBox[0].localAddress ?? 'N/A';
     String ward = userBox[0].wardNo?.toString() ?? 'N/A';
 
@@ -289,15 +290,17 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
                           ),
                         ),
                         h10,
-                        _profileItems2(title: 'Education & Experiences', icon: FontAwesomeIcons.graduationCap, onTap: (){},trailing: true),
-                        _profileItems2(title: 'Certifications', icon: FontAwesomeIcons.certificate, onTap: (){},trailing: true),
-                        _profileItems2(title: 'Patient Reviews (253)', icon: FontAwesomeIcons.solidStar, onTap: (){},trailing: true),
+                        // _profileItems2(title: 'Education & Experiences', icon: FontAwesomeIcons.graduationCap, onTap: (){},trailing: true),
+                        // _profileItems2(title: 'Certifications', icon: FontAwesomeIcons.certificate, onTap: (){},trailing: true),
+                        // _profileItems2(title: 'Patient Reviews (253)', icon: FontAwesomeIcons.solidStar, onTap: (){},trailing: true),
                         _profileItems2(title: 'Change Password', icon: FontAwesomeIcons.key,
                             onTap: ()=>Get.to(()=>ChangePwdDocOrg(userBox.first)),
                             trailing: true),
-                        _profileItems2(title: 'Permissions', icon: FontAwesomeIcons.universalAccess, onTap: (){},trailing: true),
-                        _profileItems2(title: 'Help Center', icon: Icons.question_mark, onTap: (){},trailing: true),
-                        _profileItems2(title: 'Terms & Policies', icon: FontAwesomeIcons.book, onTap: (){},trailing: true),
+                        // _profileItems2(title: 'Permissions', icon: FontAwesomeIcons.universalAccess, onTap: (){},trailing: true),
+                        // _profileItems2(title: 'Help Center', icon: Icons.question_mark, onTap: (){},trailing: true),
+                        _profileItems2(title: 'Terms & Policies', icon: FontAwesomeIcons.book, onTap: (){
+                          UrlLauncher(url: 'meroupachar.com/PrivacyPolicy').launchUrl();
+                        },trailing: true),
                         _profileItems2(
                             title: 'Log out',
                             icon: Icons.login_outlined,

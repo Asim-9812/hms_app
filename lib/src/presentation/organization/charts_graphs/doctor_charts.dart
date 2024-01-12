@@ -180,12 +180,7 @@ class _DoctorChartsState extends State<DoctorCharts> {
         h20,
         filterType == 0
             ? SfCartesianChart(
-          zoomPanBehavior: ZoomPanBehavior(
-            enablePanning: true,
-            enablePinching: true,
-            zoomMode: ZoomMode.xy,
 
-          ),
           primaryXAxis: CategoryAxis(),
           series: <ChartSeries>[
             ColumnSeries<String, String>(
@@ -207,12 +202,7 @@ class _DoctorChartsState extends State<DoctorCharts> {
         )
         :SfCartesianChart(
 
-          zoomPanBehavior: ZoomPanBehavior(
-            enablePanning: true,
-            enablePinching: true,
-            zoomMode: ZoomMode.xy,
 
-          ),
           legend: Legend(
             isVisible: true,
             position: LegendPosition.bottom,

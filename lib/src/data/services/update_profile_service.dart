@@ -89,7 +89,7 @@ class UpdateProfile{
 
       FormData formData = FormData.fromMap(data);
       (data);
-      final response = await dio.put('${Api.userUpdate}', data: formData);
+      final response = await dio.post('${Api.userUpdate}', data: formData);
 
 
 
@@ -110,7 +110,7 @@ class UpdateProfile{
         return Left('Unable to register.');
       }
     } on DioException catch (e) {
-     print('${e.response}');
+     print('${e.response?.statusCode}');
       return Left('Something went wrong');
     }
   }

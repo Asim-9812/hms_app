@@ -61,12 +61,12 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
   void initState() {
     super.initState();
 
-    checkGeolocationStatus();
+    // checkGeolocationStatus();
     // NotificationService().initNotification();
 
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      showAlertDialog(context,widget.code);
-    });
+    // WidgetsBinding.instance?.addPostFrameCallback((_) {
+    //   showAlertDialog2(context,widget.code,ref);
+    // });
 
 
 
@@ -228,7 +228,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                      backgroundColor: ColorManager.black,
+                      backgroundColor: ColorManager.white,
                       radius:30,
                       backgroundImage: profileImage,
                     ),
@@ -380,14 +380,14 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                 w10,
                 InkWell(
                   onTap: () {
-                    // final scaffoldMessage = ScaffoldMessenger.of(context);
-                    // scaffoldMessage.showSnackBar(
-                    //   SnackbarUtil.showComingSoonBar(
-                    //     message: 'Coming Soon !',
-                    //     duration: const Duration(milliseconds: 1400),
-                    //   ),
-                    // );
-                    Get.to(()=>WhereByJoinMeetingPage());
+                    final scaffoldMessage = ScaffoldMessenger.of(context);
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showComingSoonBar(
+                        message: 'Coming Soon !',
+                        duration: const Duration(milliseconds: 1400),
+                      ),
+                    );
+                    // Get.to(()=>WhereByJoinMeetingPage());
                   },
                       //()=>Get.to(()=>PatientRegistrationForm(widget.isWideScreen,widget.isNarrowScreen)),
                   child: Container(

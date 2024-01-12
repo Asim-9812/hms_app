@@ -46,7 +46,7 @@ class _AnimatedBarExampleState extends ConsumerState<OrgMainPage> {
     );
     AlertDialog alertDialog = AlertDialog(
       title: const Text("Update Successfully Installed"),
-      content: const Text("Khata System has been updated successfully! ✔ "),
+      content: const Text("MeroUpachar has been updated successfully! ✔ "),
       actions: [
         alertDialogOkButton
       ],
@@ -73,7 +73,7 @@ class _AnimatedBarExampleState extends ConsumerState<OrgMainPage> {
     );
     AlertDialog alertDialog = AlertDialog(
       title: const Text("Update Failed To Install ❌"),
-      content: Text("Khata System has failed to update because: \n $error"),
+      content: Text("MeroUpachar has failed to update because: \n $error"),
       actions: [
         alertDialogTryAgainButton,
         alertDialogCancelButton
@@ -130,11 +130,11 @@ class _AnimatedBarExampleState extends ConsumerState<OrgMainPage> {
       extendBody: true, //to make floating action button notch transparent
 
 
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: ColorManager.primary,
-        onPressed: ()=>Get.to(()=>MeetingPage()),
-        child: Icon(CupertinoIcons.video_camera_solid,color: ColorManager.white,),),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: ColorManager.primary,
+      //   onPressed: ()=>Get.to(()=>MeetingPage()),
+      //   child: Icon(CupertinoIcons.video_camera_solid,color: ColorManager.white,),),
       bottomNavigationBar: StylishBottomBar(
         option: AnimatedBarOptions(
           // iconSize: 32,

@@ -90,7 +90,8 @@ class LoginProvider{
                 return Left('Account Type doesn\'t match');
               }
 
-            }else{
+            }
+            else{
               (response.data);
               return Left('Invalid Credential');
             }

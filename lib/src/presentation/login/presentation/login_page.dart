@@ -57,7 +57,7 @@ class _LoginPageCopyState extends ConsumerState<LoginPage>
     );
     AlertDialog alertDialog = AlertDialog(
       title: const Text("Update Successfully Installed"),
-      content: const Text("Khata System has been updated successfully! ✔ "),
+      content: const Text("MeroUpachar has been updated successfully! ✔ "),
       actions: [
         alertDialogOkButton
       ],
@@ -84,7 +84,7 @@ class _LoginPageCopyState extends ConsumerState<LoginPage>
     );
     AlertDialog alertDialog = AlertDialog(
       title: const Text("Update Failed To Install ❌"),
-      content: Text("Khata System has failed to update because: \n $error"),
+      content: Text("MeroUpachar has failed to update because: \n $error"),
       actions: [
         alertDialogTryAgainButton,
         alertDialogCancelButton

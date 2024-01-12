@@ -154,37 +154,24 @@ class _MedDetailsState extends State<MedDetails> {
          child: Column(
            children: [
              h20,
-             Row(
-               mainAxisAlignment: MainAxisAlignment.start,
-               crossAxisAlignment: CrossAxisAlignment.center,
+             Column(
+               crossAxisAlignment: CrossAxisAlignment.start,
                children: [
-                 CircleAvatar(
-                   radius: 30,
-                   backgroundColor: ColorManager.primaryDark,
-                   child: FaIcon(medicineType.firstWhere((element) => element.name == reminderBox.medTypeName).icon,color: ColorManager.white.withOpacity(0.5),size: 30,),
-                 ),
-                 w20,
-                 Column(
-                   crossAxisAlignment: CrossAxisAlignment.start,
-                   children: [
-                     Text('${reminderBox.medicineName}',style: getSemiBoldStyle(color: ColorManager.black,fontSize: 32),),
-                     h10,
-                     Row(
-                       children: reminderBox.scheduleTime.map((e){
-                         return Container(
-                           padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
-                           margin: EdgeInsets.only(right: 5.w),
-                           decoration: BoxDecoration(
-                               borderRadius: BorderRadius.circular(10),
-                               color: ColorManager.primaryDark.withOpacity(0.7)
-                           ),
-                           child: Text('$e',style: getRegularStyle(color: ColorManager.white,fontSize: 12),),
-                         );
-                       }).toList(),
-                     )
-                   ],
+                 Text('${reminderBox.medicineName}',style: getSemiBoldStyle(color: ColorManager.black,fontSize: 32),),
+                 h10,
+                 Row(
+                   children: reminderBox.scheduleTime.map((e){
+                     return Container(
+                       padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+                       margin: EdgeInsets.only(right: 5.w),
+                       decoration: BoxDecoration(
+                           borderRadius: BorderRadius.circular(10),
+                           color: ColorManager.primaryDark.withOpacity(0.7)
+                       ),
+                       child: Text('$e',style: getRegularStyle(color: ColorManager.white,fontSize: 12),),
+                     );
+                   }).toList(),
                  )
-
                ],
              ),
              h20,

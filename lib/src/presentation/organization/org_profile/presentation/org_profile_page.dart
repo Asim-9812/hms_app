@@ -23,6 +23,7 @@ import '../../../../data/model/country_model.dart';
 import '../../../../data/provider/common_provider.dart';
 import '../../../../data/services/country_services.dart';
 import '../../../change_password_doc_org/presentation/change_password.dart';
+import '../../../common/url_launcher.dart';
 import '../../../documents/presentation/document_page.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../login/domain/service/login_service.dart';
@@ -128,12 +129,13 @@ class _OrgProfilePageState extends ConsumerState<OrgProfilePage> {
 
 
     final userBox = Hive.box<User>('session').values.toList();
+    // final user = ref.watch(provider)
     String firstName = userBox[0].firstName!;
     String mobileNo = userBox[0].contactNo!;
     String email = userBox[0].email!;
-    String address = userBox[0].localAddress!;
-    String pan = userBox[0].panNo!.toString();
-    String ward = userBox[0].wardNo!.toString();
+    String address = userBox[0].localAddress ?? 'N/A';
+    String pan = userBox[0].panNo?.toString() ?? 'N/A';
+    String ward = userBox[0].wardNo?.toString() ?? '-';
     String code = userBox[0].code!;
 
 
@@ -177,125 +179,129 @@ class _OrgProfilePageState extends ConsumerState<OrgProfilePage> {
                       children: [
 
                         h10,
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          controller: _scrollController,
-                          child: Row(
+                        LayoutBuilder(
+                          builder: (context,constraints) {
+                            return SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              controller: _scrollController,
+                              child: Row(
 
-                            children: [
-                              InkWell(
-                                onDoubleTap: (){
-                                  Clipboard.setData(ClipboardData(text: mobileNo));
-                                  Fluttertoast.showToast(
-                                      msg: "Phone number copied",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.black.withOpacity(0.1),
-                                      textColor: Colors.black,
-                                      fontSize: 16.0
-                                  );
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      // border: Border.all(
-                                      //   color: ColorManager.black.withOpacity(0.2)
-                                      // ),
-                                      color: ColorManager.textGrey.withOpacity(0.05)
+                                children: [
+                                  InkWell(
+                                    onDoubleTap: (){
+                                      Clipboard.setData(ClipboardData(text: mobileNo));
+                                      Fluttertoast.showToast(
+                                          msg: "Phone number copied",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.black.withOpacity(0.1),
+                                          textColor: Colors.black,
+                                          fontSize: 16.0
+                                      );
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                          // border: Border.all(
+                                          //   color: ColorManager.black.withOpacity(0.2)
+                                          // ),
+                                          color: ColorManager.textGrey.withOpacity(0.05)
+                                      ),
+                                      padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          FaIcon(FontAwesomeIcons.phone,color: ColorManager.primaryDark,),
+                                          w20,
+                                          Text(mobileNo,style: getRegularStyle(color: ColorManager.black,fontSize: 16.sp),),
+
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                  padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      FaIcon(FontAwesomeIcons.phone,color: ColorManager.primaryDark,),
-                                      w20,
-                                      Text(mobileNo,style: getRegularStyle(color: ColorManager.black,fontSize: 16.sp),),
+                                  w10,
+                                  InkWell(
+                                    onDoubleTap: (){
+                                      Clipboard.setData(ClipboardData(text: mobileNo));
+                                      Fluttertoast.showToast(
+                                          msg: "E-mail copied",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.black.withOpacity(0.1),
+                                          textColor: Colors.black,
+                                          fontSize: 16.0
+                                      );
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                          // border: Border.all(
+                                          //   color: ColorManager.black.withOpacity(0.2)
+                                          // ),
+                                          color: ColorManager.textGrey.withOpacity(0.05)
+                                      ),
+                                      padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          FaIcon(Icons.email_outlined,color: ColorManager.primaryDark,),
+                                          w20,
+                                          Text(email,style: getRegularStyle(color: ColorManager.black,fontSize: 16.sp),maxLines: 1,overflow: TextOverflow.ellipsis,),
 
-                                    ],
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              w10,
-                              InkWell(
-                                onDoubleTap: (){
-                                  Clipboard.setData(ClipboardData(text: mobileNo));
-                                  Fluttertoast.showToast(
-                                      msg: "E-mail copied",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.black.withOpacity(0.1),
-                                      textColor: Colors.black,
-                                      fontSize: 16.0
-                                  );
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      // border: Border.all(
-                                      //   color: ColorManager.black.withOpacity(0.2)
-                                      // ),
-                                      color: ColorManager.textGrey.withOpacity(0.05)
+                                  w10,
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        // border: Border.all(
+                                        //   color: ColorManager.black.withOpacity(0.2)
+                                        // ),
+                                        color: ColorManager.textGrey.withOpacity(0.05)
+                                    ),
+                                    padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        FaIcon(Icons.pin_drop_outlined,color: ColorManager.primaryDark,),
+                                        w20,
+                                        Text('${address}',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),maxLines: 1,overflow: TextOverflow.ellipsis,),
+
+                                      ],
+                                    ),
                                   ),
-                                  padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      FaIcon(Icons.email_outlined,color: ColorManager.primaryDark,),
-                                      w20,
-                                      Text(email,style: getRegularStyle(color: ColorManager.black,fontSize: 16.sp),maxLines: 1,overflow: TextOverflow.ellipsis,),
+                                  w10,
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        // border: Border.all(
+                                        //   color: ColorManager.black.withOpacity(0.2)
+                                        // ),
+                                        color: ColorManager.textGrey.withOpacity(0.05)
+                                    ),
+                                    padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        FaIcon(FontAwesomeIcons.driversLicense,color: ColorManager.primaryDark,),
+                                        w20,
+                                        Text(pan,style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),maxLines: 1,overflow: TextOverflow.ellipsis,),
 
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
-                              w10,
-                              Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    // border: Border.all(
-                                    //   color: ColorManager.black.withOpacity(0.2)
-                                    // ),
-                                    color: ColorManager.textGrey.withOpacity(0.05)
-                                ),
-                                padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    FaIcon(Icons.pin_drop_outlined,color: ColorManager.primaryDark,),
-                                    w20,
-                                    Text('${address}, ${mun}-${ward}, ${district}',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),maxLines: 1,overflow: TextOverflow.ellipsis,),
-
-                                  ],
-                                ),
-                              ),
-                              w10,
-                              Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    // border: Border.all(
-                                    //   color: ColorManager.black.withOpacity(0.2)
-                                    // ),
-                                    color: ColorManager.textGrey.withOpacity(0.05)
-                                ),
-                                padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    FaIcon(FontAwesomeIcons.driversLicense,color: ColorManager.primaryDark,),
-                                    w20,
-                                    Text(pan,style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),maxLines: 1,overflow: TextOverflow.ellipsis,),
-
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                            );
+                          }
                         ),
                         h10,
                         //
@@ -308,9 +314,11 @@ class _OrgProfilePageState extends ConsumerState<OrgProfilePage> {
                         _profileItems2(title: 'Change Password', icon: FontAwesomeIcons.key,
                             onTap: ()=>Get.to(()=>ChangePwdDocOrg(userBox.first)),
                             trailing: true),
-                        _profileItems2(title: 'Permissions', icon: FontAwesomeIcons.universalAccess, onTap: (){},trailing: true),
-                        _profileItems2(title: 'Help Center', icon: Icons.question_mark, onTap: (){},trailing: true),
-                        _profileItems2(title: 'Terms & Policies', icon: FontAwesomeIcons.book, onTap: (){},trailing: true),
+                        // _profileItems2(title: 'Permissions', icon: FontAwesomeIcons.universalAccess, onTap: (){},trailing: true),
+                        // _profileItems2(title: 'Help Center', icon: Icons.question_mark, onTap: (){},trailing: true),
+                        _profileItems2(title: 'Terms & Policies', icon: FontAwesomeIcons.book, onTap: (){
+                          UrlLauncher(url: 'meroupachar.com/PrivacyPolicy').launchUrl();
+                        },trailing: true),
                         _profileItems2(
                             title: 'Log out',
                             icon: Icons.login_outlined,

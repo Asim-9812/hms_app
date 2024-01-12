@@ -81,12 +81,7 @@ class _PatientChartState extends State<PatientChart> {
               ],
             ),
             SfCartesianChart(
-                zoomPanBehavior: ZoomPanBehavior(
-                  enablePanning: true,
-                  enablePinching: true,
-                  zoomMode: ZoomMode.xy,
 
-                ),
               legend: Legend(
                 isVisible: true,
                 position: LegendPosition.top,

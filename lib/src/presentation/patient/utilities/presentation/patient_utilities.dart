@@ -158,8 +158,8 @@ class _PatientUtilitiesState extends State<PatientUtilities> {
           children: [
 
             h20,
-            _patientStat(context),
-            h20,
+            // _patientStat(context),
+            // h20,
 
             _caloriesBody(),
             _buildCalculatorBody()

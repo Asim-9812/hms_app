@@ -1,6 +1,8 @@
 
 
 
+import 'package:meroupachar/src/core/resources/route_manager.dart';
+
 class Api{
 
    static const bearerToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiZjZhNTdmNC1iN2JmLTQzYmItODgzNy0yY2NiZDE4NDM5ODIiLCJ2YWxpZCI6IjEiLCJ1c2VyaWQiOiJET0MwMDAxIiwiZXhwIjoxNzIxMjc3NDc0LCJpc3MiOiJsb2NhbGhvc3QiLCJhdWQiOiJXZWxjb21lIn0.o7_teFlpwxmG7EOBO9eL46bfOwLySS6Qyc1Yj8ZgcyI';
@@ -96,6 +98,11 @@ class Api{
    static const getNoticeList = '$baseUrl/api/Notice/GetList';
    static const getHealthTipsList = '$baseUrl/api/HealthTips/GetList';
    static const getSliderList = '$baseUrl/api/Sliders/GetList';
+
+
+   /// Medicine unit , frequency & routes
+   static const getMedUnit = '$baseUrl/api/MedicinePackage/GetUnitList';
+   static const getFrequencyRoutes = '$baseUrl/api/PatientMedication/GetList';
 
 }
 

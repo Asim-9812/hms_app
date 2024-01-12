@@ -63,7 +63,7 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
     );
     AlertDialog alertDialog = AlertDialog(
       title: const Text("Update Successfully Installed"),
-      content: const Text("Khata System has been updated successfully! ✔ "),
+      content: const Text("MeroUpachar has been updated successfully! ✔ "),
       actions: [
         alertDialogOkButton
       ],
@@ -90,7 +90,7 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
     );
     AlertDialog alertDialog = AlertDialog(
       title: const Text("Update Failed To Install ❌"),
-      content: Text("Khata System has failed to update because: \n $error"),
+      content: Text("MeroUpachar has failed to update because: \n $error"),
       actions: [
         alertDialogTryAgainButton,
         alertDialogCancelButton
@@ -287,17 +287,17 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
             items: <Bubble>[
 
               // Floating action menu item
-              Bubble(
-                title:"Video call",
-                iconColor :ColorManager.white,
-                bubbleColor : ColorManager.primary,
-                icon:CupertinoIcons.video_camera_solid,
-                titleStyle:TextStyle(fontSize: 16 , color: ColorManager.white),
-                onPress: () {
-                  _animationController.reverse();
-                  Get.to(()=>MeetingPage());
-                },
-              ),
+              // Bubble(
+              //   title:"Video call",
+              //   iconColor :ColorManager.white,
+              //   bubbleColor : ColorManager.primary,
+              //   icon:CupertinoIcons.video_camera_solid,
+              //   titleStyle:TextStyle(fontSize: 16 , color: ColorManager.white),
+              //   onPress: () {
+              //     _animationController.reverse();
+              //     Get.to(()=>MeetingPage());
+              //   },
+              // ),
               // Floating action menu item
               Bubble(
                 title:"Chat",
@@ -309,7 +309,7 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
                   _animationController.reverse();
                   final scaffoldMessage = ScaffoldMessenger.of(context);
                   scaffoldMessage.showSnackBar(
-                      SnackbarUtil.showSuccessSnackbar(
+                      SnackbarUtil.showComingSoonBar(
                           message: 'Coming Soon',
                           duration: const Duration(milliseconds: 1200)
                       )

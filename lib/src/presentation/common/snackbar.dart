@@ -180,7 +180,7 @@ class SnackbarUtil {
             ],
           )
       ),
-      backgroundColor: ColorManager.primary,
+      backgroundColor: ColorManager.orange,
       behavior: SnackBarBehavior.floating,
       elevation: 10,
       margin: const EdgeInsets.fromLTRB(40, 0, 40, 50),

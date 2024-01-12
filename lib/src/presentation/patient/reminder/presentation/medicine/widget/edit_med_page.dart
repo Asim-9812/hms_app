@@ -3,10 +3,12 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -19,6 +21,7 @@ import '../../../../../../core/resources/value_manager.dart';
 import '../../../../../../data/provider/common_provider.dart';
 import '../../../../../common/snackbar.dart';
 import '../../../data/reminder_db.dart';
+import '../../../domain/services/med_services.dart';
 
 
 
@@ -148,6 +151,11 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
 
     contentList = widget.reminderTest.contentIdList!;
 
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      forNotifyScheduleTime();
+    });
+
+
 
 
   }
@@ -175,6 +183,38 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
       hour: parsedTime.hour,
       minute: parsedTime.minute,
     );
+  }
+
+  void forNotifyScheduleTime(){
+    final newTime = DateFormat('hh:mm a').parse(scheduleTime[0]);
+    var selectedTime = TimeOfDay(hour: newTime.hour, minute: newTime.minute);
+    final formattedTime = DateFormat('HH:mm a').format(
+      DateTime(2023, 1, 1, selectedTime.hour, selectedTime.minute),
+    );
+
+    // Calculate intake times based on selected frequencyId
+    notifyScheduleTime?.clear(); // Clear the list before adding new times
+
+    // Add the initial selected time
+    notifyScheduleTime?.add(formattedTime);
+
+    // Calculate additional times based on frequencyId
+    if (frequencyId! >= 1) {
+      // Calculate intervals based on frequencyId
+      int intervalHours = 24 ~/ frequencyId!;
+
+      for (int i = 1; i < frequencyId!; i++) {
+        // Add intervals to the selected time and add to the list
+        selectedTime = TimeOfDay(
+          hour: (selectedTime.hour + intervalHours) % 24,
+          minute: selectedTime.minute,
+        );
+        final formattedTime = DateFormat('HH:mm a').format(
+          DateTime(2023, 1, 1, selectedTime.hour, selectedTime.minute),
+        );
+        notifyScheduleTime?.add(formattedTime);
+      }
+    }
   }
 
   Future<void> _selectTime(BuildContext context) async {
@@ -224,7 +264,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
           minute: picked.minute,
         );
 
-        final formattedTime = DateFormat('HH:mm').format(
+        final formattedTime = DateFormat('HH:mm a').format(
           DateTime(2023, 1, 1, selectedTime.hour, selectedTime.minute),
         );
 
@@ -245,7 +285,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
               hour: (selectedTime.hour + intervalHours) % 24,
               minute: selectedTime.minute,
             );
-            final formattedTime = DateFormat('HH:mm').format(
+            final formattedTime = DateFormat('HH:mm a').format(
               DateTime(2023, 1, 1, selectedTime.hour, selectedTime.minute),
             );
             notifyScheduleTime?.add(formattedTime);
@@ -454,6 +494,9 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
   }
 
   Widget _form1(PageController _pageController){
+    final routes = ref.watch(routeProvider);
+    final units =ref.watch(unitProvider);
+    final frequencies =ref.watch(frequencyProvider);
 
     return Form(
       key: formKey1,
@@ -463,48 +506,87 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             h10,
-            Container(
-              // color: ColorManager.red,
-              width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: medicineType.map((e){
-                  return InkWell(
-                    splashColor: MaterialStateColor.resolveWith((states) => Colors.transparent),
-                    onTap: (){
+            routes.when(
+                data: (data){
+                  return DropdownSearch<String>(
+                    selectedItem: selectedMedTypeName,
+                    items: data.map((e) => e.name).toList(),
+                    dropdownDecoratorProps: DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color:  ColorManager.accentGreen.withOpacity(0.5)
+                              ),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color:  ColorManager.accentGreen.withOpacity(0.5)
+                              ),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          enabledBorder:  OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color:  ColorManager.primary
+                              ),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          labelText: "Routes",
+                          labelStyle: getRegularStyle(color: ColorManager.primary)
+                      ),
+                    ),
+                    onChanged: (value) {
                       setState(() {
-                        selectedMedTypeId =e.id;
-                        selectedMedTypeName = e.name;
-                        selectedStrengthUnit = null;
-
+                        selectedMedTypeName = value!;
                       });
-                      ref.read(itemProvider.notifier).updateMedicineType(e.name);
+                      final selected = data.firstWhereOrNull((element) => element.name.contains(value!));
+                      if(selected != null){
+                        setState(() {
+                          selectedMedTypeId = selected.id;
+
+                        });
+                      }
+                      else if(selected == null){
+                        setState(() {
+                          selectedMedTypeId = 0;
+
+                        });
+                      }
+                      else{
+                        setState(() {
+                          selectedMedTypeId = -1;
+                        });
+                      }
 
                     },
-                    child: Container(
+                    validator: (value){
+                      if(selectedMedTypeId == 0){
+                        return 'Select a route';
+                      }
+                      return null;
+                    },
+                    autoValidateMode: AutovalidateMode.onUserInteraction,
 
-                      child: Column(
-                        children: [
-                          Container(
-                              decoration: BoxDecoration(
-                                  color: selectedMedTypeId ==e.id? ColorManager.primary.withOpacity(0.3):ColorManager.dotGrey.withOpacity(0.5),
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                      color:  selectedMedTypeId ==e.id? ColorManager.primary:ColorManager.dotGrey
-                                  )
-                              ),
-                              padding:EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                              child: FaIcon(e.icon,color:selectedMedTypeId ==e.id? ColorManager.primary.withOpacity(0.8):ColorManager.black.withOpacity(0.4),)),
-                          h10,
-                          Text(e.name,style: getRegularStyle(color: selectedMedTypeId ==e.id? ColorManager.primary.withOpacity(0.8):ColorManager.dotGrey,fontSize: 12),)
-                        ],
+
+                    // selectedItem: selectedDepartment,
+                    popupProps: const PopupProps<String>.menu(
+
+                      showSearchBox: true,
+                      fit: FlexFit.loose,
+                      constraints: BoxConstraints(maxHeight: 350),
+                      showSelectedItems: true,
+                      searchFieldProps: TextFieldProps(
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                   );
-                }).toList(),
-              ),
+                },
+                error: (error,stack)=>Text('Something went wrong. Try again later'),
+                loading: () => SpinKitDualRing(color: ColorManager.primary)
             ),
-            h20,
+            h10,
             TextFormField(
               controller: _medicineNameController,
               decoration: InputDecoration(
@@ -595,130 +677,143 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
                   ),
                 ),
                 w10,
-                Expanded(
-                  child: DropdownButtonFormField(
-                    menuMaxHeight: 200,
-                    isDense: true,
-                    value:selectedStrengthUnit==null ? null :selectedStrengthUnit ,
-                    decoration: InputDecoration(
-                       focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ColorManager.black.withOpacity(0.5)
-                          )
-                      ),
+                units.when(
+                    data: (data){
+                      return Expanded(
+                        child: DropdownSearch<String>(
+                          selectedItem: selectedStrengthUnit,
+                          items: data.map((e) => e).toList(),
+                          dropdownDecoratorProps: DropDownDecoratorProps(
+                            dropdownSearchDecoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color:  ColorManager.accentGreen.withOpacity(0.5)
+                                    ),
+                                    borderRadius: BorderRadius.circular(10)
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color:  ColorManager.accentGreen.withOpacity(0.5)
+                                    ),
+                                    borderRadius: BorderRadius.circular(10)
+                                ),
+                                enabledBorder:  OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color:  ColorManager.primary
+                                    ),
+                                    borderRadius: BorderRadius.circular(10)
+                                ),
+                                labelText: "Units",
+                                labelStyle: getRegularStyle(color: ColorManager.primary)
+                            ),
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedStrengthUnit = value!;
+                            });
 
-                        isDense: true,
-                        labelText: 'Unit',
-                        labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                                color: ColorManager.primaryDark
-                            )
+                          },
+                          validator: (value){
+                            if(selectedStrengthUnit == null){
+                              return 'Select a unit';
+                            }
+                            return null;
+                          },
+                          autoValidateMode: AutovalidateMode.onUserInteraction,
+
+
+                          // selectedItem: selectedDepartment,
+                          popupProps: const PopupProps<String>.menu(
+
+                            showSearchBox: true,
+                            fit: FlexFit.loose,
+                            constraints: BoxConstraints(maxHeight: 350),
+                            showSelectedItems: true,
+                            searchFieldProps: TextFieldProps(
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
                         ),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                                color: ColorManager.primaryDark
-                            )
-                        )
-                    ),
-
-                    items: strengthType.where((element) => element.typeId == selectedMedTypeId)
-                        .map(
-                          (StrengthModel item) => DropdownMenuItem<String>(
-                        value: item.unitName,
-                        child: Text(
-                          item.unitName,
-                          style: getRegularStyle(color: Colors.black,fontSize: 16.sp),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ).toList(),
-                    onChanged: (value){
-                      setState(() {
-                        selectedStrengthUnit = value!;
-                      });
-                      // ref.read(itemProvider.notifier).updateStrengthUnit(value!);
-
+                      );
                     },
-                    validator: (value){
-                      if(selectedStrengthUnit == null){
-                        return 'Please select a unit';
-                      }
-                      return null;
-                    },
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                  ),
-                )
+                    error: (error,stack)=>Text('Something went wrong. Try again later'),
+                    loading: () => SpinKitDualRing(color: ColorManager.primary)
+                ),
               ],
             ),
             h10,
-            Form(
-              key: formKey2,
-              child: DropdownButtonFormField(
-
-                menuMaxHeight: 250,
-                isDense: true,
-                value: selectedFrequencyName,
-                decoration: InputDecoration(
-                   focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ColorManager.black.withOpacity(0.5)
-                          )
+            frequencies.when(
+                data: (data){
+                  return Form(
+                    key: formKey2,
+                    child: DropdownSearch<String>(
+                      selectedItem: selectedFrequencyName,
+                      items: data.map((e) => e.frequencyName).toList(),
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color:  ColorManager.accentGreen.withOpacity(0.5)
+                                ),
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color:  ColorManager.accentGreen.withOpacity(0.5)
+                                ),
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            enabledBorder:  OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color:  ColorManager.primary
+                                ),
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            labelText: "Frequency",
+                            labelStyle: getRegularStyle(color: ColorManager.primary)
+                        ),
                       ),
+                      onChanged: (value){
+                        setState(() {
+                          scheduleTime.clear();
+                          _startTimeController.clear();
+                          selectedFrequencyName = value!;
+                          frequencyId = data.firstWhere((element) => element.frequencyName == value).id;
+                          intervals = value;
+                        });
+                        // ref.read(itemProvider.notifier).updateFrequency(selectedFrequencyName!);
+                      },
+                      validator: (value){
+                        if(value == null){
+                          return 'Please select a Frequency';
+                        }
 
-                    isDense: true,
-                    labelText: 'Frequency',
-                    labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                            color: ColorManager.primaryDark
-                        )
+
+                        return null;
+                      },
+                      autoValidateMode: AutovalidateMode.onUserInteraction,
+
+
+                      // selectedItem: selectedDepartment,
+                      popupProps: const PopupProps<String>.menu(
+
+                        showSearchBox: true,
+                        fit: FlexFit.loose,
+                        constraints: BoxConstraints(maxHeight: 350),
+                        showSelectedItems: true,
+                        searchFieldProps: TextFieldProps(
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
                     ),
-
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                            color: ColorManager.primaryDark
-                        )
-                    )
-                ),
-
-                items: frequencyType
-                    .map(
-                      (FrequencyModel item) => DropdownMenuItem<String>(
-                    value: item.frequencyName,
-                    child: Text(
-                      item.frequencyName,
-                      style: getRegularStyle(color: Colors.black,fontSize: 16.sp),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ).toList(),
-                onChanged: (value){
-                  setState(() {
-                    scheduleTime.clear();
-                    _startTimeController.clear();
-                    selectedFrequencyName = value!;
-                    frequencyId = frequencyType.firstWhere((element) => element.frequencyName == value).id;
-                    intervals = frequencyType.firstWhere((element) => element.frequencyName == value).frequencyInterval;
-                  });
-                  ref.read(itemProvider.notifier).updateFrequency(selectedFrequencyName);
+                  );
                 },
-                validator: (value){
-                  if(value == null){
-                    return 'Please select a Frequency';
-                  }
-
-
-                  return null;
-                },
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-              ),
+                error: (error,stack)=>Text('Something went wrong. Try again later'),
+                loading: () => SpinKitDualRing(color: ColorManager.primary)
             ),
 
             h10,

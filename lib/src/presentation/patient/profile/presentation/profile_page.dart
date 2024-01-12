@@ -25,6 +25,7 @@ import '../../../../data/model/country_model.dart';
 import '../../../../data/provider/common_provider.dart';
 import '../../../../data/services/country_services.dart';
 import '../../../../test.dart';
+import '../../../common/snackbar.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../login/domain/service/login_service.dart';
 import '../../../login/presentation/status_page.dart';
@@ -87,8 +88,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final userBox = Hive.box<User>('session').values.toList();
     String firstName = userBox[0].firstName!;
     String mobileNo = userBox[0].contactNo!;
-    String email = userBox[0].email!;
-    String address = userBox[0].localAddress!;
+    String email = userBox[0].email ?? 'N/A';
+    String address = userBox[0].localAddress ?? 'N/A';
     return Scaffold(
       backgroundColor: ColorManager.white.withOpacity(0.99),
       appBar: AppBar(
@@ -238,11 +239,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         _profileItems2(title: 'My Documents', icon: FontAwesomeIcons.folderClosed, onTap: (){
                           Get.to(()=>PatientDocumentPage(isWideScreen,isNarrowScreen));
                         },trailing: true),
-                        _profileItems2(title: 'Change Password', icon: FontAwesomeIcons.key, onTap: (){},trailing: true),
+                        // _profileItems2(title: 'Change Password', icon: FontAwesomeIcons.key, onTap: (){},trailing: true),
                         // _profileItems2(title: 'Permissions', icon: FontAwesomeIcons.universalAccess, onTap: (){},trailing: true),
-                        _profileItems2(title: 'Help Center', icon: Icons.question_mark, onTap: (){},trailing: true),
+                        // _profileItems2(title: 'Help Center', icon: Icons.question_mark, onTap: (){},trailing: true),
                         _profileItems2(title: 'Terms & Policies', icon: FontAwesomeIcons.book, onTap: (){
-                          UrlLauncher(url: 'searchtech.com.np/privacy-policy.html').launchUrl();
+                          UrlLauncher(url: 'meroupachar.com/PrivacyPolicy').launchUrl();
                         },trailing: true),
                         _profileItems2(
                             title: 'Log out',
@@ -298,8 +299,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     bool isNarrowScreen = screenSize.width < 420;
     final userBox = Hive.box<User>('session').values.toList();
     String firstName = '${userBox[0].firstName!} ${userBox[0].lastName!}';
-    String age = userBox[0].ageGender!.split('\r\n/').first;
-    String gender = userBox[0].genderID == 1 ? 'Male' : userBox[0].genderID == 2 ? 'Female' : 'Others' ;
+    String age = userBox[0].ageGender?.split('\r\n/').first ?? 'N/A';
+    String gender =userBox[0].ageGender?.split('\r\n/').last ?? 'N/A' ;
 
     final profileImg = ref.watch(imageProvider);
     ImageProvider<Object>? profileImage;
@@ -359,7 +360,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               ],
             ),
             w10,
-            FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primaryDark,)
+            // FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primaryDark,)
           ],
         ),
       ),

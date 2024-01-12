@@ -55,12 +55,7 @@ class _DoctorChartsState extends State<FinancialCharts> {
             ],
           ),
           SfCartesianChart(
-            zoomPanBehavior: ZoomPanBehavior(
-              enablePanning: true,
-              enablePinching: true,
-              zoomMode: ZoomMode.xy,
 
-            ),
             legend: Legend(
               isVisible: tapped,
               position: LegendPosition.top,

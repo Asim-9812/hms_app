@@ -5,6 +5,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -29,7 +30,10 @@ class _CaloriesUserInfoState extends State<CaloriesUserInfo> {
 
 
   TextEditingController _weightController = TextEditingController();
-  TextEditingController _heightController = TextEditingController();
+  TextEditingController _ageController = TextEditingController();
+  TextEditingController _ftController = TextEditingController();
+  TextEditingController _inchController = TextEditingController();
+  // TextEditingController _heightController = TextEditingController();
 
   String selectedActivity = 'None';
   String? selectedGoal;
@@ -37,6 +41,11 @@ class _CaloriesUserInfoState extends State<CaloriesUserInfo> {
   int genderId = -1;
   int selectedActivityId = 0;
   int selectedGoalId = -1;
+  double _value = 0.0;
+
+
+  bool disableValidate = true;
+
 
   final _formKey = GlobalKey<FormState>();
 
@@ -76,6 +85,40 @@ class _CaloriesUserInfoState extends State<CaloriesUserInfo> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Text('Add your age :',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
+                      w10,
+                      Expanded(
+                        child: TextFormField(
+                          controller: _ageController,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value){
+                            if(value!.trim().isEmpty){
+                              return 'Required';
+                            }
+                            if (!value.contains(RegExp(r'^\d+$')))  {
+                              return 'Invalid';
+                            }
+                            if(int.parse(value) < 1 || int.parse(value) > 100){
+                              return 'Invalid';
+                            }
+
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            fillColor: ColorManager.dotGrey.withOpacity(0.8),
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  h20,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       Text('Add your weight (in KG) :',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
                       w10,
                       Expanded(
@@ -100,77 +143,114 @@ class _CaloriesUserInfoState extends State<CaloriesUserInfo> {
                             filled: true,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                color: ColorManager.primary
-                              )
                             ),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
-                                    color: ColorManager.primary
-                                )
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
-                                    color: ColorManager.primary
-                                )
-                            )
                           ),
                         ),
                       )
                     ],
                   ),
-                  h10,
+                  h20,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text('Add your height (in cm) :',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
+                      Text('Add your height :',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
                       w10,
                       Expanded(
                         child: TextFormField(
-                          controller: _heightController,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value){
-                            if(value!.trim().isEmpty){
+                          autovalidateMode: disableValidate
+                              ? AutovalidateMode.onUserInteraction
+                              : AutovalidateMode.disabled,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
                               return 'Required';
                             }
-                            if (!value.contains(RegExp(r'^\d+$')))  {
+                            if (!RegExp(r'^\d+(\.\d+)?$').hasMatch(value)) {
                               return 'Invalid';
                             }
-                            if(int.parse(value) < 50 || int.parse(value) > 260){
+                            if (double.parse(value) > 8.0) {
                               return 'Invalid';
                             }
-
                             return null;
                           },
+                          onChanged: (value) {
+                            setState(() {
+                              _value = (double.parse(_ftController.text) * 30.48) +
+                                  ((double.parse(_inchController.text.isNotEmpty ? _inchController.text : '0')) * 2.54);
+                            });
+                          },
+                          controller: _ftController,
+                          keyboardType: TextInputType.numberWithOptions(decimal: true), // Allow decimal input
+                          style: getMediumStyle(
+                            color: ColorManager.black,
+                            fontSize: 16,
+                          ),
                           decoration: InputDecoration(
-                            fillColor: ColorManager.dotGrey.withOpacity(0.8),
                             filled: true,
+                            fillColor: ColorManager.dotGrey.withOpacity(0.2),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                color: ColorManager.primary
-                              )
                             ),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
-                                    color: ColorManager.primary
-                                )
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
-                                    color: ColorManager.primary
-                                )
-                            )
+                            labelText: 'ft',
                           ),
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(1), // Change the limit as needed
+                          ],
+                        ),
+                      ),
+                      w10,
+                      Expanded(
+                        child: TextFormField(
+                          autovalidateMode: disableValidate
+                              ? AutovalidateMode.onUserInteraction
+                              : AutovalidateMode.disabled,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Required';
+                            }
+                            if (!RegExp(r'^\d+(\.\d+)?$').hasMatch(value)) {
+                              return 'Invalid';
+                            }
+                            if (double.parse(value) > 11.0) {
+                              return 'Invalid';
+                            }
+                            if (_ftController.text.isNotEmpty) {
+                              if (double.parse(_ftController.text) == 8.0 &&
+                                  double.parse(_inchController.text) > 0) {
+                                return 'Invalid';
+                              }
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              _value = (double.parse(_ftController.text) * 30.48) +
+                                  (double.parse(_inchController.text) * 2.54);
+                            });
+                          },
+                          controller: _inchController,
+                          keyboardType: TextInputType.numberWithOptions(decimal: true), // Allow decimal input
+                          style: getMediumStyle(
+                            color: ColorManager.black,
+                            fontSize: 16,
+                          ),
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            labelText: 'in',
+                          ),
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(2), // Change the limit as needed
+                          ],
                         ),
                       )
+
                     ],
                   ),
-                  h10,
+                  h20,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -342,8 +422,8 @@ class _CaloriesUserInfoState extends State<CaloriesUserInfo> {
 
                             int caloriesNeeded = 0;
                             int weight = int.parse(_weightController.text.trim());
-                            int height = int.parse(_heightController.text.trim());
-                            int age = int.parse(userBox.ageGender!.split('Y').first);
+                            int height = _value.round();
+                            int age = int.parse(_ageController.text.trim());
                             double activityFactor =
                                   selectedActivityId == 0 ? 1.2
                                 : selectedActivityId == 1 ? 1.375
@@ -381,8 +461,8 @@ class _CaloriesUserInfoState extends State<CaloriesUserInfo> {
                             UserInfoCalories user = UserInfoCalories(
                                 id: Random().nextInt(9999),
                                 userId: userBox.username!,
-                                age: int.parse(userBox.ageGender!.split('Y').first),
-                                height: int.parse(_heightController.text.trim()),
+                                age: age,
+                                height: _value.round(),
                                 weight: (int.parse(_weightController.text.trim()) * 2.2).round(),
                                 activityIntensity: ActivityTypeModel(activityId: selectedActivityId, activityName: selectedActivity),
                                 goal: GoalTypeModel(goalId: selectedGoalId, goalName: selectedGoal!),

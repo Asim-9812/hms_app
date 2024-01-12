@@ -56,9 +56,9 @@ class _OrgHomePageState extends ConsumerState<OrgHomePage> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      showAlertDialog(context,widget.code);
-    });
+    // WidgetsBinding.instance?.addPostFrameCallback((_) {
+    //   showAlertDialog(context,widget.code);
+    // });
 
 
   }
@@ -123,7 +123,7 @@ class _OrgHomePageState extends ConsumerState<OrgHomePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CircleAvatar(
-                  // backgroundColor: ColorManager.black,
+                  backgroundColor: ColorManager.white,
                   backgroundImage: profileImage,
                   radius:30,
                   // child: Image.network('${Api.baseUrl}/${userBox[0].profileImage}',fit: BoxFit.cover,),
@@ -136,7 +136,7 @@ class _OrgHomePageState extends ConsumerState<OrgHomePage> {
 
                     Text('Welcome,',style: getRegularStyle(color: ColorManager.white,fontSize: 14),),
 
-                    Text(firstName.split(' ').length >= 3? '${firstName.split(' ')[0]} ${firstName.split(' ')[1]}': '$firstName',style: getMediumStyle(color: ColorManager.white,fontSize: 16),),
+                    Text(firstName.split(' ').length >= 3? '${firstName.split(' ')[0]} ${firstName.split(' ')[1]}': '$firstName',style: getMediumStyle(color: ColorManager.white,fontSize: 18.sp),),
                   ],
                 ),
               ],
