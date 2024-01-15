@@ -268,7 +268,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text('Version 1.0.0',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                          Text('Version 1.0.2',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
                           h10,
                           Text('Developed by Search Technology',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
                           h10,
@@ -299,8 +299,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     bool isNarrowScreen = screenSize.width < 420;
     final userBox = Hive.box<User>('session').values.toList();
     String firstName = '${userBox[0].firstName!} ${userBox[0].lastName!}';
-    String age = userBox[0].ageGender?.split('\r\n/').first ?? 'N/A';
-    String gender =userBox[0].ageGender?.split('\r\n/').last ?? 'N/A' ;
+    // String age = userBox[0].ageGender?.split('\r\n/').first ?? 'N/A';
+    String gender =userBox[0].ageGender ?? 'N/A' ;
 
     final profileImg = ref.watch(imageProvider);
     ImageProvider<Object>? profileImage;
@@ -349,11 +349,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     Row(
                       children: [
                         Text(gender,style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?16.sp:16),),
-                        w10,
-                        Text('|',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?12.sp:12),),
-                        w10,
-                        Text(age,style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?16.sp:16),),
-                        ],
+                         ],
                     )
                   ],
                 ),

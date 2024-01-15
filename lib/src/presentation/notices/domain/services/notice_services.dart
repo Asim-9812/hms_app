@@ -41,6 +41,7 @@ class NoticeServices{
           .toList();
 
 
+      // final sortData = data.toList();
       final sortData = data.where((element) => element.toDate!.isBefore(DateTime.now()) && element.validDate!.isAfter(DateTime.now().subtract(Duration(days: 1)))).toList();
 
       print(sortData);

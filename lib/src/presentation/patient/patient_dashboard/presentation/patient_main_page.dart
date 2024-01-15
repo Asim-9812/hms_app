@@ -205,26 +205,28 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
               title:  Text('Utilities'),
             ),
             BottomBarItem(
-              icon:  Container(
-                // color: ColorManager.red,
-                  width: isWideScreen?30:30.sp,
+              icon:  FaIcon(Icons.person,size: isWideScreen?24:24.sp,),
 
-                  child: Stack(
-                    children: [
-                      Center(child: Padding(
-
-                        padding:  EdgeInsets.only(top: 2),
-                        child: FaIcon(Icons.person,size: isWideScreen?24:24.sp,),
-                      )),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: CircleAvatar(
-                          radius: 6.sp,
-                          backgroundColor: ColorManager.red.withOpacity(0.7),
-                        ),
-                      )
-                    ],
-                  )),
+              // Container(
+              //   // color: ColorManager.red,
+              //     width: isWideScreen?30:30.sp,
+              //
+              //     child: Stack(
+              //       children: [
+              //         Center(child: Padding(
+              //
+              //           padding:  EdgeInsets.only(top: 2),
+              //           child: FaIcon(Icons.person,size: isWideScreen?24:24.sp,),
+              //         )),
+              //         Align(
+              //           alignment: Alignment.topRight,
+              //           child: CircleAvatar(
+              //             radius: 6.sp,
+              //             backgroundColor: ColorManager.red.withOpacity(0.7),
+              //           ),
+              //         )
+              //       ],
+              //     )),
               // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
               selectedColor: ColorManager.primary,
               // unSelectedColor: Colors.purple,

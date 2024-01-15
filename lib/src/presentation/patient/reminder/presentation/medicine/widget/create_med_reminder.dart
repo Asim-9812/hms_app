@@ -76,6 +76,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
   String? selectedPatternName;
   int? selectedPatternId;
   // List<String> selectedDays = [];
+  DateTime? timeOfDay;
 
   List<String>? days;
   late int imageSet;
@@ -145,11 +146,13 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
         initialTime:_startTimeController.text.isNotEmpty?  _parseTime(_startTimeController.text) :TimeOfDay.now(),
       );
 
+
       if (picked != null) {
         var selectedTime = TimeOfDay(
           hour: picked.hour,
           minute: picked.minute,
         );
+        timeOfDay = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,selectedTime.hour,selectedTime.minute);
 
         final formattedTime = selectedTime.format(context);
 
@@ -230,11 +233,11 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
   Future<void> _selectStartDate(BuildContext context) async {
     if(formKey3.currentState!.validate()){
 
-      DateTime date = DateFormat('HH:mm a').parse(_startTimeController.text);
+      // DateTime date = DateFormat('HH:mm a').parse(_startTimeController.text);
       DateTime now = DateTime.now();
 
 
-      date = DateTime(now.year, now.month, now.day, date.hour, date.minute);
+      DateTime date = timeOfDay ?? DateTime.now();
       print(date);
 
       final DateTime? selectedDate = await showDatePicker(
@@ -267,36 +270,6 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
       );
     }
   }
-
-
-  // void printSelectedDays() {
-  //   List<String> list = [];
-  //
-  //   // selectedDays.clear(); // Clear the list before populating it
-  //   if(isSelected != null){
-  //     for (int i = 0; i < isSelected!.length; i++) {
-  //
-  //       if (isSelected![i]) {
-  //         print(daysOfWeekMedication[i]);
-  //         list.add(daysOfWeekMedication[i]);
-  //
-  //
-  //         // selectedDays.add(daysOfWeekMedication[i]);
-  //       }
-  //     }
-  //   }
-  //
-  //
-  //   setState(() {
-  //     days = list;
-  //   });
-  //   // Print the selected days
-  //   // print('Selected Days: ${selectedDays.join(', ')}');
-  //   print(isSelected);
-  //   print(days);
-  //
-  //
-  // }
 
 
   @override
@@ -1542,7 +1515,6 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
 
                             List<DateTime> scheduleList = [];
 
-                            final int notificationTimes = totalDays * totalInterval;
 
                             for(int i = 0 ; i<totalDays; i++){
                               DateTime newDate = firstDate.add(Duration(days: i));
@@ -1639,14 +1611,13 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
 
                               List<DateTime> scheduleList = [];
 
-                              final int notificationTimes = totalDays * totalInterval;
 
                               int addedDatesCount = 0;
 
                               do {
                                 DateTime newDate = firstDate.add(Duration(days: addedDatesCount));
 
-                                bool addedDate = false; // Flag to check if notificationDates is added
+// Flag to check if notificationDates is added
 
                                 for (int j = 0; j < totalInterval; j++) {
                                   DateTime notificationDates = DateTime(
@@ -1661,7 +1632,6 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
 
                                   if (days!.contains(DateFormat('EEEE').format(notificationDates))) {
                                     scheduleList.add(notificationDates);
-                                    addedDate = true;
                                   }
                                 }
 
@@ -1742,7 +1712,6 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
 
                               List<DateTime> scheduleList = [];
 
-                              final int notificationTimes = totalDays * totalInterval;
 
                               for(int i = 0 ; i<totalDays; i++){
                                 DateTime newDate = firstDate.add(Duration(days: i == 0 ? 0 :int.parse(_intervalDurationController.text) ));

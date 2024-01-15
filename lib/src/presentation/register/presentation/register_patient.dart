@@ -232,7 +232,7 @@ class _RegisterPatientState extends ConsumerState<RegisterPatient> {
                 ),
               ),
               SizedBox(
-                width: 18.w,
+                width: 10.w,
               ),
               Expanded(
                 child: TextFormField(

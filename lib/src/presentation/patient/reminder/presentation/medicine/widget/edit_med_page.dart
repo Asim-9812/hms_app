@@ -92,6 +92,9 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
 
   bool selectDaysValidation = false;
 
+  late DateTime newTime;
+  late TimeOfDay selectedTime;
+
 
 
 
@@ -150,8 +153,11 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
 
 
     contentList = widget.reminderTest.contentIdList!;
+    newTime = DateFormat('hh:mm a').parse(scheduleTime[0]);
+    selectedTime = TimeOfDay(hour: newTime.hour, minute: newTime.minute);
 
     WidgetsBinding.instance?.addPostFrameCallback((_) {
+
       forNotifyScheduleTime();
     });
 
@@ -186,8 +192,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
   }
 
   void forNotifyScheduleTime(){
-    final newTime = DateFormat('hh:mm a').parse(scheduleTime[0]);
-    var selectedTime = TimeOfDay(hour: newTime.hour, minute: newTime.minute);
+
     final formattedTime = DateFormat('HH:mm a').format(
       DateTime(2023, 1, 1, selectedTime.hour, selectedTime.minute),
     );
@@ -310,17 +315,17 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
   Future<void> _selectStartDate(BuildContext context) async {
     if(formKey3.currentState!.validate()){
 
-      DateTime date = DateFormat('hh:mm a').parse(_startTimeController.text);
+      // DateTime date = DateFormat('hh:mm a').parse(_startTimeController.text);
       DateTime now = DateTime.now();
 
-      date = DateTime(now.year, now.month, now.day, date.hour, date.minute);
+      DateTime date = DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute);
 
 
       final DateTime? selectedDate = await showDatePicker(
         context: context,
         initialDate:startDateIntake.isAfter(date)?startDateIntake: date.isBefore(now) ? now.add(Duration(days: 1)) :DateTime.now(),
         firstDate: date.isBefore(now) ? now.add(Duration(days: 1)) :DateTime.now(),
-        lastDate: DateTime(2101),
+        lastDate: DateTime.now().add(Duration(days: 120)),
       );
 
 

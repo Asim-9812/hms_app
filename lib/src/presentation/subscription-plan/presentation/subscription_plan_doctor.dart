@@ -43,7 +43,7 @@ class _SubscriptionPlanTestState extends ConsumerState<DoctorSubscriptionPlan> {
   bool isPostingData = false;
   int paymentOption = 0;
   int selectedPayment = 2;
-  SchemePlaneModel schemePlan = SchemePlaneModel();
+  SchemePlaneModel? schemePlan;
 
 
   Color? getPaymentContainerColor(int paymentOption) {
@@ -55,6 +55,7 @@ class _SubscriptionPlanTestState extends ConsumerState<DoctorSubscriptionPlan> {
 
 
   Future<dartz.Either<String, dynamic>> docRegister() async {
+    print('docRegister: ${widget.registerDoctorModel.password}');
     try {
       final response = await dio.post(
           Api.registerDoctor,
@@ -63,18 +64,19 @@ class _SubscriptionPlanTestState extends ConsumerState<DoctorSubscriptionPlan> {
             "docID": "",
             "firstName": widget.registerDoctorModel.firstName,
             "lastName": widget.registerDoctorModel.lastName,
-            "doctorEmail": widget.registerDoctorModel.email,
+            "doctorEmail":widget.registerDoctorModel.email,
             "doctorPassword": widget.registerDoctorModel.password,
-            "roleID": 1,
+            "code":widget.registerDoctorModel.code,
+            "roleID": 2,
             "referenceNo": "1",
             "subscriptionID": 0,
             "isActive": true,
-            "entryDate": "2023-07-17T10:43:10.315Z",
-            "genderID": 1,
+            "entryDate": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+            "genderID": widget.registerDoctorModel.genderId,
             "key": "12",
-            "flag": "Insert",
-            "code":widget.registerDoctorModel.code
+            "flag": "Insert"
           }
+
       );
 
       setState(() {
@@ -85,7 +87,7 @@ class _SubscriptionPlanTestState extends ConsumerState<DoctorSubscriptionPlan> {
 
       return dartz.Right(response.data);
     } on DioException catch (err) {
-      print(err.response);
+      print('error message : ${err.response?.data}');
       throw Exception('${err.response!.data['message']}');
     }}
 
@@ -94,18 +96,21 @@ class _SubscriptionPlanTestState extends ConsumerState<DoctorSubscriptionPlan> {
   Future<dartz.Either<String, dynamic>> subscriptionPlanDoctor({
 
     required int schemePlanId,
+    required int schemeId,
   }) async {
+    print('subscriptionPlanDoctor: ${widget.registerDoctorModel.password}');
     try {
       final response = await dio.post(
           Api.subscriptionPlan,
           data: {
             "id": 0,
             "userid": '${outputValue['result']['docID']}',
+            "schemeId" : schemeId,
             "subscriptionID": schemePlanId,
             "fromDate": "${DateFormat('yyyy-MM-dd').format(DateTime.now()).toString()}",
-            "toDate": schemePlan.schemeId == 1
+            "toDate": schemePlan!.schemeId == 1
                 ? "${DateFormat('yyyy-MM-dd').format(DateTime.now().add(Duration(days: 15))).toString()}"
-                :schemePlan.storageType==1
+                :schemePlan!.storageType==1
                 ?"${DateFormat('yyyy-MM-dd').format(DateTime.now().add(Duration(days: 30))).toString()}"
                 :"${DateFormat('yyyy-MM-dd').format(DateTime.now().add(Duration(days: 365))).toString()}",
             "flag": ""
@@ -124,6 +129,7 @@ class _SubscriptionPlanTestState extends ConsumerState<DoctorSubscriptionPlan> {
 
 
   Future<dartz.Either<String, dynamic>> userRegisterDoctor() async {
+    print('userRegisterDoctor: ${widget.registerDoctorModel.password}');
     try {
       final response = await dio.post(
           Api.userRegister,
@@ -140,9 +146,10 @@ class _SubscriptionPlanTestState extends ConsumerState<DoctorSubscriptionPlan> {
             "liscenceNo": 0,
             "email": widget.registerDoctorModel.email,
             "roleID": 2,
+            "natureId" : widget.registerDoctorModel.natureId,
             "joinedDate": "${DateFormat('yyyy-MM-dd').format(DateTime.now()).toString()}",
             "isActive": true,
-            "genderID": 0,
+            "genderID": widget.registerDoctorModel.genderId,
             "entryDate": "${DateFormat('yyyy-MM-dd').format(DateTime.now()).toString()}",
             "key": "12",
             "flag": "Register",
@@ -304,175 +311,218 @@ class _SubscriptionPlanTestState extends ConsumerState<DoctorSubscriptionPlan> {
                             :() async {
                           final scaffoldMessage = ScaffoldMessenger.of(context);
 
-
-                          await docRegister().then((value) async {
-                            if(value.isLeft()){
-                              scaffoldMessage.showSnackBar(
-                                SnackbarUtil.showFailureSnackbar(
-                                    message: 'Something went wrong',
-                                    duration: const Duration(seconds: 2)
-                                ),
-                              );
-
-
-
-                            }
-                            else{
-
-                              await  showModalBottomSheet(
-                                context: context,
-                                builder: (context) {
-
-
-                                  return StatefulBuilder(
-                                      builder: (context,setState) {
-                                        return Container(
-                                          padding: EdgeInsets.all(16),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                children: [
-                                                  // InkWell(
-                                                  //   onTap:(){
-                                                  //     setState(() {
-                                                  //       selectedPayment = 1;
-                                                  //     });
-                                                  //   },
-                                                  //   child: Container(
-                                                  //     decoration: BoxDecoration(
-                                                  //         borderRadius: BorderRadius.circular(10),
-                                                  //         color: getPaymentContainerColor(1),
-                                                  //         border: Border.all(
-                                                  //             color: ColorManager.black.withOpacity(0.5)
-                                                  //         )
-                                                  //     ),
-                                                  //     padding: EdgeInsets.symmetric(horizontal: 18,vertical: 18),
-                                                  //     child: Column(
-                                                  //       mainAxisSize: MainAxisSize.min,
-                                                  //       mainAxisAlignment: MainAxisAlignment.center,
-                                                  //       crossAxisAlignment: CrossAxisAlignment.center,
-                                                  //       children: [
-                                                  //         Image.asset('assets/images/esewa.png',height: 30,fit: BoxFit.contain,),
-                                                  //         h10,
-                                                  //         Text('E-sewa',style: getRegularStyle(color: ColorManager.black),),
-                                                  //       ],
-                                                  //     ),
-                                                  //   ),
-                                                  // ),
-                                                  InkWell(
-                                                    onTap:(){
-                                                      setState(() {
-                                                        selectedPayment = 2;
-                                                      });
-                                                    },
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(10),
-                                                          color: getPaymentContainerColor(2),
-                                                          border: Border.all(
-                                                              color: ColorManager.black.withOpacity(0.5)
-                                                          )
-                                                      ),
-                                                      padding: EdgeInsets.symmetric(horizontal: 24,vertical: 18),
-                                                      child: Column(
-                                                        mainAxisSize: MainAxisSize.min,
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        children: [
-                                                          Image.asset('assets/images/khalti.png',height: 30,fit: BoxFit.contain,),
-                                                          h10,
-                                                          Text('Khalti',style: getRegularStyle(color: ColorManager.black),),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(height: 16),
-                                              ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                    backgroundColor: ColorManager.primary,
-                                                    fixedSize: Size.fromWidth(300)
-
-                                                ),
-                                                onPressed: isPostingData
-                                                    ? null // Disable the button while posting data
-                                                    : () async {
-                                                  setState(() {
-                                                    isPostingData = true; // Show loading spinner
-                                                  });
-                                                  if(schemePlan.schemeName?.toLowerCase() == 'free trial'){
-                                                    await userRegisterDoctor().then((value) {
-                                                      if(value.isLeft()){
-                                                        scaffoldMessage.showSnackBar(
-                                                          SnackbarUtil.showFailureSnackbar(
-                                                              message: 'Something went wrong',
-                                                              duration: const Duration(seconds: 2)
-                                                          ),
-                                                        );
-                                                        setState(() {
-                                                          isPostingData = false;
-                                                        });
-                                                      }
-                                                      else{
-                                                        scaffoldMessage.showSnackBar(
-                                                          SnackbarUtil.showSuccessSnackbar(
-                                                              message: 'User registered successfully',
-                                                              duration: const Duration(seconds: 2)
-                                                          ),
-                                                        );
-                                                        setState(() {
-                                                          isPostingData = false;
-                                                        });
-                                                        Get.offAll(() => LoginPage());
-                                                      }
-
-                                                    });
-                                                  }
-                                                  else{
-                                                    if(selectedPayment == 1){
-                                                      Navigator.pop(context);
-                                                      // payWithEsewaInApp(productId: outputValue['result']['docID'], amount: amount, schemePlanId: schemePlanId, schemePlanName: schemePlanName);
-                                                    }else if(selectedPayment ==2 ){
-                                                      Navigator.pop(context);
-                                                      payWithKhaltiInApp(outputValue: outputValue);
-
-                                                    }
-                                                    else {
-                                                      final scaffoldMessage = ScaffoldMessenger.of(context);
-                                                      scaffoldMessage.showSnackBar(
-                                                        SnackbarUtil.showFailureSnackbar(
-                                                          message: 'Please select a payment option',
-                                                          duration: const Duration(milliseconds: 1400),
-                                                        ),
-                                                      );
-                                                      setState(() {
-                                                        isPostingData = false; // Show loading spinner
-                                                      });
-                                                    }
-                                                  }
-
-
-
-                                                },
-                                                child:isPostingData
-                                                    ?SpinKitDualRing(color: ColorManager.white,size: 20,)
-                                                    : Text('Select',style: getRegularStyle(color: ColorManager.white),),
-                                              ),
-                                            ],
+                          if(schemePlan == null){
+                            setState(() {
+                              schemePlan = data.firstWhere((element) => element.schemeName!.toLowerCase() == 'free trial');
+                            });
+                          }
+                          if(schemePlan!.schemeName?.toLowerCase() == 'free trial'){
+                            setState(() {
+                              isPostingData = true;
+                            });
+                            await docRegister().then((value) async {
+                              if(value.isLeft()){
+                                scaffoldMessage.showSnackBar(
+                                  SnackbarUtil.showFailureSnackbar(
+                                      message: 'Something went wrong',
+                                      duration: const Duration(seconds: 2)
+                                  ),
+                                );
+                              }
+                              else{
+                                await subscriptionPlanDoctor(schemePlanId: schemePlan!.schemeplanID!,schemeId: schemePlan!.schemeId!).then((value) async {
+                                  print('subscriptionPlanDoctor register : $value');
+                                  if(value.isLeft()){
+                                    scaffoldMessage.showSnackBar(
+                                      SnackbarUtil.showFailureSnackbar(
+                                          message: 'Something went wrong',
+                                          duration: const Duration(seconds: 2)
+                                      ),
+                                    );
+                                    setState(() {
+                                      isPostingData = false;
+                                    });
+                                  }
+                                  else{
+                                    await userRegisterDoctor().then((value) {
+                                      print('userRegisterDoctor register : $value');
+                                      if(value.isLeft()){
+                                        scaffoldMessage.showSnackBar(
+                                          SnackbarUtil.showFailureSnackbar(
+                                              message: 'Something went wrong',
+                                              duration: const Duration(seconds: 2)
                                           ),
                                         );
+                                        setState(() {
+                                          isPostingData = false;
+                                        });
+                                      }else{
+                                        scaffoldMessage.showSnackBar(
+                                          SnackbarUtil.showSuccessSnackbar(
+                                              message: 'User registered successfully',
+                                              duration: const Duration(seconds: 2)
+                                          ),
+                                        );
+                                        setState(() {
+                                          isPostingData = false;
+                                        });
+                                        Get.offAll(() => LoginPage());
                                       }
-                                  );
-                                },
-                              );
-                            }
-                          });
+                                    });
+
+                                  }
+
+                                });
+                              }
+                            });
+
+                          }
+                          else{
+                            scaffoldMessage.showSnackBar(
+                              SnackbarUtil.showComingSoonBar(
+                                  message: 'Coming soon',
+                                  duration: const Duration(seconds: 2)
+                              ),
+                            );
+                          }
+                          // else{
+                          //   await docRegister().then((value) async {
+                          //     if(value.isLeft()){
+                          //       scaffoldMessage.showSnackBar(
+                          //         SnackbarUtil.showFailureSnackbar(
+                          //             message: 'Something went wrong',
+                          //             duration: const Duration(seconds: 2)
+                          //         ),
+                          //       );
+                          //     }
+                          //     else{
+                          //       print('doc register : $value');
+                          //       await  showModalBottomSheet(
+                          //         context: context,
+                          //         builder: (context) {
+                          //
+                          //
+                          //           return StatefulBuilder(
+                          //               builder: (context,setState) {
+                          //                 return Container(
+                          //                   padding: EdgeInsets.all(16),
+                          //                   child: Column(
+                          //                     mainAxisSize: MainAxisSize.min,
+                          //                     children: [
+                          //                       Row(
+                          //                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          //                         children: [
+                          //                           // InkWell(
+                          //                           //   onTap:(){
+                          //                           //     setState(() {
+                          //                           //       selectedPayment = 1;
+                          //                           //     });
+                          //                           //   },
+                          //                           //   child: Container(
+                          //                           //     decoration: BoxDecoration(
+                          //                           //         borderRadius: BorderRadius.circular(10),
+                          //                           //         color: getPaymentContainerColor(1),
+                          //                           //         border: Border.all(
+                          //                           //             color: ColorManager.black.withOpacity(0.5)
+                          //                           //         )
+                          //                           //     ),
+                          //                           //     padding: EdgeInsets.symmetric(horizontal: 18,vertical: 18),
+                          //                           //     child: Column(
+                          //                           //       mainAxisSize: MainAxisSize.min,
+                          //                           //       mainAxisAlignment: MainAxisAlignment.center,
+                          //                           //       crossAxisAlignment: CrossAxisAlignment.center,
+                          //                           //       children: [
+                          //                           //         Image.asset('assets/images/esewa.png',height: 30,fit: BoxFit.contain,),
+                          //                           //         h10,
+                          //                           //         Text('E-sewa',style: getRegularStyle(color: ColorManager.black),),
+                          //                           //       ],
+                          //                           //     ),
+                          //                           //   ),
+                          //                           // ),
+                          //                           InkWell(
+                          //                             onTap:(){
+                          //                               setState(() {
+                          //                                 selectedPayment = 2;
+                          //                               });
+                          //                             },
+                          //                             child: Container(
+                          //                               decoration: BoxDecoration(
+                          //                                   borderRadius: BorderRadius.circular(10),
+                          //                                   color: getPaymentContainerColor(2),
+                          //                                   border: Border.all(
+                          //                                       color: ColorManager.black.withOpacity(0.5)
+                          //                                   )
+                          //                               ),
+                          //                               padding: EdgeInsets.symmetric(horizontal: 24,vertical: 18),
+                          //                               child: Column(
+                          //                                 mainAxisSize: MainAxisSize.min,
+                          //                                 mainAxisAlignment: MainAxisAlignment.center,
+                          //                                 crossAxisAlignment: CrossAxisAlignment.center,
+                          //                                 children: [
+                          //                                   Image.asset('assets/images/khalti.png',height: 30,fit: BoxFit.contain,),
+                          //                                   h10,
+                          //                                   Text('Khalti',style: getRegularStyle(color: ColorManager.black),),
+                          //                                 ],
+                          //                               ),
+                          //                             ),
+                          //                           ),
+                          //                         ],
+                          //                       ),
+                          //                       SizedBox(height: 16),
+                          //                       ElevatedButton(
+                          //                         style: ElevatedButton.styleFrom(
+                          //                             backgroundColor: ColorManager.primary,
+                          //                             fixedSize: Size.fromWidth(300)
+                          //
+                          //                         ),
+                          //                         onPressed: isPostingData
+                          //                             ? null // Disable the button while posting data
+                          //                             : () async {
+                          //                           setState(() {
+                          //                             isPostingData = true; // Show loading spinner
+                          //                           });
+                          //                           if(selectedPayment == 1){
+                          //                             Navigator.pop(context);
+                          //                             // payWithEsewaInApp(productId: outputValue['result']['docID'], amount: amount, schemePlanId: schemePlanId, schemePlanName: schemePlanName);
+                          //                           }else if(selectedPayment ==2 ){
+                          //                             Navigator.pop(context);
+                          //                             payWithKhaltiInApp(outputValue: outputValue);
+                          //
+                          //                           }
+                          //                           else {
+                          //                             final scaffoldMessage = ScaffoldMessenger.of(context);
+                          //                             scaffoldMessage.showSnackBar(
+                          //                               SnackbarUtil.showFailureSnackbar(
+                          //                                 message: 'Please select a payment option',
+                          //                                 duration: const Duration(milliseconds: 1400),
+                          //                               ),
+                          //                             );
+                          //                             setState(() {
+                          //                               isPostingData = false; // Show loading spinner
+                          //                             });
+                          //                           }
+                          //
+                          //
+                          //
+                          //                         },
+                          //                         child:isPostingData
+                          //                             ?SpinKitDualRing(color: ColorManager.white,size: 20,)
+                          //                             : Text('Select',style: getRegularStyle(color: ColorManager.white),),
+                          //                       ),
+                          //                     ],
+                          //                   ),
+                          //                 );
+                          //               }
+                          //           );
+                          //         },
+                          //       );
+                          //     }
+                          //   });
+                          // }
 
 
-                        }, child: Text('Submit',style: getRegularStyle(color: ColorManager.white,fontSize: 16),)),
+
+                        }, child: isPostingData ? Text('Please wait...',style: getRegularStyle(color: ColorManager.white,fontSize: 12),):Text('Submit',style: getRegularStyle(color: ColorManager.white,fontSize: 16),)),
                   ),
                 ],
               ),
@@ -572,7 +622,7 @@ class _SubscriptionPlanTestState extends ConsumerState<DoctorSubscriptionPlan> {
                       )
                   ),
                   leading: Text(data[index].schemeName!,style: getMediumStyle(color: _currentSlide ==  index ? ColorManager.black : ColorManager.black.withOpacity(0.7),fontSize: 20),),
-                  trailing: Text(data[index].storageType == 1 ? 'Rs. ${data[index].price!.round()} for a month' : 'Rs. ${data[index].price!.round()} for a year',style: getRegularStyle(color:_currentSlide ==  index ? ColorManager.black : ColorManager.black.withOpacity(0.7),fontSize: 16),),
+                  trailing: data[index].schemeName?.toLowerCase() == 'free trial' ? null :Text(data[index].storageType == 1 ? 'Rs. ${data[index].price!.round()} for a month' : 'Rs. ${data[index].price!.round()} for a year',style: getRegularStyle(color:_currentSlide ==  index ? ColorManager.black : ColorManager.black.withOpacity(0.7),fontSize: 16),),
                 ),
               ),
             );
@@ -606,6 +656,7 @@ class _SubscriptionPlanTestState extends ConsumerState<DoctorSubscriptionPlan> {
           children: [
             Text(schemePlaneModel.schemeName!,style: getMediumStyle(color: ColorManager.white,fontSize: 30),),
             h10,
+            if(schemePlaneModel.schemeName?.toLowerCase() != 'free trial')
             Row(
               children: [
                 Text('Rs. ${schemePlaneModel.price!.round()}',style: getBoldStyle(color: ColorManager.white,fontSize: 45),),
@@ -637,7 +688,7 @@ class _SubscriptionPlanTestState extends ConsumerState<DoctorSubscriptionPlan> {
     final config = PaymentConfig(
       amount: 1000, // Amount should be in paisa
       productIdentity: outputValue['result']['docID'],
-      productName: schemePlan.schemeName!,
+      productName: schemePlan!.schemeName!,
     );
 
     KhaltiScope.of(context).pay(
@@ -701,7 +752,8 @@ class _SubscriptionPlanTestState extends ConsumerState<DoctorSubscriptionPlan> {
       }else{
         print('payment done');
         subscriptionPlanDoctor(
-            schemePlanId: schemePlan.schemeplanID!
+            schemePlanId: schemePlan!.schemeplanID!,
+            schemeId: schemePlan!.schemeId!
         ).then((value) async {
           if (value.isLeft()) {
             scaffoldMessage.showSnackBar(

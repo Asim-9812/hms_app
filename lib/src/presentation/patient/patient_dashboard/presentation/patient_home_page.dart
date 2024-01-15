@@ -65,7 +65,10 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
     // NotificationService().initNotification();
 
     // WidgetsBinding.instance?.addPostFrameCallback((_) {
-    //   showAlertDialog2(context,widget.code,ref);
+    //   if(widget.noticeBool){
+    //     showAlertDialog2(context,widget.code,ref);
+    //   }
+    //
     // });
 
 
@@ -87,53 +90,6 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
   //   }
   //
   // }
-
-
-  /// health tags...
-
-  List<HealthTipsModel> selectedTags = [];
-
-  void _showMultiSelect(BuildContext context) async {
-    final tagList = await HealthTipServices().getHealthTips();
-    Set<String> addedTypes = Set<String>();
-    List<HealthTipsModel> uniqueTagList = [];
-
-    for (var tag in tagList) {
-      if (!addedTypes.contains(tag.type)) {
-        uniqueTagList.add(tag);
-        addedTypes.add(tag.type!);
-      }
-    }
-
-    // Create a copy of selectedTags with the same reference as uniqueTagList
-    List<HealthTipsModel> initialSelectedTags =
-    selectedTags.map((tag) => uniqueTagList.firstWhere((t) => t.type == tag.type)).toList();
-
-    await showDialog(
-      context: context,
-      builder: (ctx) {
-        return MultiSelectDialog(
-          title: Text('Choose Health Tips'),
-          listType: MultiSelectListType.CHIP,
-          selectedColor: ColorManager.primary,
-          separateSelectedItems: true,
-          selectedItemsTextStyle: getRegularStyle(color: ColorManager.white, fontSize: 16),
-          itemsTextStyle: getRegularStyle(color: ColorManager.black, fontSize: 16),
-          items: uniqueTagList
-              .map((tag) => MultiSelectItem<HealthTipsModel>(tag, tag.type!))
-              .toList(),
-          initialValue: initialSelectedTags, // Use initialSelectedTags here
-          onConfirm: (values) {
-            setState(() {
-              selectedTags = values.map((tag) => tag).toList(); // Store selected items
-            });
-            ref.read(tagListProvider.notifier).updateTagList(selectedTags);
-            print(selectedTags);
-          },
-        );
-      },
-    );
-  }
 
 
 
@@ -705,15 +661,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Health Tips',style: getMediumStyle(color: ColorManager.black,fontSize:isWideScreen?20: 20.sp),),
-              IconButton(onPressed: (){
-                _showMultiSelect(context);
-              }, icon: FaIcon(FontAwesomeIcons.checkSquare,size: 20,color: ColorManager.orange.withOpacity(0.7),))
-            ],
-          ),
+
           HealthTipsList(),
 
         ],
