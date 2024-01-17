@@ -3,12 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:meroupachar/src/core/resources/color_manager.dart';
+import 'package:meroupachar/src/data/services/user_services.dart';
 import 'package:meroupachar/src/presentation/doctor/doctor_dashboard/presentation/doctor_home_page.dart';
 import 'package:meroupachar/src/presentation/doctor/doctor_utilities/presentation/doctor_utilities.dart';
+import 'package:meroupachar/src/presentation/login/domain/service/login_service.dart';
 import 'package:meroupachar/src/presentation/video_chat/presentation/meeting_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -153,6 +156,7 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
     final screenSize = MediaQuery.of(context).size;
 
     final userBox = Hive.box<User>('session').values.toList();
+    final user = ref.watch(userInfoProvider(userBox[0].userID!));
 
     // Check if width is greater than height
     bool isWideScreen = screenSize.width > 500;
@@ -222,26 +226,27 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
               title:  Text('Utilities'),
             ),
             BottomBarItem(
-              icon:  Container(
-                // color: ColorManager.red,
-                  width: isWideScreen?30:30.sp,
-
-                  child: Stack(
-                    children: [
-                      Center(child: Padding(
-
-                        padding:  EdgeInsets.only(top: 2),
-                        child: FaIcon(Icons.person,size: isWideScreen?24:24.sp,),
-                      )),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: CircleAvatar(
-                          radius: 6.sp,
-                          backgroundColor: ColorManager.red.withOpacity(0.7),
-                        ),
-                      )
-                    ],
-                  )),
+              icon:  FaIcon(Icons.person,size: isWideScreen?24:24.sp,),
+              // icon:  Container(
+              //   // color: ColorManager.red,
+              //     width: isWideScreen?30:30.sp,
+              //
+              //     child: Stack(
+              //       children: [
+              //         Center(child: Padding(
+              //
+              //           padding:  EdgeInsets.only(top: 2),
+              //           child: FaIcon(Icons.person,size: isWideScreen?24:24.sp,),
+              //         )),
+              //         Align(
+              //           alignment: Alignment.topRight,
+              //           child: CircleAvatar(
+              //             radius: 6.sp,
+              //             backgroundColor: ColorManager.red.withOpacity(0.7),
+              //           ),
+              //         )
+              //       ],
+              //     )),
               // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
               selectedColor: ColorManager.primary,
               // unSelectedColor: Colors.purple,
@@ -342,26 +347,32 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
             iconColor: ColorManager.white,
 
             // Floating Action button Icon
-            iconData: CupertinoIcons.group_solid,
+            iconData: Icons.more_horiz,
             backGroundColor: ColorManager.primary,
 
           ),
 
-          body: PageView(
-          onPageChanged: (value){
-            setState(() {
-              selected = value;
-            });
-          },
-          controller: controller,
-          children: [
-            DoctorHomePage(isWideScreen,isNarrowScreen,noticeBool,userBox[0].code!),
-            DocumentPage(isWideScreen,isNarrowScreen,false),
-            PatientReports(userCode : userBox[0].code!,userId: userBox[0].userID!,),
-            DoctorUtilityPage(),
-            DocProfilePage(userBox[0])
-          ],
-        ),
+          body: user.when(
+              data: (data){
+                return PageView(
+                  onPageChanged: (value){
+                    setState(() {
+                      selected = value;
+                    });
+                  },
+                  controller: controller,
+                  children: [
+                    DoctorHomePage(isWideScreen,isNarrowScreen,noticeBool,data),
+                    DocumentPage(isWideScreen,isNarrowScreen,false),
+                    PatientReports(userCode : data.code!,userId: data.userID!,),
+                    DoctorUtilityPage(),
+                    DocProfilePage(data)
+                  ],
+                );
+              },
+              error: (error,stack)=> Center(child: Text('$error'),),
+              loading: ()=>Center(child: SpinKitDualRing(color: ColorManager.primary,),)
+          ),
       ),
     );
   }

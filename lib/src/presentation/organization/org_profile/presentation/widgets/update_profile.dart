@@ -4,8 +4,10 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:meroupachar/src/core/api.dart';
@@ -206,7 +208,7 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  onPressed: () async {
+                  onPressed: isPostingData ? null :() async {
                      final now = DateTime.now();
                      final scaffoldMessage = ScaffoldMessenger.of(context);
                      if (_formKey.currentState!.validate()){
@@ -265,6 +267,14 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                          });
                        }
                        else {
+                         final updateUser =response.fold(
+                                 (l) => null,
+                                 (r) =>User.fromJson(r['result']));
+                         final userHive = Hive.box<User>('session');
+                         if (updateUser != null) {
+                           // Assuming your Hive box is already open and initialized properly
+                           userHive.putAt(0, updateUser);
+                         }
                          scaffoldMessage.showSnackBar(
                            SnackbarUtil.showSuccessSnackbar(
                              message: 'Successfully Updated',
@@ -291,7 +301,9 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                        });
                      }
                    },
-                  child: Text(
+                  child: isPostingData ? SizedBox(
+                      height: 16,
+                      child: SpinKitDualRing(color: ColorManager.white,size: 16,)): Text(
                     'Save',
                     style: getRegularStyle(
                         color: ColorManager.white,
@@ -313,115 +325,97 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                   children: [
                     h20,
                     Center(
-                      child: Card(
-                        shape: CircleBorder(
-                            side: BorderSide(color: ColorManager.black, width: 1)),
-                        child: CircleAvatar(
-                          backgroundColor: ColorManager.white,
-                          backgroundImage: profileProvider != null
-                              ? Image.file(File(profileProvider.path)).image
-                              : tempProfileImage == null
-                              ? null
-                              : NetworkImage(
-                              '${Api.baseUrl}/${widget.user.profileImage}'),
-                          radius: widget.isWideScreen ? 60 : 60.r,
-                          child: profileProvider != null
-                              ? null
-                              : tempProfileImage == null
-                              ? Icon(FontAwesomeIcons.user, color: ColorManager.black)
-                              : null,
-                        ),
-                      ),
-                    ),
-                    h10,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: ColorManager.primary,
-                            elevation: 5,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                      child: Stack(
+                        children: [
+                          Card(
+                            shape: CircleBorder(
+                                side: BorderSide(color: ColorManager.black, width: 1)),
+                            child: CircleAvatar(
+                              backgroundColor: ColorManager.white,
+                              backgroundImage: profileProvider != null
+                                  ? Image.file(File(profileProvider.path)).image
+                                  : tempProfileImage == null
+                                  ? null
+                                  : NetworkImage(
+                                  '${Api.baseUrl}/${widget.user.profileImage}'),
+                              radius: widget.isWideScreen ? 60 : 60.r,
+                              child: profileProvider != null
+                                  ? null
+                                  : tempProfileImage == null
+                                  ? Icon(FontAwesomeIcons.user, color: ColorManager.black)
+                                  : null,
                             ),
                           ),
-                          onPressed: () async {
-                            await showModalBottomSheet(
-                              isDismissible: true,
-                              context: context,
-                              builder: (context) {
-                                return Container(
-                                  padding: EdgeInsets.all(16),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      ListTile(
-                                        leading: Icon(Icons.photo_library),
-                                        title: Text('Pick from Gallery'),
-                                        onTap: () {
-                                          ref.read(imageProvider.notifier).pickAnImage();
-                                          if (profileProvider != null) {
-                                            setState(() {
-                                              tempProfileImage = profileProvider.path;
-                                            });
-                                          }
+                          Positioned(
+                            bottom: 4,
+                            right: 0,
+                            child: GestureDetector(
+                              onTap: () async {
+                                await showModalBottomSheet(
+                                  isDismissible: true,
+                                  context: context,
+                                  builder: (context) {
+                                    return Container(
+                                      padding: EdgeInsets.all(16),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          ListTile(
+                                            leading: Icon(Icons.photo_library),
+                                            title: Text('Pick from Gallery'),
+                                            onTap: () {
+                                              ref.read(imageProvider.notifier).pickAnImage();
+                                              if (profileProvider != null) {
+                                                setState(() {
+                                                  tempProfileImage = profileProvider.path;
+                                                });
+                                              }
 
-                                          Navigator.pop(context);
-                                        },
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          ListTile(
+                                            leading: Icon(Icons.camera_alt),
+                                            title: Text('Capture from Camera'),
+                                            onTap: () {
+                                              ref.read(imageProvider.notifier).camera();
+                                              if (profileProvider != null) {
+                                                setState(() {
+                                                  tempProfileImage = profileProvider.path;
+                                                });
+                                              }
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ],
                                       ),
-                                      ListTile(
-                                        leading: Icon(Icons.camera_alt),
-                                        title: Text('Capture from Camera'),
-                                        onTap: () {
-                                          ref.read(imageProvider.notifier).camera();
-                                          if (profileProvider != null) {
-                                            setState(() {
-                                              tempProfileImage = profileProvider.path;
-                                            });
-                                          }
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                    ],
-                                  ),
+                                    );
+                                  },
                                 );
                               },
-                            );
-                          },
-                          child: Text(
-                            'Update Profile Picture',
-                            style: getRegularStyle(
-                                color: ColorManager.white,
-                                fontSize: widget.isWideScreen ? 14 : 14.sp),
+                              child: Container(
+                                height: 36.h,
+                                width: 36.h,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(30.r),
+                                    border: Border.all(
+                                        color: Colors.white,
+                                        width: 2.w
+                                    )
+                                ),
+                                child: Badge(
+                                  label: Icon(Icons.edit_outlined, color: Colors.white, size: 20.h,),
+                                  backgroundColor: ColorManager.primary,
+                                  largeSize: 30,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                        // w10,
-                        // ElevatedButton(
-                        //   style: ElevatedButton.styleFrom(
-                        //     backgroundColor: ColorManager.white,
-                        //     elevation: 5,
-                        //     shape: RoundedRectangleBorder(
-                        //       borderRadius: BorderRadius.circular(10),
-                        //     ),
-                        //   ),
-                        //   onPressed: () {
-                        //     if (user.profileImage != null) {
-                        //       setState(() {
-                        //         tempProfileImage = null;
-                        //       });
-                        //     }
-                        //     ref.invalidate(imageProvider);
-                        //   },
-                        //   child: Text(
-                        //     'Remove Profile Picture',
-                        //     style: getRegularStyle(
-                        //         color: ColorManager.black,
-                        //         fontSize: widget.isWideScreen ? 14 : 14.sp),
-                        //   ),
-                        // ),
-                      ],
+                        ],
+                      ),
                     ),
+
                     h20,
                     TextFormField(
                       controller: _firstNameController,
@@ -855,9 +849,6 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                                       color: ColorManager.black.withOpacity(0.5)
                                   )
                               ),
-                              floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                              hintText: 'Ward No.',
-                              hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide: BorderSide(
@@ -865,7 +856,7 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                                   )
                               ),
                               labelText: 'Ward',
-                              labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
+
                             ),
                           ),
                         ),
@@ -893,16 +884,14 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                                   )
                               ),
                               floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                              hintText: 'Local Address',
-                              hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
-                              border: OutlineInputBorder(
+                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide: BorderSide(
                                       color: ColorManager.black
                                   )
                               ),
                               labelText: 'Local Address',
-                              labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
+
                             ),
                           ),
                         ),

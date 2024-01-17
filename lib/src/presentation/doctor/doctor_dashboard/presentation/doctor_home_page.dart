@@ -33,8 +33,8 @@ class DoctorHomePage extends ConsumerStatefulWidget {
   final bool isWideScreen;
   final bool isNarrowScreen;
   final bool noticeBool;
-  final String code;
-  DoctorHomePage(this.isWideScreen,this.isNarrowScreen,this.noticeBool,this.code);
+  final User user;
+  DoctorHomePage(this.isWideScreen,this.isNarrowScreen,this.noticeBool,this.user);
 
   @override
   ConsumerState<DoctorHomePage> createState() => _DoctorHomePageState();
@@ -121,20 +121,20 @@ class _DoctorHomePageState extends ConsumerState<DoctorHomePage> {
   Widget build(BuildContext context) {
 
     final userBox = Hive.box<User>('session').values.toList();
-    String firstName = userBox[0].firstName!;
-    String lastName = userBox[0].lastName!;
-    final profileImg = ref.watch(imageProvider);
-    ImageProvider<Object>? profileImage;
+    String firstName = widget.user.firstName!;
+    String lastName = widget.user.lastName!;
+    // final profileImg = ref.watch(imageProvider);
+    // ImageProvider<Object>? profileImage;
+    //
+    // if (profileImg != null) {
+    //   profileImage = Image.file(File(profileImg.path)).image;
+    // } else if (userBox[0].profileImage == null) {
+    //   profileImage = AssetImage('assets/icons/user.png');
+    // } else {
+    //   profileImage = NetworkImage('${Api.baseUrl}/${userBox[0].profileImage}');
+    // }
 
-    if (profileImg != null) {
-      profileImage = Image.file(File(profileImg.path)).image;
-    } else if (userBox[0].profileImage == null) {
-      profileImage = AssetImage('assets/icons/user.png');
-    } else {
-      profileImage = NetworkImage('${Api.baseUrl}/${userBox[0].profileImage}');
-    }
-
-    final docCircle = ref.watch(getUsersDropDown(userBox[0].code!));
+    final docCircle = ref.watch(getUsersDropDown(widget.user.code!));
 
 
     return FadeIn(
@@ -163,19 +163,12 @@ class _DoctorHomePageState extends ConsumerState<DoctorHomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 18.w),
-                      child: Card(
-                        shape: CircleBorder(
-                            side: BorderSide(
-                                color: ColorManager.primary,
-                                width: 1
-                            )
-                        ),
-                        child: CircleAvatar(
-                          backgroundColor: ColorManager.white,
-                          backgroundImage: profileImage,
-                          radius: 30,
-                        ),
+                      padding: EdgeInsets.only(left: 12),
+                      child: CircleAvatar(
+                        backgroundColor: ColorManager.white,
+                        backgroundImage: userBox[0].profileImage == null ? null : NetworkImage('${Api.baseUrl}/${widget.user.profileImage}'),
+                        radius: 30,
+                        child:userBox[0].profileImage != null ? null :FaIcon(FontAwesomeIcons.user,color: ColorManager.black,),
                       ),
                     ),
                     w10,

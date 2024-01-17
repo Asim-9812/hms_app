@@ -8,14 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:meroupachar/src/core/resources/color_manager.dart';
 import 'package:meroupachar/src/core/resources/style_manager.dart';
+import 'package:meroupachar/src/data/services/user_services.dart';
 import 'package:meroupachar/src/presentation/common/url_launcher.dart';
 import 'package:meroupachar/src/presentation/notification/presentation/notification_page.dart';
+import 'package:meroupachar/src/presentation/patient/profile/presentation/widgets/update_profile.dart';
 import 'package:meroupachar/src/presentation/patient_reports/domain/model/patient_info_model.dart';
 import 'package:meroupachar/src/presentation/patient_reports/domain/services/patient_report_services.dart';
 
@@ -87,7 +90,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
     final userBox = Hive.box<User>('session').values.toList();
     String firstName = userBox[0].firstName!;
-    String mobileNo = userBox[0].contactNo!;
+    String mobileNo = userBox[0].contactNo ?? 'N/A';
     String email = userBox[0].email ?? 'N/A';
     String address = userBox[0].localAddress ?? 'N/A';
     return Scaffold(
@@ -130,107 +133,107 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
                         h10,
                         LayoutBuilder(
-                          builder: (context,constraints) {
-                            return SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              controller:_scrollController,
-                              child: Row(
+                            builder: (context,constraints) {
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                controller:_scrollController,
+                                child: Row(
 
-                                children: [
-                                  InkWell(
-                                    onDoubleTap: (){
-                                      Clipboard.setData(ClipboardData(text: mobileNo));
-                                      Fluttertoast.showToast(
-                                          msg: "Phone number copied",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Colors.black.withOpacity(0.1),
-                                          textColor: Colors.black,
-                                          fontSize: 16.0
-                                      );
-                                    },
-                                    child: Container(
+                                  children: [
+                                    InkWell(
+                                      onDoubleTap: (){
+                                        Clipboard.setData(ClipboardData(text: mobileNo));
+                                        Fluttertoast.showToast(
+                                            msg: "Phone number copied",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.BOTTOM,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.black.withOpacity(0.1),
+                                            textColor: Colors.black,
+                                            fontSize: 16.0
+                                        );
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            // border: Border.all(
+                                            //   color: ColorManager.black.withOpacity(0.2)
+                                            // ),
+                                            color: ColorManager.textGrey.withOpacity(0.05)
+                                        ),
+                                        padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            FaIcon(FontAwesomeIcons.phone,color: ColorManager.primaryDark,),
+                                            w20,
+                                            Text(mobileNo,style: getRegularStyle(color: ColorManager.black,fontSize: 16.sp),),
+
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    w10,
+                                    InkWell(
+                                      onDoubleTap: (){
+                                        Clipboard.setData(ClipboardData(text:email));
+                                        Fluttertoast.showToast(
+                                            msg: "Email copied",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.BOTTOM,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.black.withOpacity(0.1),
+                                            textColor: Colors.black,
+                                            fontSize: 16.0
+                                        );
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            // border: Border.all(
+                                            //   color: ColorManager.black.withOpacity(0.2)
+                                            // ),
+                                            color: ColorManager.textGrey.withOpacity(0.05)
+                                        ),
+                                        padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            FaIcon(Icons.email_outlined,color: ColorManager.primaryDark,),
+                                            w20,
+                                            Text(email,style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),maxLines: 1,overflow: TextOverflow.ellipsis,),
+
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    w10,
+                                    Container(
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        // border: Border.all(
-                                        //   color: ColorManager.black.withOpacity(0.2)
-                                        // ),
-                                        color: ColorManager.textGrey.withOpacity(0.05)
+                                          borderRadius: BorderRadius.circular(10),
+                                          // border: Border.all(
+                                          //   color: ColorManager.black.withOpacity(0.2)
+                                          // ),
+                                          color: ColorManager.textGrey.withOpacity(0.05)
                                       ),
                                       padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
-                                          FaIcon(FontAwesomeIcons.phone,color: ColorManager.primaryDark,),
+                                          FaIcon(Icons.pin_drop_outlined,color: ColorManager.primaryDark,),
                                           w20,
-                                          Text(mobileNo,style: getRegularStyle(color: ColorManager.black,fontSize: 16.sp),),
+                                          Text(address,style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),maxLines: 1,overflow: TextOverflow.ellipsis,),
 
                                         ],
                                       ),
                                     ),
-                                  ),
-                                  w10,
-                                  InkWell(
-                                    onDoubleTap: (){
-                                      Clipboard.setData(ClipboardData(text: email));
-                                      Fluttertoast.showToast(
-                                          msg: "Email copied",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Colors.black.withOpacity(0.1),
-                                          textColor: Colors.black,
-                                          fontSize: 16.0
-                                      );
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        // border: Border.all(
-                                        //   color: ColorManager.black.withOpacity(0.2)
-                                        // ),
-                                        color: ColorManager.textGrey.withOpacity(0.05)
-                                      ),
-                                      padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          FaIcon(Icons.email_outlined,color: ColorManager.primaryDark,),
-                                          w20,
-                                          Text(email,style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),maxLines: 1,overflow: TextOverflow.ellipsis,),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  w10,
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      // border: Border.all(
-                                      //   color: ColorManager.black.withOpacity(0.2)
-                                      // ),
-                                      color: ColorManager.textGrey.withOpacity(0.05)
-                                    ),
-                                    padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        FaIcon(Icons.pin_drop_outlined,color: ColorManager.primaryDark,),
-                                        w20,
-                                        Text(address,style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),maxLines: 1,overflow: TextOverflow.ellipsis,),
-
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
+                                  ],
+                                ),
+                              );
+                            }
                         ),
                         h10,
 
@@ -302,16 +305,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     // String age = userBox[0].ageGender?.split('\r\n/').first ?? 'N/A';
     String gender =userBox[0].ageGender ?? 'N/A' ;
 
-    final profileImg = ref.watch(imageProvider);
-    ImageProvider<Object>? profileImage;
-
-    if (profileImg != null) {
-      profileImage = Image.file(File(profileImg.path)).image;
-    } else if (userBox[0].profileImage == null) {
-      profileImage = AssetImage('assets/icons/user.png');
-    } else {
-      profileImage = NetworkImage('${Api.baseUrl}/${userBox[0].profileImage}');
-    }
+    // final profileImg = ref.watch(imageProvider);
+    // ImageProvider<Object>? profileImage;
+    //
+    // if (profileImg != null) {
+    //   profileImage = Image.file(File(profileImg.path)).image;
+    // } else if (userBox[0].profileImage == null) {
+    //   profileImage = AssetImage('assets/icons/user.png');
+    // } else {
+    //   profileImage = NetworkImage('${Api.baseUrl}/${user.profileImage}');
+    // }
 
     return Card(
       elevation: 1,
@@ -327,16 +330,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             Row(
               children: [
                 Card(
-                  shape: CircleBorder(),
+                  shape: CircleBorder(
+                      side: BorderSide(
+                          color: ColorManager.black,
+                          width: 1)
+                  ),
                   elevation: 5,
                   child: CircleAvatar(
                     backgroundColor: ColorManager.white,
-                    radius: isNarrowScreen? 50.r:50,
-                    child: CircleAvatar(
-                      backgroundColor: ColorManager.black,
-                      radius: isNarrowScreen? 45.r:45,
-                      backgroundImage: profileImage,
-                    ),
+                    backgroundImage: userBox[0].profileImage == null ? null : NetworkImage('${Api.baseUrl}/${userBox[0].profileImage}'),
+                    radius: isNarrowScreen? 45.r:45,
+                    child:userBox[0].profileImage != null ? null :FaIcon(FontAwesomeIcons.user,color: ColorManager.black,),
                   ),
                 ),
                 w10,
@@ -356,7 +360,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               ],
             ),
             w10,
-            // FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primaryDark,)
+            IconButton(
+                onPressed: ()=>Get.to(()=>UpdatePatientProfile(user:  userBox[0],)),
+                icon: FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primaryDark,))
           ],
         ),
       ),

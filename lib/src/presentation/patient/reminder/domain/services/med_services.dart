@@ -70,7 +70,11 @@ class MedServices{
 
         }
 
-        return newData;
+        // return newData;
+
+        /// from reminder_db.dart.... patient/reminder/data/
+        return frequencyType;
+
       }
       else{
         return [];

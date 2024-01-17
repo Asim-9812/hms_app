@@ -45,9 +45,10 @@
 //   List<String> idType = ['PID', 'NID','UID'];
 //   List<String> addressList = [];
 //   List<String> ageType = ['years', 'months','days','hours'];
+//   String selectedAge = 'years';
 //   String selectedAddress = 'Select Address';
 //   String selectedGender = 'Select Gender';
-//   String selectedAge = 'years';
+//
 //   String selectedId = 'PID';
 //   String selectedAccount = 'Self';
 //   int genderId = 0;

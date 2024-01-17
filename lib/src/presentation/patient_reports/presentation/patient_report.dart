@@ -255,7 +255,7 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
                             search.clear();
                             setState(() {
                               _phCheck = value!;
-                              phController.clear();
+                              // phController.clear();
                             });
                           }
                       )
@@ -424,7 +424,7 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
                             }
                           },
                           error: (error,stack)=>DropdownSearch(
-                            selectedItem: '$error',
+                            selectedItem: 'No departments',
                             items: [],
                             dropdownDecoratorProps: DropDownDecoratorProps(
                               dropdownSearchDecoration: InputDecoration(
@@ -798,7 +798,28 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
 
                             }
                           },
-                          error: (error,stack)=>Center(child: Text('$error'),),
+                          error: (error,stack)=>DropdownSearch(
+                            selectedItem: 'No groups',
+                            items: [],
+                            dropdownDecoratorProps: DropDownDecoratorProps(
+                              dropdownSearchDecoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color:  ColorManager.accentGreen.withOpacity(0.5)
+                                      ),
+                                      borderRadius: BorderRadius.circular(10)
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color:  ColorManager.accentGreen.withOpacity(0.5)
+                                      ),
+                                      borderRadius: BorderRadius.circular(10)
+                                  ),
+                                  labelText: "PH Group",
+                                  labelStyle: getRegularStyle(color: ColorManager.primary)
+                              ),
+                            ),
+                          ),
                           loading: ()=>Container(
                             width: double.infinity,
                             height: 50,
@@ -920,23 +941,34 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
 
                           ),
                           onPressed: ()async{
-                            setState(() {
-                              reportList = [];
-                              dateFrom.text = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 7)));
-                              dateTo.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
-                              selectedDepartment = 'All';
-                              departmentId = 0 ;
-                              userId = '0';
-                              selectedUser = 'All';
-                              consultantId = '0';
-                              selectedConsultant = 'All';
-                              pgId = 0;
-                              selectedPatientGroup = 'All';
-                              search.clear();
-                              phController.clear();
-                              formKey.currentState!.reset();
+                            if(_phCheck){
+                              setState(() {
+                                phController.text = userCode;
+                              });
 
-                            });
+                            }
+                            else{
+                              setState(() {
+                                phController.text = userCode;
+                                reportList = [];
+                                dateFrom.text = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 7)));
+                                dateTo.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                                selectedDepartment = 'All';
+                                departmentId = 0 ;
+                                userId = '0';
+                                selectedUser = 'All';
+                                consultantId = '0';
+                                selectedConsultant = 'All';
+                                pgId = 0;
+                                selectedPatientGroup = 'All';
+                                search.clear();
+                                // formKey.currentState!.reset();
+
+
+
+                              });
+                            }
+
 
                           },
                           child: Text('Reset',style: getRegularStyle(color: ColorManager.black,fontSize: 18),)

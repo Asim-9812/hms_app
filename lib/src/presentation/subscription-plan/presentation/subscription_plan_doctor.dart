@@ -87,8 +87,8 @@ class _SubscriptionPlanTestState extends ConsumerState<DoctorSubscriptionPlan> {
 
       return dartz.Right(response.data);
     } on DioException catch (err) {
-      print('error message : ${err.response?.data}');
-      throw Exception('${err.response!.data['message']}');
+      print('error message : $err');
+      throw Exception('${err.response!.data}');
     }}
 
 

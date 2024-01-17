@@ -170,26 +170,27 @@ class _AnimatedBarExampleState extends ConsumerState<OrgMainPage> {
             title:  Text('Doctors'),
           ),
           BottomBarItem(
-            icon:  Container(
-              // color: ColorManager.red,
-                width: isWideScreen?30:30.sp,
-
-                child: Stack(
-                  children: [
-                    Center(child: Padding(
-
-                      padding:  EdgeInsets.only(top: 2),
-                      child: FaIcon(Icons.person,size: isWideScreen?24:24.sp,),
-                    )),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: CircleAvatar(
-                        radius: 6.sp,
-                        backgroundColor: ColorManager.red.withOpacity(0.7),
-                      ),
-                    )
-                  ],
-                )),
+            icon:  FaIcon(Icons.person,size: isWideScreen?24:24.sp,),
+            // icon:  Container(
+            //   // color: ColorManager.red,
+            //     width: isWideScreen?30:30.sp,
+            //
+            //     child: Stack(
+            //       children: [
+            //         Center(child: Padding(
+            //
+            //           padding:  EdgeInsets.only(top: 2),
+            //           child: FaIcon(Icons.person,size: isWideScreen?24:24.sp,),
+            //         )),
+            //         Align(
+            //           alignment: Alignment.topRight,
+            //           child: CircleAvatar(
+            //             radius: 6.sp,
+            //             backgroundColor: ColorManager.red.withOpacity(0.7),
+            //           ),
+            //         )
+            //       ],
+            //     )),
             // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
             selectedColor: ColorManager.primary,
             // unSelectedColor: Colors.purple,

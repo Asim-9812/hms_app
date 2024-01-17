@@ -45,7 +45,7 @@ class UpdateProfile{
     required int PrefixSettingID,
     required String token,
     required String flag,
-    int? liscenceNo,
+    String? liscenceNo,
     int? panNo,
     XFile? profileImageUrl,
     XFile? signatureImageUrl,

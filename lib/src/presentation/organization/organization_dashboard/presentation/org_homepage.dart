@@ -91,16 +91,16 @@ class _OrgHomePageState extends ConsumerState<OrgHomePage> {
     final userBox = Hive.box<User>('session').values.toList();
     String firstName = userBox[0].firstName!;
 
-    final profileImg = ref.watch(imageProvider);
-    ImageProvider<Object>? profileImage;
-
-    if (profileImg != null) {
-      profileImage = Image.file(File(profileImg.path)).image;
-    } else if (userBox[0].profileImage == null) {
-      profileImage = AssetImage('assets/icons/user.png');
-    } else {
-      profileImage = NetworkImage('${Api.baseUrl}/${userBox[0].profileImage}');
-    }
+    // final profileImg = ref.watch(imageProvider);
+    // ImageProvider<Object>? profileImage;
+    //
+    // if (profileImg != null) {
+    //   profileImage = Image.file(File(profileImg.path)).image;
+    // } else if (userBox[0].profileImage == null) {
+    //   profileImage = AssetImage('assets/icons/user.png');
+    // } else {
+    //   profileImage = NetworkImage('${Api.baseUrl}/${userBox[0].profileImage}');
+    // }
 
 
     return Scaffold(
@@ -124,9 +124,9 @@ class _OrgHomePageState extends ConsumerState<OrgHomePage> {
               children: [
                 CircleAvatar(
                   backgroundColor: ColorManager.white,
-                  backgroundImage: profileImage,
-                  radius:30,
-                  // child: Image.network('${Api.baseUrl}/${userBox[0].profileImage}',fit: BoxFit.cover,),
+                  backgroundImage: userBox[0].profileImage == null ? null : NetworkImage('${Api.baseUrl}/${userBox[0].profileImage}'),
+                  radius: 30,
+                  child:userBox[0].profileImage != null ? null :FaIcon(FontAwesomeIcons.user,color: ColorManager.black,),
                 ),
                 w10,
                 Column(

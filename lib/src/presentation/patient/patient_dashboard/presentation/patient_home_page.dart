@@ -146,16 +146,16 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
 
     final userBox = Hive.box<User>('session').values.toList();
     String firstName = userBox[0].firstName!;
-    final profileImg = ref.watch(imageProvider);
-    ImageProvider<Object>? profileImage;
-
-    if (profileImg != null) {
-      profileImage = Image.file(File(profileImg.path)).image;
-    } else if (userBox[0].profileImage == null) {
-      profileImage = AssetImage('assets/icons/user.png');
-    } else {
-      profileImage = NetworkImage('${Api.baseUrl}/${userBox[0].profileImage}');
-    }
+    // final profileImg = ref.watch(imageProvider);
+    // ImageProvider<Object>? profileImage;
+    //
+    // if (profileImg != null) {
+    //   profileImage = Image.file(File(profileImg.path)).image;
+    // } else if (userBox[0].profileImage == null) {
+    //   profileImage = AssetImage('assets/icons/user.png');
+    // } else {
+    //   profileImage = NetworkImage('${Api.baseUrl}/${userBox[0].profileImage}');
+    // }
 
 
 
@@ -185,8 +185,9 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                   children: [
                     CircleAvatar(
                       backgroundColor: ColorManager.white,
-                      radius:30,
-                      backgroundImage: profileImage,
+                      backgroundImage: userBox[0].profileImage == null ? null : NetworkImage('${Api.baseUrl}/${userBox[0].profileImage}'),
+                      radius: 30,
+                      child:userBox[0].profileImage != null ? null :FaIcon(FontAwesomeIcons.user,color: ColorManager.black,),
                     ),
                     w10,
                     Column(

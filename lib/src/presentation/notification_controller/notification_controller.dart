@@ -3,13 +3,9 @@ import 'dart:isolate';
 import 'dart:ui';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:meroupachar/src/presentation/doctor/doctor_tasks/domain/model/task_model.dart';
-import 'package:meroupachar/src/presentation/patient/reminder/domain/model/general_reminder_model.dart';
 import '../../app/app.dart';
-import 'package:meroupachar/src/presentation/patient/reminder/domain/model/reminder_model.dart';
 
 
 
