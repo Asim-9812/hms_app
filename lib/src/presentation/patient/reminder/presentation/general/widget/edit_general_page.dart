@@ -159,8 +159,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: _startTimeController.text.isNotEmpty ? _parseTime(
-          _startTimeController.text) : TimeOfDay.now(),
+      initialTime: TimeOfDay.now(),
     );
 
     if (picked != null) {

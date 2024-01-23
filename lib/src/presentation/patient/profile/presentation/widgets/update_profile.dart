@@ -5,6 +5,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
@@ -54,7 +55,7 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
 
   List<String> genderType = ['Select Gender','Male', 'Female', 'Others'];
   String? selectedGender;
-  int? genderId;
+  int? genderId ;
 
   List<String> ageType = ['years', 'months','days','hours'];
   String selectedAge = 'years';
@@ -415,7 +416,7 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                           value: selectedGender,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value){
-                            if(selectedGender == genderType[0]){
+                            if(selectedGender == genderType[0] || selectedGender == null){
                               return 'Please select a Gender';
                             }
                             return null;
@@ -821,7 +822,9 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
 
                               },
                               validator: (value){
-
+                                if(value == null){
+                                  return 'Please select an address';
+                                }
                                 return null;
                               },
                               autoValidateMode: AutovalidateMode.onUserInteraction,
@@ -996,23 +999,26 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          onPressed: ()async {
+                          onPressed:isPostingData?null: ()async {
                             final scaffoldMessage = ScaffoldMessenger.of(context);
                             if(_formKey.currentState!.validate()){
+                              setState(() {
+                                isPostingData = true;
+                              });
                               UpdateProfileModel profileData = UpdateProfileModel(
                                   id: widget.user.id!,
                                   patientID: widget.user.username!,
                                   firstName: _firstNameController.text.trim(),
                                   lastName: _lastNameController.text.trim(),
                                   dob: _dobController.text.trim(),
-                                  countryID: countryId!,
-                                  districtID: districtId!,
+                                  countryID: countryId??1,
+                                  districtID: districtId ?? municipalities.first.districtId,
                                   ward: int.parse(_wardController.text.trim()),
                                   localAddress: _addressController.text.trim(),
                                   email: '',
                                   contact: _contactController.text.trim(),
                                   genderID: genderId!,
-                                  entryDate: widget.user.entryDate!,
+                                  entryDate: DateFormat('yyyy-MM-dd').format(DateTime.now()),
                                   flag: ''
                               );
 
@@ -1039,7 +1045,7 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                                   entryDate: widget.user.entryDate,
                                   code: widget.user.code,
                                   isActive: widget.user.isActive,
-                                  ageGender: age == null ? ageGender : '$age\\$selectedGender',
+                                  ageGender: age == null ? ageGender : '$age/$selectedGender',
                                   contactNo: _contactController.text.trim(),
                                   countryID: countryId,
                                   districtID: districtId,
@@ -1075,6 +1081,10 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                                 final userHive = Hive.box<User>('session');
 
                                 userHive.putAt(0, updateUser);
+                                setState(() {
+                                  isPostingData = false;
+                                });
+
 
                                 Navigator.pop(context);
 
@@ -1085,7 +1095,9 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
 
 
                           },
-                          child: Text(
+                          child:isPostingData? SizedBox(
+                              height: 16,
+                              child: SpinKitDualRing(color: ColorManager.white,size: 16,)): Text(
                             'Save',style: TextStyle(color: ColorManager.white),
                           ),
                         ),

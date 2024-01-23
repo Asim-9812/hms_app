@@ -48,6 +48,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   final ScrollController _scrollController = ScrollController();
 
+  List<DistrictModel> districts = [];
+
+  List<ProvinceModel> provinces = [];
+
+  List<MunicipalityModel> municipalities = [];
+
+  String mun = '';
+  String district = '';
+  String province = '';
+
 
   @override
   void initState() {
@@ -57,7 +67,59 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       _scrollToEnd();
     });
+    _getProvince();
+    _getDistrict();
+    _getMunicipality();
   }
+
+
+
+
+  /// fetch province list...
+
+  void _getProvince() async {
+
+    List<ProvinceModel> provinceList = await CountryService().getAllProvince();
+    setState(() {
+      provinces = provinceList;
+
+      province = provinces.firstWhereOrNull((element) => element.provinceId == widget.user.provinceID)?.provinceName ?? 'N/A';
+
+    });
+  }
+
+
+
+  /// fetch district list...
+
+  void _getDistrict() async {
+
+    List<DistrictModel> districtList = await CountryService().getAllDistrict();
+    setState(() {
+      districts = districtList;
+
+      district = districts.firstWhereOrNull((element) => element.districtId == widget.user.districtID)?.districtName ?? 'N/A';
+
+    });
+  }
+
+
+  /// fetch municipality list...
+
+  void _getMunicipality() async {
+
+    List<MunicipalityModel> municipalityList = await CountryService().getAllMunicipality();
+    setState(() {
+      municipalities = municipalityList;
+      mun = municipalities.firstWhereOrNull((element) => element.municipalityId == widget.user.municipalityID)?.municipalityName ?? 'N/A';
+
+
+    });
+  }
+
+
+
+
 
   // Function to scroll to the end and back once
   void _scrollToEnd() async {
@@ -93,6 +155,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     String mobileNo = userBox[0].contactNo ?? 'N/A';
     String email = userBox[0].email ?? 'N/A';
     String address = userBox[0].localAddress ?? 'N/A';
+    String ward = userBox[0].wardNo.toString() ?? 'N/A';
+    String fullAddress = address == 'N/A' ? 'N/A' : '$mun -$ward, $district, $province, $address';
     return Scaffold(
       backgroundColor: ColorManager.white.withOpacity(0.99),
       appBar: AppBar(
@@ -225,7 +289,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                         children: [
                                           FaIcon(Icons.pin_drop_outlined,color: ColorManager.primaryDark,),
                                           w20,
-                                          Text(address,style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),maxLines: 1,overflow: TextOverflow.ellipsis,),
+                                          Text(fullAddress,style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),maxLines: 1,overflow: TextOverflow.ellipsis,),
 
                                         ],
                                       ),
@@ -360,9 +424,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               ],
             ),
             w10,
-            IconButton(
-                onPressed: ()=>Get.to(()=>UpdatePatientProfile(user:  userBox[0],)),
-                icon: FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primaryDark,))
+            // IconButton(
+            //     onPressed: ()=>Get.to(()=>UpdatePatientProfile(user:  userBox[0],)),
+            //     icon: FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primaryDark,))
           ],
         ),
       ),
