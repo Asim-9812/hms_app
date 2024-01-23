@@ -73,13 +73,21 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
   List<MunicipalityModel> municipalities = [];
   List<DistrictModel> districts = [];
 
+  String? age;
+  String? gender;
+  String? ageGender;
+
 
   @override
   void initState(){
     super.initState();
     _getProvince();
-
-
+    _firstNameController.text = widget.user.firstName! ;
+    _lastNameController.text = widget.user.lastName! ;
+    _contactController.text = widget.user.contactNo! ;
+    _addressController.text = widget.user.localAddress ?? '';
+    _wardController.text = widget.user.wardNo.toString();
+    ageGender = widget.user.ageGender;
   }
 
 
@@ -149,7 +157,10 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
             });
             int ageDifference = now.difference(dob).inHours;
             _ageController.text = ageDifference.toString();
-          } else {
+            age = '${ageDifference}Hrs';
+
+          }
+          else {
             setState(() {
               ageId = 3;
               selectedAge = 'days';
@@ -161,9 +172,12 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
 
             _ageController.text = ageInDays.toString();
             _ageController2.text = remainingHours.toString();
+            age = '${ageInDays}D';
+
 
           }
-        }else{
+        }
+        else{
           setState(() {
             ageId = 2;
             selectedAge = 'months';
@@ -173,6 +187,7 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
           int remainingDays = (ageDuration.inDays % 30).floor();
           _ageController.text = ageInMonths.toString();
           _ageController2.text = remainingDays.toString();
+          age = '${ageInMonths}M.${remainingDays}D';
         }
 
       }else{
@@ -185,6 +200,7 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
         int remainingMonths = ((ageDuration.inDays % 365) / 30).floor();
         _ageController.text = ageInYears.toString();
         _ageController2.text = remainingMonths.toString();
+        age = '${ageInYears}Y.${remainingMonths}M';
 
       }
     }
@@ -1023,7 +1039,7 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                                   entryDate: widget.user.entryDate,
                                   code: widget.user.code,
                                   isActive: widget.user.isActive,
-                                  ageGender: widget.user.ageGender,
+                                  ageGender: age == null ? ageGender : '$age\\$selectedGender',
                                   contactNo: _contactController.text.trim(),
                                   countryID: countryId,
                                   districtID: districtId,
@@ -1059,6 +1075,8 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                                 final userHive = Hive.box<User>('session');
 
                                 userHive.putAt(0, updateUser);
+
+                                Navigator.pop(context);
 
                               }
 
