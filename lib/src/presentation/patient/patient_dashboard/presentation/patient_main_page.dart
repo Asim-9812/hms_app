@@ -10,7 +10,6 @@ import 'package:hive/hive.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
@@ -46,7 +45,6 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
   TextEditingController outputController = TextEditingController();
 
 
-  bool _isMenuOpen = false;
 
 
   final UpdateService _updateService = UpdateServiceImpl();
@@ -139,7 +137,6 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
 
 
     final isMenuOpen = ref.watch(itemProvider).isMenuOpen;
-    final scaffoldMessage = ScaffoldMessenger.of(context);
     final noticeBool = ref.watch(itemProvider).noticeChange;
     // Get the screen size
     final screenSize = MediaQuery.of(context).size;

@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -7,29 +6,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:meroupachar/src/presentation/patient/health_tips/data/tagList_provider.dart';
 import 'package:meroupachar/src/presentation/patient/health_tips/presentation/health_tips_list.dart';
 import 'package:meroupachar/src/presentation/patient/sliders/domain/services/slider_service.dart';
-import 'package:meroupachar/src/presentation/video_chat/presentation/meeting_page.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
 import '../../../../core/api.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
-import '../../../../data/provider/common_provider.dart';
 import '../../../common/snackbar.dart';
 import '../../../login/domain/model/user.dart';
-import '../../../notices/presentation/notices.dart';
-import '../../../notification/presentation/notification_page.dart';
 
-import 'package:meroupachar/src/presentation/patient/health_tips/domain/model/health_tips_model.dart';
-import '../../../video_chat/presentation/whereby_join_page.dart';
-import '../../../video_chat/presentation/whereby_meeting_page.dart';
-import '../../health_tips/domain/services/health_tips_services.dart';
-import '../../search-near-by/presentation/search_for_page.dart';
 
 
 
@@ -46,14 +32,15 @@ class PatientHomePage extends ConsumerStatefulWidget {
 
 class _PatientHomePageState extends ConsumerState<PatientHomePage> {
 
-  bool? _geolocationStatus;
-  LocationPermission? _locationPermission;
-  Position? _userPosition;
+  // bool? _geolocationStatus;
+  // LocationPermission? _locationPermission;
+  // Position? _userPosition;
+
+  //
+  // final _roomController = TextEditingController();
+
+
   late bool check;
-
-  final _roomController = TextEditingController();
-
-
 
 
 
@@ -93,44 +80,44 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
 
 
 
-  ///geolocator settings...
-
-  Future<void> checkGeolocationStatus() async {
-    _geolocationStatus = await Geolocator.isLocationServiceEnabled();
-    if (_geolocationStatus == LocationPermission.denied) {
-      setState(() {
-        _geolocationStatus = false;
-      });
-    } else {
-      checkLocationPermission();
-    }
-  }
-
-  Future<void> checkLocationPermission() async {
-    _locationPermission = await Geolocator.requestPermission();
-    if (_locationPermission == LocationPermission.denied) {
-
-      print('permission denied');
-
-    } else if (_locationPermission == LocationPermission.deniedForever) {
-      print('permission denied');
-
-
-    } else if (_locationPermission == LocationPermission.always ||
-        _locationPermission == LocationPermission.whileInUse) {
-
-      print('permission given');
-
-      final _currentPosition= await Geolocator.getCurrentPosition();
-
-      _userPosition = _currentPosition;
-      // (_userPosition);
-
-    }
-  }
-
-
-
+  // ///geolocator settings...
+  //
+  // Future<void> checkGeolocationStatus() async {
+  //   _geolocationStatus = await Geolocator.isLocationServiceEnabled();
+  //   if (_geolocationStatus == LocationPermission.denied) {
+  //     setState(() {
+  //       _geolocationStatus = false;
+  //     });
+  //   } else {
+  //     checkLocationPermission();
+  //   }
+  // }
+  //
+  // Future<void> checkLocationPermission() async {
+  //   _locationPermission = await Geolocator.requestPermission();
+  //   if (_locationPermission == LocationPermission.denied) {
+  //
+  //     print('permission denied');
+  //
+  //   } else if (_locationPermission == LocationPermission.deniedForever) {
+  //     print('permission denied');
+  //
+  //
+  //   } else if (_locationPermission == LocationPermission.always ||
+  //       _locationPermission == LocationPermission.whileInUse) {
+  //
+  //     print('permission given');
+  //
+  //     final _currentPosition= await Geolocator.getCurrentPosition();
+  //
+  //     _userPosition = _currentPosition;
+  //     // (_userPosition);
+  //
+  //   }
+  // }
+  //
+  //
+  //
 
 
 
@@ -266,7 +253,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
   Widget buildQuickServices(bool isWideScreen) {
 
     final fontSize = isWideScreen ? 16.0 : 16.sp;
-    final iconSize = isWideScreen ? 20.0 : 20.sp;
+    // final iconSize = isWideScreen ? 20.0 : 20.sp;
     final height = isWideScreen ? 120.0 : 120.h;
     final width = isWideScreen ? 200.0 : 200.w;
     return Container(
@@ -493,7 +480,6 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
 
     // Check if width is greater than height
     bool isWideScreen = screenSize.width > 500;
-    bool isNarrowScreen = screenSize.width < 500;
     return Card(
       
       shape: OutlineInputBorder(
@@ -682,8 +668,6 @@ class FactCarousel extends ConsumerWidget {
   @override
   Widget build(BuildContext context,ref) {
 
-    final fontSize = isWideScreen ? 18.0 : 18.sp;
-    final iconSize = isWideScreen ? 20.0 : 20.sp;
 
     final sliderData = ref.watch(getSliders);
 

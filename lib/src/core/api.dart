@@ -36,6 +36,7 @@ class Api{
    static const getUserById = '$baseUrl/api/Users/GetUserById/';
    static const userUpdate = '$baseUrl/api/Users/UpdateUser/profileImageUrl/signaturImageUrl';
    static const changePwdUser = '$baseUrl/api/Users/ChangePwd';
+   static const patientUpdate = '$baseUrl/api/PatientProfile/profileUpdate';
 
 
 
@@ -53,6 +54,7 @@ class Api{
    static const postPatientRegistration = '$baseUrl/api/patient/Insert/aa';
    static const getRegisteredPatients = '$baseUrl/api/Patient/Getlist';
    static const getCostCategory = '$baseUrl/api/CostCategory/Getlist';
+
 
    /// Patient report...
 

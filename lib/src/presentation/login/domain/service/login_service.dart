@@ -36,7 +36,7 @@ class LoginProvider{
             );
 
             if(response.statusCode == 200 && response.data["result"]["id"] != 0){
-              print(response.data['result']['contact']);
+              // print(response.data['result']['contact']);
 
                 response.data["result"]["typeID"] = 4;
 

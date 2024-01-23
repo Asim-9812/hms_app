@@ -1,7 +1,4 @@
-
-
 import 'dart:io';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -19,12 +16,9 @@ import 'package:meroupachar/src/presentation/doctor/doctor_tasks/domain/model/ta
 import 'package:meroupachar/src/presentation/doctor/doctor_tasks/presentation/task_detail.dart';
 import 'package:meroupachar/src/presentation/patient_reports/domain/services/patient_report_services.dart';
 import 'package:meroupachar/src/presentation/patient_reports/domain/model/patient_report_model.dart';
-
 import '../../../../core/api.dart';
 import '../../../../core/resources/value_manager.dart';
-import '../../../../data/provider/common_provider.dart';
 import '../../../login/domain/model/user.dart';
-import '../../../notices/presentation/notices.dart';
 import '../../doctor_tasks/presentation/add_tasks.dart';
 import '../../doctor_tasks/presentation/task_list.dart';
 

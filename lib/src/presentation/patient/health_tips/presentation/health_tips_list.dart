@@ -113,8 +113,8 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
 
               options: CarouselOptions(
                 // height: 150,
-                // aspectRatio: 16/9,
-                enlargeCenterPage: true,
+                aspectRatio: 16/7,
+                // enlargeCenterPage: true,
                 pageSnapping: true,
                 autoPlay:updatedList.length >1? true : false,
                 autoPlayCurve: Curves.fastOutSlowIn,

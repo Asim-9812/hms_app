@@ -6,15 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:meroupachar/src/core/resources/color_manager.dart';
 import 'package:meroupachar/src/core/resources/style_manager.dart';
+import 'package:meroupachar/src/data/services/update_profile_service.dart';
+import 'package:meroupachar/src/presentation/patient/profile/domain/model/patient_update_model.dart';
+import 'package:meroupachar/src/presentation/patient/profile/domain/services/patient_update_services.dart';
 
 import '../../../../../core/resources/value_manager.dart';
 import '../../../../../data/model/country_model.dart';
 import '../../../../../data/services/address_list_services.dart';
 import '../../../../../data/services/country_services.dart';
 import '../../../../common/date_input_formatter.dart';
+import '../../../../common/snackbar.dart';
 import '../../../../login/domain/model/user.dart';
 
 class UpdatePatientProfile extends ConsumerStatefulWidget {
@@ -28,6 +33,8 @@ class UpdatePatientProfile extends ConsumerStatefulWidget {
 
 class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
 
+
+  final _formKey = GlobalKey<FormState>();
 
   final _firstNameController = TextEditingController();
 
@@ -65,6 +72,15 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
   List<ProvinceModel> provinces = [];
   List<MunicipalityModel> municipalities = [];
   List<DistrictModel> districts = [];
+
+
+  @override
+  void initState(){
+    super.initState();
+    _getProvince();
+
+
+  }
 
 
 
@@ -251,289 +267,200 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 18.w),
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                h10,
-                Center(
-                  child: Stack(
-                    children: [
-                      Card(
-                        elevation: 0,
-                        shape: CircleBorder(
-                          side: BorderSide(
-                            color: ColorManager.black
-                          )
-                        ),
-                        child: CircleAvatar(
-                          radius: 60.r,
-                          backgroundColor: ColorManager.white,
-                          child: ClipOval(
-                            child: Icon(Icons.person,color: ColorManager.primary,)
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  h10,
+                  Center(
+                    child: Stack(
+                      children: [
+                        Card(
+                          elevation: 0,
+                          shape: CircleBorder(
+                            side: BorderSide(
+                              color: ColorManager.black
+                            )
                           ),
+                          child: CircleAvatar(
+                            radius: 60.r,
+                            backgroundColor: ColorManager.white,
+                            child: ClipOval(
+                              child: Icon(Icons.person,color: ColorManager.primary,)
+                            ),
+                          ),
+                        ),
+                        // Positioned(
+                        //   bottom: 4,
+                        //   right: 0,
+                        //   child: GestureDetector(
+                        //     onTap: (){},
+                        //     child: Container(
+                        //       height: 36.h,
+                        //       width: 36.h,
+                        //       decoration: BoxDecoration(
+                        //           color: Colors.white,
+                        //           borderRadius: BorderRadius.circular(30.r),
+                        //           border: Border.all(
+                        //               color: Colors.white,
+                        //               width: 2.w
+                        //           )
+                        //       ),
+                        //       child: Badge(
+                        //         label: Icon(Icons.edit_outlined, color: Colors.white, size: 20.h,),
+                        //         backgroundColor: ColorManager.primary,
+                        //         largeSize: 30,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                  ),
+                  h20,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _firstNameController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: ColorManager.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)
+                            ),
+                            labelText: 'First name',
+                          ),
+                          validator: (value){
+                            if(value!.trim().isEmpty){
+                              return 'First name is required';
+                            }
+                            return null;
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
                       ),
-                      Positioned(
-                        bottom: 4,
-                        right: 0,
-                        child: GestureDetector(
-                          onTap: (){},
-                          child: Container(
-                            height: 36.h,
-                            width: 36.h,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(30.r),
-                                border: Border.all(
-                                    color: Colors.white,
-                                    width: 2.w
-                                )
+                      w10,
+                      Expanded(
+                        child: TextFormField(
+                          controller: _lastNameController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: ColorManager.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)
                             ),
-                            child: Badge(
-                              label: Icon(Icons.edit_outlined, color: Colors.white, size: 20.h,),
-                              backgroundColor: ColorManager.primary,
-                              largeSize: 30,
-                            ),
+                            labelText: 'Last name',
                           ),
+                          validator: (value){
+                            if(value!.trim().isEmpty){
+                              return 'Last name is required';
+                            }
+                            return null;
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
                       ),
                     ],
                   ),
-                ),
-                h20,
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _firstNameController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: ColorManager.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)
-                          ),
-                          labelText: 'First name',
-                        ),
-                        validator: (value){
-                          if(value!.trim().isEmpty){
-                            return 'First name is required';
-                          }
-                          return null;
-                        },
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                      ),
-                    ),
-                    w10,
-                    Expanded(
-                      child: TextFormField(
-                        controller: _lastNameController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: ColorManager.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)
-                          ),
-                          labelText: 'Last name',
-                        ),
-                        validator: (value){
-                          if(value!.trim().isEmpty){
-                            return 'Last name is required';
-                          }
-                          return null;
-                        },
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                      ),
-                    ),
-                  ],
-                ),
-                h20,
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _contactController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          // isDense: true,
-                          fillColor: ColorManager.white,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10)
-                          ),
-                          labelText: 'Phone number',
-                        ),
-                        validator: (value){
-                          if(value!.trim().isEmpty){
-                            return 'Number is required';
-                          }
-                          return null;
-                        },
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                      ),
-                    ),
-                    w10,
-                    Expanded(
-                      child: DropdownButtonFormField<String>(
-                        isDense: true,
-                        padding: EdgeInsets.zero,
-                        value: selectedGender,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value){
-                          if(selectedGender == genderType[0]){
-                            return 'Please select a Gender';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          isDense: true,
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
-                          ),
-                          labelText: 'Gender'
-                        ),
-                        items: genderType
-                            .map(
-                              (String item) => DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(
-                              item,
-                            ),
-                          ),
-                        )
-                            .toList(),
-                        onChanged: (String? value) {
-                          setState(() {
-                            selectedGender = value!;
-                            genderId = genderType.indexOf(value);
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                h20,
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _ageController,
-                        keyboardType: TextInputType.number,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        onChanged: (value) {
-                          setState(() {
-                            _calculateDOB();
-                          });
-                        },
-                        validator: (value){
-                          if (value!.isEmpty) {
-                            return 'Age is required';
-                          }
-            
-                          if (!value.contains(RegExp(r'^\d+$'))) {
-                            return 'Invalid age';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                          labelText: 'Age',
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: ColorManager.black
-                              )
-                          ),
-                        ),
-                      ),
-                    ),
-                    w10,
-                    Expanded(
-                      child: DropdownButtonFormField<String>(
-                        isDense: true,
-                        padding: EdgeInsets.zero,
-                        value: selectedAge,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
-                          ),
-                        ),
-                        items: ageType
-                            .map(
-                              (String item) => DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(
-                              item,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        )
-                            .toList(),
-                        onChanged: (String? value) {
-                          setState(() {
-                            selectedAge = value!;
-                            ageId = ageType.indexOf(value)+1;
-                            _ageController2.clear();
-                            _dobController.clear();
-                            _ageController.clear();
-
-                          });
-
-                          print(ageId);
-                        },
-                      ),
-                    ),
-                    w10,
-                    Expanded(
-                      child: AbsorbPointer(
-                        absorbing: ageId  >= ageType.length,
+                  h20,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
                         child: TextFormField(
-                          controller: _ageController2,
-                          keyboardType: TextInputType.number,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator:(value){
-                            if(ageId >= ageType.length){
-                              return null;
+                          controller: _contactController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            // isDense: true,
+                            fillColor: ColorManager.white,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            labelText: 'Phone number',
+                          ),
+                          validator: (value){
+                            if(value!.trim().isEmpty){
+                              return 'Number is required';
                             }
-                            if(value!.isEmpty){
-                              return null;
-                            }
-                            if (!value.contains(RegExp(r'^\d+$'))) {
-                              return 'Please enter a valid number';
-                            }
-                            else if(ageId == 1 && int.parse(value) >=13){
-                              return 'Invalid month';
-                            }
-                            else if(ageId == 2 && int.parse(value) >=33){
-                              return 'Invalid day';
-                            }
-                            else if(ageId == 3 && int.parse(value) >=25){
-                              return 'Invalid hour';
-                            }
-            
                             return null;
                           },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                        ),
+                      ),
+                      w10,
+                      Expanded(
+                        child: DropdownButtonFormField<String>(
+                          isDense: true,
+                          padding: EdgeInsets.zero,
+                          value: selectedGender,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value){
+                            if(selectedGender == genderType[0]){
+                              return 'Please select a Gender';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            isDense: true,
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
+                            ),
+                            labelText: 'Gender'
+                          ),
+                          items: genderType
+                              .map(
+                                (String item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                              ),
+                            ),
+                          )
+                              .toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              selectedGender = value!;
+                              genderId = genderType.indexOf(value);
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  h20,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _ageController,
+                          keyboardType: TextInputType.number,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           onChanged: (value) {
                             setState(() {
                               _calculateDOB();
                             });
                           },
+                          validator: (value){
+                            if (value!.isEmpty) {
+                              return 'Age is required';
+                            }
+
+                            if (!value.contains(RegExp(r'^\d+$'))) {
+                              return 'Invalid age';
+                            }
+                            return null;
+                          },
                           decoration: InputDecoration(
                             floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                            labelText: ageId  >= ageType.length ? '-----' : ageType[ageId ],
+                            labelText: 'Age',
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(
@@ -543,199 +470,179 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                h20,
-                TextFormField(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Date is required';
-                    }
-            
-                    // Create a regular expression pattern to match 'yyyy-MM-dd' format
-                    final pattern = r'^\d{4}-\d{2}-\d{2}$';
-                    final regex = RegExp(pattern);
-            
-                    if (!regex.hasMatch(value)) {
-                      return 'Invalid Date';
-                    }
-            
-                    // Split the date string into parts
-                    final dateParts = value.split('-');
-            
-                    // Ensure there are three parts (year, month, day)
-                    if (dateParts.length != 3) {
-                      return 'Invalid Date';
-                    }
-            
-                    final year = int.tryParse(dateParts[0]);
-                    final month = int.tryParse(dateParts[1]);
-                    final day = int.tryParse(dateParts[2]);
-            
-                    if (year == null || month == null || day == null) {
-                      return 'Invalid Date';
-                    }
-            
-                    // Check if the month is invalid
-                    if (month < 1 || month > 12) {
-                      return 'Invalid Month';
-                    }
-            
-                    // Check if the day is invalid for the selected month
-                    if (day < 1 || day > DateTime(year, month + 1, 0).day) {
-                      return 'Day must be between 1 and ${DateTime(year, month, 0).day}';
-                    }
-            
-                    // Get the current date
-                    final currentDate = DateTime.now();
-            
-                    // Check if the selected date is in the future
-                    if (DateTime(year, month, day).isAfter(currentDate)) {
-                      return 'Date cannot be in the future';
-                    }
-            
-            
-                    return null;
-                  },
-                  onChanged: (value) {
-                    setState(() {
-                      _calculateAge();
-                    });
-                  },
-                  inputFormatters: [
-                    DateInputFormatter()
-                  ],
-                  controller: _dobController,
-                  decoration: InputDecoration(
-                    labelText: 'DOB',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                            color: ColorManager.primary
-                        )
-                    ),
-                    hintText: 'YYYY-MM-DD',
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.calendar_today,color: ColorManager.primary,),
-                      onPressed: () => _selectDate(context, _dobController),
-                    ),
-                  ),
-                ),
-                h20,
-                countryProvider.when(
-                    data: (data){
-                      if(data.isEmpty){
-                        return SizedBox();
-                      }
-                      else{
-                        return DropdownSearch<String>(
-
-                          items: data.map((e) => e.countryName).toList(),
-                          dropdownDecoratorProps: DropDownDecoratorProps(
-                            dropdownSearchDecoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color:  ColorManager.accentGreen.withOpacity(0.5)
-                                    ),
-                                    borderRadius: BorderRadius.circular(10)
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color:  ColorManager.accentGreen.withOpacity(0.5)
-                                    ),
-                                    borderRadius: BorderRadius.circular(10)
-                                ),
-                                labelText: "Country",
-                                labelStyle: getRegularStyle(color: ColorManager.primary)
+                      w10,
+                      Expanded(
+                        child: DropdownButtonFormField<String>(
+                          isDense: true,
+                          padding: EdgeInsets.zero,
+                          value: selectedAge,
+                          decoration: InputDecoration(
+                            isDense: true,
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
                             ),
                           ),
-                          onChanged: (value) {
+                          items: ageType
+                              .map(
+                                (String item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          )
+                              .toList(),
+                          onChanged: (String? value) {
                             setState(() {
-                              countryName = value!;
+                              selectedAge = value!;
+                              ageId = ageType.indexOf(value)+1;
+                              _ageController2.clear();
+                              _dobController.clear();
+                              _ageController.clear();
+
                             });
-                            final selected = data.firstWhereOrNull((element) => element.countryName.contains(value!));
-                            if(selected != null){
+
+                            print(ageId);
+                          },
+                        ),
+                      ),
+                      w10,
+                      Expanded(
+                        child: AbsorbPointer(
+                          absorbing: ageId  >= ageType.length,
+                          child: TextFormField(
+                            controller: _ageController2,
+                            keyboardType: TextInputType.number,
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            validator:(value){
+                              if(ageId >= ageType.length){
+                                return null;
+                              }
+                              if(value!.isEmpty){
+                                return null;
+                              }
+                              if (!value.contains(RegExp(r'^\d+$'))) {
+                                return 'Please enter a valid number';
+                              }
+                              else if(ageId == 1 && int.parse(value) >=13){
+                                return 'Invalid month';
+                              }
+                              else if(ageId == 2 && int.parse(value) >=33){
+                                return 'Invalid day';
+                              }
+                              else if(ageId == 3 && int.parse(value) >=25){
+                                return 'Invalid hour';
+                              }
+
+                              return null;
+                            },
+                            onChanged: (value) {
                               setState(() {
-                                countryId = selected.countryId;
-
+                                _calculateDOB();
                               });
-                            }
-
-                          },
-                          validator: (value){
-
-                            return null;
-                          },
-                          autoValidateMode: AutovalidateMode.onUserInteraction,
-
-
-                          selectedItem:  countryName,
-                          popupProps: const PopupProps<String>.menu(
-
-                            showSearchBox: true,
-                            fit: FlexFit.loose,
-                            constraints: BoxConstraints(maxHeight: 350),
-                            showSelectedItems: true,
-                            searchFieldProps: TextFieldProps(
-                              style: TextStyle(
-                                fontSize: 18,
+                            },
+                            decoration: InputDecoration(
+                              floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                              labelText: ageId  >= ageType.length ? '-----' : ageType[ageId ],
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                      color: ColorManager.black
+                                  )
                               ),
                             ),
                           ),
-                        );
-
-                      }
-                    },
-                    error: (error,stack)=>DropdownSearch(
-                      selectedItem: '$error',
-                      items: [],
-                      dropdownDecoratorProps: DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:  ColorManager.accentGreen.withOpacity(0.5)
-                                ),
-                                borderRadius: BorderRadius.circular(10)
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:  ColorManager.accentGreen.withOpacity(0.5)
-                                ),
-                                borderRadius: BorderRadius.circular(10)
-                            ),
-                            labelText: "Country",
-                            labelStyle: getRegularStyle(color: ColorManager.primary)
                         ),
+                      ),
+                    ],
+                  ),
+                  h20,
+                  TextFormField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Date is required';
+                      }
+
+                      // Create a regular expression pattern to match 'yyyy-MM-dd' format
+                      final pattern = r'^\d{4}-\d{2}-\d{2}$';
+                      final regex = RegExp(pattern);
+
+                      if (!regex.hasMatch(value)) {
+                        return 'Invalid Date';
+                      }
+
+                      // Split the date string into parts
+                      final dateParts = value.split('-');
+
+                      // Ensure there are three parts (year, month, day)
+                      if (dateParts.length != 3) {
+                        return 'Invalid Date';
+                      }
+
+                      final year = int.tryParse(dateParts[0]);
+                      final month = int.tryParse(dateParts[1]);
+                      final day = int.tryParse(dateParts[2]);
+
+                      if (year == null || month == null || day == null) {
+                        return 'Invalid Date';
+                      }
+
+                      // Check if the month is invalid
+                      if (month < 1 || month > 12) {
+                        return 'Invalid Month';
+                      }
+
+                      // Check if the day is invalid for the selected month
+                      if (day < 1 || day > DateTime(year, month + 1, 0).day) {
+                        return 'Day must be between 1 and ${DateTime(year, month, 0).day}';
+                      }
+
+                      // Get the current date
+                      final currentDate = DateTime.now();
+
+                      // Check if the selected date is in the future
+                      if (DateTime(year, month, day).isAfter(currentDate)) {
+                        return 'Date cannot be in the future';
+                      }
+
+
+                      return null;
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        _calculateAge();
+                      });
+                    },
+                    inputFormatters: [
+                      DateInputFormatter()
+                    ],
+                    controller: _dobController,
+                    decoration: InputDecoration(
+                      labelText: 'DOB',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                              color: ColorManager.primary
+                          )
+                      ),
+                      hintText: 'YYYY-MM-DD',
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.calendar_today,color: ColorManager.primary,),
+                        onPressed: () => _selectDate(context, _dobController),
                       ),
                     ),
-                    loading: ()=>DropdownSearch(
-                      selectedItem: 'Loading',
-                      items: [],
-                      dropdownDecoratorProps: DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:  ColorManager.accentGreen.withOpacity(0.5)
-                                ),
-                                borderRadius: BorderRadius.circular(10)
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:  ColorManager.accentGreen.withOpacity(0.5)
-                                ),
-                                borderRadius: BorderRadius.circular(10)
-                            ),
-                            labelText: "Country",
-                            labelStyle: getRegularStyle(color: ColorManager.primary)
-                        ),
-                      ),
-                    )
-                ),
-                h20,
-                if(countryName == 'NEPAL')
-                  addressProvider.when(
+                  ),
+                  h20,
+                  countryProvider.when(
                       data: (data){
                         if(data.isEmpty){
                           return SizedBox();
@@ -743,7 +650,7 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                         else{
                           return DropdownSearch<String>(
 
-                            items: data.map((e) => e).toList(),
+                            items: data.map((e) => e.countryName).toList(),
                             dropdownDecoratorProps: DropDownDecoratorProps(
                               dropdownSearchDecoration: InputDecoration(
                                   border: OutlineInputBorder(
@@ -758,31 +665,20 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                                       ),
                                       borderRadius: BorderRadius.circular(10)
                                   ),
-                                  labelText: "Address",
+                                  labelText: "Country",
                                   labelStyle: getRegularStyle(color: ColorManager.primary)
                               ),
                             ),
                             onChanged: (value) {
                               setState(() {
-                                address = value!;
+                                countryName = value!;
                               });
-                              print(address);
-                              print(value!.split('(').first.toLowerCase().trim());
-                              print(value.split('(').last.split(')').first.toLowerCase().trim());
-
-                              final selected = municipalities.firstWhereOrNull((element) => element.municipalityName.toLowerCase().trim() == value.split('(').first.toLowerCase().trim() && element.districtName.toLowerCase().trim() == value.split('(').last.split(')').first.toLowerCase().trim());
-                              // final selected = municipalities.firstWhereOrNull((element) => element.municipalityName.toLowerCase().trim() == 'gokarneshwor' && element.districtName.toLowerCase().trim() == 'kathmandu');
+                              final selected = data.firstWhereOrNull((element) => element.countryName.contains(value!));
                               if(selected != null){
                                 setState(() {
-                                  municipalId = selected.municipalityId;
-                                  districtId = selected.districtId;
-                                  provinceId = districts.firstWhere((element) => element.districtId == districtId).provinceId;
+                                  countryId = selected.countryId;
 
                                 });
-                                print('$municipalId , $districtId , $provinceId');
-                              }
-                              else{
-                                print('no address set');
                               }
 
                             },
@@ -793,7 +689,7 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                             autoValidateMode: AutovalidateMode.onUserInteraction,
 
 
-                            selectedItem: address == null ? data.first : address,
+                            selectedItem:  countryName,
                             popupProps: const PopupProps<String>.menu(
 
                               showSearchBox: true,
@@ -807,6 +703,7 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                               ),
                             ),
                           );
+
                         }
                       },
                       error: (error,stack)=>DropdownSearch(
@@ -854,123 +751,333 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                         ),
                       )
                   ),
-                if(countryName == 'NEPAL')
                   h20,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 100,
-                      child: TextFormField(
-                        controller: _wardController,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value){
-                          if (value!.trim().isEmpty) {
-                            return 'Ward no. is required';
+                  if(countryName == 'NEPAL')
+                    addressProvider.when(
+                        data: (data){
+                          if(data.isEmpty){
+                            return SizedBox();
                           }
+                          else{
+                            return DropdownSearch<String>(
 
-                          if (!value.contains(RegExp(r'^\d+$')))  {
-                            return 'Invalid Ward No.';
+                              items: data.map((e) => e).toList(),
+                              dropdownDecoratorProps: DropDownDecoratorProps(
+                                dropdownSearchDecoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color:  ColorManager.accentGreen.withOpacity(0.5)
+                                        ),
+                                        borderRadius: BorderRadius.circular(10)
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color:  ColorManager.accentGreen.withOpacity(0.5)
+                                        ),
+                                        borderRadius: BorderRadius.circular(10)
+                                    ),
+                                    labelText: "Address",
+                                    labelStyle: getRegularStyle(color: ColorManager.primary)
+                                ),
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  address = value!;
+                                });
+                                // print(address);
+                                // print(value!.split('(').first.toLowerCase().trim());
+                                // print(value.split('(').last.split(')').first.toLowerCase().trim());
+
+                                final selected = municipalities.firstWhereOrNull((element) => element.municipalityName.toLowerCase().trim() == value?.split('(').first.toLowerCase().trim() && element.districtName.toLowerCase().trim() == value?.split('(').last.split(')').first.toLowerCase().trim());
+                                // final selected = municipalities.firstWhereOrNull((element) => element.municipalityName.toLowerCase().trim() == 'gokarneshwor' && element.districtName.toLowerCase().trim() == 'kathmandu');
+                                if(selected != null){
+                                  setState(() {
+                                    municipalId = selected.municipalityId;
+                                    districtId = selected.districtId;
+                                    provinceId = districts.firstWhere((element) => element.districtId == districtId).provinceId;
+
+                                  });
+                                  print('$municipalId , $districtId , $provinceId');
+                                }
+                                else{
+                                  print('no address set');
+                                }
+
+                              },
+                              validator: (value){
+
+                                return null;
+                              },
+                              autoValidateMode: AutovalidateMode.onUserInteraction,
+
+
+                              selectedItem: address == null ? data.first : address,
+                              popupProps: const PopupProps<String>.menu(
+
+                                showSearchBox: true,
+                                fit: FlexFit.loose,
+                                constraints: BoxConstraints(maxHeight: 350),
+                                showSelectedItems: true,
+                                searchFieldProps: TextFieldProps(
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                            );
                           }
-                          return null;
                         },
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: ColorManager.black.withOpacity(0.5)
-                              )
+                        error: (error,stack)=>DropdownSearch(
+                          selectedItem: '$error',
+                          items: [],
+                          dropdownDecoratorProps: DropDownDecoratorProps(
+                            dropdownSearchDecoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color:  ColorManager.accentGreen.withOpacity(0.5)
+                                    ),
+                                    borderRadius: BorderRadius.circular(10)
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color:  ColorManager.accentGreen.withOpacity(0.5)
+                                    ),
+                                    borderRadius: BorderRadius.circular(10)
+                                ),
+                                labelText: "Address",
+                                labelStyle: getRegularStyle(color: ColorManager.primary)
+                            ),
                           ),
-                          floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: ColorManager.black
-                              )
-                          ),
-                          labelText: 'Ward',
-                          labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
                         ),
-                      ),
+                        loading: ()=>DropdownSearch(
+                          selectedItem: 'Loading',
+                          items: [],
+                          dropdownDecoratorProps: DropDownDecoratorProps(
+                            dropdownSearchDecoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color:  ColorManager.accentGreen.withOpacity(0.5)
+                                    ),
+                                    borderRadius: BorderRadius.circular(10)
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color:  ColorManager.accentGreen.withOpacity(0.5)
+                                    ),
+                                    borderRadius: BorderRadius.circular(10)
+                                ),
+                                labelText: "Country",
+                                labelStyle: getRegularStyle(color: ColorManager.primary)
+                            ),
+                          ),
+                        )
                     ),
-                    w10,
-                    Expanded(
-                      child: TextFormField(
-                        controller: _addressController,
-                        keyboardType: TextInputType.text,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value){
-                          if (value!.trim().isEmpty) {
-                            return 'Address is required';
-                          }
+                  if(countryName == 'NEPAL')
+                    h20,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 100,
+                        child: TextFormField(
+                          controller: _wardController,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value){
+                            if (value!.trim().isEmpty) {
+                              return 'Ward no. is required';
+                            }
 
-                          if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                            return 'Please enter a valid Address';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: ColorManager.black.withOpacity(0.5)
-                              )
+                            if (!value.contains(RegExp(r'^\d+$')))  {
+                              return 'Invalid Ward No.';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: ColorManager.black.withOpacity(0.5)
+                                )
+                            ),
+                            floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: ColorManager.black
+                                )
+                            ),
+                            labelText: 'Ward',
+                            labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
                           ),
-                          floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: ColorManager.black
-                              )
-                          ),
-                          labelText: 'Local Address',
-                          labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                h20,
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: ColorManager.white,
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        onPressed: () {},
-                        child: Text(
-                          'Cancel',style: TextStyle(color: ColorManager.black),
-                        ),
-                      ),
-                    ),
-                    w10,
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: ColorManager.primary,
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        onPressed: () {},
-                        child: Text(
-                          'Save',style: TextStyle(color: ColorManager.white),
-                        ),
-                      ),
-                    ),
+                      w10,
+                      Expanded(
+                        child: TextFormField(
+                          controller: _addressController,
+                          keyboardType: TextInputType.text,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value){
+                            if (value!.trim().isEmpty) {
+                              return 'Address is required';
+                            }
 
-                  ],
-                ),
-                h100,
-              ],
+                            if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                              return 'Please enter a valid Address';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: ColorManager.black.withOpacity(0.5)
+                                )
+                            ),
+                            floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: ColorManager.black
+                                )
+                            ),
+                            labelText: 'Local Address',
+                            labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  h20,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorManager.white,
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'Cancel',style: TextStyle(color: ColorManager.black),
+                          ),
+                        ),
+                      ),
+                      w10,
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorManager.primary,
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          onPressed: ()async {
+                            final scaffoldMessage = ScaffoldMessenger.of(context);
+                            if(_formKey.currentState!.validate()){
+                              UpdateProfileModel profileData = UpdateProfileModel(
+                                  id: widget.user.id!,
+                                  patientID: widget.user.username!,
+                                  firstName: _firstNameController.text.trim(),
+                                  lastName: _lastNameController.text.trim(),
+                                  dob: _dobController.text.trim(),
+                                  countryID: countryId!,
+                                  districtID: districtId!,
+                                  ward: int.parse(_wardController.text.trim()),
+                                  localAddress: _addressController.text.trim(),
+                                  email: '',
+                                  contact: _contactController.text.trim(),
+                                  genderID: genderId!,
+                                  entryDate: widget.user.entryDate!,
+                                  flag: ''
+                              );
+
+                              final response = await PatientUpdateService().updateProfile(updateProfile: profileData);
+                              if(response.isLeft()){
+                                final leftValue = response.fold((l) => l, (r) => null);
+                                scaffoldMessage.showSnackBar(
+                                  SnackbarUtil.showFailureSnackbar(
+                                    message: '$leftValue',
+                                    duration: const Duration(milliseconds: 1400),
+                                  ),
+                                );
+                              }
+                              else{
+                                scaffoldMessage.showSnackBar(
+                                  SnackbarUtil.showSuccessSnackbar(
+                                    message: 'Profile Updated',
+                                    duration: const Duration(milliseconds: 1400),
+                                  ),
+                                );
+                                User updateUser = User(
+                                  userID: widget.user.userID,
+                                  validDate: widget.user.validDate,
+                                  entryDate: widget.user.entryDate,
+                                  code: widget.user.code,
+                                  isActive: widget.user.isActive,
+                                  ageGender: widget.user.ageGender,
+                                  contactNo: _contactController.text.trim(),
+                                  countryID: countryId,
+                                  districtID: districtId,
+                                  firstName: _firstNameController.text.trim(),
+                                  lastName: _lastNameController.text.trim(),
+                                  genderID: genderId,
+                                  id: widget.user.id,
+                                  email: widget.user.email,
+                                  typeID: widget.user.typeID,
+                                  provinceID: provinceId,
+                                  municipalityID: municipalId,
+                                  orgId: widget.user.orgId,
+                                  joinedDate: widget.user.joinedDate,
+                                  designation: widget.user.designation,
+                                  flag: widget.user.flag,
+                                  liscenceNo: widget.user.liscenceNo,
+                                  localAddress: _addressController.text.trim(),
+                                  natureID: widget.user.natureID,
+                                  panNo: widget.user.panNo,
+                                  parentID: widget.user.parentID,
+                                  prefixSettingID: widget.user.prefixSettingID,
+                                  password: widget.user.password,
+                                  referredID: widget.user.referredID,
+                                  profileImage: widget.user.profileImage,
+                                  roleID: widget.user.roleID,
+                                  signatureImage: widget.user.signatureImage,
+                                  token: widget.user.token,
+                                  username: widget.user.username,
+                                  wardNo: int.parse(_wardController.text.trim())
+
+                                );
+
+                                final userHive = Hive.box<User>('session');
+
+                                userHive.putAt(0, updateUser);
+
+                              }
+
+                            }
+
+
+
+                          },
+                          child: Text(
+                            'Save',style: TextStyle(color: ColorManager.white),
+                          ),
+                        ),
+                      ),
+
+                    ],
+                  ),
+                  h100,
+                ],
+              ),
             ),
           ),
         ),
