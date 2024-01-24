@@ -245,8 +245,10 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                            PrefixSettingID: user.prefixSettingID!,
                            token: user.token!,
                            flag: 'UPDATE',
-                           profileImageUrl: profileProvider == null ? tempProfileImage == null? null : XFile('${Api.baseUrl}/${user.profileImage}'): profileProvider ,
-                           signatureImageUrl: signatureProvider == null ? tempSignImage == null? null : XFile('${Api.baseUrl}/${user.signatureImage}'): signatureProvider,
+                           profileImageUrl: null,
+                           // profileImageUrl: profileProvider == null ? tempProfileImage == null? null : XFile('${Api.baseUrl}/${user.profileImage}'): profileProvider ,
+                           // signatureImageUrl: signatureProvider == null ? tempSignImage == null? null : XFile('${Api.baseUrl}/${user.signatureImage}'): signatureProvider,
+                           signatureImageUrl: null,
                            panNo:int.parse(_panController.text)
                        );
 
@@ -346,72 +348,72 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                                   : null,
                             ),
                           ),
-                          Positioned(
-                            bottom: 4,
-                            right: 0,
-                            child: GestureDetector(
-                              onTap: () async {
-                                await showModalBottomSheet(
-                                  isDismissible: true,
-                                  context: context,
-                                  builder: (context) {
-                                    return Container(
-                                      padding: EdgeInsets.all(16),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          ListTile(
-                                            leading: Icon(Icons.photo_library),
-                                            title: Text('Pick from Gallery'),
-                                            onTap: () {
-                                              ref.read(imageProvider.notifier).pickAnImage();
-                                              if (profileProvider != null) {
-                                                setState(() {
-                                                  tempProfileImage = profileProvider.path;
-                                                });
-                                              }
-
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                          ListTile(
-                                            leading: Icon(Icons.camera_alt),
-                                            title: Text('Capture from Camera'),
-                                            onTap: () {
-                                              ref.read(imageProvider.notifier).camera();
-                                              if (profileProvider != null) {
-                                                setState(() {
-                                                  tempProfileImage = profileProvider.path;
-                                                });
-                                              }
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                              child: Container(
-                                height: 36.h,
-                                width: 36.h,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(30.r),
-                                    border: Border.all(
-                                        color: Colors.white,
-                                        width: 2.w
-                                    )
-                                ),
-                                child: Badge(
-                                  label: Icon(Icons.edit_outlined, color: Colors.white, size: 20.h,),
-                                  backgroundColor: ColorManager.primary,
-                                  largeSize: 30,
-                                ),
-                              ),
-                            ),
-                          ),
+                          // Positioned(
+                          //   bottom: 4,
+                          //   right: 0,
+                          //   child: GestureDetector(
+                          //     onTap: () async {
+                          //       await showModalBottomSheet(
+                          //         isDismissible: true,
+                          //         context: context,
+                          //         builder: (context) {
+                          //           return Container(
+                          //             padding: EdgeInsets.all(16),
+                          //             child: Column(
+                          //               mainAxisSize: MainAxisSize.min,
+                          //               children: [
+                          //                 ListTile(
+                          //                   leading: Icon(Icons.photo_library),
+                          //                   title: Text('Pick from Gallery'),
+                          //                   onTap: () {
+                          //                     ref.read(imageProvider.notifier).pickAnImage();
+                          //                     if (profileProvider != null) {
+                          //                       setState(() {
+                          //                         tempProfileImage = profileProvider.path;
+                          //                       });
+                          //                     }
+                          //
+                          //                     Navigator.pop(context);
+                          //                   },
+                          //                 ),
+                          //                 ListTile(
+                          //                   leading: Icon(Icons.camera_alt),
+                          //                   title: Text('Capture from Camera'),
+                          //                   onTap: () {
+                          //                     ref.read(imageProvider.notifier).camera();
+                          //                     if (profileProvider != null) {
+                          //                       setState(() {
+                          //                         tempProfileImage = profileProvider.path;
+                          //                       });
+                          //                     }
+                          //                     Navigator.pop(context);
+                          //                   },
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //           );
+                          //         },
+                          //       );
+                          //     },
+                          //     child: Container(
+                          //       height: 36.h,
+                          //       width: 36.h,
+                          //       decoration: BoxDecoration(
+                          //           color: Colors.white,
+                          //           borderRadius: BorderRadius.circular(30.r),
+                          //           border: Border.all(
+                          //               color: Colors.white,
+                          //               width: 2.w
+                          //           )
+                          //       ),
+                          //       child: Badge(
+                          //         label: Icon(Icons.edit_outlined, color: Colors.white, size: 20.h,),
+                          //         backgroundColor: ColorManager.primary,
+                          //         largeSize: 30,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -940,94 +942,94 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                       ),
                     ),
                     h10,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: ColorManager.primary,
-                            elevation: 5,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          onPressed: () async {
-                            await showModalBottomSheet(
-                              isDismissible: true,
-                              context: context,
-                              builder: (context) {
-                                return Container(
-                                  padding: EdgeInsets.all(16),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      ListTile(
-                                        leading: Icon(Icons.photo_library),
-                                        title: Text('Pick from Gallery'),
-                                        onTap: () {
-                                          ref.read(imageProvider2.notifier).pickAnImage();
-                                          if (signatureProvider != null) {
-                                            setState(() {
-                                              tempSignImage = signatureProvider.path;
-                                            });
-                                          }
-
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                      ListTile(
-                                        leading: Icon(Icons.camera_alt),
-                                        title: Text('Capture from Camera'),
-                                        onTap: () {
-                                          ref.read(imageProvider2.notifier).camera();
-                                          if (signatureProvider != null) {
-                                            setState(() {
-                                              tempSignImage = signatureProvider.path;
-                                            });
-                                          }
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          child: Text(
-                            'Update Signature Picture',
-                            style: getRegularStyle(
-                                color: ColorManager.white,
-                                fontSize: widget.isWideScreen ? 14 : 14.sp),
-                          ),
-                        ),
-                        // w10,
-                        // ElevatedButton(
-                        //   style: ElevatedButton.styleFrom(
-                        //     backgroundColor: ColorManager.white,
-                        //     elevation: 5,
-                        //     shape: RoundedRectangleBorder(
-                        //       borderRadius: BorderRadius.circular(10),
-                        //     ),
-                        //   ),
-                        //   onPressed: () {
-                        //     if (user.signatureImage != null) {
-                        //       setState(() {
-                        //         tempSignImage = null;
-                        //       });
-                        //     }
-                        //     ref.invalidate(imageProvider2);
-                        //   },
-                        //   child: Text(
-                        //     'Remove Signature Picture',
-                        //     style: getRegularStyle(
-                        //         color: ColorManager.black,
-                        //         fontSize: widget.isWideScreen ? 14 : 14.sp),
-                        //   ),
-                        // ),
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   crossAxisAlignment: CrossAxisAlignment.center,
+                    //   children: [
+                    //     ElevatedButton(
+                    //       style: ElevatedButton.styleFrom(
+                    //         backgroundColor: ColorManager.primary,
+                    //         elevation: 5,
+                    //         shape: RoundedRectangleBorder(
+                    //           borderRadius: BorderRadius.circular(10),
+                    //         ),
+                    //       ),
+                    //       onPressed: () async {
+                    //         await showModalBottomSheet(
+                    //           isDismissible: true,
+                    //           context: context,
+                    //           builder: (context) {
+                    //             return Container(
+                    //               padding: EdgeInsets.all(16),
+                    //               child: Column(
+                    //                 mainAxisSize: MainAxisSize.min,
+                    //                 children: [
+                    //                   ListTile(
+                    //                     leading: Icon(Icons.photo_library),
+                    //                     title: Text('Pick from Gallery'),
+                    //                     onTap: () {
+                    //                       ref.read(imageProvider2.notifier).pickAnImage();
+                    //                       if (signatureProvider != null) {
+                    //                         setState(() {
+                    //                           tempSignImage = signatureProvider.path;
+                    //                         });
+                    //                       }
+                    //
+                    //                       Navigator.pop(context);
+                    //                     },
+                    //                   ),
+                    //                   ListTile(
+                    //                     leading: Icon(Icons.camera_alt),
+                    //                     title: Text('Capture from Camera'),
+                    //                     onTap: () {
+                    //                       ref.read(imageProvider2.notifier).camera();
+                    //                       if (signatureProvider != null) {
+                    //                         setState(() {
+                    //                           tempSignImage = signatureProvider.path;
+                    //                         });
+                    //                       }
+                    //                       Navigator.pop(context);
+                    //                     },
+                    //                   ),
+                    //                 ],
+                    //               ),
+                    //             );
+                    //           },
+                    //         );
+                    //       },
+                    //       child: Text(
+                    //         'Update Signature Picture',
+                    //         style: getRegularStyle(
+                    //             color: ColorManager.white,
+                    //             fontSize: widget.isWideScreen ? 14 : 14.sp),
+                    //       ),
+                    //     ),
+                    //     // w10,
+                    //     // ElevatedButton(
+                    //     //   style: ElevatedButton.styleFrom(
+                    //     //     backgroundColor: ColorManager.white,
+                    //     //     elevation: 5,
+                    //     //     shape: RoundedRectangleBorder(
+                    //     //       borderRadius: BorderRadius.circular(10),
+                    //     //     ),
+                    //     //   ),
+                    //     //   onPressed: () {
+                    //     //     if (user.signatureImage != null) {
+                    //     //       setState(() {
+                    //     //         tempSignImage = null;
+                    //     //       });
+                    //     //     }
+                    //     //     ref.invalidate(imageProvider2);
+                    //     //   },
+                    //     //   child: Text(
+                    //     //     'Remove Signature Picture',
+                    //     //     style: getRegularStyle(
+                    //     //         color: ColorManager.black,
+                    //     //         fontSize: widget.isWideScreen ? 14 : 14.sp),
+                    //     //   ),
+                    //     // ),
+                    //   ],
+                    // ),
                     h20,
                     h100,
                     h100

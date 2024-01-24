@@ -204,7 +204,7 @@ class _GeneralDetailsState extends State<GeneralDetails> {
                        onPressed: ()=>Get.to(()=>EditGeneralReminder(reminderBox)),
                        child: Row(
                          mainAxisAlignment: MainAxisAlignment.center,
-                         crossAxisAlignment: CrossAxisAlignment.end,
+                         crossAxisAlignment: CrossAxisAlignment.center,
                          children: [
                            FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.white,size: 16,),
                            w10,
@@ -264,7 +264,7 @@ class _GeneralDetailsState extends State<GeneralDetails> {
                        },
                        child: Row(
                          mainAxisAlignment: MainAxisAlignment.center,
-                         crossAxisAlignment: CrossAxisAlignment.end,
+                         crossAxisAlignment: CrossAxisAlignment.center,
                          children: [
                            FaIcon(Icons.delete,color: ColorManager.white,size: 16,),
                            w10,

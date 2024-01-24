@@ -321,7 +321,7 @@ class _PatientDocumentPageState extends ConsumerState<PatientDocumentPage> {
                     color: ColorManager.black.withOpacity(0.8),
                   ),
                   ListView.builder(
-                    itemCount: reversedList.length > 5 ? 5 : reversedList.length,
+                    itemCount: reversedList.length ,
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),

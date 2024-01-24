@@ -1711,6 +1711,11 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
                               notificationLayout: NotificationLayout.Default,
                               //actionType : ActionType.DisabledAction,
                               color: Colors.black,
+                              category: NotificationCategory.Alarm,
+                              wakeUpScreen: true,
+                              timeoutAfter: Duration(minutes: 1),
+
+
                               //
                               backgroundColor: Colors.black,
                               // customSound: 'resource://raw/notif',
@@ -1823,6 +1828,10 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
                               notificationLayout: NotificationLayout.Default,
                               //actionType : ActionType.DisabledAction,
                               color: Colors.black,
+                              category: NotificationCategory.Alarm,
+                              wakeUpScreen: true,
+                              timeoutAfter: Duration(minutes: 1),
+
                               //
                               backgroundColor: Colors.black,
                               // customSound: 'resource://raw/notif',
@@ -1906,6 +1915,10 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
                               notificationLayout: NotificationLayout.Default,
                               //actionType : ActionType.DisabledAction,
                               color: Colors.black,
+                              category: NotificationCategory.Alarm,
+                              wakeUpScreen: true,
+                              timeoutAfter: Duration(minutes: 1),
+
                               //
                               backgroundColor: Colors.black,
                               // customSound: 'resource://raw/notif',

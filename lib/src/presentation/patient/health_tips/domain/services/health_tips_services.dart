@@ -23,7 +23,8 @@ class HealthTipServices{
           .map((e) => HealthTipsModel.fromJson(e))
           .toList();
       print(data);
-      final sortData = data.where((element) => DateTime.now().isBefore(element.toDate!) && DateTime.now().isAfter(element.validDate!)).toList();
+      final sortData = data.where((element) => DateTime.now().isAfter(element.validDate!)).toList();
+      // final sortData = data.where((element) => DateTime.now().isBefore(element.toDate!) && DateTime.now().isAfter(element.validDate!)).toList();
 
 
       return sortData;

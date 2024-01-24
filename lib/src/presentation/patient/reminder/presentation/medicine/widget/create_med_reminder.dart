@@ -1539,8 +1539,12 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                                 //actionType : ActionType.DisabledAction,
                                 color: Colors.black,
                                 category: NotificationCategory.Alarm,
+                                wakeUpScreen: true,
+                                timeoutAfter: Duration(minutes: 1),
 
-                                //
+
+                                displayOnForeground: true,
+                                displayOnBackground: true,
                                 backgroundColor: Colors.black,
                                 // customSound: 'resource://raw/notif',
                                 payload: {'actPag': 'myAct', 'actType': 'medicine'},
@@ -1551,12 +1555,14 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                                 month: scheduleList[i].month,
                                 day: scheduleList[i].day,
                                 hour: scheduleList[i].hour,
-                                minute: scheduleList[i].minute
+                                minute: scheduleList[i].minute,
+
                               );
 
                               contentList.add(content.id!);
 
                               await NotificationController.scheduleNotifications(context, schedule: schedule, content: content);
+
                             }
 
                             Reminder reminder = Reminder(
@@ -1651,6 +1657,9 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                                   //actionType : ActionType.DisabledAction,
                                   color: Colors.black,
                                   category: NotificationCategory.Alarm,
+                                  wakeUpScreen: true,
+                                  timeoutAfter: Duration(minutes: 1),
+
                                   backgroundColor: Colors.black,
                                   // customSound: 'resource://raw/notif',
                                   payload: {'actPag': 'myAct', 'actType': 'medicine'},
@@ -1731,6 +1740,10 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                                   notificationLayout: NotificationLayout.Default,
                                   //actionType : ActionType.DisabledAction,
                                   color: Colors.black,
+                                  category: NotificationCategory.Alarm,
+                                  wakeUpScreen: true,
+                                  timeoutAfter: Duration(minutes: 1),
+
                                   //
                                   backgroundColor: Colors.black,
                                   // customSound: 'resource://raw/notif',

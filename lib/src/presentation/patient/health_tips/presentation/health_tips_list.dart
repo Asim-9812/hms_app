@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -113,12 +114,12 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
 
               options: CarouselOptions(
                 // height: 150,
-                aspectRatio: 16/7,
+                aspectRatio: 16/5,
                 // enlargeCenterPage: true,
                 pageSnapping: true,
                 autoPlay:updatedList.length >1? true : false,
                 autoPlayCurve: Curves.fastOutSlowIn,
-                enableInfiniteScroll: true,
+                enableInfiniteScroll: false,
                 autoPlayAnimationDuration: Duration(milliseconds: 500),
                 viewportFraction: 1,
                 autoPlayInterval:Duration(seconds: 5) ,
@@ -136,7 +137,8 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
                 return Container(
                   width: double.infinity,
                   // height: 200,
-                  padding: EdgeInsets.only(left: 18.w, top: 8.h,bottom: 8.h),
+                  margin: EdgeInsets.symmetric(horizontal: 8),
+                  padding: EdgeInsets.only(left: 8.w, top: 8.h,bottom: 8.h),
                   decoration: BoxDecoration(
                     // image: DecorationImage(image: AssetImage(imageList[index]),fit: BoxFit.cover),
                     color: ColorManager.primary,
@@ -155,30 +157,29 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
                       alignment: Alignment.centerLeft,
                       child:
 
+                      //
+                      // HtmlWidget(
+                      //   tips.description!,
+                      //   textStyle: TextStyle(color: ColorManager.white),
+                      //   customStylesBuilder: (element) {
+                      //     if (element.localName == 'body') {
+                      //       // Set the maximum number of lines using CSS style
+                      //       return {'max-height': '1em', 'overflow': 'hidden'};
+                      //     }
+                      //     return null;
+                      //   },
+                      // )
 
-                        HtmlWidget(
-                            tips.description!,
-                          textStyle: TextStyle(color: ColorManager.white,overflow: TextOverflow.ellipsis),
+                      Html(
+                        data: '${tips.description}',style: {
+                            'body' : Style(
+                              color: ColorManager.white,
+                              fontSize: FontSize.large,
+                              maxLines: 2,
+                              textOverflow: TextOverflow.ellipsis,
 
-                          customStylesBuilder: (style){
-                            return {'color': 'white'};
-                          }
-                          ,
-
-                        ),
-
-
-
-                          // Html(data: '<div>${tips.description}</div>',style: {
-                          //   'body' : Style(
-                          //     color: ColorManager.white,
-                          //     fontSize: FontSize.medium,
-                          //     maxLines: 4,
-                          //     textOverflow: TextOverflow.ellipsis,
-                          //
-                          //   )
-                          // },)
-
+                            )
+                          },)
 
                       // Text(
                       //   tips.description ?? '',
@@ -193,16 +194,48 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(),
-                          Container(
-                              padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 8.h),
-                              decoration: BoxDecoration(
-                                  color: ColorManager.orange.withOpacity(0.7),
-                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10),bottomLeft: Radius.circular(10))
-                              ),
-                              child:
-
-                              tips.createdBy != null
-                                  ? Text(tips.createdBy!.split(' ').length>2?  'By ${tips.createdBy!.split(' ')[0]} ${tips.createdBy!.split(' ')[1]}' : 'By ${tips.createdBy}',style: getMediumStyle(color: ColorManager.white, fontSize: 16,),maxLines: 1,):null),
+                          InkWell(
+                            onTap: ()async{
+                              await showDialog(
+                                  context: context,
+                                  builder: (context){
+                                    return AlertDialog(
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 18),
+                                      title: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          Text('Health Tips'),
+                                          IconButton(onPressed: ()=>Navigator.pop(context), icon: Icon(CupertinoIcons.xmark_circle))
+                                        ],
+                                      ),
+                                      titlePadding: EdgeInsets.symmetric(vertical: 12,horizontal: 18),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          HtmlWidget(
+                                            tips.description!,
+                                            textStyle: TextStyle(color: ColorManager.black),
+                                          ),
+                                          const SizedBox(height: 20,),
+                                          Align(
+                                              alignment: Alignment.bottomRight,
+                                              child: Text('By ${tips.createdBy}')),
+                                          const SizedBox(height: 20,)
+                                        ],
+                                      ),
+                                    );
+                                  }
+                              );
+                            },
+                            child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 8.h),
+                                decoration: BoxDecoration(
+                                    color: ColorManager.orange.withOpacity(0.7),
+                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(10),bottomLeft: Radius.circular(10))
+                                ),
+                                child:Text('Read More',style: getMediumStyle(color: ColorManager.white, fontSize: 16,))),
+                          ),
                         ],
                       ),
                     )

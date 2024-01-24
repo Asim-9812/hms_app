@@ -103,7 +103,7 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
   void _addReminder(GeneralReminderModel reminder) async {
     final scaffoldMessage = ScaffoldMessenger.of(context);
     final reminderBox = Hive.box<GeneralReminderModel>('general_reminder_box');
-    print('user_id : ${reminder.userId}');
+    print('reminder id : ${reminder.reminderId}');
 
       await reminderBox.add(reminder);
     scaffoldMessage.showSnackBar(
@@ -720,6 +720,10 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
                                           .Default,
                                       color: Colors.black,
                                       category: NotificationCategory.Alarm,
+                                      timeoutAfter: Duration(minutes: 1),
+
+                                      wakeUpScreen: true,
+
 
                                       //
                                       backgroundColor: Colors.black,
@@ -796,6 +800,10 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
                                           .Default,
                                       color: Colors.black,
                                       category: NotificationCategory.Alarm,
+                                      timeoutAfter: Duration(minutes: 1),
+
+                                      wakeUpScreen: true,
+
                                       //
                                       backgroundColor: Colors.black,
                                       // customSound: 'resource://raw/notif',
@@ -899,6 +907,10 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
                                       //
                                       backgroundColor: Colors.black,
                                       category: NotificationCategory.Alarm,
+                                      timeoutAfter: Duration(minutes: 1),
+
+                                      wakeUpScreen: true,
+
                                       // customSound: 'resource://raw/notif',
                                       payload: {
                                         'actPag': 'myAct',
@@ -986,6 +998,11 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
                                           .Default,
                                       color: Colors.black,
                                       category: NotificationCategory.Alarm,
+                                      timeoutAfter: Duration(minutes: 1),
+
+                                      wakeUpScreen: true,
+
+
                                       //
                                       backgroundColor: Colors.black,
                                       // customSound: 'resource://raw/notif',
@@ -1001,7 +1018,8 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
                                         month: scheduleList[i].month,
                                         day: scheduleList[i].day,
                                         hour: scheduleList[i].hour,
-                                        minute: scheduleList[i].minute
+                                        minute: scheduleList[i].minute,
+
                                     );
 
                                     contentList.add(content.id!);

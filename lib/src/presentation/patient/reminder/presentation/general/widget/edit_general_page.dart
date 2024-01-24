@@ -62,6 +62,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
   DateTime? startDateIntake;
 
   DateTime? setTime ;
+  DateTime? tempTime ;
 
   String? selectedInitialReminderType;
   int? selectedInitialReminderTypeId;
@@ -76,6 +77,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
 
   bool isPostingData = false;
 
+  DateTime todaysDate = DateTime.now();
 
 
 
@@ -96,11 +98,12 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
     _titleController.text = reminder.title;
     _descriptionController.text = reminder.description;
     _startTimeController.text = reminder.time;
-    _startDateController.text = reminder.startDate.toString();
+    _startDateController.text = DateFormat('yyyy-MM-dd').format(reminder.startDate);
     startDateIntake =reminder.startDate;
     selectedPatternName = reminder.reminderPattern.patternName;
     selectedPatternId = reminder.reminderPattern.reminderPatternId;
-    setTime = DateFormat('hh:mm a').parse(reminder.time);
+    tempTime = DateFormat('hh:mm a').parse(reminder.time);
+    setTime = DateTime(startDateIntake!.year,startDateIntake!.month,startDateIntake!.day,tempTime!.hour,tempTime!.minute);
     if(reminder.reminderPattern.interval != null){
       _intervalDurationController.text = reminder.reminderPattern.interval.toString();
     }
@@ -135,7 +138,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
     final reminderBox = Hive.box<GeneralReminderModel>('general_reminder_box');
     // Get the index of the reminder to update based on its 'reminderId' (you should replace 1002 with the actual 'reminderId' you want to update)
     final int indexToUpdate = reminderBox.values.toList().indexWhere((element) => element.reminderId == reminder.reminderId);
-
+    print(reminder.reminderId);
     if (indexToUpdate != -1) {
       // If the reminder is found, update it
       reminderBox.putAt(indexToUpdate, reminder);
@@ -456,148 +459,148 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                   ),
 
                   h20,
-                  if(widget.reminder.reminderPattern.reminderPatternId == 1 || widget.reminder.reminderPattern.reminderPatternId == 2 )
-                  Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(' Remind me before (optional)',style: getRegularStyle(color: ColorManager.black,fontSize: 16.sp),)),
-                  if(widget.reminder.reminderPattern.reminderPatternId == 1 || widget.reminder.reminderPattern.reminderPatternId == 2 )
-                  h10,
-                  if(widget.reminder.reminderPattern.reminderPatternId == 1 || widget.reminder.reminderPattern.reminderPatternId == 2 )
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-
-
-                      Expanded(
-                        child: TextFormField(
-                          controller: _initialReminderController,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                             focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ColorManager.black.withOpacity(0.5)
-                          )
-                      ),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
-                                    color: ColorManager.primary
-                                )
-                            ),
-                            enabledBorder:  OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
-                                    color: ColorManager.primaryDark
-                                )
-                            ),
-
-                          ),
-                          validator: (value){
-                            if(value!.isEmpty){
-                              return null;
-                            }
-                            if(selectedInitialReminderTypeId == 2){
-                              if(int.parse(value)>7){
-                                return 'Days must be less than 8';
-                              }
-                              if(startDateIntake!.difference(DateTime.now()).inDays < int.parse(value)){
-                                return 'Select a time that is at least a day from today';
-                              }
-                            }
-                            if(selectedInitialReminderTypeId == 1){
-                              if(int.parse(value)>24){
-                                return 'Hours must be less than 24';
-                              }
-                              if(setTime!.difference(DateTime.now()).inHours < int.parse(value)){
-                                return 'Select a time that is at least a hour from now';
-                              }
-                            }
-                            if(selectedInitialReminderTypeId == 0){
-                              if(int.parse(value)>60){
-                                return 'Minutes must be less than 60';
-                              }
-                              if(setTime!.difference(DateTime.now()).inMinutes < int.parse(value)){
-                                return 'Select a time that is at least a minute from now';
-                              }
-                            }
-                            if (!value.contains(RegExp(r'^\d+$'))) {
-                              return 'Invalid value';
-                            }
-                            else if (int.parse(value) <= 0) {
-                              return 'Must be greater than 0';
-                            }
-                            return null;
-                          },
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          onChanged: (value){
-                            // ref.read(itemProvider.notifier).updateStrength(value);
-                          },
-                        ),
-                      ),
-                      w10,
-                      Expanded(
-                        child: DropdownButtonFormField(
-                          menuMaxHeight: 200,
-                          isDense: true,
-                          value:selectedInitialReminderType ,
-                          decoration: InputDecoration(
-                             focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ColorManager.black.withOpacity(0.5)
-                          )
-                      ),
-
-                              isDense: true,
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                      color: ColorManager.primaryDark
-                                  )
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                      color: ColorManager.primaryDark
-                                  )
-                              )
-                          ),
-
-                          items: initialReminderType
-                              .map(
-                                (String item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: getRegularStyle(color: Colors.black,fontSize: 16.sp),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ).toList(),
-                          onChanged: (value){
-                            setState(() {
-                              selectedInitialReminderType = value!;
-                              selectedInitialReminderTypeId = initialReminderType.indexOf(value);
-                            });
-                            // ref.read(itemProvider.notifier).updateStrengthUnit(value!);
-
-                          },
-                          validator: (value){
-                            if(_initialReminderController.text.isNotEmpty){
-                              if(selectedInitialReminderType == null){
-                                return 'Please select a unit';
-                              }
-
-                            }
-                            return null;
-                          },
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                        ),
-                      ),
-                    ],
-                  ),
-                  h10,
+                  // if(widget.reminder.reminderPattern.reminderPatternId == 1 || widget.reminder.reminderPattern.reminderPatternId == 2 )
+                  // Align(
+                  //     alignment: Alignment.centerLeft,
+                  //     child: Text(' Remind me before (optional)',style: getRegularStyle(color: ColorManager.black,fontSize: 16.sp),)),
+                  // if(widget.reminder.reminderPattern.reminderPatternId == 1 || widget.reminder.reminderPattern.reminderPatternId == 2 )
+                  // h10,
+                  // if(widget.reminder.reminderPattern.reminderPatternId == 1 || widget.reminder.reminderPattern.reminderPatternId == 2 )
+                  // Row(
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //
+                  //
+                  //     Expanded(
+                  //       child: TextFormField(
+                  //         controller: _initialReminderController,
+                  //         keyboardType: TextInputType.number,
+                  //         decoration: InputDecoration(
+                  //            focusedBorder: OutlineInputBorder(
+                  //         borderRadius: BorderRadius.circular(10),
+                  //         borderSide: BorderSide(
+                  //             color: ColorManager.black.withOpacity(0.5)
+                  //         )
+                  //     ),
+                  //           border: OutlineInputBorder(
+                  //               borderRadius: BorderRadius.circular(10),
+                  //               borderSide: BorderSide(
+                  //                   color: ColorManager.primary
+                  //               )
+                  //           ),
+                  //           enabledBorder:  OutlineInputBorder(
+                  //               borderRadius: BorderRadius.circular(10),
+                  //               borderSide: BorderSide(
+                  //                   color: ColorManager.primaryDark
+                  //               )
+                  //           ),
+                  //
+                  //         ),
+                  //         validator: (value){
+                  //           if(value!.isEmpty){
+                  //             return null;
+                  //           }
+                  //           if(selectedInitialReminderTypeId == 2){
+                  //             if(int.parse(value)>7){
+                  //               return 'Days must be less than 8';
+                  //             }
+                  //             if(startDateIntake!.difference(DateTime.now()).inDays < int.parse(value)){
+                  //               return 'Select a time that is at least a day from today';
+                  //             }
+                  //           }
+                  //           if(selectedInitialReminderTypeId == 1){
+                  //             if(int.parse(value)>24){
+                  //               return 'Hours must be less than 24';
+                  //             }
+                  //             if(setTime!.difference(DateTime.now()).inHours < int.parse(value)){
+                  //               return 'Select a time that is at least a hour from now';
+                  //             }
+                  //           }
+                  //           if(selectedInitialReminderTypeId == 0){
+                  //             if(int.parse(value)>60){
+                  //               return 'Minutes must be less than 60';
+                  //             }
+                  //             if(setTime!.difference(DateTime.now()).inMinutes < int.parse(value)){
+                  //               return 'Select a time that is at least a minute from now';
+                  //             }
+                  //           }
+                  //           if (!value.contains(RegExp(r'^\d+$'))) {
+                  //             return 'Invalid value';
+                  //           }
+                  //           else if (int.parse(value) <= 0) {
+                  //             return 'Must be greater than 0';
+                  //           }
+                  //           return null;
+                  //         },
+                  //         autovalidateMode: AutovalidateMode.onUserInteraction,
+                  //         onChanged: (value){
+                  //           // ref.read(itemProvider.notifier).updateStrength(value);
+                  //         },
+                  //       ),
+                  //     ),
+                  //     w10,
+                  //     Expanded(
+                  //       child: DropdownButtonFormField(
+                  //         menuMaxHeight: 200,
+                  //         isDense: true,
+                  //         value:selectedInitialReminderType ,
+                  //         decoration: InputDecoration(
+                  //            focusedBorder: OutlineInputBorder(
+                  //         borderRadius: BorderRadius.circular(10),
+                  //         borderSide: BorderSide(
+                  //             color: ColorManager.black.withOpacity(0.5)
+                  //         )
+                  //     ),
+                  //
+                  //             isDense: true,
+                  //             border: OutlineInputBorder(
+                  //                 borderRadius: BorderRadius.circular(10),
+                  //                 borderSide: BorderSide(
+                  //                     color: ColorManager.primaryDark
+                  //                 )
+                  //             ),
+                  //             enabledBorder: OutlineInputBorder(
+                  //                 borderRadius: BorderRadius.circular(10),
+                  //                 borderSide: BorderSide(
+                  //                     color: ColorManager.primaryDark
+                  //                 )
+                  //             )
+                  //         ),
+                  //
+                  //         items: initialReminderType
+                  //             .map(
+                  //               (String item) => DropdownMenuItem<String>(
+                  //             value: item,
+                  //             child: Text(
+                  //               item,
+                  //               style: getRegularStyle(color: Colors.black,fontSize: 16.sp),
+                  //               overflow: TextOverflow.ellipsis,
+                  //             ),
+                  //           ),
+                  //         ).toList(),
+                  //         onChanged: (value){
+                  //           setState(() {
+                  //             selectedInitialReminderType = value!;
+                  //             selectedInitialReminderTypeId = initialReminderType.indexOf(value);
+                  //           });
+                  //           // ref.read(itemProvider.notifier).updateStrengthUnit(value!);
+                  //
+                  //         },
+                  //         validator: (value){
+                  //           if(_initialReminderController.text.isNotEmpty){
+                  //             if(selectedInitialReminderType == null){
+                  //               return 'Please select a unit';
+                  //             }
+                  //
+                  //           }
+                  //           return null;
+                  //         },
+                  //         autovalidateMode: AutovalidateMode.onUserInteraction,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  // h10,
                   DropdownButtonFormField(
 
                     menuMaxHeight: 250,
@@ -682,7 +685,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                         enabledBorder:  OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
-                                color: ColorManager.primaryDark
+                            color: ColorManager.primaryDark
                             )
                         ),
                         labelText: 'Interval of Days',
@@ -864,6 +867,11 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                         notificationLayout: NotificationLayout
                                             .Default,
                                         color: Colors.black,
+                                        category: NotificationCategory.Alarm,
+                                        wakeUpScreen: true,
+                                        timeoutAfter: Duration(minutes: 1),
+
+
 
                                         //
                                         backgroundColor: Colors.black,
@@ -891,7 +899,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                     }
 
                                     GeneralReminderModel reminder = GeneralReminderModel(
-                                        reminderId: Random().nextInt(9999),
+                                        reminderId:widget.reminder.reminderId,
                                         title: _titleController.text.trim(),
                                         description: _descriptionController.text,
                                         time: _startTimeController.text.trim(),
@@ -949,6 +957,11 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                         notificationLayout: NotificationLayout
                                             .Default,
                                         color: Colors.black,
+                                        category: NotificationCategory.Alarm,
+                                        wakeUpScreen: true,
+                                        timeoutAfter: Duration(minutes: 1),
+
+
 
                                         //
                                         backgroundColor: Colors.black,
@@ -976,7 +989,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                     }
 
                                     GeneralReminderModel reminder = GeneralReminderModel(
-                                        reminderId: Random().nextInt(9999),
+                                        reminderId: widget.reminder.reminderId,
                                         title: _titleController.text.trim(),
                                         description: _descriptionController.text,
                                         time: _startTimeController.text.trim(),
@@ -1049,6 +1062,9 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                         notificationLayout: NotificationLayout
                                             .Default,
                                         color: Colors.black,
+                                        category: NotificationCategory.Alarm,
+                                        wakeUpScreen: true,
+                                        timeoutAfter: Duration(minutes: 1),
 
                                         //
                                         backgroundColor: Colors.black,
@@ -1077,7 +1093,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                     }
 
                                     GeneralReminderModel reminder = GeneralReminderModel(
-                                        reminderId: Random().nextInt(1000),
+                                        reminderId: widget.reminder.reminderId,
                                         title: _titleController.text.trim(),
                                         description: _descriptionController.text,
                                         time: _startTimeController.text.trim(),
@@ -1138,6 +1154,12 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                         notificationLayout: NotificationLayout
                                             .Default,
                                         color: Colors.black,
+                                        category: NotificationCategory.Alarm,
+                                        wakeUpScreen: true,
+                                        timeoutAfter: Duration(minutes: 1),
+
+
+
 
                                         //
                                         backgroundColor: Colors.black,
@@ -1166,7 +1188,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                     }
 
                                     GeneralReminderModel reminder = GeneralReminderModel(
-                                        reminderId: Random().nextInt(1000),
+                                        reminderId: widget.reminder.reminderId,
                                         title: _titleController.text.trim(),
                                         description: _descriptionController.text,
                                         time: _startTimeController.text.trim(),

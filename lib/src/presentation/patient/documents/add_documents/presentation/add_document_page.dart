@@ -200,6 +200,7 @@ class _AddDocumentPageState extends ConsumerState<AddPatientDocuments> {
 
                               }
                               else{
+
                                 scaffoldMessage.showSnackBar(
                                     SnackbarUtil.showSuccessSnackbar(
                                         message: 'File uploaded!!!',
@@ -210,6 +211,7 @@ class _AddDocumentPageState extends ConsumerState<AddPatientDocuments> {
                                 setState(() {
                                   isPosting = false;
                                 });
+
                                 ref.refresh(patientDocumentProvider(userBox[0].username!));
                                 ref.refresh(patientFolderProvider(userBox[0].username!));
                                 Navigator.pop(context);

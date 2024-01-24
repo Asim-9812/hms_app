@@ -10,7 +10,7 @@ import '../../app/app.dart';
 
 
 
-
+bool dismissedManually = false;
 
 
 
@@ -65,7 +65,7 @@ class NotificationController {
   ///  Notifications events are only delivered after call this method
   static Future<void> startListeningNotificationEvents() async {
     AwesomeNotifications()
-        .setListeners(onActionReceivedMethod: onActionReceivedMethod);
+        .setListeners(onActionReceivedMethod: onActionReceivedMethod,onDismissActionReceivedMethod: onDismissActionReceivedMethod);
   }
 
   ///  *********************************************
@@ -75,6 +75,7 @@ class NotificationController {
   @pragma('vm:entry-point')
   static Future<void> onActionReceivedMethod(
       ReceivedAction receivedAction) async {
+
     if (receivedAction.actionType == ActionType.SilentAction ||
         receivedAction.actionType == ActionType.SilentBackgroundAction) {
       // For background actions, you must hold the execution until the end
@@ -84,14 +85,19 @@ class NotificationController {
         await snoozeMedNotification();
 
       }
-      // print(
-      //     'Message sent via notification input: "${receivedAction.buttonKeyInput}"');
-      // await executeLongTaskInBackground();
-    } else {
+    }
+    else if(receivedAction.actionType == ActionType.DismissAction){
+
+
+
+    }
+    else {
       // this process is only necessary when you need to redirect the user
       // to a new page or use a valid context, since parallel isolates do not
       // have valid context, so you need redirect the execution to main isolate
       if (receivePort == null) {
+
+
         print(
             'onActionReceivedMethod was called inside a parallel dart isolate.');
         SendPort? sendPort =
@@ -105,6 +111,23 @@ class NotificationController {
       }
       return onActionReceivedImplementationMethod(receivedAction);
     }
+  }
+
+
+  static Future<void> onDismissActionReceivedMethod(
+      ReceivedAction receivedAction) async {
+    if(receivedAction.buttonKeyPressed != 'DISMISSED'){
+      // final SnackBar snackBar = SnackBar(content: Text("Snoozed for 5 minutes"));
+      // snackBarKey.currentState?.showSnackBar(snackBar);
+      if(!dismissedManually){
+        await postAlarmNotification();
+        print('executed');
+      }
+
+
+    }
+    dismissedManually = false;
+    print('didnt executed');
   }
 
   static Future<void> onActionReceivedImplementationMethod(
@@ -206,6 +229,19 @@ class NotificationController {
   }
 
 
+  /// if the alarm isnt dismissed or snoozed automatically , this is executed after 10 mins
+
+  static Future<void> postAlarmNotification() async {
+    dismissedManually = true;
+    await postAlarm(
+        title: 'test',
+        msg: 'test message',
+        hoursFromNow: 5,
+        username: 'test user',
+        repeatNotif: false);
+  }
+
+
 
   static Future<void> cancelNotifications({
     required int id
@@ -235,6 +271,46 @@ Future<void> snoozeAlarm({
       //actionType : ActionType.DisabledAction,
       color: Colors.black,
       backgroundColor: Colors.black,
+
+      // customSound: 'resource://raw/notif',
+      payload: {'actPag': 'myAct', 'actType': 'medicine', 'username': username},
+    ),
+    actionButtons: [
+      NotificationActionButton(
+          key: 'SNOOZE',
+          label: 'Snooze',
+          actionType: ActionType.SilentAction
+      ),
+      NotificationActionButton(
+          key: 'DISMISS',
+          label: 'Dismiss',
+          actionType: ActionType.DisabledAction
+      ),
+    ],
+  );
+}
+
+Future<void> postAlarm({
+  required int hoursFromNow,
+  required String username,
+  required String title,
+  required String msg,
+  bool repeatNotif = false,
+}) async {
+  // var nowDate = DateTime.now().add(Duration(hours: hoursFromNow, seconds: 5));
+  await AwesomeNotifications().createNotification(
+    schedule: NotificationInterval(interval: 600,repeats: false,timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()),
+    content: NotificationContent(
+      id: -1,
+      channelKey: 'alerts',
+      title: '${Emojis.medical_pill} Reminder!!!',
+      body: 'Time for your medicine',
+      notificationLayout: NotificationLayout.Default,
+      timeoutAfter: Duration(minutes: 1),
+      color: Colors.black,
+      backgroundColor: Colors.black,
+      category: NotificationCategory.Alarm,
+
 
       // customSound: 'resource://raw/notif',
       payload: {'actPag': 'myAct', 'actType': 'medicine', 'username': username},
@@ -309,6 +385,7 @@ Future<void> myNotificationSchedules({
 }) async {
 
 
+
   await AwesomeNotifications().createNotification(
     schedule: schedule,
     content: content,
@@ -325,6 +402,11 @@ Future<void> myNotificationSchedules({
       ),
     ],
   );
+
+
+
+
+
 
 
 
