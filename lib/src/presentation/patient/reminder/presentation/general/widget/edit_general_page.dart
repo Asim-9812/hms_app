@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -76,6 +77,12 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
 
 
   bool isPostingData = false;
+  bool remindMe = false;
+
+
+
+
+
 
   DateTime todaysDate = DateTime.now();
 
@@ -120,6 +127,12 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
         days!.contains('Sunday'),
       ];
     }
+    if(reminder.initialReminder != null){
+      remindMe = true;
+      _initialReminderController.text = reminder.initialReminder!.initialReminder.toString();
+      selectedInitialReminderType=reminder.initialReminder!.initialReminderTypeName;
+      selectedInitialReminderTypeId = reminder.initialReminder!.initialReminderTypeId;
+    }
 
     contentList = reminder.contentIdList!;
 
@@ -142,6 +155,9 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
     if (indexToUpdate != -1) {
       // If the reminder is found, update it
       reminderBox.putAt(indexToUpdate, reminder);
+      setState(() {
+        isPostingData = false;
+      });
       Navigator.pop(context,true); // Optionally, you can navigate back to the previous screen
     } else {
       // Handle the case where the reminder is not found
@@ -500,7 +516,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                   //           if(value!.isEmpty){
                   //             return null;
                   //           }
-                  //           if(selectedInitialReminderTypeId == 2){
+                  //           if(selectedInitialReminderTypeId! == 2){
                   //             if(int.parse(value)>7){
                   //               return 'Days must be less than 8';
                   //             }
@@ -508,7 +524,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                   //               return 'Select a time that is at least a day from today';
                   //             }
                   //           }
-                  //           if(selectedInitialReminderTypeId == 1){
+                  //           if(selectedInitialReminderTypeId! == 1){
                   //             if(int.parse(value)>24){
                   //               return 'Hours must be less than 24';
                   //             }
@@ -516,7 +532,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                   //               return 'Select a time that is at least a hour from now';
                   //             }
                   //           }
-                  //           if(selectedInitialReminderTypeId == 0){
+                  //           if(selectedInitialReminderTypeId! == 0){
                   //             if(int.parse(value)>60){
                   //               return 'Minutes must be less than 60';
                   //             }
@@ -543,7 +559,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                   //       child: DropdownButtonFormField(
                   //         menuMaxHeight: 200,
                   //         isDense: true,
-                  //         value:selectedInitialReminderType ,
+                  //         value:selectedInitialReminderType! ,
                   //         decoration: InputDecoration(
                   //            focusedBorder: OutlineInputBorder(
                   //         borderRadius: BorderRadius.circular(10),
@@ -580,15 +596,15 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                   //         ).toList(),
                   //         onChanged: (value){
                   //           setState(() {
-                  //             selectedInitialReminderType = value!;
-                  //             selectedInitialReminderTypeId = initialReminderType.indexOf(value);
+                  //             selectedInitialReminderType! = value!;
+                  //             selectedInitialReminderTypeId! = initialReminderType.indexOf(value);
                   //           });
                   //           // ref.read(itemProvider.notifier).updateStrengthUnit(value!);
                   //
                   //         },
                   //         validator: (value){
                   //           if(_initialReminderController.text.isNotEmpty){
-                  //             if(selectedInitialReminderType == null){
+                  //             if(selectedInitialReminderType! == null){
                   //               return 'Please select a unit';
                   //             }
                   //
@@ -759,6 +775,152 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
 
                   if(selectedPatternId == 3)
                     h10,
+
+                  if(selectedPatternId == 1 || selectedPatternId ==2)
+                    Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Remind me before'),
+                        Checkbox(
+                            value: remindMe,
+                            onChanged: (value){
+                              setState(() {
+                                remindMe =!remindMe ;
+                              });
+                            }
+                        )
+                      ],
+                    ),
+
+                  if(remindMe)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: _initialReminderController,
+                            decoration: InputDecoration(
+                              labelText: 'Remind me',
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10)
+                              ),
+
+                            ),
+                            validator: (value){
+                              if(_startDateController.text.isEmpty || _startTimeController.text.isEmpty){
+                                return 'Please set the date & time first';
+                              }
+                              else{
+                                final now = DateTime.now();
+
+                                DateTime validDate = DateTime(startDateIntake!.year,startDateIntake!.month,startDateIntake!.day,setTime!.hour,setTime!.minute);
+
+
+                                if(value!.trim().isEmpty){
+                                  return 'Time is required';
+                                }
+                                else{
+                                  try{
+                                    final int addTime = int.parse(_initialReminderController.text.trim());
+                                    if(selectedInitialReminderTypeId! == 1){
+                                      final addedTime = validDate.subtract(Duration(minutes: addTime));
+
+                                      if(addedTime.isBefore(now)){
+                                        return 'Initial reminder cannot be before current date';
+                                      }
+                                    }
+                                    else if(selectedInitialReminderTypeId! == 2){
+                                      final addedTime = validDate.subtract(Duration(hours: addTime));
+
+                                      if(addedTime.isBefore(now)){
+                                        return 'Initial reminder cannot be before current date';
+                                      }
+                                    }
+                                    else if(selectedInitialReminderTypeId! == 3){
+                                      final addedTime = validDate.subtract(Duration(days: addTime));
+
+                                      if(addedTime.isBefore(now)){
+                                        return 'Initial reminder cannot be before current date';
+                                      }
+                                    }
+
+                                  } catch(e) {
+                                    return 'Invalid Time';
+                                  }
+                                }
+
+                              }
+
+                              return null;
+                            },
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                          ),
+                        ),
+                        w10,
+                        SizedBox(
+                          width: 100,
+                          child: DropdownButtonFormField(
+
+                            menuMaxHeight: 250,
+                            isDense: true,
+                            decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                        color: ColorManager.black.withOpacity(0.5)
+                                    )
+                                ),
+
+                                isDense: true,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                        color: ColorManager.primaryDark
+                                    )
+                                ),
+
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                        color: ColorManager.primaryDark
+                                    )
+                                )
+                            ),
+                            value: selectedInitialReminderType! ,
+
+                            items: initialReminderType
+                                .map(
+                                  (String item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ).toList(),
+                            onChanged: (value){
+                              final index = initialReminderType.indexOf(value!) + 1;
+                              setState(() {
+                                selectedInitialReminderType = value;
+                                selectedInitialReminderTypeId = index;
+                              });
+
+                              //ref.read(itemProvider.notifier).updatePatternId(patternList.firstWhere((element) => element.patternName == value).id);
+
+                            },
+                            validator: (value){
+                              if(selectedInitialReminderType == null){
+                                return 'Reminder Pattern is required';
+                              }
+
+                              return null;
+                            },
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                          ),
+                        ),
+
+                      ],
+                    ),
+
                   h10,
                   Row(
                     children: [
@@ -815,16 +977,36 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                   ),
                                 );
                               }
+
                               else{
 
-                                for(int i = 0; i < contentList.length ; i++){
-                                  await NotificationController.cancelNotifications(id: contentList[i]);
-                                }
+
 
                                 if(formKey1.currentState!.validate()) {
                                   setState(() {
                                     isPostingData = true;
                                   });
+
+                                  for(int i = 0; i < contentList.length ; i++){
+                                    await NotificationController.cancelNotifications(id: contentList[i]);
+                                  }
+
+                                  int addedTime = 0;
+
+                                  Duration? duration ;
+
+                                  if(remindMe){
+                                    addedTime = int.parse(_initialReminderController.text.trim());
+                                    if(selectedInitialReminderTypeId! == 1){
+                                      duration = Duration(minutes: addedTime);
+                                    }
+                                    else if(selectedInitialReminderTypeId! == 2){
+                                      duration = Duration(hours: addedTime);
+                                    }
+                                    else if(selectedInitialReminderTypeId! == 3){
+                                      duration = Duration(days: addedTime);
+                                    }
+                                  }
 
                                   /// FOR ONCE....
                                   if (selectedPatternId == 1) {
@@ -832,13 +1014,13 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                         startDateIntake!.year,
                                         startDateIntake!.month,
                                         startDateIntake!.day,
-                                        DateFormat('hh:mm a')
-                                            .parse(_startTimeController.text)
-                                            .hour, DateFormat('hh:mm a')
-                                        .parse(_startTimeController.text)
-                                        .minute);
+                                        setTime!.hour, setTime!.minute);
+
+                                    final initialDate = firstDate.subtract(remindMe? duration! : Duration(seconds: 0));
 
                                     List<DateTime> scheduleList = [];
+                                    List<DateTime> scheduleInitialList = [];
+
 
                                     for (int i = 0; i < 1; i++) {
                                       DateTime newDate = firstDate.add(
@@ -846,16 +1028,32 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                       print(newDate);
                                       DateTime notificationDates = DateTime(
                                           newDate.year, newDate.month,
-                                          newDate.day, DateFormat('hh:mm a')
-                                          .parse(_startTimeController.text)
-                                          .hour, DateFormat('hh:mm a')
-                                          .parse(_startTimeController.text)
-                                          .minute);
+                                          newDate.day, setTime!.hour, setTime!.minute);
+                                      DateTime newInitialDate = initialDate.add(Duration(days: i));
                                       scheduleList.add(notificationDates);
+                                      scheduleInitialList.add(newInitialDate);
                                     }
 
                                     print('scheduled list : ${scheduleList
                                         .length}');
+                                    GeneralReminderModel reminder = GeneralReminderModel(
+                                        reminderId: Random().nextInt(9999),
+                                        title: _titleController.text.trim(),
+                                        description: _descriptionController.text,
+                                        time: _startTimeController.text.trim(),
+                                        startDate: startDateIntake!,
+                                        reminderPattern: ReminderPattern(
+                                          reminderPatternId: selectedPatternId!,
+                                          patternName: selectedPatternName!,
+                                        ),
+                                        initialReminder: !remindMe ? null : InitialReminder(
+                                            initialReminderTypeId: selectedInitialReminderTypeId!,
+                                            initialReminderTypeName: selectedInitialReminderType!,
+                                            initialReminder: int.parse(_initialReminderController.text.trim())
+                                        ),
+                                        userId: userId,
+                                        contentIdList: contentList
+                                    );
 
                                     for (int i = 0; i <
                                         scheduleList.length; i++) {
@@ -868,9 +1066,9 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                             .Default,
                                         color: Colors.black,
                                         category: NotificationCategory.Alarm,
-                                        wakeUpScreen: true,
                                         timeoutAfter: Duration(minutes: 1),
 
+                                        wakeUpScreen: true,
 
 
                                         //
@@ -890,27 +1088,63 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                           minute: scheduleList[i].minute
                                       );
 
+
                                       contentList.add(content.id!);
 
                                       await NotificationController
                                           .scheduleNotifications(
-                                          context, schedule: schedule,
+
+                                          context,
+                                          schedule: schedule,
                                           content: content);
                                     }
 
-                                    GeneralReminderModel reminder = GeneralReminderModel(
-                                        reminderId:widget.reminder.reminderId,
-                                        title: _titleController.text.trim(),
-                                        description: _descriptionController.text,
-                                        time: _startTimeController.text.trim(),
-                                        startDate: startDateIntake!,
-                                        reminderPattern: ReminderPattern(
-                                          reminderPatternId: selectedPatternId!,
-                                          patternName: selectedPatternName!,
-                                        ),
-                                        userId: userId,
-                                        contentIdList: contentList
-                                    );
+                                    if(remindMe){
+                                      for (int i = 0; i <
+                                          scheduleInitialList.length; i++) {
+                                        final NotificationContent content = NotificationContent(
+                                          id: Random().nextInt(9999),
+                                          channelKey: 'alerts',
+                                          title: _titleController.text.trim(),
+                                          body: _descriptionController.text,
+                                          notificationLayout: NotificationLayout
+                                              .Default,
+                                          color: Colors.black,
+
+                                          wakeUpScreen: true,
+
+
+                                          //
+                                          backgroundColor: Colors.black,
+                                          // customSound: 'resource://raw/notif',
+                                          payload: {
+                                            'actPag': 'myAct',
+                                            'actType': 'medicine'
+                                          },
+                                        );
+
+                                        final NotificationCalendar schedule = NotificationCalendar(
+                                            year: scheduleInitialList[i].year,
+                                            month: scheduleInitialList[i].month,
+                                            day: scheduleInitialList[i].day,
+                                            hour: scheduleInitialList[i].hour,
+                                            minute: scheduleInitialList[i].minute
+                                        );
+
+
+                                        contentList.add(content.id!);
+
+                                        await NotificationController
+                                            .scheduleInitialNotifications(
+
+                                            context,
+                                            schedule: schedule,
+                                            content: content);
+                                      }
+
+                                    }
+
+
 
 
                                     _updateReminder(reminder);
@@ -922,30 +1156,27 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                         startDateIntake!.year,
                                         startDateIntake!.month,
                                         startDateIntake!.day,
-                                        DateFormat('hh:mm a')
-                                            .parse(_startTimeController.text)
-                                            .hour, DateFormat('hh:mm a')
-                                        .parse(_startTimeController.text)
-                                        .minute);
+                                        setTime!.hour, setTime!.minute);
+
+                                    final initialDate = firstDate.subtract(remindMe? duration! : Duration(seconds: 0));
 
                                     List<DateTime> scheduleList = [];
+                                    List<DateTime> scheduleInitialList = [];
 
-                                    for (int i = 0; i < 365; i++) {
+
+                                    for (int i = 0; i < 1; i++) {
                                       DateTime newDate = firstDate.add(
                                           Duration(days: i));
-                                      print(newDate);
                                       DateTime notificationDates = DateTime(
                                           newDate.year, newDate.month,
-                                          newDate.day, DateFormat('hh:mm a')
-                                          .parse(_startTimeController.text)
-                                          .hour, DateFormat('hh:mm a')
-                                          .parse(_startTimeController.text)
-                                          .minute);
+                                          newDate.day, setTime!.hour, setTime!.minute);
+                                      DateTime newInitialDate = initialDate.add(Duration(days: i));
                                       scheduleList.add(notificationDates);
+                                      scheduleInitialList.add(newInitialDate);
                                     }
-
-                                    print('scheduled list : ${scheduleList
-                                        .length}');
+                                    //
+                                    // print('scheduled list : ${scheduleList
+                                    //     .length}');
 
                                     for (int i = 0; i <
                                         scheduleList.length; i++) {
@@ -958,10 +1189,9 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                             .Default,
                                         color: Colors.black,
                                         category: NotificationCategory.Alarm,
-                                        wakeUpScreen: true,
                                         timeoutAfter: Duration(minutes: 1),
 
-
+                                        wakeUpScreen: true,
 
                                         //
                                         backgroundColor: Colors.black,
@@ -977,7 +1207,8 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                           month: scheduleList[i].month,
                                           day: scheduleList[i].day,
                                           hour: scheduleList[i].hour,
-                                          minute: scheduleList[i].minute
+                                          minute: scheduleList[i].minute,
+                                          repeats: true
                                       );
 
                                       contentList.add(content.id!);
@@ -988,18 +1219,69 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                           content: content);
                                     }
 
+                                    if(remindMe){
+                                      for (int i = 0; i <
+                                          scheduleInitialList.length; i++) {
+                                        final NotificationContent content = NotificationContent(
+                                          id: Random().nextInt(9999),
+                                          channelKey: 'alerts',
+                                          title: _titleController.text.trim(),
+                                          body: _descriptionController.text,
+                                          notificationLayout: NotificationLayout
+                                              .Default,
+                                          color: Colors.black,
+
+                                          wakeUpScreen: true,
+
+
+                                          //
+                                          backgroundColor: Colors.black,
+                                          // customSound: 'resource://raw/notif',
+                                          payload: {
+                                            'actPag': 'myAct',
+                                            'actType': 'medicine'
+                                          },
+                                        );
+
+                                        final NotificationCalendar schedule = NotificationCalendar(
+                                            year: scheduleInitialList[i].year,
+                                            month: scheduleInitialList[i].month,
+                                            day: scheduleInitialList[i].day,
+                                            hour: scheduleInitialList[i].hour,
+                                            minute: scheduleInitialList[i].minute,
+                                            repeats: true
+                                        );
+
+
+                                        contentList.add(content.id!);
+
+                                        await NotificationController
+                                            .scheduleInitialNotifications(
+
+                                            context,
+                                            schedule: schedule,
+                                            content: content);
+                                      }
+
+                                    }
+
                                     GeneralReminderModel reminder = GeneralReminderModel(
-                                        reminderId: widget.reminder.reminderId,
-                                        title: _titleController.text.trim(),
-                                        description: _descriptionController.text,
-                                        time: _startTimeController.text.trim(),
-                                        startDate: startDateIntake!,
-                                        reminderPattern: ReminderPattern(
-                                          reminderPatternId: selectedPatternId!,
-                                          patternName: selectedPatternName!,
-                                        ),
-                                        userId: userId,
-                                        contentIdList: contentList
+                                      reminderId: Random().nextInt(9999),
+                                      title: _titleController.text.trim(),
+                                      description: _descriptionController.text,
+                                      time: _startTimeController.text.trim(),
+                                      startDate: startDateIntake!,
+                                      reminderPattern: ReminderPattern(
+                                        reminderPatternId: selectedPatternId!,
+                                        patternName: selectedPatternName!,
+                                      ),
+                                      userId: userId,
+                                      contentIdList: contentList,
+                                      initialReminder: !remindMe ? null : InitialReminder(
+                                          initialReminderTypeId: selectedInitialReminderTypeId!,
+                                          initialReminderTypeName: selectedInitialReminderType!,
+                                          initialReminder: int.parse(_initialReminderController.text.trim())
+                                      ),
                                     );
 
 
@@ -1013,13 +1295,11 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                         startDateIntake!.year,
                                         startDateIntake!.month,
                                         startDateIntake!.day,
-                                        DateFormat('hh:mm a')
-                                            .parse(_startTimeController.text)
-                                            .hour, DateFormat('hh:mm a')
-                                        .parse(_startTimeController.text)
-                                        .minute);
+                                        setTime!.hour, setTime!.minute);
 
+                                    final initialDate = firstDate.subtract(remindMe? duration! : Duration(seconds: 0));
                                     List<DateTime> scheduleList = [];
+                                    List<DateTime> scheduleInitialList = [];
 
 
                                     int addedDatesCount = 0;
@@ -1027,16 +1307,15 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                     do {
                                       DateTime newDate = firstDate.add(
                                           Duration(days: addedDatesCount));
+                                      DateTime newInitialDate = initialDate.add(Duration(days: addedDatesCount));
 
                                       bool addedDate = false; // Flag to check if notificationDates is added
 
                                       DateTime notificationDates = DateTime(
                                           newDate.year, newDate.month,
-                                          newDate.day, DateFormat('hh:mm a')
-                                          .parse(_startTimeController.text)
-                                          .hour, DateFormat('hh:mm a')
-                                          .parse(_startTimeController.text)
-                                          .minute);
+                                          newDate.day, setTime!.hour, setTime!.minute);
+
+
 
                                       print(notificationDates);
 
@@ -1044,13 +1323,14 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                           DateFormat('EEEE').format(
                                               notificationDates))) {
                                         scheduleList.add(notificationDates);
+                                        scheduleInitialList.add(newInitialDate);
                                         addedDate = true;
                                       }
 
                                       addedDatesCount++;
                                     } while (scheduleList.length < 100);
 
-                                    print(scheduleList.length);
+
 
                                     for (int i = 0; i <
                                         scheduleList.length; i++) {
@@ -1062,12 +1342,14 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                         notificationLayout: NotificationLayout
                                             .Default,
                                         color: Colors.black,
-                                        category: NotificationCategory.Alarm,
-                                        wakeUpScreen: true,
-                                        timeoutAfter: Duration(minutes: 1),
 
                                         //
                                         backgroundColor: Colors.black,
+                                        category: NotificationCategory.Alarm,
+                                        timeoutAfter: Duration(minutes: 1),
+
+                                        wakeUpScreen: true,
+
                                         // customSound: 'resource://raw/notif',
                                         payload: {
                                           'actPag': 'myAct',
@@ -1092,8 +1374,54 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                           content: content);
                                     }
 
+                                    if(remindMe){
+                                      for (int i = 0; i <
+                                          scheduleInitialList.length; i++) {
+                                        final NotificationContent content = NotificationContent(
+                                          id: Random().nextInt(9999),
+                                          channelKey: 'alerts',
+                                          title: _titleController.text.trim(),
+                                          body: _descriptionController.text,
+                                          notificationLayout: NotificationLayout
+                                              .Default,
+                                          color: Colors.black,
+
+                                          wakeUpScreen: true,
+
+
+                                          //
+                                          backgroundColor: Colors.black,
+                                          // customSound: 'resource://raw/notif',
+                                          payload: {
+                                            'actPag': 'myAct',
+                                            'actType': 'medicine'
+                                          },
+                                        );
+
+                                        final NotificationCalendar schedule = NotificationCalendar(
+                                            year: scheduleInitialList[i].year,
+                                            month: scheduleInitialList[i].month,
+                                            day: scheduleInitialList[i].day,
+                                            hour: scheduleInitialList[i].hour,
+                                            minute: scheduleInitialList[i].minute,
+                                            repeats: true
+                                        );
+
+
+                                        contentList.add(content.id!);
+
+                                        await NotificationController
+                                            .scheduleInitialNotifications(
+
+                                            context,
+                                            schedule: schedule,
+                                            content: content);
+                                      }
+
+                                    }
+
                                     GeneralReminderModel reminder = GeneralReminderModel(
-                                        reminderId: widget.reminder.reminderId,
+                                        reminderId: Random().nextInt(1000),
                                         title: _titleController.text.trim(),
                                         description: _descriptionController.text,
                                         time: _startTimeController.text.trim(),
@@ -1120,13 +1448,11 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                         startDateIntake!.year,
                                         startDateIntake!.month,
                                         startDateIntake!.day,
-                                        DateFormat('hh:mm a')
-                                            .parse(_startTimeController.text)
-                                            .hour, DateFormat('hh:mm a')
-                                        .parse(_startTimeController.text)
-                                        .minute);
+                                        setTime!.hour, setTime!.minute);
 
+                                    final initialDate = firstDate.subtract(remindMe? duration! : Duration(seconds: 0));
                                     List<DateTime> scheduleList = [];
+                                    List<DateTime> scheduleInitialList = [];
 
                                     for (int i = 0; i < 100; i++) {
                                       DateTime newDate = firstDate.add(Duration(
@@ -1136,12 +1462,11 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
 
                                       DateTime notificationDates = DateTime(
                                           newDate.year, newDate.month,
-                                          newDate.day, DateFormat('hh:mm a')
-                                          .parse(_startTimeController.text)
-                                          .hour, DateFormat('hh:mm a')
-                                          .parse(_startTimeController.text)
-                                          .minute);
+                                          newDate.day, setTime!.hour, setTime!.minute);
+                                      DateTime newInitialDate = initialDate.add(Duration(days: i == 0 ? 0 : int.parse(
+                                          _intervalDurationController.text)));
                                       scheduleList.add(notificationDates);
+                                      scheduleInitialList.add(newInitialDate);
                                     }
 
                                     for (int i = 0; i <
@@ -1155,10 +1480,9 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                             .Default,
                                         color: Colors.black,
                                         category: NotificationCategory.Alarm,
-                                        wakeUpScreen: true,
                                         timeoutAfter: Duration(minutes: 1),
 
-
+                                        wakeUpScreen: true,
 
 
                                         //
@@ -1172,11 +1496,12 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
 
 
                                       final NotificationCalendar schedule = NotificationCalendar(
-                                          year: scheduleList[i].year,
-                                          month: scheduleList[i].month,
-                                          day: scheduleList[i].day,
-                                          hour: scheduleList[i].hour,
-                                          minute: scheduleList[i].minute
+                                        year: scheduleList[i].year,
+                                        month: scheduleList[i].month,
+                                        day: scheduleList[i].day,
+                                        hour: scheduleList[i].hour,
+                                        minute: scheduleList[i].minute,
+
                                       );
 
                                       contentList.add(content.id!);
@@ -1187,8 +1512,53 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                           content: content);
                                     }
 
+                                    if(remindMe){
+                                      for (int i = 0; i <
+                                          scheduleInitialList.length; i++) {
+                                        final NotificationContent content = NotificationContent(
+                                          id: Random().nextInt(9999),
+                                          channelKey: 'alerts',
+                                          title: _titleController.text.trim(),
+                                          body: _descriptionController.text,
+                                          notificationLayout: NotificationLayout
+                                              .Default,
+                                          color: Colors.black,
+
+                                          wakeUpScreen: true,
+
+
+                                          //
+                                          backgroundColor: Colors.black,
+                                          // customSound: 'resource://raw/notif',
+                                          payload: {
+                                            'actPag': 'myAct',
+                                            'actType': 'medicine'
+                                          },
+                                        );
+
+                                        final NotificationCalendar schedule = NotificationCalendar(
+                                            year: scheduleInitialList[i].year,
+                                            month: scheduleInitialList[i].month,
+                                            day: scheduleInitialList[i].day,
+                                            hour: scheduleInitialList[i].hour,
+                                            minute: scheduleInitialList[i].minute
+                                        );
+
+
+                                        contentList.add(content.id!);
+
+                                        await NotificationController
+                                            .scheduleInitialNotifications(
+
+                                            context,
+                                            schedule: schedule,
+                                            content: content);
+                                      }
+
+                                    }
+
                                     GeneralReminderModel reminder = GeneralReminderModel(
-                                        reminderId: widget.reminder.reminderId,
+                                        reminderId: Random().nextInt(1000),
                                         title: _titleController.text.trim(),
                                         description: _descriptionController.text,
                                         time: _startTimeController.text.trim(),
@@ -1214,7 +1584,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                               }
 
 
-                            }, child: Text('Save',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
+                            }, child:isPostingData?SpinKitDualRing(color: ColorManager.white,size: 16,): Text('Save',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
                       ),
                     ],
                   ),

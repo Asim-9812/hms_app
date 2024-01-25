@@ -113,8 +113,8 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
               carouselController: _carouselController,
 
               options: CarouselOptions(
-                // height: 150,
-                aspectRatio: 16/5,
+                height: 150.h,
+                // aspectRatio: 16/5,
                 // enlargeCenterPage: true,
                 pageSnapping: true,
                 autoPlay:updatedList.length >1? true : false,
@@ -137,8 +137,8 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
                 return Container(
                   width: double.infinity,
                   // height: 200,
-                  margin: EdgeInsets.symmetric(horizontal: 8),
-                  padding: EdgeInsets.only(left: 8.w, top: 8.h,bottom: 8.h),
+                  margin: EdgeInsets.symmetric(horizontal: 8.w),
+                  padding: EdgeInsets.only( top: 8,bottom: 8),
                   decoration: BoxDecoration(
                     // image: DecorationImage(image: AssetImage(imageList[index]),fit: BoxFit.cover),
                     color: ColorManager.primary,
@@ -174,7 +174,7 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
                         data: '${tips.description}',style: {
                             'body' : Style(
                               color: ColorManager.white,
-                              fontSize: FontSize.large,
+                              fontSize: FontSize.medium,
                               maxLines: 2,
                               textOverflow: TextOverflow.ellipsis,
 
@@ -234,7 +234,7 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
                                     color: ColorManager.orange.withOpacity(0.7),
                                     borderRadius: BorderRadius.only(topLeft: Radius.circular(10),bottomLeft: Radius.circular(10))
                                 ),
-                                child:Text('Read More',style: getMediumStyle(color: ColorManager.white, fontSize: 16,))),
+                                child:Text('Read More',style: getMediumStyle(color: ColorManager.white, fontSize: 16.sp,))),
                           ),
                         ],
                       ),

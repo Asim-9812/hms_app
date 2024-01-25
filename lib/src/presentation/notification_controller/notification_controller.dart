@@ -10,7 +10,7 @@ import '../../app/app.dart';
 
 
 
-bool dismissedManually = false;
+
 
 
 
@@ -20,6 +20,7 @@ bool dismissedManually = false;
 
 class NotificationController {
   static ReceivedAction? initialAction;
+  static bool isPostAlarmExecuted = false;
 
   ///  *********************************************
   ///     INITIALIZATIONS
@@ -116,18 +117,11 @@ class NotificationController {
 
   static Future<void> onDismissActionReceivedMethod(
       ReceivedAction receivedAction) async {
-    if(receivedAction.buttonKeyPressed != 'DISMISSED'){
-      // final SnackBar snackBar = SnackBar(content: Text("Snoozed for 5 minutes"));
-      // snackBarKey.currentState?.showSnackBar(snackBar);
-      if(!dismissedManually){
-        await postAlarmNotification();
-        print('executed');
-      }
-
-
+    if (receivedAction.buttonKeyPressed != 'DISMISSED' && !isPostAlarmExecuted) {
+      await postAlarmNotification();
+      isPostAlarmExecuted = true;
+      print('executed');
     }
-    dismissedManually = false;
-    print('didnt executed');
   }
 
   static Future<void> onActionReceivedImplementationMethod(
@@ -215,6 +209,18 @@ class NotificationController {
   }
 
 
+  static Future<void> scheduleInitialNotifications(BuildContext context,{
+    required NotificationSchedule schedule,
+    required NotificationContent content,
+  }) async {
+    bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
+    if (!isAllowed) isAllowed = await displayNotificationRationale(context);
+    if (!isAllowed) return;
+    await myInitialNotificationSchedules(schedule: schedule,content: content);
+  }
+
+
+
 
 
 
@@ -232,7 +238,7 @@ class NotificationController {
   /// if the alarm isnt dismissed or snoozed automatically , this is executed after 10 mins
 
   static Future<void> postAlarmNotification() async {
-    dismissedManually = true;
+
     await postAlarm(
         title: 'test',
         msg: 'test message',
@@ -260,8 +266,7 @@ Future<void> snoozeAlarm({
 }) async {
   // var nowDate = DateTime.now().add(Duration(hours: hoursFromNow, seconds: 5));
   await AwesomeNotifications().createNotification(
-    schedule: NotificationCalendar.fromDate(
-       date: DateTime.now().add(const Duration(minutes: 5))),
+    schedule: NotificationInterval(interval: 300,repeats: false,timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()),
     content: NotificationContent(
       id: -1,
       channelKey: 'alerts',
@@ -310,9 +315,8 @@ Future<void> postAlarm({
       color: Colors.black,
       backgroundColor: Colors.black,
       category: NotificationCategory.Alarm,
-
-
-      // customSound: 'resource://raw/notif',
+      // actionType: ActionType.DisabledAction,
+      customSound: 'resource://raw/notif',
       payload: {'actPag': 'myAct', 'actType': 'medicine', 'username': username},
     ),
     actionButtons: [
@@ -411,6 +415,30 @@ Future<void> myNotificationSchedules({
 
 
 }
+
+
+
+Future<void> myInitialNotificationSchedules({
+  required NotificationSchedule schedule,
+  required NotificationContent content,
+}) async {
+
+
+
+  await AwesomeNotifications().createNotification(
+    schedule: schedule,
+    content: content,
+  );
+
+
+
+
+
+
+
+
+}
+
 
 
 

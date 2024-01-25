@@ -59,6 +59,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
   TextEditingController _intervalDurationController = TextEditingController();
   TextEditingController _summaryController = TextEditingController();
   TextEditingController _noteController = TextEditingController();
+  TextEditingController _initialReminderController = TextEditingController();
 
 
   int selectedMedTypeId = 0;
@@ -87,7 +88,6 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
 
 
   bool isPostingData = false;
-
 
 
 
@@ -131,13 +131,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
 
   }
 
-  TimeOfDay _parseTime(String timeString) {
-    final parsedTime = DateFormat('hh:mm a').parse(timeString);
-    return TimeOfDay(
-      hour: parsedTime.hour,
-      minute: parsedTime.minute,
-    );
-  }
+
 
   Future<void> _selectTime(BuildContext context) async {
     if(formKey2.currentState!.validate()){
@@ -640,76 +634,70 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
               ],
             ),
             h10,
-            frequencies.when(
-                data: (data){
-                  return Form(
-                    key: formKey2,
-                    child: DropdownSearch<String>(
+            Form(
+              key: formKey2,
+              child: DropdownSearch<String>(
 
-                      items: data.map((e) => e.frequencyName).toList(),
-                      dropdownDecoratorProps: DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:  ColorManager.accentGreen.withOpacity(0.5)
-                                ),
-                                borderRadius: BorderRadius.circular(10)
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:  ColorManager.accentGreen.withOpacity(0.5)
-                                ),
-                                borderRadius: BorderRadius.circular(10)
-                            ),
-                            enabledBorder:  OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:  ColorManager.primary
-                                ),
-                                borderRadius: BorderRadius.circular(10)
-                            ),
-                            labelText: "Frequency",
-                            labelStyle: getRegularStyle(color: ColorManager.primary)
-                        ),
-                      ),
-                      onChanged: (value){
-                        setState(() {
-                          scheduleTime.clear();
-                          _startTimeController.clear();
-                          selectedFrequencyName = value!;
-                          frequencyId = data.firstWhere((element) => element.frequencyName == value).id;
-                          intervals = value;
-                        });
-                        // ref.read(itemProvider.notifier).updateFrequency(selectedFrequencyName!);
-                      },
-                      validator: (value){
-                        if(value == null){
-                          return 'Please select a Frequency';
-                        }
-
-
-                        return null;
-                      },
-                      autoValidateMode: AutovalidateMode.onUserInteraction,
-
-
-                      // selectedItem: selectedDepartment,
-                      popupProps: const PopupProps<String>.menu(
-
-                        showSearchBox: true,
-                        fit: FlexFit.loose,
-                        constraints: BoxConstraints(maxHeight: 350),
-                        showSelectedItems: true,
-                        searchFieldProps: TextFieldProps(
-                          style: TextStyle(
-                            fontSize: 18,
+                items: frequencyType.map((e) => e.frequencyName).toList(),
+                dropdownDecoratorProps: DropDownDecoratorProps(
+                  dropdownSearchDecoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color:  ColorManager.accentGreen.withOpacity(0.5)
                           ),
-                        ),
+                          borderRadius: BorderRadius.circular(10)
                       ),
-                    ),
-                  );
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color:  ColorManager.accentGreen.withOpacity(0.5)
+                          ),
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      enabledBorder:  OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color:  ColorManager.primary
+                          ),
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      labelText: "Frequency",
+                      labelStyle: getRegularStyle(color: ColorManager.primary)
+                  ),
+                ),
+                onChanged: (value){
+                  setState(() {
+                    scheduleTime.clear();
+                    _startTimeController.clear();
+                    selectedFrequencyName = value!;
+                    frequencyId = frequencyType.firstWhere((element) => element.frequencyName == value).id;
+                    intervals = value;
+                  });
+                  // ref.read(itemProvider.notifier).updateFrequency(selectedFrequencyName!);
                 },
-                error: (error,stack)=>Text('Something went wrong. Try again later'),
-                loading: () => SpinKitDualRing(color: ColorManager.primary)
+                validator: (value){
+                  if(value == null){
+                    return 'Please select a Frequency';
+                  }
+
+
+                  return null;
+                },
+                autoValidateMode: AutovalidateMode.onUserInteraction,
+
+
+                // selectedItem: selectedDepartment,
+                popupProps: const PopupProps<String>.menu(
+
+                  showSearchBox: true,
+                  fit: FlexFit.loose,
+                  constraints: BoxConstraints(maxHeight: 350),
+                  showSelectedItems: true,
+                  searchFieldProps: TextFieldProps(
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+              ),
             ),
 
             h10,
@@ -1131,6 +1119,8 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
               },
               autovalidateMode: AutovalidateMode.onUserInteraction,
             ),
+
+
             h10,
             if(selectedPatternId == 3)
               TextFormField(

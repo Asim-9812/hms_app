@@ -81,25 +81,31 @@ class _MedRemindersState extends ConsumerState<MedReminders> {
     final reminderList = Hive.box<Reminder>('med_reminder').values.where((element) => element.userId == userBox[0].username).toList();
 
 
-    String findClosestIntakeTime(List<String> intakeTimes) {
-      final now = DateTime.now();
-      DateTime? closestTime;
+    // String findClosestIntakeTime(List<String> intakeTimes) {
+    //   final now = DateTime.now();
+    //   DateTime? closestTime;
+    //
+    //   for (final intakeTime in intakeTimes) {
+    //     try {
+    //       final time = DateFormat('hh:mm a').parse(intakeTime);
+    //
+    //       if (time.isAfter(now) && (closestTime == null || time.isBefore(closestTime))) {
+    //         closestTime = time;
+    //       }
+    //     } catch (e) {
+    //       // Handle the case where parsing fails, e.g., due to a wrong format
+    //       print('Error parsing time: $intakeTime');
+    //     }
+    //   }
+    //
+    //   if (closestTime != null) {
+    //     return DateFormat('hh:mm a').format(closestTime);
+    //   } else {
+    //     // If no intake time is found, return the first intake time of the day
+    //     return intakeTimes.isNotEmpty ? intakeTimes[0] : 'No Time Available';
+    //   }
+    // }
 
-      for (final intakeTime in intakeTimes) {
-        final time = DateFormat('hh:mm a').parse(intakeTime);
-
-        if (time.isAfter(now) && (closestTime == null || time.isBefore(closestTime))) {
-          closestTime = time;
-        }
-      }
-
-      if (closestTime != null) {
-        return DateFormat('hh:mm a').format(closestTime);
-      } else {
-        // If no intake time is found, return the first intake time of the day
-        return intakeTimes[0];
-      }
-    }
 
     if (reminderList.isNotEmpty) {
       return ListView.builder(
@@ -108,7 +114,7 @@ class _MedRemindersState extends ConsumerState<MedReminders> {
       itemCount: reminderList.length,
       itemBuilder: (context, index) {
 
-        final closestIntakeTime = findClosestIntakeTime(reminderList[index].scheduleTime);
+        // final closestIntakeTime = findClosestIntakeTime(reminderList[index].scheduleTime);
         return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -140,7 +146,7 @@ class _MedRemindersState extends ConsumerState<MedReminders> {
               ),
               padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.h),
               child: Text(
-                closestIntakeTime,
+                reminderList[index].scheduleTime.first,
                 style: getRegularStyle(color: ColorManager.white, fontSize: 12),
               ),
             ),
