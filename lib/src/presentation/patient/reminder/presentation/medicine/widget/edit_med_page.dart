@@ -95,6 +95,8 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
   late DateTime newTime;
   late TimeOfDay selectedTime;
 
+  bool isPostingData = false;
+
 
 
 
@@ -186,6 +188,9 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
     if (indexToUpdate != -1) {
       // If the reminder is found, update it
       reminderBox.putAt(indexToUpdate, reminder);
+      setState(() {
+        isPostingData = false;
+      });
       Navigator.pop(context,true); // Optionally, you can navigate back to the previous screen
     } else {
       // Handle the case where the reminder is not found
@@ -1644,333 +1649,340 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: ColorManager.primaryDark
                       ),
-                      onPressed: () async {
+                      onPressed:isPostingData? null : () async {
                         Uint8List? reminderImage;
                         List<String> list = [];
 
                         // selectedDays.clear(); // Clear the list before populating it
-
-
-                        for(int i = 0; i < contentList.length ; i++){
-                          await NotificationController.cancelNotifications(id: contentList[i]);
-                        }
-
-
-                        if(isSelected != null){
-                          for (int i = 0; i < isSelected!.length; i++) {
-
-                            if (isSelected![i]) {
-                              print(daysOfWeekMedication[i]);
-                              list.add(daysOfWeekMedication[i]);
-
-
-                              // selectedDays.add(daysOfWeekMedication[i]);
-                            }
+                        if(formKey4.currentState!.validate()){
+                          setState(() {
+                            isPostingData = true;
+                          });
+                          for(int i = 0; i < contentList.length ; i++){
+                            await NotificationController.cancelNotifications(id: contentList[i]);
                           }
-                        }
-
-                        setState(() {
-                          days = list;
-                        });
-
-                        if(selectImage != null) {
-
-                          reminderImage = await selectImage.readAsBytes();
-
-                        }
 
 
+                          if(isSelected != null){
+                            for (int i = 0; i < isSelected!.length; i++) {
+
+                              if (isSelected![i]) {
+                                print(daysOfWeekMedication[i]);
+                                list.add(daysOfWeekMedication[i]);
 
 
-                        /// FOR EVERYDAY....
-                        if(selectedPatternId == 1){
-                          final int totalDays = int.parse(_medicationDurationController.text.trim());
-                          final int totalInterval = scheduleTime.length;
-                          final DateTime firstDate = DateTime(startDateIntake!.year,startDateIntake!.month,startDateIntake!.day,DateFormat('hh:mm').parse(notifyScheduleTime[0]).hour,DateFormat('hh:mm').parse(notifyScheduleTime[0]).minute);
-
-                          List<DateTime> scheduleList = [firstDate];
-
-                          final int notificationTimes = totalDays * totalInterval;
-
-                          for(int i = 0 ; i<totalDays; i++){
-                            DateTime newDate = firstDate.add(Duration(days: i));
-                            for(int j = 0 ; j < totalInterval ; j++){
-
-                              DateTime notificationDates = DateTime(newDate.year,newDate.month,newDate.day,DateFormat('hh:mm').parse(notifyScheduleTime![j]).hour,DateFormat('hh:mm').parse(notifyScheduleTime![j]).minute);
-                              scheduleList.add(notificationDates);
+                                // selectedDays.add(daysOfWeekMedication[i]);
+                              }
                             }
                           }
 
-                          for(int i = 0; i <scheduleList.length; i++){
-                            final NotificationContent content = NotificationContent(
-                              id: Random().nextInt(9999),
-                              channelKey: 'alerts',
-                              title: _medicineNameController.text.trim(),
-                              body: '${_strengthController.text} ${selectedStrengthUnit} ${selectedMealName}',
-                              notificationLayout: NotificationLayout.Default,
-                              //actionType : ActionType.DisabledAction,
-                              color: Colors.black,
-                              category: NotificationCategory.Alarm,
-                              wakeUpScreen: true,
-                              timeoutAfter: Duration(minutes: 1),
+                          setState(() {
+                            days = list;
+                          });
 
+                          if(selectImage != null) {
 
-                              //
-                              backgroundColor: Colors.black,
-                              // customSound: 'resource://raw/notif',
-                              payload: {'actPag': 'myAct', 'actType': 'medicine'},
-                            );
+                            reminderImage = await selectImage.readAsBytes();
 
-                            final NotificationCalendar schedule = NotificationCalendar(
-                                year: scheduleList[i].year,
-                                month: scheduleList[i].month,
-                                day: scheduleList[i].day,
-                                hour: scheduleList[i].hour,
-                                minute: scheduleList[i].minute
-                            );
-
-                            contentList.add(content.id!);
-
-                            await NotificationController.scheduleNotifications(context, schedule: schedule, content: content);
                           }
 
-                          Reminder reminder = Reminder(
-                            reminderId: updatedReminder.reminderId,
-                            userId: updatedReminder.userId,
-                            medTypeId: selectedMedTypeId,
-                            medTypeName: selectedMedTypeName,
-                            medicineName: _medicineNameController.text.trim(),
-                            strength: int.parse(_strengthController.text),
-                            unit: selectedStrengthUnit!,
-                            frequency: Frequency(
-                                frequencyId: frequencyId,
-                                frequencyName: selectedFrequencyName,
-                                intervals: intervals
-                            ) ,
-                            scheduleTime: scheduleTime,
-                            medicationDuration: int.parse(_medicationDurationController.text.trim()),
-                            startDate: startDateIntake,
-                            endDate: endDateIntake,
-                            mealTypeId: selectedMealId,
-                            meal: selectedMealName,
-                            reminderPattern:ReminderPattern(
-                                reminderPatternId: selectedPatternId,
-                                patternName: selectedPatternName,
-                                interval: selectedPatternId == 3 ? int.parse(_intervalDurationController.text) : null,
-                                daysOfWeek: selectedPatternId == 2 ? days : null
-                            ) ,
-                            reminderImage: imageSet == 1 ? updatedReminder.reminderImage : selectImage != null ? reminderImage : null,
-                            notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
-                            summary: _summaryController.text.trim(),
-                            contentIdList: contentList
-                          );
-
-                          // NotificationService().scheduleEverydayNotification(reminder: reminder);
-                          _updateReminder(reminder);
 
 
 
+                          /// FOR EVERYDAY....
+                          if(selectedPatternId == 1){
+                            final int totalDays = int.parse(_medicationDurationController.text.trim());
+                            final int totalInterval = scheduleTime.length;
+                            final DateTime firstDate = DateTime(startDateIntake!.year,startDateIntake!.month,startDateIntake!.day,DateFormat('hh:mm').parse(notifyScheduleTime[0]).hour,DateFormat('hh:mm').parse(notifyScheduleTime[0]).minute);
 
-                        }
+                            List<DateTime> scheduleList = [firstDate];
 
+                            final int notificationTimes = totalDays * totalInterval;
 
-                        /// FOR Specific days....
-                        if(selectedPatternId == 2){
-                          final int totalDays = int.parse(_medicationDurationController.text.trim());
-                          final int totalInterval = scheduleTime.length;
-                          final DateTime firstDate = DateTime(
-                            startDateIntake!.year,
-                            startDateIntake!.month,
-                            startDateIntake!.day,
-                            DateFormat('hh:mm').parse(notifyScheduleTime[0]).hour,
-                            DateFormat('hh:mm').parse(notifyScheduleTime[0]).minute,
-                          );
+                            for(int i = 0 ; i<totalDays; i++){
+                              DateTime newDate = firstDate.add(Duration(days: i));
+                              for(int j = 0 ; j < totalInterval ; j++){
 
-                          List<DateTime> scheduleList = [];
-
-                          final int notificationTimes = totalDays * totalInterval;
-
-                          int addedDatesCount = 0;
-
-                          do {
-                            DateTime newDate = firstDate.add(Duration(days: addedDatesCount));
-
-                            bool addedDate = false; // Flag to check if notificationDates is added
-
-                            for (int j = 0; j < totalInterval; j++) {
-                              DateTime notificationDates = DateTime(
-                                newDate.year,
-                                newDate.month,
-                                newDate.day,
-                                int.parse(scheduleTime[j].split(':').first),
-                                int.parse(scheduleTime[j].split(':').last.split(' ').first),
-                              );
-
-                              print(notificationDates);
-
-                              if (days!.contains(DateFormat('EEEE').format(notificationDates))) {
+                                DateTime notificationDates = DateTime(newDate.year,newDate.month,newDate.day,DateFormat('hh:mm').parse(notifyScheduleTime![j]).hour,DateFormat('hh:mm').parse(notifyScheduleTime![j]).minute);
                                 scheduleList.add(notificationDates);
-                                addedDate = true;
                               }
                             }
 
-                            addedDatesCount++;
-
-                          } while (scheduleList.length < totalDays * totalInterval);
-
-                          for(int i = 0; i <scheduleList.length; i++){
-                            final NotificationContent content = NotificationContent(
-                              id: Random().nextInt(9999),
-                              channelKey: 'alerts',
-                              title: _medicineNameController.text.trim(),
-                              body: '${_strengthController.text} ${selectedStrengthUnit} ${selectedMealName}',
-                              notificationLayout: NotificationLayout.Default,
-                              //actionType : ActionType.DisabledAction,
-                              color: Colors.black,
-                              category: NotificationCategory.Alarm,
-                              wakeUpScreen: true,
-                              timeoutAfter: Duration(minutes: 1),
-
-                              //
-                              backgroundColor: Colors.black,
-                              // customSound: 'resource://raw/notif',
-                              payload: {'actPag': 'myAct', 'actType': 'medicine'},
-                            );
-
-                            final NotificationCalendar schedule = NotificationCalendar(
-                                year: scheduleList[i].year,
-                                month: scheduleList[i].month,
-                                day: scheduleList[i].day,
-                                hour: scheduleList[i].hour,
-                                minute: scheduleList[i].minute
-                            );
-
-                            contentList.add(content.id!);
-
-                            await NotificationController.scheduleNotifications(context, schedule: schedule, content: content);
-                          }
-
-                          Reminder reminder = Reminder(
-                              reminderId: updatedReminder.reminderId,
-                              userId: updatedReminder.userId,
-                              medTypeId: selectedMedTypeId,
-                              medTypeName: selectedMedTypeName,
-                              medicineName: _medicineNameController.text.trim(),
-                              strength: int.parse(_strengthController.text),
-                              unit: selectedStrengthUnit!,
-                              frequency: Frequency(
-                                  frequencyId: frequencyId,
-                                  frequencyName: selectedFrequencyName,
-                                  intervals: intervals
-                              ) ,
-                              scheduleTime: scheduleTime,
-                              medicationDuration: int.parse(_medicationDurationController.text.trim()),
-                              startDate: startDateIntake,
-                              endDate: endDateIntake,
-                              mealTypeId: selectedMealId,
-                              meal: selectedMealName,
-                              reminderPattern:ReminderPattern(
-                                  reminderPatternId: selectedPatternId,
-                                  patternName: selectedPatternName,
-                                  interval: selectedPatternId == 3 ? int.parse(_intervalDurationController.text) : null,
-                                  daysOfWeek: selectedPatternId == 2 ? days : null
-                              ) ,
-                              reminderImage: imageSet == 1 ? updatedReminder.reminderImage : selectImage != null ? reminderImage : null,
-                              notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
-                              summary: _summaryController.text.trim(),
-                              contentIdList: contentList
-                          );
-
-                          // NotificationService().scheduleEverydayNotification(reminder: reminder);
-                          _updateReminder(reminder);
-
-                        }
+                            for(int i = 0; i <scheduleList.length; i++){
+                              final NotificationContent content = NotificationContent(
+                                id: Random().nextInt(9999),
+                                channelKey: 'alerts',
+                                title: _medicineNameController.text.trim(),
+                                body: '${_strengthController.text} ${selectedStrengthUnit} ${selectedMealName}',
+                                notificationLayout: NotificationLayout.Default,
+                                //actionType : ActionType.DisabledAction,
+                                color: Colors.black,
+                                category: NotificationCategory.Alarm,
+                                wakeUpScreen: true,
+                                timeoutAfter: Duration(minutes: 1),
 
 
-                        /// FOR INTERVALS....
-                        if(selectedPatternId == 3){
-                          final int totalDays = int.parse(_medicationDurationController.text.trim());
-                          final int totalInterval = scheduleTime.length;
-                          final DateTime firstDate = DateTime(startDateIntake!.year,startDateIntake!.month,startDateIntake!.day,DateFormat('hh:mm').parse(notifyScheduleTime[0]).hour,DateFormat('hh:mm').parse(notifyScheduleTime[0]).minute);
+                                //
+                                backgroundColor: Colors.black,
+                                // customSound: 'resource://raw/notif',
+                                payload: {'actPag': 'myAct', 'actType': 'medicine'},
+                              );
 
-                          List<DateTime> scheduleList = [firstDate];
+                              final NotificationCalendar schedule = NotificationCalendar(
+                                  year: scheduleList[i].year,
+                                  month: scheduleList[i].month,
+                                  day: scheduleList[i].day,
+                                  hour: scheduleList[i].hour,
+                                  minute: scheduleList[i].minute
+                              );
 
-                          final int notificationTimes = totalDays * totalInterval;
+                              contentList.add(content.id!);
 
-                          for(int i = 0 ; i<totalDays; i++){
-                            DateTime newDate = firstDate.add(Duration(days: i == 0 ? 0 :int.parse(_intervalDurationController.text) ));
-                            for(int j = 0 ; j < totalInterval ; j++){
-                              DateTime notificationDates = DateTime(newDate.year,newDate.month,newDate.day,DateFormat('hh:mm').parse(notifyScheduleTime[j]).hour,DateFormat('hh:mm').parse(notifyScheduleTime[j]).minute);
-                              scheduleList.add(notificationDates);
+                              await NotificationController.scheduleNotifications(context, schedule: schedule, content: content);
                             }
-                          }
 
-                          for(int i = 0; i <scheduleList.length; i++){
-                            final NotificationContent content = NotificationContent(
-                              id: Random().nextInt(9999),
-                              channelKey: 'alerts',
-                              title: _medicineNameController.text.trim(),
-                              body: '${_strengthController.text} ${selectedStrengthUnit} ${selectedMealName}',
-                              notificationLayout: NotificationLayout.Default,
-                              //actionType : ActionType.DisabledAction,
-                              color: Colors.black,
-                              category: NotificationCategory.Alarm,
-                              wakeUpScreen: true,
-                              timeoutAfter: Duration(minutes: 1),
-
-                              //
-                              backgroundColor: Colors.black,
-                              // customSound: 'resource://raw/notif',
-                              payload: {'actPag': 'myAct', 'actType': 'medicine'},
+                            Reminder reminder = Reminder(
+                                reminderId: updatedReminder.reminderId,
+                                userId: updatedReminder.userId,
+                                medTypeId: selectedMedTypeId,
+                                medTypeName: selectedMedTypeName,
+                                medicineName: _medicineNameController.text.trim(),
+                                strength: int.parse(_strengthController.text),
+                                unit: selectedStrengthUnit!,
+                                frequency: Frequency(
+                                    frequencyId: frequencyId,
+                                    frequencyName: selectedFrequencyName,
+                                    intervals: intervals
+                                ) ,
+                                scheduleTime: scheduleTime,
+                                medicationDuration: int.parse(_medicationDurationController.text.trim()),
+                                startDate: startDateIntake,
+                                endDate: endDateIntake,
+                                mealTypeId: selectedMealId,
+                                meal: selectedMealName,
+                                reminderPattern:ReminderPattern(
+                                    reminderPatternId: selectedPatternId,
+                                    patternName: selectedPatternName,
+                                    interval: selectedPatternId == 3 ? int.parse(_intervalDurationController.text) : null,
+                                    daysOfWeek: selectedPatternId == 2 ? days : null
+                                ) ,
+                                reminderImage: imageSet == 1 ? updatedReminder.reminderImage : selectImage != null ? reminderImage : null,
+                                notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
+                                summary: _summaryController.text.trim(),
+                                contentIdList: contentList
                             );
 
-                            final NotificationCalendar schedule = NotificationCalendar(
-                                year: scheduleList[i].year,
-                                month: scheduleList[i].month,
-                                day: scheduleList[i].day,
-                                hour: scheduleList[i].hour,
-                                minute: scheduleList[i].minute
+                            // NotificationService().scheduleEverydayNotification(reminder: reminder);
+                            _updateReminder(reminder);
+
+
+
+
+                          }
+
+
+                          /// FOR Specific days....
+                          if(selectedPatternId == 2){
+                            final int totalDays = int.parse(_medicationDurationController.text.trim());
+                            final int totalInterval = scheduleTime.length;
+                            final DateTime firstDate = DateTime(
+                              startDateIntake!.year,
+                              startDateIntake!.month,
+                              startDateIntake!.day,
+                              DateFormat('hh:mm').parse(notifyScheduleTime[0]).hour,
+                              DateFormat('hh:mm').parse(notifyScheduleTime[0]).minute,
                             );
 
-                            contentList.add(content.id!);
+                            List<DateTime> scheduleList = [];
 
-                            await NotificationController.scheduleNotifications(context, schedule: schedule, content: content);
+                            final int notificationTimes = totalDays * totalInterval;
+
+                            int addedDatesCount = 0;
+
+                            do {
+                              DateTime newDate = firstDate.add(Duration(days: addedDatesCount));
+
+                              bool addedDate = false; // Flag to check if notificationDates is added
+
+                              for (int j = 0; j < totalInterval; j++) {
+                                DateTime notificationDates = DateTime(
+                                  newDate.year,
+                                  newDate.month,
+                                  newDate.day,
+                                  int.parse(scheduleTime[j].split(':').first),
+                                  int.parse(scheduleTime[j].split(':').last.split(' ').first),
+                                );
+
+                                print(notificationDates);
+
+                                if (days!.contains(DateFormat('EEEE').format(notificationDates))) {
+                                  scheduleList.add(notificationDates);
+                                  addedDate = true;
+                                }
+                              }
+
+                              addedDatesCount++;
+
+                            } while (scheduleList.length < totalDays * totalInterval);
+
+                            for(int i = 0; i <scheduleList.length; i++){
+                              final NotificationContent content = NotificationContent(
+                                id: Random().nextInt(9999),
+                                channelKey: 'alerts',
+                                title: _medicineNameController.text.trim(),
+                                body: '${_strengthController.text} ${selectedStrengthUnit} ${selectedMealName}',
+                                notificationLayout: NotificationLayout.Default,
+                                //actionType : ActionType.DisabledAction,
+                                color: Colors.black,
+                                category: NotificationCategory.Alarm,
+                                wakeUpScreen: true,
+                                timeoutAfter: Duration(minutes: 1),
+
+                                //
+                                backgroundColor: Colors.black,
+                                // customSound: 'resource://raw/notif',
+                                payload: {'actPag': 'myAct', 'actType': 'medicine'},
+                              );
+
+                              final NotificationCalendar schedule = NotificationCalendar(
+                                  year: scheduleList[i].year,
+                                  month: scheduleList[i].month,
+                                  day: scheduleList[i].day,
+                                  hour: scheduleList[i].hour,
+                                  minute: scheduleList[i].minute
+                              );
+
+                              contentList.add(content.id!);
+
+                              await NotificationController.scheduleNotifications(context, schedule: schedule, content: content);
+                            }
+
+                            Reminder reminder = Reminder(
+                                reminderId: updatedReminder.reminderId,
+                                userId: updatedReminder.userId,
+                                medTypeId: selectedMedTypeId,
+                                medTypeName: selectedMedTypeName,
+                                medicineName: _medicineNameController.text.trim(),
+                                strength: int.parse(_strengthController.text),
+                                unit: selectedStrengthUnit!,
+                                frequency: Frequency(
+                                    frequencyId: frequencyId,
+                                    frequencyName: selectedFrequencyName,
+                                    intervals: intervals
+                                ) ,
+                                scheduleTime: scheduleTime,
+                                medicationDuration: int.parse(_medicationDurationController.text.trim()),
+                                startDate: startDateIntake,
+                                endDate: endDateIntake,
+                                mealTypeId: selectedMealId,
+                                meal: selectedMealName,
+                                reminderPattern:ReminderPattern(
+                                    reminderPatternId: selectedPatternId,
+                                    patternName: selectedPatternName,
+                                    interval: selectedPatternId == 3 ? int.parse(_intervalDurationController.text) : null,
+                                    daysOfWeek: selectedPatternId == 2 ? days : null
+                                ) ,
+                                reminderImage: imageSet == 1 ? updatedReminder.reminderImage : selectImage != null ? reminderImage : null,
+                                notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
+                                summary: _summaryController.text.trim(),
+                                contentIdList: contentList
+                            );
+
+                            // NotificationService().scheduleEverydayNotification(reminder: reminder);
+                            _updateReminder(reminder);
+
                           }
-                          Reminder reminder = Reminder(
-                              reminderId: updatedReminder.reminderId,
-                              userId: updatedReminder.userId,
-                              medTypeId: selectedMedTypeId,
-                              medTypeName: selectedMedTypeName,
-                              medicineName: _medicineNameController.text.trim(),
-                              strength: int.parse(_strengthController.text),
-                              unit: selectedStrengthUnit!,
-                              frequency: Frequency(
-                                  frequencyId: frequencyId,
-                                  frequencyName: selectedFrequencyName,
-                                  intervals: intervals
-                              ) ,
-                              scheduleTime: scheduleTime,
-                              medicationDuration: int.parse(_medicationDurationController.text.trim()),
-                              startDate: startDateIntake,
-                              endDate: endDateIntake,
-                              mealTypeId: selectedMealId,
-                              meal: selectedMealName,
-                              reminderPattern:ReminderPattern(
-                                  reminderPatternId: selectedPatternId,
-                                  patternName: selectedPatternName,
-                                  interval: selectedPatternId == 3 ? int.parse(_intervalDurationController.text) : null,
-                                  daysOfWeek: selectedPatternId == 2 ? days : null
-                              ) ,
-                              reminderImage: imageSet == 1 ? updatedReminder.reminderImage : selectImage != null ? reminderImage : null,
-                              notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
-                              summary: _summaryController.text.trim(),
-                              contentIdList: contentList
-                          );
 
-                          // NotificationService().scheduleEverydayNotification(reminder: reminder);
-                          _updateReminder(reminder);
+
+                          /// FOR INTERVALS....
+                          if(selectedPatternId == 3){
+                            final int totalDays = int.parse(_medicationDurationController.text.trim());
+                            final int totalInterval = scheduleTime.length;
+                            final DateTime firstDate = DateTime(startDateIntake!.year,startDateIntake!.month,startDateIntake!.day,DateFormat('hh:mm').parse(notifyScheduleTime[0]).hour,DateFormat('hh:mm').parse(notifyScheduleTime[0]).minute);
+
+                            List<DateTime> scheduleList = [firstDate];
+
+                            final int notificationTimes = totalDays * totalInterval;
+
+                            for(int i = 0 ; i<totalDays; i++){
+                              DateTime newDate = firstDate.add(Duration(days: i == 0 ? 0 :int.parse(_intervalDurationController.text) ));
+                              for(int j = 0 ; j < totalInterval ; j++){
+                                DateTime notificationDates = DateTime(newDate.year,newDate.month,newDate.day,DateFormat('hh:mm').parse(notifyScheduleTime[j]).hour,DateFormat('hh:mm').parse(notifyScheduleTime[j]).minute);
+                                scheduleList.add(notificationDates);
+                              }
+                            }
+
+                            for(int i = 0; i <scheduleList.length; i++){
+                              final NotificationContent content = NotificationContent(
+                                id: Random().nextInt(9999),
+                                channelKey: 'alerts',
+                                title: _medicineNameController.text.trim(),
+                                body: '${_strengthController.text} ${selectedStrengthUnit} ${selectedMealName}',
+                                notificationLayout: NotificationLayout.Default,
+                                //actionType : ActionType.DisabledAction,
+                                color: Colors.black,
+                                category: NotificationCategory.Alarm,
+                                wakeUpScreen: true,
+                                timeoutAfter: Duration(minutes: 1),
+
+                                //
+                                backgroundColor: Colors.black,
+                                // customSound: 'resource://raw/notif',
+                                payload: {'actPag': 'myAct', 'actType': 'medicine'},
+                              );
+
+                              final NotificationCalendar schedule = NotificationCalendar(
+                                  year: scheduleList[i].year,
+                                  month: scheduleList[i].month,
+                                  day: scheduleList[i].day,
+                                  hour: scheduleList[i].hour,
+                                  minute: scheduleList[i].minute
+                              );
+
+                              contentList.add(content.id!);
+
+                              await NotificationController.scheduleNotifications(context, schedule: schedule, content: content);
+                            }
+                            Reminder reminder = Reminder(
+                                reminderId: updatedReminder.reminderId,
+                                userId: updatedReminder.userId,
+                                medTypeId: selectedMedTypeId,
+                                medTypeName: selectedMedTypeName,
+                                medicineName: _medicineNameController.text.trim(),
+                                strength: int.parse(_strengthController.text),
+                                unit: selectedStrengthUnit!,
+                                frequency: Frequency(
+                                    frequencyId: frequencyId,
+                                    frequencyName: selectedFrequencyName,
+                                    intervals: intervals
+                                ) ,
+                                scheduleTime: scheduleTime,
+                                medicationDuration: int.parse(_medicationDurationController.text.trim()),
+                                startDate: startDateIntake,
+                                endDate: endDateIntake,
+                                mealTypeId: selectedMealId,
+                                meal: selectedMealName,
+                                reminderPattern:ReminderPattern(
+                                    reminderPatternId: selectedPatternId,
+                                    patternName: selectedPatternName,
+                                    interval: selectedPatternId == 3 ? int.parse(_intervalDurationController.text) : null,
+                                    daysOfWeek: selectedPatternId == 2 ? days : null
+                                ) ,
+                                reminderImage: imageSet == 1 ? updatedReminder.reminderImage : selectImage != null ? reminderImage : null,
+                                notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
+                                summary: _summaryController.text.trim(),
+                                contentIdList: contentList
+                            );
+
+                            // NotificationService().scheduleEverydayNotification(reminder: reminder);
+                            _updateReminder(reminder);
+
+                          }
+
 
                         }
+
+
 
 
 

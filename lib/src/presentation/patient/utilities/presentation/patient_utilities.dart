@@ -262,151 +262,151 @@ class _PatientUtilitiesState extends State<PatientUtilities> {
   }
 
 
-  _patientStat(BuildContext context){
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 18.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Container(
-                  // width: MediaQuery.of(context).size.width*0.45,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-
-                      color: ColorManager.red.withOpacity(0.15)
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          FaIcon(FontAwesomeIcons.heartPulse,color: ColorManager.red.withOpacity(0.5),size: 20.sp,),
-                          w10,
-                          Text('Heart Rate',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),)
-                        ],
-                      ),
-                      h10,
-                      Text('120 bpm',style: getMediumStyle(color: ColorManager.black,fontSize: 16.sp),),
-                      h20,
-                      Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: 12.sp),)
-                    ],
-
-                  ),
-                ),
-              ),
-              w10,
-              Expanded(
-                child: Container(
-                  // width: MediaQuery.of(context).size.width*.45,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-
-                      color: ColorManager.primary.withOpacity(0.15)
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          FaIcon(FontAwesomeIcons.heartCircleBolt,color: ColorManager.primaryDark.withOpacity(0.5),size: 20.sp,),
-                          w10,
-                          Text('Blood Pressure',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),)
-                        ],
-                      ),
-                      h10,
-                      Text('120/80 mmHg',style: getMediumStyle(color: ColorManager.black,fontSize: 16.sp),),
-                      h20,
-                      Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: 12.sp),)
-                    ],
-
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        h10,
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 18.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Container(
-                  // width: MediaQuery.of(context).size.width*.45,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-
-                      color: ColorManager.primary.withOpacity(0.15)
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          FaIcon(CupertinoIcons.graph_circle_fill,color: ColorManager.primary.withOpacity(0.5),size: 20.sp,),
-                          w10,
-                          Text('Cholesterol',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),)
-                        ],
-                      ),
-                      h10,
-                      Text('97 mg/dl',style: getMediumStyle(color: ColorManager.black,fontSize: 16.sp),),
-                      h20,
-                      Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: 12.sp),)
-                    ],
-
-                  ),
-                ),
-              ),
-              w10,
-              Expanded(
-                child: Container(
-                  // width: MediaQuery.of(context).size.width*.45,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-
-                      color: ColorManager.orange.withOpacity(0.15)
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          FaIcon(FontAwesomeIcons.heartCircleCheck,color: ColorManager.orange.withOpacity(0.5),size: 20.sp,),
-                          w10,
-                          Text('Sugar',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),)
-                        ],
-                      ),
-                      h10,
-                      Text('90 mg/dl',style: getMediumStyle(color: ColorManager.black,fontSize:16.sp),),
-                      h20,
-                      Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: 12.sp),)
-                    ],
-
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+  // _patientStat(BuildContext context){
+  //   return Column(
+  //     children: [
+  //       Container(
+  //         padding: EdgeInsets.symmetric(horizontal: 18.w),
+  //         child: Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Expanded(
+  //               child: Container(
+  //                 // width: MediaQuery.of(context).size.width*0.45,
+  //                 decoration: BoxDecoration(
+  //                     borderRadius: BorderRadius.circular(20),
+  //
+  //                     color: ColorManager.red.withOpacity(0.15)
+  //                 ),
+  //                 padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
+  //                 child: Column(
+  //                   mainAxisAlignment: MainAxisAlignment.start,
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: [
+  //                     Row(
+  //                       mainAxisSize: MainAxisSize.min,
+  //                       children: [
+  //                         FaIcon(FontAwesomeIcons.heartPulse,color: ColorManager.red.withOpacity(0.5),size: 20.sp,),
+  //                         w10,
+  //                         Text('Heart Rate',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),)
+  //                       ],
+  //                     ),
+  //                     h10,
+  //                     Text('120 bpm',style: getMediumStyle(color: ColorManager.black,fontSize: 16.sp),),
+  //                     h20,
+  //                     Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: 12.sp),)
+  //                   ],
+  //
+  //                 ),
+  //               ),
+  //             ),
+  //             w10,
+  //             Expanded(
+  //               child: Container(
+  //                 // width: MediaQuery.of(context).size.width*.45,
+  //                 decoration: BoxDecoration(
+  //                     borderRadius: BorderRadius.circular(20),
+  //
+  //                     color: ColorManager.primary.withOpacity(0.15)
+  //                 ),
+  //                 padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
+  //                 child: Column(
+  //                   mainAxisAlignment: MainAxisAlignment.start,
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: [
+  //                     Row(
+  //                       mainAxisSize: MainAxisSize.min,
+  //                       children: [
+  //                         FaIcon(FontAwesomeIcons.heartCircleBolt,color: ColorManager.primaryDark.withOpacity(0.5),size: 20.sp,),
+  //                         w10,
+  //                         Text('Blood Pressure',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),)
+  //                       ],
+  //                     ),
+  //                     h10,
+  //                     Text('120/80 mmHg',style: getMediumStyle(color: ColorManager.black,fontSize: 16.sp),),
+  //                     h20,
+  //                     Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: 12.sp),)
+  //                   ],
+  //
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //       h10,
+  //       Container(
+  //         padding: EdgeInsets.symmetric(horizontal: 18.w),
+  //         child: Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Expanded(
+  //               child: Container(
+  //                 // width: MediaQuery.of(context).size.width*.45,
+  //                 decoration: BoxDecoration(
+  //                     borderRadius: BorderRadius.circular(20),
+  //
+  //                     color: ColorManager.primary.withOpacity(0.15)
+  //                 ),
+  //                 padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
+  //                 child: Column(
+  //                   mainAxisAlignment: MainAxisAlignment.start,
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: [
+  //                     Row(
+  //                       mainAxisSize: MainAxisSize.min,
+  //                       children: [
+  //                         FaIcon(CupertinoIcons.graph_circle_fill,color: ColorManager.primary.withOpacity(0.5),size: 20.sp,),
+  //                         w10,
+  //                         Text('Cholesterol',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),)
+  //                       ],
+  //                     ),
+  //                     h10,
+  //                     Text('97 mg/dl',style: getMediumStyle(color: ColorManager.black,fontSize: 16.sp),),
+  //                     h20,
+  //                     Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: 12.sp),)
+  //                   ],
+  //
+  //                 ),
+  //               ),
+  //             ),
+  //             w10,
+  //             Expanded(
+  //               child: Container(
+  //                 // width: MediaQuery.of(context).size.width*.45,
+  //                 decoration: BoxDecoration(
+  //                     borderRadius: BorderRadius.circular(20),
+  //
+  //                     color: ColorManager.orange.withOpacity(0.15)
+  //                 ),
+  //                 padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
+  //                 child: Column(
+  //                   mainAxisAlignment: MainAxisAlignment.start,
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: [
+  //                     Row(
+  //                       mainAxisSize: MainAxisSize.min,
+  //                       children: [
+  //                         FaIcon(FontAwesomeIcons.heartCircleCheck,color: ColorManager.orange.withOpacity(0.5),size: 20.sp,),
+  //                         w10,
+  //                         Text('Sugar',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),)
+  //                       ],
+  //                     ),
+  //                     h10,
+  //                     Text('90 mg/dl',style: getMediumStyle(color: ColorManager.black,fontSize:16.sp),),
+  //                     h20,
+  //                     Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: 12.sp),)
+  //                   ],
+  //
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget _caloriesBody() {
     final userInfo = userInfoBox.values.toList();

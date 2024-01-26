@@ -776,7 +776,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                   if(selectedPatternId == 3)
                     h10,
 
-                  if(selectedPatternId == 1 || selectedPatternId ==2)
+
                     Row(
                       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

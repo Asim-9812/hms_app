@@ -612,7 +612,7 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
                 if(selectedPatternId == 3)
                   h10,
 
-                if(selectedPatternId == 1 || selectedPatternId ==2)
+
                 Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -744,9 +744,9 @@ class _EditReminderPageState extends ConsumerState<CreateGeneralReminder> {
 
                           },
                           validator: (value){
-                            if(selectedInitialReminderType == null){
-                              return 'Reminder Pattern is required';
-                            }
+                            // if(selectedInitialReminderType == null){
+                            //   return 'Reminder Pattern is required';
+                            // }
 
                             return null;
                           },
