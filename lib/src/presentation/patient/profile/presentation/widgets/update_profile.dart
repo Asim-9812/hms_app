@@ -1,16 +1,20 @@
 
 
 
+import 'dart:io';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:meroupachar/src/core/resources/color_manager.dart';
 import 'package:meroupachar/src/core/resources/style_manager.dart';
+import 'package:meroupachar/src/data/provider/common_provider.dart';
 import 'package:meroupachar/src/data/services/update_profile_service.dart';
 import 'package:meroupachar/src/presentation/patient/profile/domain/model/patient_update_model.dart';
 import 'package:meroupachar/src/presentation/patient/profile/domain/services/patient_update_services.dart';
@@ -89,6 +93,13 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
     _addressController.text = widget.user.localAddress ?? '';
     _wardController.text = widget.user.wardNo.toString();
     ageGender = widget.user.ageGender;
+    selectedGender = ageGender?.split('/').last;
+    genderId = genderType.indexOf(selectedGender??'Select Gender');
+    if(widget.user.dob != null){
+      _dobController.text = widget.user.dob!;
+      _calculateAge();
+    }
+    municipalId = widget.user.municipalityID;
   }
 
 
@@ -173,7 +184,7 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
 
             _ageController.text = ageInDays.toString();
             _ageController2.text = remainingHours.toString();
-            age = '${ageInDays}D';
+            age = '${ageInDays}D.${remainingHours}H';
 
 
           }
@@ -269,6 +280,7 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
   Widget build(BuildContext context) {
     final addressProvider = ref.watch(getAddressList);
     final countryProvider = ref.watch(getCountries);
+    final profilePicProvider= ref.watch(imageProvider);
     return GestureDetector(
       onTap: ()=>FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -304,35 +316,158 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                           child: CircleAvatar(
                             radius: 60.r,
                             backgroundColor: ColorManager.white,
-                            child: ClipOval(
-                              child: Icon(Icons.person,color: ColorManager.primary,)
+                            child: profilePicProvider != null ? Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  image: DecorationImage(image: FileImage(File(profilePicProvider.path)),fit: BoxFit.cover)
+                                ), ) :
+                                widget.user.profileImage != null ? Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      image: DecorationImage(image: FileImage(File(widget.user.profileImage!)),fit: BoxFit.cover)
+                                  ), )
+                                    :Icon(Icons.person,color: ColorManager.primary,),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 4,
+                          right: 0,
+                          child: GestureDetector(
+                            onTap: ()async {
+                              await showModalBottomSheet(
+                                constraints: BoxConstraints(maxHeight: 150),
+                                  context: context,
+                                  builder: (context){
+                                    return Container(
+                                      color: ColorManager.white,
+                                      padding: EdgeInsets.symmetric(vertical: 18),
+                                      child: Center(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Column(
+                                              children: [
+                                                InkWell(
+                                                  onTap : (){
+                                                    ref.read(imageProvider.notifier).camera();
+
+
+                                                    // if(image!=null){
+                                                    //   // Convert XFile to File
+                                                    //   File file2 = File(image.path);
+                                                    //   PlatformFile platformFile = convertFileToPlatformFile(file2);
+                                                    //
+                                                    //   setState(() {
+                                                    //     file = platformFile;
+                                                    //     _validateFile =false;
+                                                    //   });
+                                                    //
+                                                    //   ref.refresh(imageProvider);
+                                                    //
+                                                    // }
+
+
+                                                    // Now you can work with the 'file' as a File
+                                                    // For example, you can use it to display or upload the image
+                                                    setState(() {
+
+                                                    });
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(10),
+                                                        border: Border.all(
+                                                            color: ColorManager.black.withOpacity(0.5)
+                                                        )
+                                                    ),
+                                                    padding: EdgeInsets.symmetric(horizontal: 30.w,vertical: 30.h),
+                                                    child: Icon(FontAwesomeIcons.camera,color: ColorManager.black,),
+                                                  ),
+                                                ),
+                                                h10,
+                                                Text('Camera',style: getRegularStyle(color: ColorManager.black,fontSize: 16),)
+                                              ],
+                                            ),
+                                            Column(
+                                              children: [
+                                                InkWell(
+                                                  onTap:()async{
+
+                                                    ref.read(imageProvider.notifier).pickAnImage();
+
+                                                    // FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                                    //   allowMultiple: false,
+                                                    //   type: FileType.custom,
+                                                    //   allowedExtensions: [
+                                                    //     'jpg',
+                                                    //     'jpeg',
+                                                    //     'png',
+                                                    //     'gif',
+                                                    //     'bmp',
+                                                    //     'tiff',
+                                                    //     'webp',
+                                                    //     'svg',
+                                                    //     'ico'],
+                                                    // );
+                                                    //
+                                                    // if (result != null) {
+                                                    //   setState(() {
+                                                    //     file = result.files.first;
+                                                    //     _validateFile =false;
+                                                    //   });
+                                                    //
+                                                    // } else {
+                                                    //   // User canceled the picker
+                                                    // }
+
+                                                    setState(() {
+
+                                                    });
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(10),
+                                                        border: Border.all(
+                                                            color: ColorManager.black.withOpacity(0.5)
+                                                        )
+                                                    ),
+                                                    padding: EdgeInsets.symmetric(horizontal: 30.w,vertical: 30.h),
+                                                    child: Icon(FontAwesomeIcons.image,color: ColorManager.black,),
+                                                  ),
+                                                ),
+                                                h10,
+                                                Text('Gallery',style: getRegularStyle(color: ColorManager.black,fontSize: 16),)
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }
+                              );
+                            },
+                            child: Container(
+                              height: 36.h,
+                              width: 36.h,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(30.r),
+                                  border: Border.all(
+                                      color: Colors.white,
+                                      width: 2.w
+                                  )
+                              ),
+                              child: Badge(
+                                label: Icon(Icons.edit_outlined, color: Colors.white, size: 20.h,),
+                                backgroundColor: ColorManager.primary,
+                                largeSize: 30,
+                              ),
                             ),
                           ),
                         ),
-                        // Positioned(
-                        //   bottom: 4,
-                        //   right: 0,
-                        //   child: GestureDetector(
-                        //     onTap: (){},
-                        //     child: Container(
-                        //       height: 36.h,
-                        //       width: 36.h,
-                        //       decoration: BoxDecoration(
-                        //           color: Colors.white,
-                        //           borderRadius: BorderRadius.circular(30.r),
-                        //           border: Border.all(
-                        //               color: Colors.white,
-                        //               width: 2.w
-                        //           )
-                        //       ),
-                        //       child: Badge(
-                        //         label: Icon(Icons.edit_outlined, color: Colors.white, size: 20.h,),
-                        //         backgroundColor: ColorManager.primary,
-                        //         largeSize: 30,
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
@@ -451,136 +586,136 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                       ),
                     ],
                   ),
-                  h20,
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _ageController,
-                          keyboardType: TextInputType.number,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          onChanged: (value) {
-                            setState(() {
-                              _calculateDOB();
-                            });
-                          },
-                          validator: (value){
-                            if (value!.isEmpty) {
-                              return 'Age is required';
-                            }
-
-                            if (!value.contains(RegExp(r'^\d+$'))) {
-                              return 'Invalid age';
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                            labelText: 'Age',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
-                                    color: ColorManager.black
-                                )
-                            ),
-                          ),
-                        ),
-                      ),
-                      w10,
-                      Expanded(
-                        child: DropdownButtonFormField<String>(
-                          isDense: true,
-                          padding: EdgeInsets.zero,
-                          value: selectedAge,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
-                            ),
-                          ),
-                          items: ageType
-                              .map(
-                                (String item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          )
-                              .toList(),
-                          onChanged: (String? value) {
-                            setState(() {
-                              selectedAge = value!;
-                              ageId = ageType.indexOf(value)+1;
-                              _ageController2.clear();
-                              _dobController.clear();
-                              _ageController.clear();
-
-                            });
-
-                            print(ageId);
-                          },
-                        ),
-                      ),
-                      w10,
-                      Expanded(
-                        child: AbsorbPointer(
-                          absorbing: ageId  >= ageType.length,
-                          child: TextFormField(
-                            controller: _ageController2,
-                            keyboardType: TextInputType.number,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                            validator:(value){
-                              if(ageId >= ageType.length){
-                                return null;
-                              }
-                              if(value!.isEmpty){
-                                return null;
-                              }
-                              if (!value.contains(RegExp(r'^\d+$'))) {
-                                return 'Please enter a valid number';
-                              }
-                              else if(ageId == 1 && int.parse(value) >=13){
-                                return 'Invalid month';
-                              }
-                              else if(ageId == 2 && int.parse(value) >=33){
-                                return 'Invalid day';
-                              }
-                              else if(ageId == 3 && int.parse(value) >=25){
-                                return 'Invalid hour';
-                              }
-
-                              return null;
-                            },
-                            onChanged: (value) {
-                              setState(() {
-                                _calculateDOB();
-                              });
-                            },
-                            decoration: InputDecoration(
-                              floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                              labelText: ageId  >= ageType.length ? '-----' : ageType[ageId ],
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                      color: ColorManager.black
-                                  )
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  // h20,
+                  // Row(
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   children: [
+                  //     Expanded(
+                  //       child: TextFormField(
+                  //         controller: _ageController,
+                  //         keyboardType: TextInputType.number,
+                  //         autovalidateMode: AutovalidateMode.onUserInteraction,
+                  //         onChanged: (value) {
+                  //           setState(() {
+                  //             _calculateDOB();
+                  //           });
+                  //         },
+                  //         validator: (value){
+                  //           if (value!.isEmpty) {
+                  //             return 'Age is required';
+                  //           }
+                  //
+                  //           if (!value.contains(RegExp(r'^\d+$'))) {
+                  //             return 'Invalid age';
+                  //           }
+                  //           return null;
+                  //         },
+                  //         decoration: InputDecoration(
+                  //           floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                  //           labelText: 'Age',
+                  //           border: OutlineInputBorder(
+                  //               borderRadius: BorderRadius.circular(10),
+                  //               borderSide: BorderSide(
+                  //                   color: ColorManager.black
+                  //               )
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     w10,
+                  //     Expanded(
+                  //       child: DropdownButtonFormField<String>(
+                  //         isDense: true,
+                  //         padding: EdgeInsets.zero,
+                  //         value: selectedAge,
+                  //         decoration: InputDecoration(
+                  //           isDense: true,
+                  //           filled: true,
+                  //           fillColor: Colors.white,
+                  //           border: OutlineInputBorder(
+                  //             borderRadius: BorderRadius.circular(10),
+                  //             borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
+                  //           ),
+                  //           enabledBorder: OutlineInputBorder(
+                  //             borderRadius: BorderRadius.circular(10),
+                  //             borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
+                  //           ),
+                  //         ),
+                  //         items: ageType
+                  //             .map(
+                  //               (String item) => DropdownMenuItem<String>(
+                  //             value: item,
+                  //             child: Text(
+                  //               item,
+                  //               overflow: TextOverflow.ellipsis,
+                  //             ),
+                  //           ),
+                  //         )
+                  //             .toList(),
+                  //         onChanged: (String? value) {
+                  //           setState(() {
+                  //             selectedAge = value!;
+                  //             ageId = ageType.indexOf(value)+1;
+                  //             _ageController2.clear();
+                  //             _dobController.clear();
+                  //             _ageController.clear();
+                  //
+                  //           });
+                  //
+                  //           print(ageId);
+                  //         },
+                  //       ),
+                  //     ),
+                  //     w10,
+                  //     Expanded(
+                  //       child: AbsorbPointer(
+                  //         absorbing: ageId  >= ageType.length,
+                  //         child: TextFormField(
+                  //           controller: _ageController2,
+                  //           keyboardType: TextInputType.number,
+                  //           autovalidateMode: AutovalidateMode.onUserInteraction,
+                  //           validator:(value){
+                  //             if(ageId >= ageType.length){
+                  //               return null;
+                  //             }
+                  //             if(value!.isEmpty){
+                  //               return null;
+                  //             }
+                  //             if (!value.contains(RegExp(r'^\d+$'))) {
+                  //               return 'Please enter a valid number';
+                  //             }
+                  //             else if(ageId == 1 && int.parse(value) >=13){
+                  //               return 'Invalid month';
+                  //             }
+                  //             else if(ageId == 2 && int.parse(value) >=33){
+                  //               return 'Invalid day';
+                  //             }
+                  //             else if(ageId == 3 && int.parse(value) >=25){
+                  //               return 'Invalid hour';
+                  //             }
+                  //
+                  //             return null;
+                  //           },
+                  //           onFieldSubmitted: (value) {
+                  //             setState(() {
+                  //               _calculateDOB();
+                  //             });
+                  //           },
+                  //           decoration: InputDecoration(
+                  //             floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                  //             labelText: ageId  >= ageType.length ? '-----' : ageType[ageId ],
+                  //             border: OutlineInputBorder(
+                  //                 borderRadius: BorderRadius.circular(10),
+                  //                 borderSide: BorderSide(
+                  //                     color: ColorManager.black
+                  //                 )
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   h20,
                   TextFormField(
                     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -634,7 +769,7 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
 
                       return null;
                     },
-                    onChanged: (value) {
+                    onFieldSubmitted: (value) {
                       setState(() {
                         _calculateAge();
                       });
@@ -1019,7 +1154,8 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                                   contact: _contactController.text.trim(),
                                   genderID: genderId!,
                                   entryDate: DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                                  flag: ''
+                                  flag: '',
+                                imagePhoto1: profilePicProvider != null ?File(profilePicProvider.path): widget.user.profileImage != null ? File(widget.user.profileImage!):null
                               );
 
                               final response = await PatientUpdateService().updateProfile(updateProfile: profileData);
@@ -1031,6 +1167,9 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                                     duration: const Duration(milliseconds: 1400),
                                   ),
                                 );
+                                setState(() {
+                                  isPostingData = false;
+                                });
                               }
                               else{
                                 scaffoldMessage.showSnackBar(
@@ -1069,12 +1208,14 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                                   prefixSettingID: widget.user.prefixSettingID,
                                   password: widget.user.password,
                                   referredID: widget.user.referredID,
-                                  profileImage: widget.user.profileImage,
+                                  profileImage: profilePicProvider?.path ?? widget.user.profileImage,
                                   roleID: widget.user.roleID,
                                   signatureImage: widget.user.signatureImage,
                                   token: widget.user.token,
                                   username: widget.user.username,
-                                  wardNo: int.parse(_wardController.text.trim())
+                                  wardNo: int.parse(_wardController.text.trim()),
+                                  dob: _dobController.text.trim()
+
 
                                 );
 

@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
+
 class UpdateProfileModel {
   final int id;
   final String patientID;
@@ -13,6 +17,7 @@ class UpdateProfileModel {
   final int genderID;
   final String entryDate;
   final String flag;
+  final File? imagePhoto1;
 
   UpdateProfileModel({
     required this.id,
@@ -29,6 +34,7 @@ class UpdateProfileModel {
     required this.genderID,
     required this.entryDate,
     required this.flag,
+    required this.imagePhoto1,
   });
 
   factory UpdateProfileModel.fromJson(Map<String, dynamic> json) {
@@ -47,6 +53,7 @@ class UpdateProfileModel {
       genderID: json['genderID'] ?? 0,
       entryDate: json['entryDate'] ?? '',
       flag: json['flag'] ?? '',
+      imagePhoto1: json['imagephoto1'] ?? '',
     );
   }
 
@@ -66,6 +73,7 @@ class UpdateProfileModel {
       'genderID': genderID,
       'entryDate': entryDate,
       'flag': flag,
+      'imagephoto1' : imagePhoto1
     };
   }
 }

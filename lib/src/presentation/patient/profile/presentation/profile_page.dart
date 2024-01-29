@@ -402,7 +402,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   elevation: 5,
                   child: CircleAvatar(
                     backgroundColor: ColorManager.white,
-                    backgroundImage: userBox[0].profileImage == null ? null : NetworkImage('${Api.baseUrl}/${userBox[0].profileImage}'),
+                    backgroundImage: userBox[0].profileImage == null ? null : FileImage(File('${userBox[0].profileImage}')),
                     radius: isNarrowScreen? 45.r:45,
                     child:userBox[0].profileImage != null ? null :FaIcon(FontAwesomeIcons.user,color: ColorManager.black,),
                   ),

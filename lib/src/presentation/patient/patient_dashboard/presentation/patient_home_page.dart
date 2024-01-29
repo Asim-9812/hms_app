@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -172,7 +174,7 @@ class _PatientHomePageState extends ConsumerState<PatientHomePage> {
                   children: [
                     CircleAvatar(
                       backgroundColor: ColorManager.white,
-                      backgroundImage: userBox[0].profileImage == null ? null : NetworkImage('${Api.baseUrl}/${userBox[0].profileImage}'),
+                      backgroundImage: userBox[0].profileImage == null ? null : FileImage(File('${userBox[0].profileImage}')),
                       radius: 30,
                       child:userBox[0].profileImage != null ? null :FaIcon(FontAwesomeIcons.user,color: ColorManager.black,),
                     ),

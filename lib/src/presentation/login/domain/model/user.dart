@@ -110,6 +110,9 @@ class User extends HiveObject {
   @HiveField(34)
   String? ageGender;
 
+  @HiveField(35)
+  String? dob;
+
   User({
     this.id,
     this.userID,
@@ -145,7 +148,8 @@ class User extends HiveObject {
     this.code,
     this.username,
     this.orgId,
-    this.ageGender
+    this.ageGender,
+    this.dob,
   });
 
 
@@ -186,6 +190,7 @@ class User extends HiveObject {
       username: json['userName'] as String?,
       orgId: json['orgId'] as String?,
       ageGender: json['ageGender'] as String?,
+      dob: json['dob'] as String?,
     );
   }
 
@@ -225,7 +230,8 @@ class User extends HiveObject {
       'code': code,
       'userName': username,
       'orgId': orgId,
-      'ageGender': ageGender
+      'ageGender': ageGender,
+      'dob' : dob
     };
   }
 
@@ -266,7 +272,8 @@ class User extends HiveObject {
       code: null,
       username: null,
       orgId: null,
-      ageGender: null
+      ageGender: null,
+      dob: null
     );
   }
 }

@@ -219,27 +219,30 @@ class _MedDetailsState extends State<MedDetails> {
                      ],
                    ),
                    h20,
-                   Row(
-                     mainAxisAlignment: MainAxisAlignment.start,
-                     children: [
-                       Text('Consumption Pattern:',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
-                       w10,
-                       reminderBox.reminderPattern.interval != null ? Text('Every ${reminderBox.reminderPattern.interval} days',style: getRegularStyle(color: ColorManager.white,fontSize: 18),)
-                           : reminderBox.reminderPattern.daysOfWeek == null ?   Text('Everyday',style: getRegularStyle(color: ColorManager.white,fontSize: 18),)
-                           : Row(
-                         children: reminderBox.reminderPattern.daysOfWeek!.map((e){
-                           return Container(
-                             padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
-                             margin: EdgeInsets.only(right: 5.w),
-                             decoration: BoxDecoration(
-                                 borderRadius: BorderRadius.circular(10),
-                                 color: ColorManager.white.withOpacity(0.7)
-                             ),
-                             child: Text('${e.substring(0,3)}',style: getRegularStyle(color: ColorManager.primaryDark,fontSize: 12),),
-                           );
-                         }).toList(),
-                       )
-                     ],
+                   SingleChildScrollView(
+                     scrollDirection: Axis.horizontal,
+                     child: Row(
+                       mainAxisAlignment: MainAxisAlignment.start,
+                       children: [
+                         Text('Consumption Pattern:',style: getMediumStyle(color: ColorManager.white,fontSize: 18),),
+                         w10,
+                         reminderBox.reminderPattern.interval != null ? Text('Every ${reminderBox.reminderPattern.interval} days',style: getRegularStyle(color: ColorManager.white,fontSize: 18),)
+                             : reminderBox.reminderPattern.daysOfWeek == null ?   Text('Everyday',style: getRegularStyle(color: ColorManager.white,fontSize: 18),)
+                             : Row(
+                                                          children: reminderBox.reminderPattern.daysOfWeek!.map((e){
+                                 return Container(
+                                   padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+                                   margin: EdgeInsets.only(right: 5.w),
+                                   decoration: BoxDecoration(
+                                       borderRadius: BorderRadius.circular(10),
+                                       color: ColorManager.white.withOpacity(0.7)
+                                   ),
+                                   child: Text('${e.substring(0,3)}',style: getRegularStyle(color: ColorManager.primaryDark,fontSize: 12),),
+                                 );
+                                                          }).toList(),
+                                                        )
+                       ],
+                     ),
                    ),
 
 

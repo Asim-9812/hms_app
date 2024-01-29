@@ -1257,7 +1257,6 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
 
                                         await NotificationController
                                             .scheduleInitialNotifications(
-
                                             context,
                                             schedule: schedule,
                                             content: content);
