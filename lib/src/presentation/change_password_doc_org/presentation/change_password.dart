@@ -15,15 +15,15 @@ import '../../common/snackbar.dart';
 import '../../login/domain/model/user.dart';
 import '../domain/service/change_user_pwd_services.dart';
 
-class ChangePwdDocOrg extends StatefulWidget {
+class ChangePwd extends StatefulWidget {
   final User userBox;
-  ChangePwdDocOrg(this.userBox);
+  ChangePwd(this.userBox);
 
   @override
-  State<ChangePwdDocOrg> createState() => _ChangePwdDocOrgState();
+  State<ChangePwd> createState() => _ChangePwdState();
 }
 
-class _ChangePwdDocOrgState extends State<ChangePwdDocOrg> {
+class _ChangePwdState extends State<ChangePwd> {
 
   final formKey = GlobalKey<FormState>();
 
@@ -77,6 +77,11 @@ class _ChangePwdDocOrgState extends State<ChangePwdDocOrg> {
                         return 'Invalid password';
                       }
                       return null;
+                    },
+                    onChanged: (value){
+                      setState(() {
+                        _pwdCheck = true;
+                      });
                     },
                     decoration: InputDecoration(
                         floatingLabelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 14),
@@ -213,11 +218,12 @@ class _ChangePwdDocOrgState extends State<ChangePwdDocOrg> {
                         final scaffoldMessage = ScaffoldMessenger.of(context);
 
                       if(formKey.currentState!.validate()){
+                        // print(widget.userBox.username);
                         setState(() {
                           _isPosting = true;
                         });
                         final response = await ChangePwdUserService().changeUserPwd(
-                            userId: widget.userBox.userID!,
+                            userId: widget.userBox.typeID ==4 ? widget.userBox.username! : widget.userBox.userID!,
                             oldPwd: _oldPwdController.text.trim(),
                             newPwd: _newPwdController.text.trim()
                         );

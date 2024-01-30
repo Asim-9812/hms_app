@@ -334,7 +334,7 @@ class _OrgProfilePageState extends ConsumerState<OrgProfilePage> {
                                 Get.to(()=>DocumentPage(isWideScreen,isNarrowScreen,true));
                               },trailing: true),
                               _profileItems2(title: 'Change Password', icon: FontAwesomeIcons.key,
-                                  onTap: ()=>Get.to(()=>ChangePwdDocOrg(userBox.first)),
+                                  onTap: ()=>Get.to(()=>ChangePwd(userBox.first)),
                                   trailing: true),
                               // _profileItems2(title: 'Permissions', icon: FontAwesomeIcons.universalAccess, onTap: (){},trailing: true),
                               // _profileItems2(title: 'Help Center', icon: Icons.question_mark, onTap: (){},trailing: true),

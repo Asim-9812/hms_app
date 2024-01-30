@@ -16,6 +16,7 @@ import 'package:hive/hive.dart';
 import 'package:meroupachar/src/core/resources/color_manager.dart';
 import 'package:meroupachar/src/core/resources/style_manager.dart';
 import 'package:meroupachar/src/data/services/user_services.dart';
+import 'package:meroupachar/src/presentation/change_password_doc_org/presentation/change_password.dart';
 import 'package:meroupachar/src/presentation/common/url_launcher.dart';
 import 'package:meroupachar/src/presentation/notification/presentation/notification_page.dart';
 import 'package:meroupachar/src/presentation/patient/profile/presentation/widgets/update_profile.dart';
@@ -27,7 +28,6 @@ import '../../../../core/resources/value_manager.dart';
 import '../../../../data/model/country_model.dart';
 import '../../../../data/provider/common_provider.dart';
 import '../../../../data/services/country_services.dart';
-import '../../../../test.dart';
 import '../../../common/snackbar.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../login/domain/service/login_service.dart';
@@ -306,7 +306,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         _profileItems2(title: 'My Documents', icon: FontAwesomeIcons.folderClosed, onTap: (){
                           Get.to(()=>PatientDocumentPage(isWideScreen,isNarrowScreen));
                         },trailing: true),
-                        // _profileItems2(title: 'Change Password', icon: FontAwesomeIcons.key, onTap: (){},trailing: true),
+                        // _profileItems2(title: 'Change Password', icon: FontAwesomeIcons.key, onTap: ()=>Get.to(()=>ChangePwd(userBox[0])),trailing: true),
                         // _profileItems2(title: 'Permissions', icon: FontAwesomeIcons.universalAccess, onTap: (){},trailing: true),
                         // _profileItems2(title: 'Help Center', icon: Icons.question_mark, onTap: (){},trailing: true),
                         _profileItems2(title: 'Terms & Policies', icon: FontAwesomeIcons.book, onTap: (){

@@ -309,7 +309,7 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
                               // _profileItems2(title: 'Certifications', icon: FontAwesomeIcons.certificate, onTap: (){},trailing: true),
                               // _profileItems2(title: 'Patient Reviews (253)', icon: FontAwesomeIcons.solidStar, onTap: (){},trailing: true),
                               _profileItems2(title: 'Change Password', icon: FontAwesomeIcons.key,
-                                  onTap: ()=>Get.to(()=>ChangePwdDocOrg(userBox.first)),
+                                  onTap: ()=>Get.to(()=>ChangePwd(userBox.first)),
                                   trailing: true),
                               // _profileItems2(title: 'Permissions', icon: FontAwesomeIcons.universalAccess, onTap: (){},trailing: true),
                               // _profileItems2(title: 'Help Center', icon: Icons.question_mark, onTap: (){},trailing: true),

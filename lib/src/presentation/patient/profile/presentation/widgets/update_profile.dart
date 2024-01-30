@@ -1020,7 +1020,7 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                                     ),
                                     borderRadius: BorderRadius.circular(10)
                                 ),
-                                labelText: "Country",
+                                labelText: "Address",
                                 labelStyle: getRegularStyle(color: ColorManager.primary)
                             ),
                           ),

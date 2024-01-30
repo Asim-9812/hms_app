@@ -321,7 +321,7 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
                 _scan();
 
               // Get.to(()=>NoticesUI());
-              // Get.to(()=>QrScanner());
+              // Get.to(()=>TestPage1001());
 
               }
             },
