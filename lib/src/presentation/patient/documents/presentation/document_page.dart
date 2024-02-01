@@ -20,6 +20,8 @@ import 'package:meroupachar/src/presentation/patient/documents/presentation/fold
 import '../../../../core/api.dart';
 import '../../../../core/pdf_api.dart';
 import '../../../../core/resources/value_manager.dart';
+import '../../../common/snackbar.dart';
+import '../../../documents/domain/services/document_services.dart';
 import '../../../documents/presentation/pdfView.dart';
 import '../../../login/domain/model/user.dart';
 import '../add_documents/presentation/add_document_page.dart';
@@ -137,7 +139,7 @@ class _PatientDocumentPageState extends ConsumerState<PatientDocumentPage> {
                                 fileNumbers: numberOfDocs,
                                 onTap: (){
                                   final list = documents.where((element) => element.folderName == data[index] ).toList();
-                                  Get.to(()=>PatientFolderPage(docId: username, folderName: data[index], files: list));
+                                  Get.to(()=>PatientFolderPage(userId: username, folderName: data[index], files: list));
                                 });
                           },
 
@@ -327,7 +329,7 @@ class _PatientDocumentPageState extends ConsumerState<PatientDocumentPage> {
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (BuildContext context, int index) {
                       return _fileTile(context,
-                        docId: username,
+                        userId: username,
                         documentId:reversedList[index].documentID! ,
                         typeId: reversedList[index].documentTypeID!,
                         fileName: reversedList[index].documentTitle!,
@@ -372,12 +374,12 @@ class _PatientDocumentPageState extends ConsumerState<PatientDocumentPage> {
     required String description,
     required int typeId,
     required int documentId,
-    required String docId,
+    required String userId,
   }) {
     return ListTile(
 
       onLongPress: () async {
-        _showFileDialog(context,documentId.toString(),docId);
+        _showFileDialog(context,documentId.toString(),userId);
       },
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
@@ -396,7 +398,7 @@ class _PatientDocumentPageState extends ConsumerState<PatientDocumentPage> {
       subtitle: Text('${description}',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 10),),
       trailing: IconButton(
         onPressed: () async {
-          _showFileDialog(context,documentId.toString(),docId);
+          _showFileDialog(context,documentId.toString(),userId);
         },
         icon: FaIcon(Icons.more_horiz,color: ColorManager.iconGrey,),
       ),
@@ -404,7 +406,7 @@ class _PatientDocumentPageState extends ConsumerState<PatientDocumentPage> {
   }
 
   /// file menu...
-  Future<void> _showFileDialog(BuildContext context,String documentId,String docId) {
+  Future<void> _showFileDialog(BuildContext context,String documentId,String userId) {
     return showDialog(
         context: context,
         builder: (context){
@@ -426,38 +428,38 @@ class _PatientDocumentPageState extends ConsumerState<PatientDocumentPage> {
                     color: ColorManager.black,
                   ),
                   _folderCustomize(icon: Icons.delete_outline, name: 'Delete',
-                      onTap: (){}
-                    //       ()async{
-                    //     final scaffoldMessage = ScaffoldMessenger.of(context);
-                    // final response = await DoctorDocumentServices().delDocument(documentId: documentId);
-                    // if(response.isLeft()){
-                    //   final left = response.fold(
-                    //           (l) => l,
-                    //           (r) => null
-                    //   );
-                    //   scaffoldMessage.showSnackBar(
-                    //       SnackbarUtil.showFailureSnackbar(
-                    //           message: '$left',
-                    //           duration: const Duration(milliseconds: 1200)
-                    //       )
-                    //   );
-                    //   Navigator.pop(context);
-                    // }
-                    // else{
-                    //   if(response.isLeft()){
-                    //
-                    //     scaffoldMessage.showSnackBar(
-                    //         SnackbarUtil.showSuccessSnackbar(
-                    //             message: 'Successful',
-                    //             duration: const Duration(milliseconds: 1200)
-                    //         )
-                    //     );
-                    //     ref.refresh(documentProvider(docId));
-                    //     ref.refresh(folderProvider(docId));
-                    //     Navigator.pop(context);
-                    //   }
-                    // }
-                    //   }
+                      onTap:
+                          ()async{
+                        final scaffoldMessage = ScaffoldMessenger.of(context);
+                    final response = await PatientDocumentServices().delDocument(documentId: documentId);
+                    if(response.isLeft()){
+                      final left = response.fold(
+                              (l) => l,
+                              (r) => null
+                      );
+                      scaffoldMessage.showSnackBar(
+                          SnackbarUtil.showFailureSnackbar(
+                              message: '$left',
+                              duration: const Duration(milliseconds: 1200)
+                          )
+                      );
+                      Navigator.pop(context);
+                    }
+                    else{
+
+
+                        scaffoldMessage.showSnackBar(
+                            SnackbarUtil.showSuccessSnackbar(
+                                message: 'Successful',
+                                duration: const Duration(milliseconds: 1200)
+                            )
+                        );
+                        ref.refresh(patientDocumentProvider(userId));
+                        ref.refresh(patientFolderProvider(userId));
+                        Navigator.pop(context);
+
+                    }
+                      }
                   ),
 
                 ],

@@ -35,14 +35,17 @@ class ReminderAdapter extends TypeAdapter<Reminder> {
       reminderImage: fields[15] as Uint8List?,
       notes: fields[16] as String?,
       summary: fields[17] as String,
-      contentIdList: (fields[18] as List?)?.cast<int>(),
+      contentId: fields[18] as int,
+      dateList: (fields[19] as List).cast<DateListModel>(),
+      reminderTypeId: fields[20] as int,
+      initialContentId: fields[21] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, Reminder obj) {
     writer
-      ..writeByte(19)
+      ..writeByte(22)
       ..writeByte(0)
       ..write(obj.reminderId)
       ..writeByte(1)
@@ -80,7 +83,13 @@ class ReminderAdapter extends TypeAdapter<Reminder> {
       ..writeByte(17)
       ..write(obj.summary)
       ..writeByte(18)
-      ..write(obj.contentIdList);
+      ..write(obj.contentId)
+      ..writeByte(19)
+      ..write(obj.dateList)
+      ..writeByte(20)
+      ..write(obj.reminderTypeId)
+      ..writeByte(21)
+      ..write(obj.initialContentId);
   }
 
   @override
@@ -173,6 +182,43 @@ class ReminderPatternAdapter extends TypeAdapter<ReminderPattern> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is ReminderPatternAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class DateListModelAdapter extends TypeAdapter<DateListModel> {
+  @override
+  final int typeId = 23;
+
+  @override
+  DateListModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return DateListModel(
+      dateId: fields[0] as int,
+      reminderDate: fields[1] as DateTime,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, DateListModel obj) {
+    writer
+      ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.dateId)
+      ..writeByte(1)
+      ..write(obj.reminderDate);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DateListModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

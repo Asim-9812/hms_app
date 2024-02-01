@@ -74,6 +74,8 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
   List<DateTime> scheduledDate = [];
 
   List<int> contentList = [];
+  int? contentId ;
+  int? initialContentId ;
 
 
   bool isPostingData = false;
@@ -134,7 +136,8 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
       selectedInitialReminderTypeId = reminder.initialReminder!.initialReminderTypeId;
     }
 
-    contentList = reminder.contentIdList!;
+    contentId = reminder.contentId;
+    initialContentId = reminder.initialContentId;
 
 
 
@@ -987,9 +990,13 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                     isPostingData = true;
                                   });
 
-                                  for(int i = 0; i < contentList.length ; i++){
-                                    await NotificationController.cancelNotifications(id: contentList[i]);
-                                  }
+                                    await NotificationController.cancelNotifications(id: contentId!);
+
+                                    if(widget.reminder.initialReminder != null){
+                                      await NotificationController.cancelNotifications(id: initialContentId!);
+                                    }
+
+
 
                                   int addedTime = 0;
 
@@ -1017,25 +1024,88 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                         setTime!.hour, setTime!.minute);
 
                                     final initialDate = firstDate.subtract(remindMe? duration! : Duration(seconds: 0));
-
-                                    List<DateTime> scheduleList = [];
-                                    List<DateTime> scheduleInitialList = [];
+                                    int contentId = Random().nextInt(9999);
 
 
-                                    for (int i = 0; i < 1; i++) {
-                                      DateTime newDate = firstDate.add(
-                                          Duration(days: i));
-                                      print(newDate);
-                                      DateTime notificationDates = DateTime(
-                                          newDate.year, newDate.month,
-                                          newDate.day, setTime!.hour, setTime!.minute);
-                                      DateTime newInitialDate = initialDate.add(Duration(days: i));
-                                      scheduleList.add(notificationDates);
-                                      scheduleInitialList.add(newInitialDate);
+
+
+                                    final NotificationContent content = NotificationContent(
+                                      id: contentId,
+                                      channelKey: 'alerts',
+                                      title: _titleController.text.trim(),
+                                      body: _descriptionController.text,
+                                      notificationLayout: NotificationLayout
+                                          .Default,
+                                      color: Colors.black,
+                                      category: NotificationCategory.Alarm,
+                                      timeoutAfter: Duration(minutes: 1),
+
+                                      wakeUpScreen: true,
+
+
+                                      //
+                                      backgroundColor: Colors.black,
+                                      // customSound: 'resource://raw/notif',
+                                      payload: {
+                                        'reminderTypeId': '2',
+                                        'dateTime': firstDate.toString()
+                                      },
+                                    );
+
+                                    final NotificationCalendar schedule = NotificationCalendar(
+                                year: firstDate.year,
+                                month: firstDate.month,
+                                day: firstDate.day,
+                                hour: firstDate.hour,
+                                minute: firstDate.minute,
+                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                              );
+
+
+
+                                    await NotificationController
+                                        .scheduleNotifications(
+
+
+                                        schedule: schedule,
+                                        content: content);
+                                    final initialContentId = Random().nextInt(9999);
+
+                                    if(remindMe){
+
+
+                                      final NotificationContent initialContent = NotificationContent(
+                                        id: initialContentId,
+                                        channelKey: 'alerts',
+                                        title: _titleController.text.trim(),
+                                        body: _descriptionController.text,
+                                        notificationLayout: NotificationLayout
+                                            .Default,
+                                        color: Colors.black,
+
+                                        wakeUpScreen: true,
+
+
+                                        //
+                                        backgroundColor: Colors.black,
+
+                                      );
+
+                                      final NotificationCalendar schedule = NotificationCalendar(
+                                year: initialDate.year,
+                                month: initialDate.month,
+                                day: initialDate.day,
+                                hour: initialDate.hour,
+                                minute: initialDate.minute,
+                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                            );
+
+                                      await NotificationController
+                                          .scheduleInitialNotifications(
+                                          schedule: schedule,
+                                          content: initialContent);
+
                                     }
-
-                                    print('scheduled list : ${scheduleList
-                                        .length}');
                                     GeneralReminderModel reminder = GeneralReminderModel(
                                         reminderId: Random().nextInt(9999),
                                         title: _titleController.text.trim(),
@@ -1047,102 +1117,15 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                           patternName: selectedPatternName!,
                                         ),
                                         initialReminder: !remindMe ? null : InitialReminder(
+                                            initialReminderContentId: initialContentId,
                                             initialReminderTypeId: selectedInitialReminderTypeId!,
                                             initialReminderTypeName: selectedInitialReminderType!,
                                             initialReminder: int.parse(_initialReminderController.text.trim())
                                         ),
                                         userId: userId,
-                                        contentIdList: contentList
+                                        contentId: contentId,
+                                        reminderTypeId: 2
                                     );
-
-                                    for (int i = 0; i <
-                                        scheduleList.length; i++) {
-                                      final NotificationContent content = NotificationContent(
-                                        id: Random().nextInt(9999),
-                                        channelKey: 'alerts',
-                                        title: _titleController.text.trim(),
-                                        body: _descriptionController.text,
-                                        notificationLayout: NotificationLayout
-                                            .Default,
-                                        color: Colors.black,
-                                        category: NotificationCategory.Alarm,
-                                        timeoutAfter: Duration(minutes: 1),
-
-                                        wakeUpScreen: true,
-
-
-                                        //
-                                        backgroundColor: Colors.black,
-                                        // customSound: 'resource://raw/notif',
-                                        payload: {
-                                          'actPag': 'myAct',
-                                          'actType': 'medicine'
-                                        },
-                                      );
-
-                                      final NotificationCalendar schedule = NotificationCalendar(
-                                          year: scheduleList[i].year,
-                                          month: scheduleList[i].month,
-                                          day: scheduleList[i].day,
-                                          hour: scheduleList[i].hour,
-                                          minute: scheduleList[i].minute
-                                      );
-
-
-                                      contentList.add(content.id!);
-
-                                      await NotificationController
-                                          .scheduleNotifications(
-
-                                          context,
-                                          schedule: schedule,
-                                          content: content);
-                                    }
-
-                                    if(remindMe){
-                                      for (int i = 0; i <
-                                          scheduleInitialList.length; i++) {
-                                        final NotificationContent content = NotificationContent(
-                                          id: Random().nextInt(9999),
-                                          channelKey: 'alerts',
-                                          title: _titleController.text.trim(),
-                                          body: _descriptionController.text,
-                                          notificationLayout: NotificationLayout
-                                              .Default,
-                                          color: Colors.black,
-
-                                          wakeUpScreen: true,
-
-
-                                          //
-                                          backgroundColor: Colors.black,
-                                          // customSound: 'resource://raw/notif',
-                                          payload: {
-                                            'actPag': 'myAct',
-                                            'actType': 'medicine'
-                                          },
-                                        );
-
-                                        final NotificationCalendar schedule = NotificationCalendar(
-                                            year: scheduleInitialList[i].year,
-                                            month: scheduleInitialList[i].month,
-                                            day: scheduleInitialList[i].day,
-                                            hour: scheduleInitialList[i].hour,
-                                            minute: scheduleInitialList[i].minute
-                                        );
-
-
-                                        contentList.add(content.id!);
-
-                                        await NotificationController
-                                            .scheduleInitialNotifications(
-
-                                            context,
-                                            schedule: schedule,
-                                            content: content);
-                                      }
-
-                                    }
 
 
 
@@ -1160,107 +1143,84 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
 
                                     final initialDate = firstDate.subtract(remindMe? duration! : Duration(seconds: 0));
 
-                                    List<DateTime> scheduleList = [];
-                                    List<DateTime> scheduleInitialList = [];
+                                    int contentId =Random().nextInt(9999);
 
+                                    final NotificationContent content = NotificationContent(
+                                      id: contentId,
+                                      channelKey: 'alerts',
+                                      title: _titleController.text.trim(),
+                                      body: _descriptionController.text,
+                                      notificationLayout: NotificationLayout
+                                          .Default,
+                                      color: Colors.black,
+                                      category: NotificationCategory.Alarm,
+                                      timeoutAfter: Duration(minutes: 1),
 
-                                    for (int i = 0; i < 1; i++) {
-                                      DateTime newDate = firstDate.add(
-                                          Duration(days: i));
-                                      DateTime notificationDates = DateTime(
-                                          newDate.year, newDate.month,
-                                          newDate.day, setTime!.hour, setTime!.minute);
-                                      DateTime newInitialDate = initialDate.add(Duration(days: i));
-                                      scheduleList.add(notificationDates);
-                                      scheduleInitialList.add(newInitialDate);
-                                    }
-                                    //
-                                    // print('scheduled list : ${scheduleList
-                                    //     .length}');
+                                      wakeUpScreen: true,
 
-                                    for (int i = 0; i <
-                                        scheduleList.length; i++) {
+                                      //
+                                      backgroundColor: Colors.black,
+                                      // customSound: 'resource://raw/notif',
+                                      payload: {
+                                        'reminderTypeId': '2',
+                                        'dateTime': firstDate.toString()
+                                      },
+                                    );
+
+                                    final NotificationCalendar schedule = NotificationCalendar(
+                                year: firstDate.year,
+                                month: firstDate.month,
+                                day: firstDate.day,
+                                hour: firstDate.hour,
+                                minute: firstDate.minute,
+                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                              );
+
+                                    contentList.add(content.id!);
+
+                                    await NotificationController
+                                        .scheduleNotifications(
+                                        schedule: schedule,
+                                        content: content);
+                                    final initialContentId = Random().nextInt(9999);
+
+                                    if(remindMe){
+
                                       final NotificationContent content = NotificationContent(
-                                        id: Random().nextInt(9999),
+                                        id: initialContentId,
                                         channelKey: 'alerts',
                                         title: _titleController.text.trim(),
                                         body: _descriptionController.text,
                                         notificationLayout: NotificationLayout
                                             .Default,
                                         color: Colors.black,
-                                        category: NotificationCategory.Alarm,
-                                        timeoutAfter: Duration(minutes: 1),
 
                                         wakeUpScreen: true,
 
+
                                         //
                                         backgroundColor: Colors.black,
-                                        // customSound: 'resource://raw/notif',
-                                        payload: {
-                                          'actPag': 'myAct',
-                                          'actType': 'medicine'
-                                        },
+
                                       );
 
                                       final NotificationCalendar schedule = NotificationCalendar(
-                                          year: scheduleList[i].year,
-                                          month: scheduleList[i].month,
-                                          day: scheduleList[i].day,
-                                          hour: scheduleList[i].hour,
-                                          minute: scheduleList[i].minute,
-                                          repeats: true
-                                      );
+                                year: initialDate.year,
+                                month: initialDate.month,
+                                day: initialDate.day,
+                                hour: initialDate.hour,
+                                minute: initialDate.minute,
+                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                            );
+
 
                                       contentList.add(content.id!);
 
                                       await NotificationController
-                                          .scheduleNotifications(
-                                          context, schedule: schedule,
+                                          .scheduleInitialNotifications(
+
+                                          schedule: schedule,
                                           content: content);
-                                    }
 
-                                    if(remindMe){
-                                      for (int i = 0; i <
-                                          scheduleInitialList.length; i++) {
-                                        final NotificationContent content = NotificationContent(
-                                          id: Random().nextInt(9999),
-                                          channelKey: 'alerts',
-                                          title: _titleController.text.trim(),
-                                          body: _descriptionController.text,
-                                          notificationLayout: NotificationLayout
-                                              .Default,
-                                          color: Colors.black,
-
-                                          wakeUpScreen: true,
-
-
-                                          //
-                                          backgroundColor: Colors.black,
-                                          // customSound: 'resource://raw/notif',
-                                          payload: {
-                                            'actPag': 'myAct',
-                                            'actType': 'medicine'
-                                          },
-                                        );
-
-                                        final NotificationCalendar schedule = NotificationCalendar(
-                                            year: scheduleInitialList[i].year,
-                                            month: scheduleInitialList[i].month,
-                                            day: scheduleInitialList[i].day,
-                                            hour: scheduleInitialList[i].hour,
-                                            minute: scheduleInitialList[i].minute,
-                                            repeats: true
-                                        );
-
-
-                                        contentList.add(content.id!);
-
-                                        await NotificationController
-                                            .scheduleInitialNotifications(
-                                            context,
-                                            schedule: schedule,
-                                            content: content);
-                                      }
 
                                     }
 
@@ -1275,8 +1235,10 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                         patternName: selectedPatternName!,
                                       ),
                                       userId: userId,
-                                      contentIdList: contentList,
+                                      contentId: contentId,
+                                      reminderTypeId: 2,
                                       initialReminder: !remindMe ? null : InitialReminder(
+                                          initialReminderContentId: initialContentId,
                                           initialReminderTypeId: selectedInitialReminderTypeId!,
                                           initialReminderTypeName: selectedInitialReminderType!,
                                           initialReminder: int.parse(_initialReminderController.text.trim())
@@ -1297,44 +1259,53 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                         setTime!.hour, setTime!.minute);
 
                                     final initialDate = firstDate.subtract(remindMe? duration! : Duration(seconds: 0));
-                                    List<DateTime> scheduleList = [];
-                                    List<DateTime> scheduleInitialList = [];
+
+                                    int contentId = Random().nextInt(9999);
+                                    int initialContentId = Random().nextInt(9999);
+                                    final NotificationContent content = NotificationContent(
+                                      id: contentId,
+                                      channelKey: 'alerts',
+                                      title: _titleController.text.trim(),
+                                      body: _descriptionController.text,
+                                      notificationLayout: NotificationLayout
+                                          .Default,
+                                      color: Colors.black,
+
+                                      //
+                                      backgroundColor: Colors.black,
+                                      category: NotificationCategory.Alarm,
+                                      timeoutAfter: Duration(minutes: 1),
+
+                                      wakeUpScreen: true,
+
+                                      // customSound: 'resource://raw/notif',
+                                      payload: {
+                                        'reminderTypeId': '2',
+                                        'dateTime': firstDate.toString()
+                                      },
+                                    );
 
 
-                                    int addedDatesCount = 0;
-
-                                    do {
-                                      DateTime newDate = firstDate.add(
-                                          Duration(days: addedDatesCount));
-                                      DateTime newInitialDate = initialDate.add(Duration(days: addedDatesCount));
-
-                                      bool addedDate = false; // Flag to check if notificationDates is added
-
-                                      DateTime notificationDates = DateTime(
-                                          newDate.year, newDate.month,
-                                          newDate.day, setTime!.hour, setTime!.minute);
+                                    final NotificationCalendar schedule = NotificationCalendar(
+                                year: firstDate.year,
+                                month: firstDate.month,
+                                day: firstDate.day,
+                                hour: firstDate.hour,
+                                minute: firstDate.minute,
+                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                              );
 
 
 
-                                      print(notificationDates);
-
-                                      if (days!.contains(
-                                          DateFormat('EEEE').format(
-                                              notificationDates))) {
-                                        scheduleList.add(notificationDates);
-                                        scheduleInitialList.add(newInitialDate);
-                                        addedDate = true;
-                                      }
-
-                                      addedDatesCount++;
-                                    } while (scheduleList.length < 100);
+                                    await NotificationController
+                                        .scheduleNotifications(
+                                        schedule: schedule,
+                                        content: content);
 
 
-
-                                    for (int i = 0; i <
-                                        scheduleList.length; i++) {
-                                      final NotificationContent content = NotificationContent(
-                                        id: Random().nextInt(9999),
+                                    if(remindMe){
+                                      final NotificationContent initialContent = NotificationContent(
+                                        id: initialContentId,
                                         channelKey: 'alerts',
                                         title: _titleController.text.trim(),
                                         body: _descriptionController.text,
@@ -1342,80 +1313,28 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                             .Default,
                                         color: Colors.black,
 
-                                        //
-                                        backgroundColor: Colors.black,
-                                        category: NotificationCategory.Alarm,
-                                        timeoutAfter: Duration(minutes: 1),
-
                                         wakeUpScreen: true,
 
-                                        // customSound: 'resource://raw/notif',
-                                        payload: {
-                                          'actPag': 'myAct',
-                                          'actType': 'medicine'
-                                        },
-                                      );
 
+                                        //
+                                        backgroundColor: Colors.black,
+
+                                      );
 
                                       final NotificationCalendar schedule = NotificationCalendar(
-                                          year: scheduleList[i].year,
-                                          month: scheduleList[i].month,
-                                          day: scheduleList[i].day,
-                                          hour: scheduleList[i].hour,
-                                          minute: scheduleList[i].minute
-                                      );
-
-                                      contentList.add(content.id!);
+                                year: initialDate.year,
+                                month: initialDate.month,
+                                day: initialDate.day,
+                                hour: initialDate.hour,
+                                minute: initialDate.minute,
+                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                            );
 
                                       await NotificationController
-                                          .scheduleNotifications(
-                                          context, schedule: schedule,
-                                          content: content);
-                                    }
+                                          .scheduleInitialNotifications(
+                                          schedule: schedule,
+                                          content: initialContent);
 
-                                    if(remindMe){
-                                      for (int i = 0; i <
-                                          scheduleInitialList.length; i++) {
-                                        final NotificationContent content = NotificationContent(
-                                          id: Random().nextInt(9999),
-                                          channelKey: 'alerts',
-                                          title: _titleController.text.trim(),
-                                          body: _descriptionController.text,
-                                          notificationLayout: NotificationLayout
-                                              .Default,
-                                          color: Colors.black,
-
-                                          wakeUpScreen: true,
-
-
-                                          //
-                                          backgroundColor: Colors.black,
-                                          // customSound: 'resource://raw/notif',
-                                          payload: {
-                                            'actPag': 'myAct',
-                                            'actType': 'medicine'
-                                          },
-                                        );
-
-                                        final NotificationCalendar schedule = NotificationCalendar(
-                                            year: scheduleInitialList[i].year,
-                                            month: scheduleInitialList[i].month,
-                                            day: scheduleInitialList[i].day,
-                                            hour: scheduleInitialList[i].hour,
-                                            minute: scheduleInitialList[i].minute,
-                                            repeats: true
-                                        );
-
-
-                                        contentList.add(content.id!);
-
-                                        await NotificationController
-                                            .scheduleInitialNotifications(
-
-                                            context,
-                                            schedule: schedule,
-                                            content: content);
-                                      }
 
                                     }
 
@@ -1433,7 +1352,15 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                                 : null
                                         ),
                                         userId: userId,
-                                        contentIdList: contentList
+                                        contentId: contentId,
+                                        initialContentId: initialContentId,
+                                        initialReminder: !remindMe ? null : InitialReminder(
+                                            initialReminderContentId: initialContentId,
+                                            initialReminderTypeId: selectedInitialReminderTypeId!,
+                                            initialReminderTypeName: selectedInitialReminderType!,
+                                            initialReminder: int.parse(_initialReminderController.text.trim())
+                                        ),
+                                        reminderTypeId: 2
                                     );
 
 
@@ -1449,111 +1376,84 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                         startDateIntake!.day,
                                         setTime!.hour, setTime!.minute);
 
+                                    int contentId = Random().nextInt(9999);
+                                    int initialContentId = Random().nextInt(9999);
+
                                     final initialDate = firstDate.subtract(remindMe? duration! : Duration(seconds: 0));
-                                    List<DateTime> scheduleList = [];
-                                    List<DateTime> scheduleInitialList = [];
 
-                                    for (int i = 0; i < 100; i++) {
-                                      DateTime newDate = firstDate.add(Duration(
-                                          days: i == 0 ? 0 : int.parse(
-                                              _intervalDurationController.text)));
+                                    final NotificationContent content = NotificationContent(
+                                      id: contentId,
+                                      channelKey: 'alerts',
+                                      title: _titleController.text.trim(),
+                                      body: _descriptionController.text,
+                                      notificationLayout: NotificationLayout
+                                          .Default,
+                                      color: Colors.black,
+                                      category: NotificationCategory.Alarm,
+                                      timeoutAfter: Duration(minutes: 1),
+
+                                      wakeUpScreen: true,
 
 
-                                      DateTime notificationDates = DateTime(
-                                          newDate.year, newDate.month,
-                                          newDate.day, setTime!.hour, setTime!.minute);
-                                      DateTime newInitialDate = initialDate.add(Duration(days: i == 0 ? 0 : int.parse(
-                                          _intervalDurationController.text)));
-                                      scheduleList.add(notificationDates);
-                                      scheduleInitialList.add(newInitialDate);
-                                    }
+                                      //
+                                      backgroundColor: Colors.black,
+                                      // customSound: 'resource://raw/notif',
+                                      payload: {
+                                        'reminderTypeId': '2',
+                                        'dateTime': firstDate.toString()
+                                      },
+                                    );
 
-                                    for (int i = 0; i <
-                                        scheduleList.length; i++) {
-                                      final NotificationContent content = NotificationContent(
-                                        id: Random().nextInt(9999),
+
+                                    final NotificationCalendar schedule = NotificationCalendar(
+                                year: firstDate.year,
+                                month: firstDate.month,
+                                day: firstDate.day,
+                                hour: firstDate.hour,
+                                minute: firstDate.minute,
+                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                              );
+
+                                    contentList.add(content.id!);
+
+                                    await NotificationController
+                                        .scheduleNotifications(
+                                        schedule: schedule,
+                                        content: content);
+
+
+                                    if(remindMe){
+                                      final NotificationContent initialContent = NotificationContent(
+                                        id: initialContentId,
                                         channelKey: 'alerts',
                                         title: _titleController.text.trim(),
                                         body: _descriptionController.text,
                                         notificationLayout: NotificationLayout
                                             .Default,
                                         color: Colors.black,
-                                        category: NotificationCategory.Alarm,
-                                        timeoutAfter: Duration(minutes: 1),
 
                                         wakeUpScreen: true,
 
 
                                         //
                                         backgroundColor: Colors.black,
-                                        // customSound: 'resource://raw/notif',
-                                        payload: {
-                                          'actPag': 'myAct',
-                                          'actType': 'medicine'
-                                        },
                                       );
 
+                                      final NotificationCalendar initialSchedule = NotificationCalendar(
+                                year: initialDate.year,
+                                month: initialDate.month,
+                                day: initialDate.day,
+                                hour: initialDate.hour,
+                                minute: initialDate.minute,
+                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                            );
 
-                                      final NotificationCalendar schedule = NotificationCalendar(
-                                        year: scheduleList[i].year,
-                                        month: scheduleList[i].month,
-                                        day: scheduleList[i].day,
-                                        hour: scheduleList[i].hour,
-                                        minute: scheduleList[i].minute,
 
-                                      );
-
-                                      contentList.add(content.id!);
 
                                       await NotificationController
-                                          .scheduleNotifications(
-                                          context, schedule: schedule,
-                                          content: content);
-                                    }
-
-                                    if(remindMe){
-                                      for (int i = 0; i <
-                                          scheduleInitialList.length; i++) {
-                                        final NotificationContent content = NotificationContent(
-                                          id: Random().nextInt(9999),
-                                          channelKey: 'alerts',
-                                          title: _titleController.text.trim(),
-                                          body: _descriptionController.text,
-                                          notificationLayout: NotificationLayout
-                                              .Default,
-                                          color: Colors.black,
-
-                                          wakeUpScreen: true,
-
-
-                                          //
-                                          backgroundColor: Colors.black,
-                                          // customSound: 'resource://raw/notif',
-                                          payload: {
-                                            'actPag': 'myAct',
-                                            'actType': 'medicine'
-                                          },
-                                        );
-
-                                        final NotificationCalendar schedule = NotificationCalendar(
-                                            year: scheduleInitialList[i].year,
-                                            month: scheduleInitialList[i].month,
-                                            day: scheduleInitialList[i].day,
-                                            hour: scheduleInitialList[i].hour,
-                                            minute: scheduleInitialList[i].minute
-                                        );
-
-
-                                        contentList.add(content.id!);
-
-                                        await NotificationController
-                                            .scheduleInitialNotifications(
-
-                                            context,
-                                            schedule: schedule,
-                                            content: content);
-                                      }
-
+                                          .scheduleInitialNotifications(
+                                          schedule: initialSchedule,
+                                          content: initialContent);
                                     }
 
                                     GeneralReminderModel reminder = GeneralReminderModel(
@@ -1571,7 +1471,15 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                               : null,
                                         ),
                                         userId: userId,
-                                        contentIdList: contentList
+                                        contentId: contentId,
+                                        initialContentId: initialContentId,
+                                        initialReminder: !remindMe ? null : InitialReminder(
+                                            initialReminderContentId: initialContentId,
+                                            initialReminderTypeId: selectedInitialReminderTypeId!,
+                                            initialReminderTypeName: selectedInitialReminderType!,
+                                            initialReminder: int.parse(_initialReminderController.text.trim())
+                                        ),
+                                        reminderTypeId: 2
                                     );
 
 

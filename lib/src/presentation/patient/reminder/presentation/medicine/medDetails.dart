@@ -398,9 +398,9 @@ class _MedDetailsState extends State<MedDetails> {
                                        ),
                                        onPressed: ()async{
 
-                                         for(int i = 0 ; i < reminderBox.contentIdList!.length ; i++){
-                                           await NotificationController.cancelNotifications(id: reminderBox.contentIdList![i]);
-                                         }
+                                           await NotificationController.cancelNotifications(id: reminderBox.contentId);
+                                           await NotificationController.cancelNotifications(id: reminderBox.initialContentId);
+
 
                                          reminder.deleteAt(index);
                                          setState(() {

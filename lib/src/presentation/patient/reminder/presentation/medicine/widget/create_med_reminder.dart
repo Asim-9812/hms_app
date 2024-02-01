@@ -551,13 +551,17 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                     validator: (value){
                       if(value!.isEmpty){
                         return 'Strength is required';
+
                       }
-                      if (!value.contains(RegExp(r'^\d+$'))) {
+                      try{
+                        final strength = double.parse(value);
+                        if (strength <= 0) {
+                          return 'Must be greater than 0';
+                        }
+                      }catch(e){
                         return 'Invalid value';
                       }
-                      else if (int.parse(value) <= 0) {
-                        return 'Must be greater than 0';
-                      }
+
                       return null;
                     },
                     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -807,8 +811,8 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                   else if (int.parse(value) <= 0 ) {
                     return 'Must be greater than 0';
                   }
-                  else if (int.parse(value) > 120 ) {
-                    return 'Must be less than 120 days or 4 months';
+                  else if (int.parse(value) > 365 ) {
+                    return 'Must be less than a year';
                   }
                   return null;
                 },
@@ -1500,10 +1504,11 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                             final int totalDays = int.parse(_medicationDurationController.text.trim());
                             final int totalInterval = scheduleTime.length;
                             final DateTime firstDate = DateTime(startDateIntake!.year,startDateIntake!.month,startDateIntake!.day,DateFormat('hh:mm').parse(notifyScheduleTime[0]).hour,DateFormat('hh:mm').parse(notifyScheduleTime[0]).minute);
+                            final DateTime initialDate = firstDate.subtract(Duration(minutes: 10));
 
 
 
-                            List<DateTime> scheduleList = [];
+                            List<DateListModel> scheduleList = [];
 
 
                             for(int i = 0 ; i<totalDays; i++){
@@ -1511,17 +1516,23 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                               print(newDate);
                               for(int j = 0 ; j < totalInterval ; j++){
 
-                                
+                                int dateId = j + 1;
                                 DateTime notificationDates = DateTime(newDate.year,newDate.month,newDate.day,DateFormat('hh:mm').parse(notifyScheduleTime[j]).hour,DateFormat('hh:mm').parse(notifyScheduleTime[j]).minute);
-                                scheduleList.add(notificationDates);
+                                DateListModel addDates = DateListModel(dateId: dateId, reminderDate: notificationDates);
+
+                                scheduleList.add(addDates);
                               }
                             }
 
+                            print(scheduleList.length);
+
                             print('scheduled list : ${scheduleList.length}');
 
-                            for(int i = 0; i <scheduleList.length; i++){
+                            int contentId = Random().nextInt(9999);
+                            int initialContentId = Random().nextInt(9999);
+
                               final NotificationContent content = NotificationContent(
-                                id: Random().nextInt(9999),
+                                id: contentId,
                                 channelKey: 'alerts',
                                 title: _medicineNameController.text.trim(),
                                 body: '${_strengthController.text} ${selectedStrengthUnit} ${selectedMealName}',
@@ -1537,25 +1548,56 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                                 displayOnBackground: true,
                                 backgroundColor: Colors.black,
                                 // customSound: 'resource://raw/notif',
-                                payload: {'actPag': 'myAct', 'actType': 'medicine'},
+                                payload: {
+                                  'reminderTypeId' : '1',
+                                  'dateId': '1'
+                                },
                               );
 
+
+
+                              // final NotificationCalendar schedule = NotificationCalendar.fromDate(date: fi22rstDate);
                               final NotificationCalendar schedule = NotificationCalendar(
-                                year: scheduleList[i].year,
-                                month: scheduleList[i].month,
-                                day: scheduleList[i].day,
-                                hour: scheduleList[i].hour,
-                                minute: scheduleList[i].minute,
-
+                                year: firstDate.year,
+                                month: firstDate.month,
+                                day: firstDate.day,
+                                hour: firstDate.hour,
+                                minute: firstDate.minute,
+                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
                               );
 
-                              contentList.add(content.id!);
 
-                              await NotificationController.scheduleNotifications(context, schedule: schedule, content: content);
+                            final NotificationContent initialContent = NotificationContent(
+                              id: initialContentId,
+                              channelKey: 'alerts',
+                              title: _medicineNameController.text.trim(),
+                              body: '10 minutes before your medicine',
+                              notificationLayout: NotificationLayout.Default,
+                              //actionType : ActionType.DisabledAction,
+                              color: Colors.black,
+                              wakeUpScreen: true,
+                              displayOnForeground: true,
+                              displayOnBackground: true,
+                              backgroundColor: Colors.black,
 
-                            }
+                            );
+                            final NotificationCalendar initialSchedule = NotificationCalendar(
+                                year: initialDate.year,
+                                month: initialDate.month,
+                                day: initialDate.day,
+                                hour: initialDate.hour,
+                                minute: initialDate.minute,
+                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                            );
+
+
+                              await NotificationController.scheduleNotifications(schedule: schedule, content: content);
+                              await NotificationController.scheduleInitialNotifications(schedule: initialSchedule, content: initialContent);
+
+
 
                             Reminder reminder = Reminder(
+                              reminderTypeId: 1,
                               reminderId: Random().nextInt(1000),
                               userId: userId,
                               medTypeId: selectedMedTypeId,
@@ -1583,7 +1625,9 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                               reminderImage: selectImage != null ? reminderImage : null,
                               notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
                               summary: _summaryController.text.trim(),
-                              contentIdList: contentList
+                              contentId: contentId,
+                              initialContentId: initialContentId,
+                              dateList: scheduleList
                             );
 
                             _addReminder(reminder);
@@ -1604,8 +1648,9 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                                 DateFormat('hh:mm').parse(notifyScheduleTime[0]).hour,
                                 DateFormat('hh:mm').parse(notifyScheduleTime[0]).minute,
                               );
+                              final DateTime initialDate = firstDate.subtract(Duration(minutes: 10));
 
-                              List<DateTime> scheduleList = [];
+                              List<DateListModel> scheduleList = [];
 
 
                               int addedDatesCount = 0;
@@ -1613,9 +1658,10 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                               do {
                                 DateTime newDate = firstDate.add(Duration(days: addedDatesCount));
 
-// Flag to check if notificationDates is added
+
 
                                 for (int j = 0; j < totalInterval; j++) {
+                                  int index = 0;
                                   DateTime notificationDates = DateTime(
                                     newDate.year,
                                     newDate.month,
@@ -1627,7 +1673,10 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                                   print(notificationDates);
 
                                   if (days!.contains(DateFormat('EEEE').format(notificationDates))) {
-                                    scheduleList.add(notificationDates);
+                                    index++;
+                                    int dateId = index;
+                                    DateListModel dateList = DateListModel(dateId: dateId, reminderDate: notificationDates);
+                                    scheduleList.add(dateList);
                                   }
                                 }
 
@@ -1637,9 +1686,12 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
 
                               print(scheduleList.length);
 
-                              for(int i = 0; i <scheduleList.length; i++){
+                              int contentId = Random().nextInt(9999);
+                              int initialContentId = Random().nextInt(9999);
+
+
                                 final NotificationContent content = NotificationContent(
-                                  id: Random().nextInt(9999),
+                                  id: contentId,
                                   channelKey: 'alerts',
                                   title: _medicineNameController.text.trim(),
                                   body: '${_strengthController.text} ${selectedStrengthUnit} ${selectedMealName}',
@@ -1652,21 +1704,50 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
 
                                   backgroundColor: Colors.black,
                                   // customSound: 'resource://raw/notif',
-                                  payload: {'actPag': 'myAct', 'actType': 'medicine'},
+                                    payload: {
+                                      'reminderTypeId' : '1',
+                                      'dateId': '1'
+                                    },
                                 );
 
                                 final NotificationCalendar schedule = NotificationCalendar(
-                                    year: scheduleList[i].year,
-                                    month: scheduleList[i].month,
-                                    day: scheduleList[i].day,
-                                    hour: scheduleList[i].hour,
-                                    minute: scheduleList[i].minute
-                                );
+                                year: firstDate.year,
+                                month: firstDate.month,
+                                day: firstDate.day,
+                                hour: firstDate.hour,
+                                minute: firstDate.minute,
+                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                              );
 
-                                contentList.add(content.id!);
 
-                                await NotificationController.scheduleNotifications(context, schedule: schedule, content: content);
-                              }
+
+                                await NotificationController.scheduleNotifications( schedule: schedule, content: content);
+
+                              final NotificationContent initialContent = NotificationContent(
+                                id: initialContentId,
+                                channelKey: 'alerts',
+                                title: _medicineNameController.text.trim(),
+                                body: '10 minutes before your medicine',
+                                notificationLayout: NotificationLayout.Default,
+                                //actionType : ActionType.DisabledAction,
+                                color: Colors.black,
+                                wakeUpScreen: true,
+                                displayOnForeground: true,
+                                displayOnBackground: true,
+                                backgroundColor: Colors.black,
+
+                              );
+                              final NotificationCalendar initialSchedule = NotificationCalendar(
+                                year: initialDate.year,
+                                month: initialDate.month,
+                                day: initialDate.day,
+                                hour: initialDate.hour,
+                                minute: initialDate.minute,
+                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                            );
+
+
+                              await NotificationController.scheduleInitialNotifications( schedule: initialSchedule, content: initialContent);
 
                               Reminder reminder = Reminder(
                                   reminderId: Random().nextInt(1000),
@@ -1696,7 +1777,10 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                                   reminderImage: selectImage != null ? reminderImage : null,
                                   notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
                                   summary: _summaryController.text.trim(),
-                                  contentIdList: contentList
+                                  contentId: contentId,
+                                initialContentId: initialContentId,
+                                reminderTypeId: 1,
+                                dateList: scheduleList
                               );
 
                               _addReminder(reminder);
@@ -1708,22 +1792,27 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                               final int totalDays = int.parse(_medicationDurationController.text.trim());
                               final int totalInterval = scheduleTime.length;
                               final DateTime firstDate = DateTime(startDateIntake!.year,startDateIntake!.month,startDateIntake!.day,DateFormat('hh:mm').parse(notifyScheduleTime[0]).hour,DateFormat('hh:mm').parse(notifyScheduleTime[0]).minute);
-
-                              List<DateTime> scheduleList = [];
+                              final DateTime initialDate = firstDate.subtract(Duration(minutes: 10));
+                              List<DateListModel> scheduleList = [];
 
 
                               for(int i = 0 ; i<totalDays; i++){
                                 DateTime newDate = firstDate.add(Duration(days: i == 0 ? 0 :int.parse(_intervalDurationController.text) ));
                                 for(int j = 0 ; j < totalInterval ; j++){
-                                
+                                int dateId = j+1;
                                   DateTime notificationDates = DateTime(newDate.year,newDate.month,newDate.day,DateFormat('hh:mm').parse(notifyScheduleTime[j]).hour,DateFormat('hh:mm').parse(notifyScheduleTime[j]).minute);
-                                  scheduleList.add(notificationDates);
+
+                                  DateListModel dateList = DateListModel(dateId: dateId, reminderDate: notificationDates);
+
+                                  scheduleList.add(dateList);
                                 }
                               }
 
-                              for(int i = 0; i <scheduleList.length; i++){
+                              int contentId = Random().nextInt(9999);
+                              int initialContentId = Random().nextInt(9999);
+
                                 final NotificationContent content = NotificationContent(
-                                  id: Random().nextInt(9999),
+                                  id: contentId,
                                   channelKey: 'alerts',
                                   title: _medicineNameController.text.trim(),
                                   body: '${_strengthController.text} ${selectedStrengthUnit} ${selectedMealName}',
@@ -1741,17 +1830,44 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                                 );
 
                                 final NotificationCalendar schedule = NotificationCalendar(
-                                    year: scheduleList[i].year,
-                                    month: scheduleList[i].month,
-                                    day: scheduleList[i].day,
-                                    hour: scheduleList[i].hour,
-                                    minute: scheduleList[i].minute
-                                );
+                                year: firstDate.year,
+                                month: firstDate.month,
+                                day: firstDate.day,
+                                hour: firstDate.hour,
+                                minute: firstDate.minute,
+                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                              );
 
-                                contentList.add(content.id!);
 
-                                await NotificationController.scheduleNotifications(context, schedule: schedule, content: content);
-                              }
+
+                                await NotificationController.scheduleNotifications(schedule: schedule, content: content);
+                              final NotificationContent initialContent = NotificationContent(
+                                id: initialContentId,
+                                channelKey: 'alerts',
+                                title: _medicineNameController.text.trim(),
+                                body: '10 minutes before your medicine',
+                                notificationLayout: NotificationLayout.Default,
+                                //actionType : ActionType.DisabledAction,
+                                color: Colors.black,
+                                wakeUpScreen: true,
+                                displayOnForeground: true,
+                                displayOnBackground: true,
+                                backgroundColor: Colors.black,
+
+                              );
+                              final NotificationCalendar initialSchedule = NotificationCalendar(
+                                year: initialDate.year,
+                                month: initialDate.month,
+                                day: initialDate.day,
+                                hour: initialDate.hour,
+                                minute: initialDate.minute,
+                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                            );
+
+
+                              await NotificationController.scheduleInitialNotifications( schedule: initialSchedule, content: initialContent);
+
+
                               Reminder reminder = Reminder(
                                   reminderId: Random().nextInt(1000),
                                   userId: userId,
@@ -1780,7 +1896,10 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                                   reminderImage: selectImage != null ? reminderImage : null,
                                   notes: _noteController.text.isEmpty? null : _noteController.text.trim(),
                                   summary: _summaryController.text.trim(),
-                                  contentIdList: contentList
+                                  contentId: contentId,
+                                initialContentId: initialContentId,
+                                reminderTypeId: 1,
+                                dateList: scheduleList
                               );
 
                               _addReminder(reminder);

@@ -63,6 +63,7 @@ Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter<User>(UserAdapter());
   Hive.registerAdapter<Reminder>(ReminderAdapter());
+  Hive.registerAdapter<DateListModel>(DateListModelAdapter());
   Hive.registerAdapter<Frequency>(FrequencyAdapter());
   Hive.registerAdapter<ReminderPattern>(ReminderPatternAdapter());
   Hive.registerAdapter(GeneralReminderModelAdapter());

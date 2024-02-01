@@ -44,7 +44,14 @@ class Reminder {
   @HiveField(17)
   String summary;
   @HiveField(18)
-  List<int>? contentIdList;
+  int contentId;
+  @HiveField(19)
+  List<DateListModel> dateList;
+  @HiveField(20)
+  int reminderTypeId;
+
+  @HiveField(21)
+  int initialContentId;
 
   Reminder({
     required this.reminderId,
@@ -65,7 +72,10 @@ class Reminder {
     required this.reminderImage,
     required this.notes,
     required this.summary,
-    this.contentIdList,
+    required this.contentId,
+    required this.dateList,
+    required this.reminderTypeId,
+    required this.initialContentId
   });
 }
 
@@ -101,6 +111,21 @@ class ReminderPattern {
     required this.patternName,
     this.interval,
     this.daysOfWeek,
+  });
+}
+
+
+@HiveType(typeId: 23)
+class DateListModel {
+  @HiveField(0)
+  final int dateId;
+
+  @HiveField(1)
+  final DateTime reminderDate;
+
+  DateListModel({
+    required this.dateId,
+    required this.reminderDate,
   });
 }
 

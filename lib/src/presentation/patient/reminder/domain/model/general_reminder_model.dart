@@ -33,7 +33,16 @@ class GeneralReminderModel {
   String userId;
 
   @HiveField(8)
-  List<int>? contentIdList;
+  int contentId;
+
+  @HiveField(9)
+  int reminderTypeId;
+
+  @HiveField(10)
+  int? initialContentId;
+
+
+
 
   GeneralReminderModel({
     required this.reminderId,
@@ -44,7 +53,9 @@ class GeneralReminderModel {
     this.initialReminder,
     required this.reminderPattern,
     required this.userId,
-    this.contentIdList,
+    required this.contentId,
+    required this.reminderTypeId,
+    this.initialContentId
   });
 }
 
@@ -60,9 +71,13 @@ class InitialReminder {
   @HiveField(2)
   int initialReminder;
 
+  @HiveField(3)
+  int initialReminderContentId;
+
   InitialReminder({
     required this.initialReminderTypeId,
     required this.initialReminderTypeName,
     required this.initialReminder,
+    required this.initialReminderContentId
   });
 }

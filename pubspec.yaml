@@ -187,6 +187,8 @@ dependencies:
 
   bloc: ^8.1.2
 
+  image_cropper: ^5.0.1
+
 
 
 

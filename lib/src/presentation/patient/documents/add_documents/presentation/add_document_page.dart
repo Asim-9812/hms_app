@@ -18,7 +18,7 @@ import '../../../../../core/resources/color_manager.dart';
 import '../../../../../core/resources/style_manager.dart';
 import '../../../../../core/resources/value_manager.dart';
 import '../../../../../data/provider/common_provider.dart';
-
+import 'package:image_cropper/image_cropper.dart';
 import '../../../../common/date_input_formatter.dart';
 import '../../../../common/snackbar.dart';
 import '../../../../documents/domain/model/document_model.dart';
@@ -559,10 +559,13 @@ class _AddDocumentPageState extends ConsumerState<AddPatientDocuments> {
 
   Widget buildBrowseFile() {
     final image= ref.watch(imageProvider);
+
+
     if (image != null) {
-      // Convert XFile to File
-      File file2 = File(image.path);
-      PlatformFile platformFile = convertFileToPlatformFile(file2);
+
+
+      File newFile = File(image.path);
+      PlatformFile platformFile = convertFileToPlatformFile(newFile);
 
       setState(() {
         file = platformFile;
@@ -613,8 +616,10 @@ class _AddDocumentPageState extends ConsumerState<AddPatientDocuments> {
                               Column(
                                 children: [
                                   InkWell(
-                                    onTap : (){
+                                    onTap : () async {
                                        ref.read(imageProvider.notifier).camera();
+
+
 
 
                                        // if(image!=null){
@@ -660,6 +665,8 @@ class _AddDocumentPageState extends ConsumerState<AddPatientDocuments> {
                                     onTap:()async{
 
                                       ref.read(imageProvider.notifier).pickAnImage();
+
+
 
                                       // FilePickerResult? result = await FilePicker.platform.pickFiles(
                                       //   allowMultiple: false,

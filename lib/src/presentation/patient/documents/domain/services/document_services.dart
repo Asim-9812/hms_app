@@ -146,7 +146,7 @@ class PatientDocumentServices {
   }) async{
     try{
       dio.options.headers['Authorization'] = Api.bearerToken;
-      final response = await dio.delete('${Api.delDocuments}$documentId');
+      final response = await dio.get('${Api.delPatientDocuments}$documentId');
       if(response.statusCode == 200){
         return Right('File deleted');
       }
@@ -155,7 +155,9 @@ class PatientDocumentServices {
       }
 
     } on DioException catch(e){
-      print('$e');
+      if(e.response?.statusCode == 500){
+        return Right('File deleted');
+      }
       return Left('Something went wrong');
     }
   }

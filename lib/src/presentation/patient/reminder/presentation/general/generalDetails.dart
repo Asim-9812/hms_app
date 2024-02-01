@@ -233,9 +233,8 @@ class _GeneralDetailsState extends State<GeneralDetails> {
                                        ),
                                        onPressed: ()async{
 
-                                         for(int i = 0 ; i < reminderBox.contentIdList!.length ; i++){
-                                           await NotificationController.cancelNotifications(id: reminderBox.contentIdList![i]);
-                                         }
+                                           await NotificationController.cancelNotifications(id: reminderBox.contentId);
+
 
                                          reminder.deleteAt(index);
                                          setState(() {

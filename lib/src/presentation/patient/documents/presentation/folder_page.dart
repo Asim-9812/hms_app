@@ -21,13 +21,14 @@ import '../../../common/snackbar.dart';
 import '../../../documents/domain/model/document_model.dart';
 import '../add_documents/presentation/add_document_page.dart';
 import '../domain/model/document_model.dart';
+import '../domain/services/document_services.dart';
 import '../search_documents/presentation/search_document_page.dart';
 
 class PatientFolderPage extends ConsumerStatefulWidget {
-  final String docId;
+  final String userId;
   final String folderName;
   final List<PatientDocumentModel> files;
-  PatientFolderPage({required this.docId,required this.folderName,required this.files});
+  PatientFolderPage({required this.userId,required this.folderName,required this.files});
 
   @override
   ConsumerState<PatientFolderPage> createState() => _PatientFolderPageState();
@@ -100,7 +101,7 @@ class _PatientFolderPageState extends ConsumerState<PatientFolderPage> {
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int index) {
         return _fileTile(context,
-          docId: widget.docId,
+          userrId: widget.userId,
           documentId:widget.files[index].documentID! ,
           typeId: widget.files[index].documentTypeID!,
           fileName: widget.files[index].documentTitle!,
@@ -138,12 +139,12 @@ class _PatientFolderPageState extends ConsumerState<PatientFolderPage> {
     required String description,
     required int typeId,
     required int documentId,
-    required String docId,
+    required String userrId,
   }) {
     return ListTile(
 
       onLongPress: () async {
-        _showFileDialog(context,documentId.toString(),docId);
+        _showFileDialog(context,documentId.toString(),userrId);
       },
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
@@ -162,7 +163,7 @@ class _PatientFolderPageState extends ConsumerState<PatientFolderPage> {
       subtitle: Text('${description}',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 10),),
       trailing: IconButton(
         onPressed: () async {
-          _showFileDialog(context,documentId.toString(),docId);
+          _showFileDialog(context,documentId.toString(),userrId);
         },
         icon: FaIcon(Icons.more_horiz,color: ColorManager.iconGrey,),
       ),
@@ -182,7 +183,7 @@ class _PatientFolderPageState extends ConsumerState<PatientFolderPage> {
   }
 
   /// file menu...
-  Future<void> _showFileDialog(BuildContext context,String documentId,String docId) {
+  Future<void> _showFileDialog(BuildContext context,String documentId,String userId) {
     return showDialog(
         context: context,
         builder: (context){
@@ -204,9 +205,10 @@ class _PatientFolderPageState extends ConsumerState<PatientFolderPage> {
                     color: ColorManager.black,
                   ),
                   _menuCustomize(icon: Icons.delete_outline, name: 'Delete',
-                      onTap: ()async{
+                      onTap:
+                          ()async{
                         final scaffoldMessage = ScaffoldMessenger.of(context);
-                        final response = await DoctorDocumentServices().delDocument(documentId: documentId);
+                        final response = await PatientDocumentServices().delDocument(documentId: documentId);
                         if(response.isLeft()){
                           final left = response.fold(
                                   (l) => l,
@@ -221,18 +223,19 @@ class _PatientFolderPageState extends ConsumerState<PatientFolderPage> {
                           Navigator.pop(context);
                         }
                         else{
-                          if(response.isLeft()){
 
-                            scaffoldMessage.showSnackBar(
-                                SnackbarUtil.showSuccessSnackbar(
-                                    message: 'Successful',
-                                    duration: const Duration(milliseconds: 1200)
-                                )
-                            );
-                            ref.refresh(documentProvider(docId));
-                            ref.refresh(folderProvider(docId));
-                            Navigator.pop(context);
-                          }
+
+                          scaffoldMessage.showSnackBar(
+                              SnackbarUtil.showSuccessSnackbar(
+                                  message: 'Successful',
+                                  duration: const Duration(milliseconds: 1200)
+                              )
+                          );
+                          ref.refresh(patientDocumentProvider(userId));
+                          ref.refresh(patientFolderProvider(userId));
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+
                         }
                       }
                   ),
