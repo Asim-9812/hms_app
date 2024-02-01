@@ -45,6 +45,7 @@ class ProfilePage extends ConsumerStatefulWidget {
 class _ProfilePageState extends ConsumerState<ProfilePage> {
 
 
+  late User userProfile;
 
   final ScrollController _scrollController = ScrollController();
 
@@ -62,6 +63,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   void initState() {
     super.initState();
+
+    userProfile = widget.user;
 
     // Add a post-frame callback to scroll to the end after the layout is built
     WidgetsBinding.instance?.addPostFrameCallback((_) {
@@ -135,6 +138,119 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       _scrollController.position.minScrollExtent,
       duration: Duration(milliseconds: 500), // Adjust the duration as needed
       curve: Curves.linear,
+    );
+  }
+
+
+  void _showProfileDetails() async {
+    final ageGender = userProfile.ageGender;
+    final age = ageGender == null ? 'N/A' : ageGender.split('/').first;
+    final gender = ageGender == null ? 'N/A' : ageGender.split('/').last;
+
+    String address = userProfile.localAddress ?? 'N/A';
+    String ward = userProfile.wardNo.toString() ?? 'N/A';
+    String fullAddress = address == 'N/A' ? 'N/A' : '$mun -$ward, $district, $province, $address';
+
+    await showDialog(
+        context: context,
+        builder: (context){
+          return AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            backgroundColor: Colors.transparent,
+            title: Container(
+              decoration: BoxDecoration(
+                  color: ColorManager.primary,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                  )
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 20.h),
+              child: Text('User Details',style: TextStyle(color: ColorManager.white,fontWeight: FontWeight.w500,fontSize: 18.sp),),
+            ),
+            titlePadding: EdgeInsets.zero,
+            content: Container(
+              decoration: BoxDecoration(
+                  color: ColorManager.white,
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
+                  )
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 20.h),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Card(
+                    shape: CircleBorder(
+                        side: BorderSide(
+                            color: ColorManager.black,
+                            width: 1)
+                    ),
+                    elevation: 5,
+                    child: CircleAvatar(
+                      backgroundColor: ColorManager.white,
+                      backgroundImage: userProfile.profileImage == null ? null : FileImage(File('${userProfile.profileImage}')),
+                      radius: 50.r,
+                      child:userProfile.profileImage != null ? null :FaIcon(FontAwesomeIcons.user,color: ColorManager.black,),
+                    ),
+                  ),
+                  h20,
+                  Row(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('User Id',style: TextStyle(fontWeight: FontWeight.w500)),
+
+                          Text('Full Name',style: TextStyle(fontWeight: FontWeight.w500)),
+
+                          Text('Age',style: TextStyle(fontWeight: FontWeight.w500)),
+
+                          Text('Contact no',style: TextStyle(fontWeight: FontWeight.w500)),
+
+                          Text('Email',style: TextStyle(fontWeight: FontWeight.w500)),
+
+                          Text('Address',style: TextStyle(fontWeight: FontWeight.w500)),
+                        ],
+                      ),
+                      w10,
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(': ${userProfile.username}'),
+
+                          Text(': ${userProfile.firstName} ${userProfile.lastName}'),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(': $age'),
+                              w20,
+                              w20,
+                              Text('Gender',style: TextStyle(fontWeight: FontWeight.w500),),
+                              w20,
+                              Text(': $gender'),
+
+                            ],
+                          ),
+
+                          Text(': ${userProfile.contactNo ?? 'N/A'}'),
+
+                          Text(': ${userProfile.email ?? 'N/A'}'),
+
+                          Text(': $fullAddress'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
     );
   }
 
@@ -380,54 +496,57 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     //   profileImage = NetworkImage('${Api.baseUrl}/${user.profileImage}');
     // }
 
-    return Card(
-      elevation: 1,
-      color: ColorManager.white,
-      shadowColor: ColorManager.textGrey.withOpacity(0.4),
-      child: Container(
+    return InkWell(
+      onTap: _showProfileDetails,
+      child: Card(
+        elevation: 1,
+        color: ColorManager.white,
+        shadowColor: ColorManager.textGrey.withOpacity(0.4),
+        child: Container(
 
-        padding: EdgeInsets.symmetric(horizontal: 18.w,vertical:12.h),
-        child:  Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Card(
-                  shape: CircleBorder(
-                      side: BorderSide(
-                          color: ColorManager.black,
-                          width: 1)
+          padding: EdgeInsets.symmetric(horizontal: 18.w,vertical:12.h),
+          child:  Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Card(
+                    shape: CircleBorder(
+                        side: BorderSide(
+                            color: ColorManager.black,
+                            width: 1)
+                    ),
+                    elevation: 5,
+                    child: CircleAvatar(
+                      backgroundColor: ColorManager.white,
+                      backgroundImage: userBox[0].profileImage == null ? null : FileImage(File('${userBox[0].profileImage}')),
+                      radius: isNarrowScreen? 45.r:45,
+                      child:userBox[0].profileImage != null ? null :FaIcon(FontAwesomeIcons.user,color: ColorManager.black,),
+                    ),
                   ),
-                  elevation: 5,
-                  child: CircleAvatar(
-                    backgroundColor: ColorManager.white,
-                    backgroundImage: userBox[0].profileImage == null ? null : FileImage(File('${userBox[0].profileImage}')),
-                    radius: isNarrowScreen? 45.r:45,
-                    child:userBox[0].profileImage != null ? null :FaIcon(FontAwesomeIcons.user,color: ColorManager.black,),
+                  w10,
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 25.sp:25),),
+                      h10,
+                      Row(
+                        children: [
+                          Text(gender,style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?16.sp:16),),
+                           ],
+                      )
+                    ],
                   ),
-                ),
-                w10,
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 25.sp:25),),
-                    h10,
-                    Row(
-                      children: [
-                        Text(gender,style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?16.sp:16),),
-                         ],
-                    )
-                  ],
-                ),
-              ],
-            ),
-            w10,
-            IconButton(
-                onPressed: ()=>Get.to(()=>UpdatePatientProfile(user:  userBox[0],)),
-                icon: FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primaryDark,))
-          ],
+                ],
+              ),
+              w10,
+              IconButton(
+                  onPressed: ()=>Get.to(()=>UpdatePatientProfile(user:  userBox[0],)),
+                  icon: FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primaryDark,))
+            ],
+          ),
         ),
       ),
     );

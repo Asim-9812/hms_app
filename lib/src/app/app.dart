@@ -40,7 +40,7 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(500, 1000),
+      designSize: const Size(450, 980),
       builder: (context, child) {
         return KhaltiScope(
           publicKey: 'test_public_key_d5355c28fd984efabb516a5b832a769e',
