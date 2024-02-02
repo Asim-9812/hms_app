@@ -8,11 +8,14 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:meroupachar/src/presentation/doctor/doctor_tasks/domain/model/task_model.dart';
+import 'package:meroupachar/src/presentation/login/presentation/status_page.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/domain/model/general_reminder_model.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/domain/model/reminder_model.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/general/generalDetails.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/medicine/medDetails.dart';
+import 'package:meroupachar/src/presentation/patient/reminder/presentation/reminder_tabs.dart';
 import '../../app/app.dart';
+import '../login/domain/model/user.dart';
 
 
 
@@ -90,14 +93,9 @@ class NotificationController {
       if(receivedAction.buttonKeyPressed == 'SNOOZE'){
         // final SnackBar snackBar = SnackBar(content: Text("Snoozed for 5 minutes"));
         // snackBarKey.currentState?.showSnackBar(snackBar);
-        await snoozeMedNotification();
+        await snoozeMedNotification(receivedAction);
 
       }
-    }
-    else if(receivedAction.actionType == ActionType.DismissAction){
-
-
-
     }
     else {
       // this process is only necessary when you need to redirect the user
@@ -453,7 +451,7 @@ class NotificationController {
       }
       else{
         if (receivedAction.buttonKeyPressed != 'DISMISSED' && !isPostAlarmExecuted) {
-          await postAlarmNotification();
+          await postAlarmNotification(receivedAction);
           isPostAlarmExecuted = true;
           print('executed');
         }
@@ -466,6 +464,7 @@ class NotificationController {
 
   static Future<void> onActionReceivedImplementationMethod(
       ReceivedAction receivedAction) async {
+    print(receivedAction.payload ?? 'null payload');
     onDismissActionReceivedMethod(receivedAction);
     final payload = receivedAction.payload;
 
@@ -485,6 +484,12 @@ class NotificationController {
       final reminderIndex = reminderBox.indexWhere((element) => element.title == receivedAction.title);
       final reminder = reminderBox.firstWhere((element) => element.title == receivedAction.title);
       Get.to(()=>GeneralDetails(reminder));
+    }
+
+    else{
+      final userBox =await Hive.box<User>('session').values.toList();
+      int? accId = userBox.first.typeID;
+      Get.to(()=>StatusPage(accountId: accId ?? 0));
     }
 
 
@@ -588,26 +593,18 @@ class NotificationController {
 
 
 
-  static Future<void> snoozeMedNotification() async {
+  static Future<void> snoozeMedNotification(ReceivedAction receivedAction) async {
     await snoozeAlarm(
-        title: 'test',
-        msg: 'test message',
-        hoursFromNow: 5,
-        username: 'test user',
-        repeatNotif: false);
+        receivedAction: receivedAction);
   }
 
 
   /// if the alarm isnt dismissed or snoozed automatically , this is executed after 10 mins
 
-  static Future<void> postAlarmNotification() async {
+  static Future<void> postAlarmNotification(ReceivedAction receivedAction) async {
 
     await postAlarm(
-        title: 'test',
-        msg: 'test message',
-        hoursFromNow: 5,
-        username: 'test user',
-        repeatNotif: false);
+        receivedAction: receivedAction);
   }
 
 
@@ -621,11 +618,7 @@ class NotificationController {
 
 
 Future<void> snoozeAlarm({
-  required int hoursFromNow,
-  required String username,
-  required String title,
-  required String msg,
-  bool repeatNotif = false,
+  required ReceivedAction receivedAction
 }) async {
   // var nowDate = DateTime.now().add(Duration(hours: hoursFromNow, seconds: 5));
   await AwesomeNotifications().createNotification(
@@ -633,15 +626,15 @@ Future<void> snoozeAlarm({
     content: NotificationContent(
       id: -1,
       channelKey: 'alerts',
-      title: '${Emojis.medical_pill} Reminder!!!',
-      body: 'Time for your medicine',
+      title: '${receivedAction.title}',
+      body: '${receivedAction.body}',
       notificationLayout: NotificationLayout.Default,
       //actionType : ActionType.DisabledAction,
       color: Colors.black,
       backgroundColor: Colors.black,
+      category: NotificationCategory.Alarm,
+      timeoutAfter: Duration(minutes: 1)
 
-      // customSound: 'resource://raw/notif',
-      payload: {'actPag': 'myAct', 'actType': 'medicine', 'username': username},
     ),
     actionButtons: [
       NotificationActionButton(
@@ -659,11 +652,7 @@ Future<void> snoozeAlarm({
 }
 
 Future<void> postAlarm({
-  required int hoursFromNow,
-  required String username,
-  required String title,
-  required String msg,
-  bool repeatNotif = false,
+  required ReceivedAction receivedAction
 }) async {
   // var nowDate = DateTime.now().add(Duration(hours: hoursFromNow, seconds: 5));
   await AwesomeNotifications().createNotification(
@@ -671,8 +660,8 @@ Future<void> postAlarm({
     content: NotificationContent(
       id: -1,
       channelKey: 'alerts',
-      title: '${Emojis.medical_pill} Reminder!!!',
-      body: 'Time for your medicine',
+      title: '${receivedAction.title}',
+      body: '${receivedAction.body}',
       notificationLayout: NotificationLayout.Default,
       timeoutAfter: Duration(minutes: 1),
       color: Colors.black,

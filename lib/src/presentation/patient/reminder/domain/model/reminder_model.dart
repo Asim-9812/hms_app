@@ -18,7 +18,7 @@ class Reminder {
   @HiveField(4)
   String medicineName;
   @HiveField(5)
-  int strength;
+  double strength;
   @HiveField(6)
   String unit;
   @HiveField(7)

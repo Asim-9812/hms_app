@@ -1787,7 +1787,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
                                 medTypeId: selectedMedTypeId,
                                 medTypeName: selectedMedTypeName,
                                 medicineName: _medicineNameController.text.trim(),
-                                strength: int.parse(_strengthController.text),
+                                strength: double.parse(_strengthController.text),
                                 unit: selectedStrengthUnit!,
                                 frequency: Frequency(
                                     frequencyId: frequencyId,
@@ -1932,7 +1932,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
                                 medTypeId: selectedMedTypeId,
                                 medTypeName: selectedMedTypeName,
                                 medicineName: _medicineNameController.text.trim(),
-                                strength: int.parse(_strengthController.text),
+                                strength: double.parse(_strengthController.text),
                                 unit: selectedStrengthUnit!,
                                 frequency: Frequency(
                                     frequencyId: frequencyId,
@@ -2003,7 +2003,10 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
                               //
                               backgroundColor: Colors.black,
                               // customSound: 'resource://raw/notif',
-                              payload: {'actPag': 'myAct', 'actType': 'medicine'},
+                              payload: {
+                                'reminderTypeId' : '1',
+                                'dateId': '1'
+                              },
                             );
 
                             final NotificationCalendar schedule = NotificationCalendar(
@@ -2051,7 +2054,7 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
                                 medTypeId: selectedMedTypeId,
                                 medTypeName: selectedMedTypeName,
                                 medicineName: _medicineNameController.text.trim(),
-                                strength: int.parse(_strengthController.text),
+                                strength: double.parse(_strengthController.text),
                                 unit: selectedStrengthUnit!,
                                 frequency: Frequency(
                                     frequencyId: frequencyId,

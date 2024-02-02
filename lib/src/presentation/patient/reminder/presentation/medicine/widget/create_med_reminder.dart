@@ -1603,7 +1603,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                               medTypeId: selectedMedTypeId,
                               medTypeName: selectedMedTypeName,
                               medicineName: _medicineNameController.text.trim(),
-                              strength: int.parse(_strengthController.text),
+                              strength: double.parse(_strengthController.text),
                               unit: selectedStrengthUnit!,
                               frequency: Frequency(
                                   frequencyId: frequencyId!,
@@ -1648,7 +1648,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                                 DateFormat('hh:mm').parse(notifyScheduleTime[0]).hour,
                                 DateFormat('hh:mm').parse(notifyScheduleTime[0]).minute,
                               );
-                              final DateTime initialDate = firstDate.subtract(Duration(minutes: 10));
+
 
                               List<DateListModel> scheduleList = [];
 
@@ -1670,13 +1670,13 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                                     int.parse(scheduleTime[j].split(':').last.split(' ').first),
                                   );
 
-                                  print(notificationDates);
 
                                   if (days!.contains(DateFormat('EEEE').format(notificationDates))) {
                                     index++;
                                     int dateId = index;
                                     DateListModel dateList = DateListModel(dateId: dateId, reminderDate: notificationDates);
                                     scheduleList.add(dateList);
+                                    print(notificationDates);
                                   }
                                 }
 
@@ -1710,12 +1710,15 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                                     },
                                 );
 
+                                final specificFirstDate = scheduleList.first.reminderDate;
+                              final DateTime initialDate = specificFirstDate.subtract(Duration(minutes: 10));
+
                                 final NotificationCalendar schedule = NotificationCalendar(
-                                year: firstDate.year,
-                                month: firstDate.month,
-                                day: firstDate.day,
-                                hour: firstDate.hour,
-                                minute: firstDate.minute,
+                                year: specificFirstDate.year,
+                                month: specificFirstDate.month,
+                                day: specificFirstDate.day,
+                                hour: specificFirstDate.hour,
+                                minute: specificFirstDate.minute,
                                 timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
                               );
 
@@ -1755,7 +1758,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                                   medTypeId: selectedMedTypeId,
                                   medTypeName: selectedMedTypeName,
                                   medicineName: _medicineNameController.text.trim(),
-                                  strength: int.parse(_strengthController.text),
+                                  strength: double.parse(_strengthController.text),
                                   unit: selectedStrengthUnit!,
                                   frequency: Frequency(
                                       frequencyId: frequencyId!,
@@ -1826,7 +1829,10 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                                   //
                                   backgroundColor: Colors.black,
                                   // customSound: 'resource://raw/notif',
-                                  payload: {'actPag': 'myAct', 'actType': 'medicine'},
+                                  payload: {
+                                    'reminderTypeId' : '1',
+                                    'dateId': '1'
+                                  },
                                 );
 
                                 final NotificationCalendar schedule = NotificationCalendar(
@@ -1874,7 +1880,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                                   medTypeId: selectedMedTypeId,
                                   medTypeName: selectedMedTypeName,
                                   medicineName: _medicineNameController.text.trim(),
-                                  strength: int.parse(_strengthController.text),
+                                  strength: double.parse(_strengthController.text),
                                   unit: selectedStrengthUnit!,
                                   frequency: Frequency(
                                       frequencyId: frequencyId!,

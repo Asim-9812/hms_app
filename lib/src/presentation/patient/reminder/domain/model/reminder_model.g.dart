@@ -22,7 +22,7 @@ class ReminderAdapter extends TypeAdapter<Reminder> {
       medTypeId: fields[2] as int,
       medTypeName: fields[3] as String,
       medicineName: fields[4] as String,
-      strength: fields[5] as int,
+      strength: fields[5] as double,
       unit: fields[6] as String,
       frequency: fields[7] as Frequency,
       scheduleTime: (fields[8] as List).cast<String>(),

@@ -241,7 +241,7 @@ class _GeneralDetailsState extends State<GeneralDetails> {
                                            back = 1;
                                          });
                                          Navigator.pop(context);
-                                       }, child: Text('Yes')),
+                                       }, child: Text('Yes',style: TextStyle(color: ColorManager.white),)),
                                    ElevatedButton(
                                        style: ElevatedButton.styleFrom(
                                            elevation: 0,
