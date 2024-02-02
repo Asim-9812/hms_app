@@ -200,12 +200,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   Row(
                     children: [
                       Text('User Id',style: TextStyle(fontWeight: FontWeight.w500)),
+                      w10,
                       Text(': ${userProfile.username}'),
                     ],
                   ),
                   Row(
                     children: [
                       Text('Full name',style: TextStyle(fontWeight: FontWeight.w500)),
+                      w10,
                       Text(': ${userProfile.firstName} ${userProfile.lastName}'),
                     ],
                   ),
@@ -215,12 +217,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       Row(
                         children: [
                           Text('Age',style: TextStyle(fontWeight: FontWeight.w500)),
+                          w10,
                           Text(': $age'),
                         ],
                       ),
                       Row(
                         children: [
                           Text('Gender',style: TextStyle(fontWeight: FontWeight.w500)),
+                          w10,
                           Text(': $gender'),
                         ],
                       )
@@ -229,23 +233,24 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   Row(
                     children: [
                       Text('Contact no',style: TextStyle(fontWeight: FontWeight.w500)),
+                      w10,
                       Text(': ${userProfile.contactNo ?? 'N/A'}'),
                     ],
                   ),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Email',style: TextStyle(fontWeight: FontWeight.w500)),
-                      SizedBox(
-                          width: 200,
-                          child: Text(': ${userProfile.email ?? 'N/A'}')),
+                      w10,
+                      Expanded(child: Text(': ${userProfile.email ?? 'N/A'}')),
                     ],
                   ),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Full Address',style: TextStyle(fontWeight: FontWeight.w500)),
-                      SizedBox(
-                          width: 200,
-                          child: Text(': $fullAddress')),
+                      w10,
+                      Expanded(child: Text(': $fullAddress')),
                     ],
                   )
                   // Row(
