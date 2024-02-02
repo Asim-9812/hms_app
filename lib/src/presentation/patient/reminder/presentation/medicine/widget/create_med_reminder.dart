@@ -1555,6 +1555,8 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                               );
 
 
+                              print(firstDate);
+                              print(initialDate);
 
                               // final NotificationCalendar schedule = NotificationCalendar.fromDate(date: fi22rstDate);
                               final NotificationCalendar schedule = NotificationCalendar(

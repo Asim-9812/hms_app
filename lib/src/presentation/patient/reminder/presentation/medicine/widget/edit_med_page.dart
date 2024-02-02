@@ -1747,7 +1747,6 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
                             );
 
 
-
                             final NotificationCalendar schedule = NotificationCalendar(
                                 year: firstDate.year,
                                 month: firstDate.month,
@@ -1778,6 +1777,9 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
                             await NotificationController.scheduleNotifications(schedule: schedule, content: content);
                             await NotificationController.scheduleInitialNotifications(schedule: initialSchedule, content: initialContent);
 
+
+                            print(firstDate);
+                            print(initialDate);
 
 
                             Reminder reminder = Reminder(

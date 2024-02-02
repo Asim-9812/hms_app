@@ -16,6 +16,7 @@ import 'package:meroupachar/src/presentation/patient/reminder/presentation/medic
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/reminder_tabs.dart';
 import '../../app/app.dart';
 import '../login/domain/model/user.dart';
+import '../patient/patient_dashboard/presentation/patient_main_page.dart';
 
 
 
@@ -29,6 +30,8 @@ import '../login/domain/model/user.dart';
 ///  *********************************************
 
 class NotificationController {
+
+
   static ReceivedAction? initialAction;
   static bool isPostAlarmExecuted = false;
 

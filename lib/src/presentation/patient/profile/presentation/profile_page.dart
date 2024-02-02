@@ -196,56 +196,108 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     ),
                   ),
                   h20,
+
                   Row(
                     children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('User Id',style: TextStyle(fontWeight: FontWeight.w500)),
-
-                          Text('Full Name',style: TextStyle(fontWeight: FontWeight.w500)),
-
-                          Text('Age',style: TextStyle(fontWeight: FontWeight.w500)),
-
-                          Text('Contact no',style: TextStyle(fontWeight: FontWeight.w500)),
-
-                          Text('Email',style: TextStyle(fontWeight: FontWeight.w500)),
-
-                          Text('Address',style: TextStyle(fontWeight: FontWeight.w500)),
-                        ],
-                      ),
-                      w10,
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(': ${userProfile.username}'),
-
-                          Text(': ${userProfile.firstName} ${userProfile.lastName}'),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(': $age'),
-                              w20,
-                              w20,
-                              Text('Gender',style: TextStyle(fontWeight: FontWeight.w500),),
-                              w20,
-                              Text(': $gender'),
-
-                            ],
-                          ),
-
-                          Text(': ${userProfile.contactNo ?? 'N/A'}'),
-
-                          Text(': ${userProfile.email ?? 'N/A'}'),
-
-                          Text(': $fullAddress'),
-                        ],
-                      ),
+                      Text('User Id',style: TextStyle(fontWeight: FontWeight.w500)),
+                      Text(': ${userProfile.username}'),
                     ],
                   ),
+                  Row(
+                    children: [
+                      Text('Full name',style: TextStyle(fontWeight: FontWeight.w500)),
+                      Text(': ${userProfile.firstName} ${userProfile.lastName}'),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text('Age',style: TextStyle(fontWeight: FontWeight.w500)),
+                          Text(': $age'),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text('Gender',style: TextStyle(fontWeight: FontWeight.w500)),
+                          Text(': $gender'),
+                        ],
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('Contact no',style: TextStyle(fontWeight: FontWeight.w500)),
+                      Text(': ${userProfile.contactNo ?? 'N/A'}'),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('Email',style: TextStyle(fontWeight: FontWeight.w500)),
+                      SizedBox(
+                          width: 200,
+                          child: Text(': ${userProfile.email ?? 'N/A'}')),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('Full Address',style: TextStyle(fontWeight: FontWeight.w500)),
+                      SizedBox(
+                          width: 200,
+                          child: Text(': $fullAddress')),
+                    ],
+                  )
+                  // Row(
+                  //   children: [
+                  //     Column(
+                  //       mainAxisAlignment: MainAxisAlignment.start,
+                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       children: [
+                  //         Text('User Id',style: TextStyle(fontWeight: FontWeight.w500)),
+                  //
+                  //         Text('Full Name',style: TextStyle(fontWeight: FontWeight.w500)),
+                  //
+                  //         Text('Age',style: TextStyle(fontWeight: FontWeight.w500)),
+                  //
+                  //         Text('Contact no',style: TextStyle(fontWeight: FontWeight.w500)),
+                  //
+                  //         Text('Email',style: TextStyle(fontWeight: FontWeight.w500)),
+                  //
+                  //         Text('Address',style: TextStyle(fontWeight: FontWeight.w500)),
+                  //       ],
+                  //     ),
+                  //     w10,
+                  //     Column(
+                  //       mainAxisAlignment: MainAxisAlignment.start,
+                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       children: [
+                  //         Text(': ${userProfile.username}'),
+                  //
+                  //         Text(': ${userProfile.firstName} ${userProfile.lastName}'),
+                  //
+                  //         Row(
+                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //           children: [
+                  //             Text(': $age'),
+                  //             w20,
+                  //             w20,
+                  //             Text('Gender',style: TextStyle(fontWeight: FontWeight.w500),),
+                  //             w20,
+                  //             Text(': $gender'),
+                  //
+                  //           ],
+                  //         ),
+                  //
+                  //         Text(': ${userProfile.contactNo ?? 'N/A'}'),
+                  //
+                  //         Text(': ${userProfile.email ?? 'N/A'}',maxLines: null),
+                  //
+                  //         Text(': $fullAddress',maxLines: null),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ),

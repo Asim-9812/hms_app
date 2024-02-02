@@ -9,8 +9,8 @@ import '../core/resources/route_manager.dart';
 import '../presentation/notification_controller/notification_controller.dart';
 
 
-final GlobalKey<ScaffoldMessengerState> snackBarKey =
-GlobalKey<ScaffoldMessengerState>();
+// final GlobalKey<ScaffoldMessengerState> snackBarKey =
+// GlobalKey<ScaffoldMessengerState>();
 
 
 class MyApp extends StatefulWidget {
@@ -53,12 +53,12 @@ class MyAppState extends State<MyApp> {
               theme: ThemeData(
                 colorScheme: ColorScheme.fromSeed(seedColor: ColorManager.primary)
               ),
-              scaffoldMessengerKey: snackBarKey,
+              // scaffoldMessengerKey: snackBarKey,
               supportedLocales:const [
                 Locale('en', 'US'),
                 Locale('ne', 'NP'),
               ] ,
-              navigatorKey: navKey,
+              navigatorKey: MyApp.navigatorKey,
               localizationsDelegates: const [
                 KhaltiLocalizations.delegate,
               ],
