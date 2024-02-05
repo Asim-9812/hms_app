@@ -93,8 +93,9 @@ class _AddDocumentPageState extends ConsumerState<AddPatientDocuments> {
   void _getDocumentTypes() async {
 
     final userId = userBox[0].username;
-    final folders = await PatientDocumentServices().getFolderList(username: userId!);
-    final typeList = await PatientDocumentServices().getDocumentTypeList();
+    final token = userBox[0].token;
+    final folders = await PatientDocumentServices().getFolderList(username: userId!,token: token??'');
+    final typeList = await PatientDocumentServices().getDocumentTypeList(token: token ?? '');
     setState(() {
       folderList = folders;
       docTypeList = [initial,...typeList];
@@ -120,6 +121,8 @@ class _AddDocumentPageState extends ConsumerState<AddPatientDocuments> {
   @override
   Widget build(BuildContext context) {
 
+
+    final token = userBox[0].token;
 
 
     return GestureDetector(
@@ -186,7 +189,8 @@ class _AddDocumentPageState extends ConsumerState<AddPatientDocuments> {
                                   documentTitle: _nameController.text.trim(),
                                   documentDescription:_descController.text.trim() ,
                                   completedDate: _dateController.text.trim(),
-                                  documentUrl: file!
+                                  documentUrl: file!,
+                                token: token ?? ''
                               );
                               if(response.isLeft()){
                                 final left = response.fold((l) => l, (r) => null);
@@ -212,8 +216,8 @@ class _AddDocumentPageState extends ConsumerState<AddPatientDocuments> {
                                   isPosting = false;
                                 });
 
-                                ref.refresh(patientDocumentProvider(userBox[0].username!));
-                                ref.refresh(patientFolderProvider(userBox[0].username!));
+                                ref.refresh(patientDocumentProvider('${userBox[0].username!}&$token'));
+                                ref.refresh(patientFolderProvider('${userBox[0].username!}&$token'));
                                 Navigator.pop(context);
                               }
                             }

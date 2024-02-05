@@ -10,10 +10,10 @@ import '../../../../core/api.dart';
 import '../model/document_model.dart';
 
 
-final folderProvider = FutureProvider.family((ref,String docID)=>DoctorDocumentServices().getFolderList(docID: docID));
-final allDocumentProvider = FutureProvider.family((ref,String docID)=>DoctorDocumentServices().getAllDocumentList(docID: docID));
-final documentProvider = FutureProvider.family((ref,String docID)=>DoctorDocumentServices().getDocumentList(docID: docID));
-final linkProvider = FutureProvider.family((ref,String docID)=>DoctorDocumentServices().getLinkList(docID: docID));
+final folderProvider = FutureProvider.family((ref,Tuple2<String, String> params)=>DoctorDocumentServices().getFolderList(docID: params.value1, token: params.value2));
+final allDocumentProvider = FutureProvider.family((ref,Tuple2<String, String> params)=>DoctorDocumentServices().getAllDocumentList(docID: params.value1, token: params.value2));
+final documentProvider = FutureProvider.family((ref,Tuple2<String, String> params)=>DoctorDocumentServices().getDocumentList(docID: params.value1, token: params.value2));
+final linkProvider = FutureProvider.family((ref,Tuple2<String, String> params)=>DoctorDocumentServices().getLinkList(docID: params.value1, token: params.value2));
 
 
 class DoctorDocumentServices {
@@ -23,8 +23,8 @@ class DoctorDocumentServices {
 
 
 
-  Future<List<DocumentTypeModel>> getDocumentTypeList() async{
-    dio.options.headers['Authorization'] = Api.bearerToken;
+  Future<List<DocumentTypeModel>> getDocumentTypeList({required String token}) async{
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try{
       final response = await dio.get(Api.getDocumentType);
 
@@ -40,9 +40,10 @@ class DoctorDocumentServices {
   }
 
   Future<List<DoctorFolderModel>> getFolderList({
-    required String docID
+    required String docID,
+    required String token
 }) async{
-    dio.options.headers['Authorization'] = Api.bearerToken;
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try{
       final response = await dio.get('${Api.getFolders}$docID');
 
@@ -63,9 +64,10 @@ class DoctorDocumentServices {
   }
 
   Future<List<DocumentModel>> getAllDocumentList({
-    required String docID
+    required String docID,
+    required String token
   }) async{
-    dio.options.headers['Authorization'] = Api.bearerToken;
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try{
       final response = await dio.get('${Api.getDocuments}$docID');
 
@@ -82,9 +84,10 @@ class DoctorDocumentServices {
 
 
   Future<List<DocumentModel>> getDocumentList({
-    required String docID
+    required String docID,
+    required String token
   }) async{
-    dio.options.headers['Authorization'] = Api.bearerToken;
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try{
       final response = await dio.get('${Api.getDocuments}$docID');
 
@@ -104,9 +107,10 @@ class DoctorDocumentServices {
 
 
   Future<List<DocumentModel>> getLinkList({
-    required String docID
+    required String docID,
+    required String token
   }) async{
-    dio.options.headers['Authorization'] = Api.bearerToken;
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try{
       final response = await dio.get('${Api.getDocuments}$docID');
 
@@ -137,9 +141,10 @@ class DoctorDocumentServices {
     required String completedDate,
     required String flag,
     required PlatformFile? documentUrl,
+    required String token
   }) async{
     try{
-      dio.options.headers['Authorization'] = Api.bearerToken;
+      dio.options.headers['Authorization'] = 'Bearer $token';
       Map<String,dynamic> data = {
         "documentID": documentID,
         "userID": userID,
@@ -178,9 +183,10 @@ class DoctorDocumentServices {
 
 
   Future<Either<String,String>> delDocument({
-    required String documentId
+    required String documentId,
+    required String token
   }) async{
-    dio.options.headers['Authorization'] = Api.bearerToken;
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try{
       final response = await dio.get('${Api.delDocuments}$documentId');
       if(response.statusCode == 200){

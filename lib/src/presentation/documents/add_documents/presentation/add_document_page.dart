@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:dartz/dartz.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -90,9 +91,11 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
 
   void _getDocumentTypes() async {
 
-    final docId = userBox[0].userID;
-    final folders = await DoctorDocumentServices().getFolderList(docID: docId!);
-    final typeList = await DoctorDocumentServices().getDocumentTypeList();
+    final docId = userBox[0].userID!;
+    final token = userBox[0].token!;
+    final params = Tuple2(docId, token);
+    final folders = await DoctorDocumentServices().getFolderList(docID: docId,token: token);
+    final typeList = await DoctorDocumentServices().getDocumentTypeList(token: token);
     setState(() {
       folderList = [initialFolder,...folders];
       docTypeList = [initial,...typeList];
@@ -117,7 +120,9 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
 
   @override
   Widget build(BuildContext context) {
-
+    final docId = userBox[0].userID!;
+    final token = userBox[0].token!;
+    final params = Tuple2(docId, token);
 
 
     return GestureDetector(
@@ -175,6 +180,7 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
                                 isPosting = true;
                               });
                               final response = await DoctorDocumentServices().addDocument(
+                                token: token,
                                   documentID: 1,
                                   userID: userBox[0].userID!,
                                   documentTypeID: selectedDocumentTypeId,
@@ -209,10 +215,10 @@ class _AddDocumentPageState extends ConsumerState<AddDocuments> {
                                 setState(() {
                                   isPosting = false;
                                 });
-                                ref.refresh(documentProvider(userBox[0].userID!));
-                                ref.refresh(folderProvider(userBox[0].userID!));
-                                ref.refresh(allDocumentProvider(userBox[0].userID!));
-                                ref.refresh(linkProvider(userBox[0].userID!));
+                                ref.refresh(documentProvider(params));
+                                ref.refresh(folderProvider(params));
+                                ref.refresh(allDocumentProvider(params));
+                                ref.refresh(linkProvider(params));
                                 Navigator.pop(context);
                               }
                             }

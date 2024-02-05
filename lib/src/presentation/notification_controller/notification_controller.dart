@@ -14,6 +14,8 @@ import 'package:meroupachar/src/presentation/patient/reminder/domain/model/remin
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/general/generalDetails.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/medicine/medDetails.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/reminder_tabs.dart';
+
+import '../../../main.dart';
 import '../../app/app.dart';
 import '../login/domain/model/user.dart';
 import '../patient/patient_dashboard/presentation/patient_main_page.dart';
@@ -46,16 +48,18 @@ class NotificationController {
           NotificationChannel(
               channelKey: 'alerts',
               channelName: 'Alerts',
-              channelDescription: 'Notification tests as alerts',
+              channelDescription: 'Notification for meroUpachar',
               playSound: true,
               onlyAlertOnce: true,
+              criticalAlerts: true,
               groupAlertBehavior: GroupAlertBehavior.Children,
               importance: NotificationImportance.High,
               defaultPrivacy: NotificationPrivacy.Private,
               defaultColor: Colors.deepPurple,
               ledColor: Colors.deepPurple)
         ],
-        debug: true);
+
+        debug: false);
 
     // Get initial notification action is optional
     initialAction = await AwesomeNotifications()
@@ -79,7 +83,10 @@ class NotificationController {
   ///  Notifications events are only delivered after call this method
   static Future<void> startListeningNotificationEvents() async {
     AwesomeNotifications()
-        .setListeners(onActionReceivedMethod: onActionReceivedMethod,onDismissActionReceivedMethod: onDismissActionReceivedMethod);
+        .setListeners(onActionReceivedMethod: onActionReceivedMethod,onDismissActionReceivedMethod: (receivedAction){
+          print('Action received');
+          return onDismissActionReceivedMethod(receivedAction);
+    },);
   }
 
   ///  *********************************************
@@ -98,6 +105,10 @@ class NotificationController {
         // snackBarKey.currentState?.showSnackBar(snackBar);
         await snoozeMedNotification(receivedAction);
 
+      }
+      else if(receivedAction.buttonKeyPressed == 'DISMISSED'){
+        print('dismissed action received');
+        await onDismissActionReceivedMethod(receivedAction);
       }
     }
     else {
@@ -123,8 +134,10 @@ class NotificationController {
   }
 
 
+  @pragma('vm:entry-point')
   static Future<void> onDismissActionReceivedMethod(
       ReceivedAction receivedAction) async {
+
 
     print(receivedAction.payload);
 
@@ -145,9 +158,10 @@ class NotificationController {
           final newDate = dateList[index];
           final newInitialDate = newDate.reminderDate.subtract(Duration(minutes: 10));
           print(newDate.reminderDate);
+          print(newInitialDate);
           final contentId = Random().nextInt(9999);
           final initialContentId = Random().nextInt(9999);
-          scheduleNotifications(
+          await scheduleNotifications(
               content: NotificationContent(
                   id: contentId,
                   channelKey: 'alerts',
@@ -174,7 +188,7 @@ class NotificationController {
                   timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
               )
           );
-          scheduleInitialNotifications(
+          await scheduleInitialNotifications(
               schedule:NotificationCalendar(
                   year: newInitialDate.year,
                   month: newInitialDate.month,
@@ -465,11 +479,13 @@ class NotificationController {
 
   }
 
+  @pragma('vm:entry-point')
   static Future<void> onActionReceivedImplementationMethod(
       ReceivedAction receivedAction) async {
     print(receivedAction.payload ?? 'null payload');
     onDismissActionReceivedMethod(receivedAction);
     final payload = receivedAction.payload;
+    final userBox = Hive.box<User>('session').values.toList();
 
     if(payload != null && payload['reminderTypeId'] == '1'){
 
@@ -477,7 +493,7 @@ class NotificationController {
       final reminderBox = Hive.box<Reminder>('med_reminder').values.toList();
       final reminderIndex = reminderBox.indexWhere((element) => element.medicineName == receivedAction.title);
       final reminder = reminderBox.firstWhere((element) => element.medicineName == receivedAction.title);
-      Get.to(()=>MedDetails(reminder));
+      Get.to(()=>MedDetails(reminder,userBox[0]));
     }
 
     else if(payload != null && payload['reminderTypeId'] == '2'){
@@ -557,7 +573,7 @@ class NotificationController {
 
 
 
-
+  @pragma('vm:entry-point')
   static Future<void> scheduleTaskNotification(BuildContext context,{required TaskModel reminder}) async {
     bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
     if (!isAllowed) isAllowed = await displayNotificationRationale();
@@ -568,7 +584,7 @@ class NotificationController {
 
 
 
-
+  @pragma('vm:entry-point')
   static Future<void> scheduleNotifications({
     required NotificationSchedule schedule,
     required NotificationContent content,
@@ -579,7 +595,7 @@ class NotificationController {
     await myNotificationSchedules(schedule: schedule,content: content);
   }
 
-
+  @pragma('vm:entry-point')
   static Future<void> scheduleInitialNotifications({
     required NotificationSchedule schedule,
     required NotificationContent content,
@@ -646,9 +662,9 @@ Future<void> snoozeAlarm({
           actionType: ActionType.SilentAction
       ),
       NotificationActionButton(
-          key: 'DISMISS',
+          key: 'DISMISSED',
           label: 'Dismiss',
-          actionType: ActionType.DisabledAction
+          actionType: ActionType.SilentBackgroundAction
       ),
     ],
   );
@@ -681,9 +697,9 @@ Future<void> postAlarm({
           actionType: ActionType.SilentAction
       ),
       NotificationActionButton(
-          key: 'DISMISS',
+          key: 'DISMISSED',
           label: 'Dismiss',
-          actionType: ActionType.DisabledAction
+          actionType: ActionType.SilentBackgroundAction
       ),
     ],
   );
@@ -726,7 +742,7 @@ Future<void> myNotifyTaskSchedule({
       NotificationActionButton(
           key: 'DISMISSED',
           label: 'Dismiss',
-          actionType: ActionType.DisabledAction
+          actionType: ActionType.SilentBackgroundAction
       ),
     ],
   );
@@ -757,7 +773,7 @@ Future<void> myNotificationSchedules({
       NotificationActionButton(
           key: 'DISMISSED',
           label: 'Dismiss',
-          actionType: ActionType.DismissAction
+          actionType: ActionType.SilentBackgroundAction
       ),
     ],
   );

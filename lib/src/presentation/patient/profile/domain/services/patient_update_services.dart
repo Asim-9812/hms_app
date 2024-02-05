@@ -15,9 +15,10 @@ class PatientUpdateService{
   final dio = Dio();
 
   Future<Either<String,String>> updateProfile({
-    required UpdateProfileModel updateProfile
+    required UpdateProfileModel updateProfile,
+    required String token
 }) async {
-    dio.options.headers['Authorization'] = Api.bearerToken;
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try{
       // final data = updateProfile.toJson();
       final data = {

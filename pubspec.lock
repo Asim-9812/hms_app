@@ -81,14 +81,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.8.1"
-  bloc:
+  background_fetch:
     dependency: "direct main"
     description:
-      name: bloc
-      sha256: "3820f15f502372d979121de1f6b97bfcf1630ebff8fe1d52fb2b0bfa49be5b49"
+      name: background_fetch
+      sha256: "34550cf9b383e5a1844e7d22119aa500508c7df9421fa967c9fb4430d6cb2878"
       url: "https://pub.dev"
     source: hosted
-    version: "8.1.2"
+    version: "1.2.2"
   boolean_selector:
     dependency: transitive
     description:
@@ -486,14 +486,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_bloc:
-    dependency: "direct main"
-    description:
-      name: flutter_bloc
-      sha256: e74efb89ee6945bcbce74a5b3a5a3376b088e5f21f55c263fc38cbdc6237faae
-      url: "https://pub.dev"
-    source: hosted
-    version: "8.1.3"
   flutter_cache_manager:
     dependency: transitive
     description:

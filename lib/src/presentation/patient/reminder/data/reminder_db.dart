@@ -93,6 +93,8 @@ List<FrequencyModel> frequencyType = [
   FrequencyModel(id: 2, frequencyName: 'BDS - Twice a day', frequencyInterval: '12 hours interval'),
   FrequencyModel(id: 3, frequencyName: 'TDS - Thrice a day', frequencyInterval: '8 hours interval'),
   FrequencyModel(id: 4, frequencyName: 'QDS - Four times a day', frequencyInterval: '6 hours interval'),
+  // FrequencyModel(id: 24, frequencyName: '24ds - 24 times a day', frequencyInterval: '1 hours interval'),
+  // FrequencyModel(id: 288, frequencyName: '288ds - 288 times a day', frequencyInterval: '5 min interval'),
 ];
 
 

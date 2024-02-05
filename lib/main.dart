@@ -14,9 +14,8 @@ import 'package:meroupachar/src/presentation/patient/calories/domain/model/calor
 import 'package:meroupachar/src/presentation/patient/reminder/domain/model/general_reminder_model.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/domain/model/reminder_model.dart';
 // import 'package:timezone/data/latest.dart' as tz;
-
+import 'package:background_fetch/background_fetch.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
-// import 'package:workmanager/workmanager.dart';
 
 
 
@@ -26,6 +25,13 @@ final boxA = Provider<List<User>>((ref) => []);
 
 late Box userBox2;
 
+
+void backgroundFetchHeadlessTask() async {
+  print('background execution');
+  await NotificationController.initializeLocalNotifications();
+  await NotificationController.initializeIsolateReceivePort();
+  await NotificationController.startListeningNotificationEvents();
+}
 
 
 
@@ -39,6 +45,17 @@ Future<void> main() async {
 
   await NotificationController.initializeLocalNotifications();
   await NotificationController.initializeIsolateReceivePort();
+
+  BackgroundFetch.configure(
+      BackgroundFetchConfig(
+          minimumFetchInterval: 15, // minimum interval in minutes
+          stopOnTerminate: false,
+          enableHeadless: true
+      ),
+      backgroundFetchHeadlessTask
+  );
+
+
 
 
 

@@ -272,7 +272,7 @@ class _AnimatedBarExampleState extends ConsumerState<PatientMainPage> {
                                   InkWell(
                                     onTap : (){
                                       Navigator.pop(context);
-                                      Get.to(()=>CreateMedReminder());
+                                      Get.to(()=>CreateMedReminder(userBox[0]));
 
                                     },
                                     child: Container(

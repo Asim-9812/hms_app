@@ -9,13 +9,16 @@ import 'package:meroupachar/src/core/api.dart';
 import 'package:meroupachar/src/presentation/patient/health_tips/domain/model/health_tips_model.dart';
 
 
-final getHealthTipsList = FutureProvider((ref) => HealthTipServices().getHealthTips());
+final getHealthTipsList = FutureProvider.family((ref,String token) => HealthTipServices().getHealthTips(token: token));
 
 
 class HealthTipServices{
   final dio = Dio();
 
-  Future<List<HealthTipsModel>> getHealthTips() async {
+  Future<List<HealthTipsModel>> getHealthTips({required String token}) async {
+
+    dio.options.headers['Authorization'] = 'Bearer $token';
+
     try{
       final response = await dio.get('${Api.getHealthTipsList}');
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hive/hive.dart';
 import 'package:meroupachar/src/core/resources/style_manager.dart';
 import 'package:meroupachar/src/presentation/patient/health_tips/data/tagList_provider.dart';
 import 'package:meroupachar/src/presentation/patient/health_tips/domain/services/health_tips_services.dart';
@@ -14,6 +15,7 @@ import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/value_manager.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import '../../../login/domain/model/user.dart';
 import '../domain/model/health_tips_model.dart';
 
 
@@ -37,8 +39,8 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
 
   List<HealthTipsModel> selectedTags = [];
 
-  void _showMultiSelect(BuildContext context) async {
-    final tagList = await HealthTipServices().getHealthTips();
+  void _showMultiSelect(BuildContext context,String token) async {
+    final tagList = await HealthTipServices().getHealthTips(token: token);
     Set<String> addedTypes = Set<String>();
     List<HealthTipsModel> uniqueTagList = [];
 
@@ -86,7 +88,12 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
   @override
   Widget build(BuildContext context) {
 
-    final getHealthTips = ref.watch(getHealthTipsList);
+
+    final userBox = Hive.box<User>('session').values.toList();
+    final user = userBox[0];
+    final token = user.token;
+
+    final getHealthTips = ref.watch(getHealthTipsList(token??''));
     final tagList = ref.watch(tagListProvider).filteredList;
 
     return getHealthTips.when(
@@ -106,7 +113,7 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
               children: [
                 Text('Health Tips',style: getMediumStyle(color: ColorManager.black,fontSize:18),),
                 IconButton(onPressed: (){
-                  _showMultiSelect(context);
+                  _showMultiSelect(context,token??'');
                 }, icon: FaIcon(FontAwesomeIcons.checkSquare,size: 20,color: ColorManager.orange.withOpacity(0.7),))
               ],
             ),
@@ -274,12 +281,7 @@ class _HealthTipsState extends ConsumerState<HealthTipsList> {
           ],
         );
       },
-      error: (error, stack) => Center(
-        child: Text(
-          '$error',
-          style: getRegularStyle(color: ColorManager.black, fontSize: 16),
-        ),
-      ),
+      error: (error, stack) => SizedBox(),
       loading: () => Center(child: CircularProgressIndicator()),
     );
   }

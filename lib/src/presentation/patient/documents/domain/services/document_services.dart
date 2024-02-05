@@ -1,18 +1,21 @@
 
 
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart' as dioFile;
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:path/path.dart';
 
 import '../../../../../core/api.dart';
 import '../../../../documents/domain/model/document_model.dart';
+import '../../../../login/domain/service/login_service.dart';
 import '../model/document_model.dart';
 
 
-final patientFolderProvider = FutureProvider.family((ref,String username)=>PatientDocumentServices().getFolderList(username: username));
-final patientDocumentProvider = FutureProvider.family((ref,String username)=>PatientDocumentServices().getDocumentList(username: username));
+final patientFolderProvider = FutureProvider.family((ref,String usernameToken)=>PatientDocumentServices().getFolderList(username: usernameToken.split('&').first,token: usernameToken.split('&').last));
+final patientDocumentProvider = FutureProvider.family((ref,String usernameToken)=>PatientDocumentServices().getDocumentList(username: usernameToken.split('&').first,token: usernameToken.split('&').last));
 
 
 class PatientDocumentServices {
@@ -20,8 +23,9 @@ class PatientDocumentServices {
 
 
 
-  Future<List<DocumentTypeModel>> getDocumentTypeList() async{
-    dio.options.headers['Authorization'] = Api.bearerToken;
+  Future<List<DocumentTypeModel>> getDocumentTypeList({required String token}) async{
+
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try{
       final response = await dio.get(Api.getDocumentType);
 
@@ -42,10 +46,11 @@ class PatientDocumentServices {
   }
 
   Future<List<String>> getFolderList({
-    required String username
+    required String username,
+    required String token
 }) async{
     try{
-      dio.options.headers['Authorization'] = Api.bearerToken;
+      dio.options.headers['Authorization'] = 'Bearer $token';
       final response = await dio.get('${Api.getPatientDocuments}$username');
 
       final data = (response.data['result'] as List)
@@ -76,10 +81,11 @@ class PatientDocumentServices {
 
 
   Future<List<PatientDocumentModel>> getDocumentList({
-    required String username
+    required String username,
+    required String token
   }) async{
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try{
-      dio.options.headers['Authorization'] = Api.bearerToken;
       final response = await dio.get('${Api.getPatientDocuments}$username');
 
       final data = (response.data['result'] as List)
@@ -103,9 +109,11 @@ class PatientDocumentServices {
     required String documentDescription,
     required String completedDate,
     required PlatformFile documentUrl,
+    required String token
   }) async{
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try{
-      dio.options.headers['Authorization'] = Api.bearerToken;
+
       Map<String,dynamic> data = {
         "documentID": documentID,
         "userID": userID,
@@ -116,14 +124,14 @@ class PatientDocumentServices {
         "documentDescription": documentDescription,
         "completedDate": completedDate,
         "flag": "Insert",
-        "documentUrl": await MultipartFile.fromFile(
+        "documentUrl": await dioFile.MultipartFile.fromFile(
           documentUrl.path!,
           filename: basename(documentUrl.path!),
 
         ),
       };
       print(data);
-      FormData formData = FormData.fromMap(data);
+      dioFile.FormData formData = dioFile.FormData.fromMap(data);
       final response = await dio.post('${Api.addPatientDocuments}',
       data: formData
       );
@@ -142,10 +150,12 @@ class PatientDocumentServices {
 
 
   Future<Either<String,String>> delDocument({
-    required String documentId
+    required String documentId,
+    required String token
   }) async{
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try{
-      dio.options.headers['Authorization'] = Api.bearerToken;
+
       final response = await dio.get('${Api.delPatientDocuments}$documentId');
       if(response.statusCode == 200){
         return Right('File deleted');

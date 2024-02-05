@@ -8,18 +8,22 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meroupachar/src/core/api.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/data/reminder_db.dart';
 
+import '../../../../login/domain/service/login_service.dart';
 
 
-final unitProvider = FutureProvider((ref) => MedServices().getMedicineUnits());
-final frequencyProvider = FutureProvider((ref) => MedServices().getFrequency());
-final routeProvider = FutureProvider((ref) => MedServices().getRoute());
+
+final unitProvider = FutureProvider.family((ref,String token) => MedServices().getMedicineUnits(token: token));
+final frequencyProvider = FutureProvider.family((ref,String token) => MedServices().getFrequency(token: token));
+final routeProvider = FutureProvider.family((ref,String token) => MedServices().getRoute(token: token));
 
 class MedServices{
 
   final dio = Dio();
 
 
-  Future<List<String>> getMedicineUnits() async{
+  Future<List<String>> getMedicineUnits({required String token}) async{
+    dio.options.headers['Authorization'] = 'Bearer $token';
+
 
     try{
 
@@ -44,8 +48,9 @@ class MedServices{
 
   }
 
-  Future<List<FrequencyModel>> getFrequency() async {
+  Future<List<FrequencyModel>> getFrequency({required String token}) async {
 
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try{
 
       final response = await dio.get('${Api.getFrequencyRoutes}');
@@ -88,8 +93,8 @@ class MedServices{
   }
 
 
-  Future<List<MedicineTypeModel>> getRoute() async {
-
+  Future<List<MedicineTypeModel>> getRoute({required String token}) async {
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try{
 
       final response = await dio.get('${Api.getFrequencyRoutes}');

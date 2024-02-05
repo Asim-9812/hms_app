@@ -217,7 +217,7 @@ class _AnimatedBarExampleState extends ConsumerState<OrgMainPage> {
         controller: controller,
         children: [
           OrgHomePage(isWideScreen,isNarrowScreen,noticeBool,userBox[0].code!),
-          PatientReports(userCode : userBox[0].code!,userId: userBox[0].userID!,),
+          PatientReports(userCode : userBox[0].code!,userId: userBox[0].userID!,token: userBox[0].token!,),
           DoctorReportsPage(isWideScreen, isNarrowScreen),
           OrgProfilePage(userBox[0]),
         ],

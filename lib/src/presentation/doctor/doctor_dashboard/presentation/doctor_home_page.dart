@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:animate_do/animate_do.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -128,7 +129,9 @@ class _DoctorHomePageState extends ConsumerState<DoctorHomePage> {
     //   profileImage = NetworkImage('${Api.baseUrl}/${userBox[0].profileImage}');
     // }
 
-    final docCircle = ref.watch(getUsersDropDown(widget.user.code!));
+    final params = Tuple2(widget.user.code!, widget.user.token!);
+
+    final docCircle = ref.watch(getUsersDropDown(params));
 
 
     return FadeIn(

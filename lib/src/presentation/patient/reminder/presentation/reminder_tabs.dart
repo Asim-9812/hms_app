@@ -17,6 +17,7 @@ import 'package:meroupachar/src/data/provider/common_provider.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/general/general_list.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/medicine/widget/create_med_reminder.dart';
 import '../../../../core/resources/value_manager.dart';
+import '../../../login/domain/model/user.dart';
 import '../../../notification_controller/notification_controller.dart';
 import 'general/widget/create_general_reminder.dart';
 import 'medicine/medicine_list.dart';

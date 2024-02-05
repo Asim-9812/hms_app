@@ -94,8 +94,9 @@ class _AddDocumentPageState extends ConsumerState<AddDocuPatients> {
   void _getDocumentTypes() async {
 
     final userId = userBox[0].username;
+    final token = userBox[0].token ?? '';
     // final folders = await PatientDocumentServices().getFolderList(username: userId!);
-    final typeList = await PatientDocumentServices().getDocumentTypeList();
+    final typeList = await PatientDocumentServices().getDocumentTypeList(token: token);
     setState(() {
       // folderList = folders;
       docTypeList = [initial,...typeList.where((element) => (element.documentType.toLowerCase() == 'pdf') || (element.documentType.toLowerCase() == 'image')).toList()];
@@ -121,7 +122,7 @@ class _AddDocumentPageState extends ConsumerState<AddDocuPatients> {
   @override
   Widget build(BuildContext context) {
 
-
+    final token = userBox[0].token ?? '';
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -187,7 +188,8 @@ class _AddDocumentPageState extends ConsumerState<AddDocuPatients> {
                                   documentTitle: _nameController.text.trim(),
                                   documentDescription:_descController.text.trim() ,
                                   completedDate: _dateController.text.trim(),
-                                  documentUrl: file!
+                                  documentUrl: file!,
+                                token: token
                               );
                               if(response.isLeft()){
                                 final left = response.fold((l) => l, (r) => null);

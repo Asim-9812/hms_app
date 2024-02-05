@@ -17,13 +17,15 @@ import 'package:meroupachar/src/presentation/patient/reminder/presentation/medic
 import '../../../../../core/resources/color_manager.dart';
 import '../../../../../core/resources/style_manager.dart';
 import '../../../../../core/resources/value_manager.dart';
+import '../../../../login/domain/model/user.dart';
 import '../../../../notification_controller/notification_controller.dart';
 import '../../data/reminder_db.dart';
 
 class MedDetails extends StatefulWidget {
   final Reminder reminder;
+  final User user;
 
-  MedDetails(this.reminder);
+  MedDetails(this.reminder,this.user);
 
   @override
   State<MedDetails> createState() => _MedDetailsState();
@@ -34,6 +36,8 @@ class _MedDetailsState extends State<MedDetails> {
   GlobalKey<_MedDetailsState> refreshKey = GlobalKey();
 
 
+
+  late String token ;
 
   late Box<Reminder> reminderBox;
   late ValueListenable<Box<Reminder>> reminderBoxListenable;
@@ -51,6 +55,9 @@ class _MedDetailsState extends State<MedDetails> {
 
 
     super.initState();
+
+    token = widget.user.token ?? '';
+
     // notificationServices.initializeNotifications();
 
     // Open the Hive box
@@ -366,7 +373,7 @@ class _MedDetailsState extends State<MedDetails> {
                        backgroundColor: ColorManager.primary,
                        elevation: 0
                      ),
-                       onPressed: ()=>Get.to(()=>EditMedReminderPage(reminderBox)),
+                       onPressed: ()=>Get.to(()=>EditMedReminderPage(reminderBox,widget.user)),
                        child: Row(
                          mainAxisAlignment: MainAxisAlignment.center,
                          crossAxisAlignment: CrossAxisAlignment.center,

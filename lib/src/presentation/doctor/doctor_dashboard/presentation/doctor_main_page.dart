@@ -359,7 +359,7 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
                   children: [
                     DoctorHomePage(isWideScreen,isNarrowScreen,noticeBool,data),
                     DocumentPage(isWideScreen,isNarrowScreen,false),
-                    PatientReports(userCode : data.code!,userId: data.userID!,),
+                    PatientReports(userCode : data.code!,userId: data.userID!,token: data.token!,),
                     DoctorUtilityPage(),
                     DocProfilePage(data)
                   ],

@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:dartz/dartz.dart';
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,18 +27,35 @@ class FolderPage extends ConsumerStatefulWidget {
   final String docId;
   final String folderName;
   final List<DocumentModel> files;
-  FolderPage({required this.docId,required this.folderName,required this.files});
+  final String token;
+  FolderPage({required this.token,required this.docId,required this.folderName,required this.files});
 
   @override
   ConsumerState<FolderPage> createState() => _PatientFolderPageState();
 }
 
 class _PatientFolderPageState extends ConsumerState<FolderPage> {
+
+
+  late String token;
+
+  late Tuple2<String,String> params;
+
   // bool isFolderLocked = false;
   List<DocumentModel> docList = [];
   List<DocumentTypeModel> docTypeList = [];
   int? pages;
   bool? isReady;
+
+
+
+  @override
+  void initState(){
+    super.initState();
+    token = widget.token;
+    params = Tuple2(widget.docId, token);
+
+  }
 
 
   @override
@@ -195,7 +213,7 @@ class _PatientFolderPageState extends ConsumerState<FolderPage> {
                   _menuCustomize(icon: Icons.delete_outline, name: 'Delete',
                       onTap: ()async{
                         final scaffoldMessage = ScaffoldMessenger.of(context);
-                        final response = await DoctorDocumentServices().delDocument(documentId: documentId);
+                        final response = await DoctorDocumentServices().delDocument(documentId: documentId,token: token);
                         if(response.isLeft()){
                           final left = response.fold(
                                   (l) => l,
@@ -217,8 +235,8 @@ class _PatientFolderPageState extends ConsumerState<FolderPage> {
                                     duration: const Duration(milliseconds: 1200)
                                 )
                             );
-                            ref.refresh(documentProvider(docId));
-                            ref.refresh(folderProvider(docId));
+                            ref.refresh(documentProvider(params));
+                            ref.refresh(folderProvider(params));
                             Navigator.pop(context);
                           }
                         }

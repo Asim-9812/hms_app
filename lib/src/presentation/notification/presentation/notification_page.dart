@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,7 +14,8 @@ import 'notification_personal.dart';
 
 class NotificationPage extends ConsumerStatefulWidget {
   final String code;
-  NotificationPage({required this.code});
+  final String token;
+  NotificationPage({required this.code,required this.token});
 
   @override
   ConsumerState<NotificationPage> createState() => _NotificationPageState();
@@ -31,7 +33,8 @@ class _NotificationPageState extends ConsumerState<NotificationPage>
 
   @override
   Widget build(BuildContext context) {
-    final noticeList = ref.watch(getNoticeList(widget.code));
+    final params = Tuple2(widget.code, widget.token);
+    final noticeList = ref.watch(getNoticeList(params));
     return Scaffold(
       backgroundColor: ColorManager.white.withOpacity(0.98),
       appBar: AppBar(
@@ -49,7 +52,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage>
         actions: [
           IconButton(
               onPressed: (){
-                ref.refresh(getNoticeList(widget.code));
+                ref.refresh(getNoticeList(params));
               },
               icon: FaIcon(Icons.refresh,color: ColorManager.white,))
         ],

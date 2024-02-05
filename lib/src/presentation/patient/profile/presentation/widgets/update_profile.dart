@@ -38,6 +38,8 @@ class UpdatePatientProfile extends ConsumerStatefulWidget {
 
 class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
 
+  late String token;
+
 
   final _formKey = GlobalKey<FormState>();
 
@@ -86,6 +88,8 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
   @override
   void initState(){
     super.initState();
+
+    token = widget.user.token ?? '';
     _getProvince();
     _firstNameController.text = widget.user.firstName! ;
     _lastNameController.text = widget.user.lastName! ;
@@ -222,7 +226,7 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
 
   /// fetch province list...
   void _getProvince() async {
-    List<ProvinceModel> provinceList = await CountryService().getAllProvince();
+    List<ProvinceModel> provinceList = await CountryService().getAllProvince(token: token);
 
     setState(() {
       provinces = provinceList;
@@ -235,7 +239,7 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
 
   void _getDistrict() async {
 
-    List<DistrictModel> districtList = await CountryService().getAllDistrict();
+    List<DistrictModel> districtList = await CountryService().getAllDistrict(token: token);
 
     setState(() {
       districts = districtList;
@@ -248,7 +252,7 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
 
   void _getMunicipality() async {
 
-    List<MunicipalityModel> municipalityList = await CountryService().getAllMunicipality();
+    List<MunicipalityModel> municipalityList = await CountryService().getAllMunicipality(token: token);
 
     setState(() {
       municipalities = municipalityList;
@@ -278,8 +282,8 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final addressProvider = ref.watch(getAddressList);
-    final countryProvider = ref.watch(getCountries);
+    final addressProvider = ref.watch(getAddressList(token));
+    final countryProvider = ref.watch(getCountries(token));
     final profilePicProvider= ref.watch(imageProvider);
     return GestureDetector(
       onTap: ()=>FocusScope.of(context).unfocus(),
@@ -1158,7 +1162,7 @@ class _UpdatePatientProfileState extends ConsumerState<UpdatePatientProfile> {
                                 imagePhoto1: profilePicProvider != null ?File(profilePicProvider.path): widget.user.profileImage != null ? File(widget.user.profileImage!):null
                               );
 
-                              final response = await PatientUpdateService().updateProfile(updateProfile: profileData);
+                              final response = await PatientUpdateService().updateProfile(updateProfile: profileData,token: token);
                               if(response.isLeft()){
                                 final leftValue = response.fold((l) => l, (r) => null);
                                 scaffoldMessage.showSnackBar(

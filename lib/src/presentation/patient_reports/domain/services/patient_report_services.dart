@@ -3,6 +3,7 @@
 
 
 
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meroupachar/src/core/api.dart';
@@ -12,9 +13,9 @@ import 'package:meroupachar/src/presentation/patient_reports/domain/model/patien
 import '../model/patient_report_model.dart';
 
 
-final getUsersDropDown = FutureProvider.family((ref,String code) => PatientReportServices().getUsersList(code: code));
-final getPatientProvider = FutureProvider.family((ref,String code) => PatientReportServices().getPatientInfo(code: code));
-final getPatientGroups = FutureProvider((ref) => PatientReportServices().getPatientGroupList());
+final getUsersDropDown = FutureProvider.family((ref, Tuple2<String, String> params) => PatientReportServices().getUsersList(code: params.value1,token: params.value2));
+final getPatientProvider = FutureProvider.family((ref,Tuple2<String, String> params) => PatientReportServices().getPatientInfo(code: params.value1,token:params.value2 ));
+final getPatientGroups = FutureProvider.family((ref,String token) => PatientReportServices().getPatientGroupList(token: token));
 
 class PatientReportServices{
   final dio = Dio();
@@ -28,7 +29,9 @@ class PatientReportServices{
     required String patientId,
     required int patientGroupId,
     required String code,
+    required String token
 }) async {
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try{
       Map<String,dynamic> data2 = {
         "fromdate": fromDate,
@@ -62,9 +65,10 @@ class PatientReportServices{
 
 
   Future<List<UserListModel>> getUsersList({
-    required String code
+    required String code,
+    required String token
 }) async {
-    dio.options.headers['Authorization'] = Api.bearerToken;
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try {
       final response = await dio.get('${Api.getDoctorsList}$code',);
 
@@ -81,9 +85,10 @@ class PatientReportServices{
   }
 
   Future<List<ConsultantModel>> getConsultantList({
-    required String userId
+    required String userId,
+    required String token
   }) async {
-    dio.options.headers['Authorization'] = Api.bearerToken;
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try {
       final response = await dio.get('${Api.getConsultantList}$userId',);
 
@@ -102,8 +107,8 @@ class PatientReportServices{
 
 
 
-  Future<List<PatientGroupModel>> getPatientGroupList() async {
-    dio.options.headers['Authorization'] = Api.bearerToken;
+  Future<List<PatientGroupModel>> getPatientGroupList({required String token}) async {
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try {
       final response = await dio.get(Api.getPatientGroupList,);
 
@@ -119,9 +124,10 @@ class PatientReportServices{
 
 
   Future<PatientInfoModel> getPatientInfo({
-    required String code
+    required String code,
+    required String token
 }) async {
-    dio.options.headers['Authorization'] = Api.bearerToken;
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try {
 
       final response = await dio.get('${Api.getPatientInfo}$code',);

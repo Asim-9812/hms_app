@@ -43,6 +43,8 @@ class OrgProfilePage extends ConsumerStatefulWidget {
 
 class _OrgProfilePageState extends ConsumerState<OrgProfilePage> {
 
+  late String token;
+
   List<DistrictModel> districts = [];
   List<ProvinceModel> provinces = [];
 
@@ -62,6 +64,9 @@ class _OrgProfilePageState extends ConsumerState<OrgProfilePage> {
   @override
   void initState(){
     super.initState();
+
+    token = widget.user.token??'';
+
     // Add a post-frame callback to scroll to the end after the layout is built
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       _scrollToEnd();
@@ -100,7 +105,7 @@ class _OrgProfilePageState extends ConsumerState<OrgProfilePage> {
 
   void _getProvince() async {
 
-    List<ProvinceModel> provinceList = await CountryService().getAllProvince();
+    List<ProvinceModel> provinceList = await CountryService().getAllProvince(token: token);
     setState(() {
       provinces = provinceList;
       province = provinces.firstWhereOrNull((element) => element.provinceId == widget.user.provinceID)?.provinceName ?? 'N/A';
@@ -112,7 +117,7 @@ class _OrgProfilePageState extends ConsumerState<OrgProfilePage> {
 
   void _getDistrict() async {
 
-    List<DistrictModel> districtList = await CountryService().getAllDistrict();
+    List<DistrictModel> districtList = await CountryService().getAllDistrict(token: token);
     setState(() {
       districts = districtList;
 
@@ -126,7 +131,7 @@ class _OrgProfilePageState extends ConsumerState<OrgProfilePage> {
 
   void _getMunicipality() async {
 
-    List<MunicipalityModel> municipalityList = await CountryService().getAllMunicipality();
+    List<MunicipalityModel> municipalityList = await CountryService().getAllMunicipality(token: token);
     setState(() {
       municipalities = municipalityList;
       mun = municipalities.firstWhereOrNull((element) => element.municipalityId == widget.user.municipalityID)?.municipalityName ?? 'N/A';
@@ -170,7 +175,7 @@ class _OrgProfilePageState extends ConsumerState<OrgProfilePage> {
         centerTitle: true,
         actions: [
           IconButton(
-              onPressed:()=>Get.to(()=>NotificationPage(code: code,)),
+              onPressed:()=>Get.to(()=>NotificationPage(code: code,token: token)),
               icon: FaIcon(Icons.notifications,color: ColorManager.white,))
         ],
 

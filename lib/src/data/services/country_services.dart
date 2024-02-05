@@ -6,12 +6,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/api.dart';
+import '../../presentation/login/domain/service/login_service.dart';
 import '../model/country_model.dart';
 
 
-final getMunicipality = FutureProvider((ref) => CountryService().getAllMunicipality());
-final getDistrict = FutureProvider((ref) => CountryService().getAllDistrict());
-final getCountries = FutureProvider((ref) => CountryService().getCountry());
+final getMunicipality = FutureProvider.family((ref,String token) => CountryService().getAllMunicipality(token: token));
+final getDistrict = FutureProvider.family((ref,String token) => CountryService().getAllDistrict(token: token));
+final getCountries = FutureProvider.family((ref,String token) => CountryService().getCountry(token: token));
 
 
 
@@ -21,7 +22,8 @@ class CountryService{
   final dio = Dio();
 
 
-  Future<List<Country>> getCountry() async {
+  Future<List<Country>> getCountry({required String token}) async {
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try {
       final response = await dio.get(Api.getCountry,);
 
@@ -36,8 +38,9 @@ class CountryService{
   }
 
 
-  Future<List<ProvinceModel>> getAllProvince() async
+  Future<List<ProvinceModel>> getAllProvince({required String token}) async
   {
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try {
       final response = await dio.get('${Api.getAllProvince}',);
 
@@ -53,8 +56,10 @@ class CountryService{
 
 
   Future<List<ProvinceModel>> getProvince({
-    required int countryId
+    required int countryId,
+    required String token
 }) async {
+    dio.options.headers['Authorization'] = 'Bearer $token';
     ('$countryId');
     try {
       final response = await dio.get('${Api.getProvince}$countryId',);
@@ -70,8 +75,10 @@ class CountryService{
   }
 
   Future<List<DistrictModel>> getDistrict({
-    required int provinceId
+    required int provinceId,
+    required String token
 }) async {
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try {
       final response = await dio.get('${Api.getDistrict}$provinceId',);
 
@@ -85,7 +92,8 @@ class CountryService{
     }
   }
 
-  Future<List<DistrictModel>> getAllDistrict() async {
+  Future<List<DistrictModel>> getAllDistrict({required String token}) async {
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try {
       final response = await dio.get(Api.getAllDistrict);
 
@@ -99,8 +107,8 @@ class CountryService{
     }
   }
 
-  Future<List<MunicipalityModel>> getAllMunicipality() async {
-    dio.options.headers['Authorization'] = Api.bearerToken;
+  Future<List<MunicipalityModel>> getAllMunicipality({required String token}) async {
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try {
       final response = await dio.get(Api.getAllMunicipality);
 
@@ -117,9 +125,10 @@ class CountryService{
 
 
   Future<List<MunicipalityModel>> getMunicipality({
-    required int districtId
+    required int districtId,
+    required String token
   }) async {
-    dio.options.headers['Authorization'] = Api.bearerToken;
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try {
       final response = await dio.get('${Api.getMunicipality}$districtId');
 

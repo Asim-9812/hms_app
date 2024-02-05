@@ -7,6 +7,7 @@
 import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,12 +34,14 @@ class ViewProfile extends ConsumerWidget {
   final String patientCode;
   final String colorCode;
   final String patientAddress;
-  ViewProfile({required this.patientCode,required this.colorCode,required this.patientAddress});
+  final String token;
+  ViewProfile({required this.token,required this.patientCode,required this.colorCode,required this.patientAddress});
 
   @override
   Widget build(BuildContext context,ref) {
 
-    final patientInfo = ref.watch(getPatientProvider(patientCode));
+    final params = Tuple2(patientCode, token);
+    final patientInfo = ref.watch(getPatientProvider(params));
     return Scaffold(
       backgroundColor: ColorManager.white.withOpacity(0.99),
       appBar: AppBar(

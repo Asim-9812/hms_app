@@ -3,6 +3,7 @@
 
 
 
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meroupachar/src/core/api.dart';
@@ -10,14 +11,16 @@ import 'package:meroupachar/src/core/api.dart';
 import '../model/notice_model.dart';
 
 
-final getNoticeList = FutureProvider.family((ref,String code) => NoticeServices().getNoticeList(code: code));
+final getNoticeList = FutureProvider.family((ref,Tuple2<String, String> params) => NoticeServices().getNoticeList(code: params.value1,token: params.value2));
 
 class NoticeServices{
   final dio = Dio();
 
   Future<List<NoticeModel>> getNoticeList({
-    required String code
+    required String code,
+    required String token
 }) async {
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try{
       final response = await dio.get('${Api.getNoticeList}/$code');
 

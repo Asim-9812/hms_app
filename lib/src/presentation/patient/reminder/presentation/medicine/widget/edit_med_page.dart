@@ -14,6 +14,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/domain/model/reminder_model.dart';
+import '../../../../../login/domain/model/user.dart';
 import '../../../../../notification_controller/notification_controller.dart';
 import '../../../../../../core/resources/color_manager.dart';
 import '../../../../../../core/resources/style_manager.dart';
@@ -27,8 +28,9 @@ import '../../../domain/services/med_services.dart';
 
 class EditMedReminderPage extends ConsumerStatefulWidget {
   final Reminder reminderTest;
+  final User user;
 
-  EditMedReminderPage(this.reminderTest);
+  EditMedReminderPage(this.reminderTest,this.user);
 
   @override
   _EditReminderPageState createState() => _EditReminderPageState();
@@ -36,6 +38,8 @@ class EditMedReminderPage extends ConsumerStatefulWidget {
 
 class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
   late Reminder updatedReminder;
+
+  late String token;
 
   int page = 0;
   PageController _pageController = PageController(initialPage: 0);
@@ -104,6 +108,9 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
   @override
   void initState() {
     super.initState();
+
+    token = widget.user.token ?? '';
+
     // Initialize the updatedReminder with the data from Hive
     updatedReminder = widget.reminderTest;
     selectedMedTypeId = updatedReminder.medTypeId;
@@ -511,9 +518,9 @@ class _EditReminderPageState extends ConsumerState<EditMedReminderPage> {
   }
 
   Widget _form1(PageController _pageController){
-    final routes = ref.watch(routeProvider);
-    final units =ref.watch(unitProvider);
-    final frequencies =ref.watch(frequencyProvider);
+    final routes = ref.watch(routeProvider(token));
+    final units =ref.watch(unitProvider(token));
+    final frequencies =ref.watch(frequencyProvider(token));
 
     return Form(
       key: formKey1,

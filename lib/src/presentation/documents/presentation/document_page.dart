@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:dartz/dartz.dart';
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -141,9 +142,11 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
     bool isWideScreen = screenSize.width > 500;
     bool isNarrowScreen = screenSize.width < 380;
     final userBox = Hive.box<User>('session').values.toList();
-    final docId = userBox[0].userID;
-    final folderList = ref.watch(folderProvider(docId!));
-    final documentList = ref.watch(documentProvider(docId));
+    final docId = userBox[0].userID!;
+    final token = userBox[0].token!;
+    final params = Tuple2(docId, token);
+    final folderList = ref.watch(folderProvider(params));
+    final documentList = ref.watch(documentProvider(params));
 
 
     return Container(
@@ -194,7 +197,7 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
                                 fileNumbers: numberOfDocs,
                                 onTap: (){
                                   final list = documents.where((element) => element.folderName == data[index].folderName ).toList();
-                                  Get.to(()=>FolderPage(docId: docId, folderName: data[index].folderName, files: list));
+                                  Get.to(()=>FolderPage(docId: docId, folderName: data[index].folderName, files: list,token: token,));
                                 });
                           },
 
@@ -345,8 +348,10 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
 
   Widget buildFile(BuildContext context) {
     final userBox = Hive.box<User>('session').values.toList();
-    final docId = userBox[0].userID;
-    final documentList = ref.watch(documentProvider(docId!));
+    final docId = userBox[0].userID!;
+    final token = userBox[0].token!;
+    final params = Tuple2(docId, token);
+    final documentList = ref.watch(documentProvider(params));
     return documentList.when(
         data: (data){
           if(data.isEmpty){
@@ -372,6 +377,7 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
                     itemBuilder: (BuildContext context, int index) {
                       return _fileTile(context,
                         docId: docId,
+                        token: token,
                         documentId:reversedList[index].documentID! ,
                         typeId: reversedList[index].documentTypeID!,
                         fileName: reversedList[index].documentTitle!,
@@ -410,8 +416,10 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
 
   Widget buildLinks(BuildContext context) {
     final userBox = Hive.box<User>('session').values.toList();
-    final docId = userBox[0].userID;
-    final documentList = ref.watch(linkProvider(docId!));
+    final docId = userBox[0].userID!;
+    final token = userBox[0].token!;
+    final params = Tuple2(docId, token);
+    final documentList = ref.watch(linkProvider(params));
     return documentList.when(
         data: (data){
           if(data.isEmpty){
@@ -437,6 +445,7 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
                     itemBuilder: (BuildContext context, int index) {
                       return _linkTile(context,
                         docId: docId,
+                        token: token,
                         documentId:reversedList[index].documentID! ,
                         typeId: reversedList[index].documentTypeID!,
                         fileName: reversedList[index].documentTitle!,
@@ -473,11 +482,12 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
     required int typeId,
     required int documentId,
     required String docId,
+    required String token,
   }) {
     return ListTile(
 
       onLongPress: () async {
-        _showFileDialog(context,documentId.toString(),docId);
+        _showFileDialog(context,documentId.toString(),docId,token);
       },
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
@@ -496,7 +506,7 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
       subtitle: Text('${description}',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 10),),
       trailing: IconButton(
         onPressed: () async {
-          _showFileDialog(context,documentId.toString(),docId);
+          _showFileDialog(context,documentId.toString(),docId,token);
         },
         icon: FaIcon(Icons.more_horiz,color: ColorManager.iconGrey,),
       ),
@@ -514,11 +524,12 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
     required int typeId,
     required int documentId,
     required String docId,
+    required String token,
   }) {
     return ListTile(
 
       onLongPress: () async {
-        _showFileDialog(context,documentId.toString(),docId);
+        _showFileDialog(context,documentId.toString(),docId,token);
       },
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
@@ -537,7 +548,7 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
       subtitle: Text('${description}',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 10),),
       trailing: IconButton(
         onPressed: () async {
-          _showFileDialog(context,documentId.toString(),docId);
+          _showFileDialog(context,documentId.toString(),docId,token);
         },
         icon: FaIcon(Icons.more_horiz,color: ColorManager.iconGrey,),
       ),
@@ -546,7 +557,8 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
 
 
   /// file menu...
-  Future<void> _showFileDialog(BuildContext context,String documentId,String docId) {
+  Future<void> _showFileDialog(BuildContext context,String documentId,String docId,String token) {
+    final params = Tuple2(docId, token);
     return showDialog(
         context: context,
         builder: (context){
@@ -570,7 +582,7 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
                   _folderCustomize(icon: Icons.delete_outline, name: 'Delete',
                       onTap: ()async{
                         final scaffoldMessage = ScaffoldMessenger.of(context);
-                    final response = await DoctorDocumentServices().delDocument(documentId: documentId);
+                    final response = await DoctorDocumentServices().delDocument(documentId: documentId,token: token);
                     if(response.isLeft()){
                       final left = response.fold(
                               (l) => l,
@@ -593,9 +605,9 @@ class _PatientDocumentPageState extends ConsumerState<DocumentPage> {
                                 duration: const Duration(milliseconds: 1200)
                             )
                         );
-                        ref.refresh(documentProvider(docId));
-                        ref.refresh(folderProvider(docId));
-                        ref.refresh(linkProvider(docId));
+                        ref.refresh(documentProvider(params));
+                        ref.refresh(folderProvider(params));
+                        ref.refresh(linkProvider(params));
                         Navigator.pop(context);
 
                     }

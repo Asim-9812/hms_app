@@ -28,6 +28,8 @@ import '../../../data/reminder_db.dart';
 
 
 class CreateMedReminder extends ConsumerStatefulWidget {
+  final User user;
+  CreateMedReminder(this.user);
 
 
   @override
@@ -35,6 +37,8 @@ class CreateMedReminder extends ConsumerStatefulWidget {
 }
 
 class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
+
+  late String token;
 
 
   int page = 0;
@@ -105,7 +109,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
   @override
   void initState() {
     super.initState();
-
+    token = widget.user.token ?? '' ;
 
 
 
@@ -173,6 +177,9 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
             scheduleTime.add(formattedTime);
           }
         }
+
+
+
         setState(() {});
       }
 
@@ -209,6 +216,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
             notifyScheduleTime.add(formattedTime);
           }
         }
+
         setState(() {});
       }
     }
@@ -384,9 +392,9 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
   }
 
   Widget _form1(PageController _pageController){
-    final routes = ref.watch(routeProvider);
-    final units =ref.watch(unitProvider);
-    final frequencies =ref.watch(frequencyProvider);
+    final routes = ref.watch(routeProvider(token));
+    final units =ref.watch(unitProvider(token));
+    final frequencies =ref.watch(frequencyProvider(token));
 
     return Form(
       key: formKey1,
@@ -1796,7 +1804,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                             if(selectedPatternId == 3){
                               final int totalDays = int.parse(_medicationDurationController.text.trim());
                               final int totalInterval = scheduleTime.length;
-                              final DateTime firstDate = DateTime(startDateIntake!.year,startDateIntake!.month,startDateIntake!.day,DateFormat('hh:mm').parse(notifyScheduleTime[0]).hour,DateFormat('hh:mm').parse(notifyScheduleTime[0]).minute);
+                              final DateTime firstDate = DateTime(startDateIntake!.year,startDateIntake!.month,startDateIntake!.day,DateFormat('hh:mm a').parse(notifyScheduleTime[0]).hour,DateFormat('hh:mm a').parse(notifyScheduleTime[0]).minute);
                               final DateTime initialDate = firstDate.subtract(Duration(minutes: 10));
                               List<DateListModel> scheduleList = [];
 

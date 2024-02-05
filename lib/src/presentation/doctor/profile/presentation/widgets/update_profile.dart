@@ -38,6 +38,7 @@ class UpdateDocProfile extends ConsumerStatefulWidget {
 
 class _UpdateOrgProfileState extends ConsumerState<UpdateDocProfile> {
   late User user;
+  late String token;
   String? tempProfileImage; // Variable to store temporary changes
   String? tempSignImage;
   String countryName = 'NEPAL';
@@ -76,6 +77,7 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateDocProfile> {
   void initState() {
     super.initState();
     user = widget.user;
+    token = user.token ?? '';
 
     tempProfileImage = user.profileImage == null ? null :user.profileImage!;
     tempSignImage = user.signatureImage == null ? null :user.signatureImage!;
@@ -124,7 +126,7 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateDocProfile> {
 
   /// fetch province list...
   void _getProvince() async {
-    List<ProvinceModel> provinceList = await CountryService().getAllProvince();
+    List<ProvinceModel> provinceList = await CountryService().getAllProvince(token: token);
 
     setState(() {
       provinces = provinceList;
@@ -137,7 +139,7 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateDocProfile> {
 
   void _getDistrict() async {
 
-    List<DistrictModel> districtList = await CountryService().getAllDistrict();
+    List<DistrictModel> districtList = await CountryService().getAllDistrict(token: token);
 
     setState(() {
       districts = districtList;
@@ -150,7 +152,7 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateDocProfile> {
 
   void _getMunicipality() async {
 
-    List<MunicipalityModel> municipalityList = await CountryService().getAllMunicipality();
+    List<MunicipalityModel> municipalityList = await CountryService().getAllMunicipality(token: token);
 
     setState(() {
       municipalities = municipalityList;
@@ -192,8 +194,8 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateDocProfile> {
   Widget build(BuildContext context) {
     final profileProvider = ref.watch(imageProvider);
     final signatureProvider = ref.watch(imageProvider2);
-    final addressProvider = ref.watch(getAddressList);
-    final countryProvider = ref.watch(getCountries);
+    final addressProvider = ref.watch(getAddressList( token));
+    final countryProvider = ref.watch(getCountries(token));
 
 
     return WillPopScope(

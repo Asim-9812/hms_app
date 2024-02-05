@@ -51,7 +51,7 @@ class UpdateProfile{
     XFile? signatureImageUrl,
   }) async {
     try {
-      dio.options.headers['Authorization'] = Api.bearerToken;
+      dio.options.headers['Authorization'] = 'Bearer $token';
       Map<String, dynamic> data = {
         'ID': ID,
         'userID': userID,

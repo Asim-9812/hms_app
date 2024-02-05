@@ -114,6 +114,8 @@ class LoginProvider{
 class UserProvider extends StateNotifier<List<User>>{
   UserProvider(super._state);
 
+
+
   Future<String> getUserInfo({required Map<String,dynamic> response}) async{
     ('User provider: $response');
     final newUser = User.fromJson(response["result"]);
@@ -121,6 +123,7 @@ class UserProvider extends StateNotifier<List<User>>{
       newUser.localAddress = response['result']['patientFullAddress'];
       newUser.profileImage = response['result']['patientPhoto'];
       newUser.genderID = response['result']['gender'];
+
 
 
     if(Hive.box<User>('session').isEmpty){

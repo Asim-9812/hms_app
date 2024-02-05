@@ -47,6 +47,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   late User userProfile;
 
+  late String token;
+
   final ScrollController _scrollController = ScrollController();
 
   List<DistrictModel> districts = [];
@@ -65,6 +67,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     super.initState();
 
     userProfile = widget.user;
+    token = userProfile.token ?? '';
 
     // Add a post-frame callback to scroll to the end after the layout is built
     WidgetsBinding.instance?.addPostFrameCallback((_) {
@@ -82,7 +85,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   void _getProvince() async {
 
-    List<ProvinceModel> provinceList = await CountryService().getAllProvince();
+    List<ProvinceModel> provinceList = await CountryService().getAllProvince(token: token);
     setState(() {
       provinces = provinceList;
 
@@ -97,7 +100,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   void _getDistrict() async {
 
-    List<DistrictModel> districtList = await CountryService().getAllDistrict();
+    List<DistrictModel> districtList = await CountryService().getAllDistrict(token: token);
     setState(() {
       districts = districtList;
 
@@ -111,7 +114,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   void _getMunicipality() async {
 
-    List<MunicipalityModel> municipalityList = await CountryService().getAllMunicipality();
+    List<MunicipalityModel> municipalityList = await CountryService().getAllMunicipality(token: token);
     setState(() {
       municipalities = municipalityList;
       mun = municipalities.firstWhereOrNull((element) => element.municipalityId == widget.user.municipalityID)?.municipalityName ?? 'N/A';
@@ -340,7 +343,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         centerTitle: true,
         actions: [
           IconButton(
-              onPressed:()=>Get.to(()=>NotificationPage(code: userBox[0].orgId!,)),
+              onPressed:()=>Get.to(()=>NotificationPage(code: userBox[0].orgId!,token: token,)),
               icon: FaIcon(Icons.notifications,color: ColorManager.white,))
         ],
 

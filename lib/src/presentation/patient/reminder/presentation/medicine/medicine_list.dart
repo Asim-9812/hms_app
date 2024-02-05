@@ -125,7 +125,11 @@ class _MedRemindersState extends ConsumerState<MedReminders> {
             onTap: ()async{
               // NotificationService().scheduleNotification();
               ref.read(itemProvider.notifier).updateMenu(false);
-              Get.to(()=>MedDetails(reminderList[index]));
+
+
+
+
+              Get.to(()=>MedDetails(reminderList[index],userBox[0]));
             },
             // leading: CircleAvatar(
             //   backgroundColor:reminder.startDate.difference(DateTime.now()) <= Duration(days: 0) ? ColorManager.primaryDark : ColorManager.dotGrey,

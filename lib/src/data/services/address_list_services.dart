@@ -3,16 +3,16 @@ import 'package:meroupachar/src/data/model/country_model.dart';
 import 'package:meroupachar/src/data/services/country_services.dart';
 
 
-final getAddressList = FutureProvider((ref) => AddressList().getAddress());
+final getAddressList = FutureProvider.family((ref,String token) => AddressList().getAddress(token));
 
 
 class AddressList {
   Map<int, List<String>> combinedData = {};
 
-  Future<List<String>> getAddress() async {
-    List<DistrictModel> districts = await CountryService().getAllDistrict();
+  Future<List<String>> getAddress(String token) async {
+    List<DistrictModel> districts = await CountryService().getAllDistrict(token: token);
 
-    List<MunicipalityModel> municipalities = await CountryService().getAllMunicipality();
+    List<MunicipalityModel> municipalities = await CountryService().getAllMunicipality(token: token);
 
     // Combine data into one map based on districtId
     districts.forEach((district) {

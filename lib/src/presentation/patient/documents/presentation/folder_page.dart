@@ -27,8 +27,9 @@ import '../search_documents/presentation/search_document_page.dart';
 class PatientFolderPage extends ConsumerStatefulWidget {
   final String userId;
   final String folderName;
+  final String token;
   final List<PatientDocumentModel> files;
-  PatientFolderPage({required this.userId,required this.folderName,required this.files});
+  PatientFolderPage({required this.userId,required this.folderName,required this.files,required this.token});
 
   @override
   ConsumerState<PatientFolderPage> createState() => _PatientFolderPageState();
@@ -101,11 +102,12 @@ class _PatientFolderPageState extends ConsumerState<PatientFolderPage> {
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int index) {
         return _fileTile(context,
-          userrId: widget.userId,
+          userId: widget.userId,
           documentId:widget.files[index].documentID! ,
           typeId: widget.files[index].documentTypeID!,
           fileName: widget.files[index].documentTitle!,
           description: widget.files[index].documentDescription?? 'No description',
+          token: widget.token,
           onTap: ()async{
             if(widget.files[index].documentTypeID == 2){
               final image = Image.network('${Api.baseUrl}/${widget.files[index].patientAttachment}').image;
@@ -139,12 +141,13 @@ class _PatientFolderPageState extends ConsumerState<PatientFolderPage> {
     required String description,
     required int typeId,
     required int documentId,
-    required String userrId,
+    required String userId,
+    required String token
   }) {
     return ListTile(
 
       onLongPress: () async {
-        _showFileDialog(context,documentId.toString(),userrId);
+        _showFileDialog(context,documentId.toString(),userId,token);
       },
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
@@ -163,7 +166,7 @@ class _PatientFolderPageState extends ConsumerState<PatientFolderPage> {
       subtitle: Text('${description}',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 10),),
       trailing: IconButton(
         onPressed: () async {
-          _showFileDialog(context,documentId.toString(),userrId);
+          _showFileDialog(context,documentId.toString(),userId,token);
         },
         icon: FaIcon(Icons.more_horiz,color: ColorManager.iconGrey,),
       ),
@@ -183,7 +186,7 @@ class _PatientFolderPageState extends ConsumerState<PatientFolderPage> {
   }
 
   /// file menu...
-  Future<void> _showFileDialog(BuildContext context,String documentId,String userId) {
+  Future<void> _showFileDialog(BuildContext context,String documentId,String userId,String token) {
     return showDialog(
         context: context,
         builder: (context){
@@ -208,7 +211,7 @@ class _PatientFolderPageState extends ConsumerState<PatientFolderPage> {
                       onTap:
                           ()async{
                         final scaffoldMessage = ScaffoldMessenger.of(context);
-                        final response = await PatientDocumentServices().delDocument(documentId: documentId);
+                        final response = await PatientDocumentServices().delDocument(documentId: documentId,token: token);
                         if(response.isLeft()){
                           final left = response.fold(
                                   (l) => l,
@@ -231,8 +234,8 @@ class _PatientFolderPageState extends ConsumerState<PatientFolderPage> {
                                   duration: const Duration(milliseconds: 1200)
                               )
                           );
-                          ref.refresh(patientDocumentProvider(userId));
-                          ref.refresh(patientFolderProvider(userId));
+                          ref.refresh(patientDocumentProvider('$userId&$token'));
+                          ref.refresh(patientFolderProvider('$userId&$token'));
                           Navigator.pop(context);
                           Navigator.pop(context);
 

@@ -24,14 +24,18 @@ import '../domain/services/patient_report_services.dart';
 
 class PatientReports extends ConsumerStatefulWidget {
   final String userCode;
+  final String token;
   final String userId;
-  PatientReports({required this.userCode,required this.userId});
+  PatientReports({required this.userCode,required this.userId,required this.token});
 
   @override
   ConsumerState<PatientReports> createState() => _PatientReportsState();
 }
 
 class _PatientReportsState extends ConsumerState<PatientReports> {
+
+  late String token;
+
   TextEditingController dateFrom = TextEditingController();
   TextEditingController dateTo = TextEditingController();
   TextEditingController search = TextEditingController();
@@ -65,6 +69,7 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
   @override
   void initState() {
     super.initState();
+    token = widget.token;
     dateFrom.text = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 7)));
     dateTo.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
     userCode = widget.userCode;
@@ -140,7 +145,8 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
   }
 
   void _getUsers() async {
-    List<UserListModel> list = await PatientReportServices().getUsersList(code: userCode);
+
+    List<UserListModel> list = await PatientReportServices().getUsersList(code: userCode,token: token);
     setState(() {
       userList = list;
     });
@@ -150,7 +156,7 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
 
   void _getConsultant() async {
 
-    List<ConsultantModel> list = await PatientReportServices().getConsultantList(userId: userId == "0" ?widget.userId: userId );
+    List<ConsultantModel> list = await PatientReportServices().getConsultantList(userId: userId == "0" ?widget.userId: userId,token: token );
     setState(() {
       consultantList = list;
     });
@@ -160,9 +166,10 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
   @override
   Widget build(BuildContext context) {
     final userBox = Hive.box<User>('session').values.toList();
+    final params = Tuple2(userCode, token);
     final departmentList = ref.watch(getDepartmentList);
-    final doctorsList = ref.watch(getUsersDropDown(userCode));
-    final patientGroupList = ref.watch(getPatientGroups);
+    final doctorsList = ref.watch(getUsersDropDown(params));
+    final patientGroupList = ref.watch(getPatientGroups(token));
     return GestureDetector(
       onTap: ()=>FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -875,7 +882,8 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
                                       patientGroupId: 0,
                                       code: userBox[0].code!,
                                       patientId: phController.text.trim(),
-                                      consultantId: consultantId
+                                      consultantId: consultantId,
+                                    token: token
                                   );
 
                                   if(response.isEmpty){
@@ -904,7 +912,8 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
                                       patientGroupId: pgId,
                                       code: userBox[0].code!,
                                       patientId: "0",
-                                      consultantId: consultantId
+                                      consultantId: consultantId,
+                                    token: token
                                   );
 
                                   if(response.isEmpty){

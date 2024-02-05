@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -68,8 +69,10 @@ class _SearchDocumentsState extends ConsumerState<SearchDocuments> {
   @override
   Widget build(BuildContext context) {
     final userBox = Hive.box<User>('session').values.toList();
-    final docId = userBox[0].userID;
-    final documentList = ref.watch(allDocumentProvider(docId!));
+    final docId = userBox[0].userID!;
+    final token = userBox[0].token!;
+    final params = Tuple2(docId, token);
+    final documentList = ref.watch(allDocumentProvider(params));
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
