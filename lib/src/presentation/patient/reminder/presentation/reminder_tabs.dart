@@ -119,7 +119,7 @@ class _ReminderState extends ConsumerState<ReminderTabs>with TickerProviderState
 
                               ),
                               padding: EdgeInsets.symmetric(vertical: 24.h),
-                              child:  Center(child: Text('Medicinal',style: getMediumStyle(color: page == 0?ColorManager.primary: ColorManager.white,fontSize: 20),)),
+                              child:  Center(child: Text('Medicine',style: getMediumStyle(color: page == 0?ColorManager.primary: ColorManager.white,fontSize: 20),)),
                             ),
                           ),
                         ),

@@ -167,7 +167,7 @@ class _PatientReportsState extends ConsumerState<PatientReports> {
   Widget build(BuildContext context) {
     final userBox = Hive.box<User>('session').values.toList();
     final params = Tuple2(userCode, token);
-    final departmentList = ref.watch(getDepartmentList);
+    final departmentList = ref.watch(getDepartmentList(token));
     final doctorsList = ref.watch(getUsersDropDown(params));
     final patientGroupList = ref.watch(getPatientGroups(token));
     return GestureDetector(

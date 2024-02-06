@@ -370,7 +370,7 @@ class _OrgProfilePageState extends ConsumerState<OrgProfilePage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text('Version 1.0.3',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                                Text('Version 1.0.4',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
                                 h10,
                                 Text('Developed by Search Technology',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
                                 h10,

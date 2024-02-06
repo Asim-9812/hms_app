@@ -56,7 +56,8 @@ class NotificationController {
               importance: NotificationImportance.High,
               defaultPrivacy: NotificationPrivacy.Private,
               defaultColor: Colors.deepPurple,
-              ledColor: Colors.deepPurple)
+              ledColor: Colors.deepPurple
+          )
         ],
 
         debug: false);
@@ -83,10 +84,9 @@ class NotificationController {
   ///  Notifications events are only delivered after call this method
   static Future<void> startListeningNotificationEvents() async {
     AwesomeNotifications()
-        .setListeners(onActionReceivedMethod: onActionReceivedMethod,onDismissActionReceivedMethod: (receivedAction){
-          print('Action received');
-          return onDismissActionReceivedMethod(receivedAction);
-    },);
+        .setListeners(
+      onActionReceivedMethod: onActionReceivedMethod,
+      onDismissActionReceivedMethod: onDismissActionReceivedMethod);
   }
 
   ///  *********************************************
@@ -96,6 +96,8 @@ class NotificationController {
   @pragma('vm:entry-point')
   static Future<void> onActionReceivedMethod(
       ReceivedAction receivedAction) async {
+
+    print('action received!!');
 
     if (receivedAction.actionType == ActionType.SilentAction ||
         receivedAction.actionType == ActionType.SilentBackgroundAction) {
@@ -138,6 +140,7 @@ class NotificationController {
   static Future<void> onDismissActionReceivedMethod(
       ReceivedAction receivedAction) async {
 
+    print('dismiss action received!!');
 
     print(receivedAction.payload);
 
@@ -482,6 +485,8 @@ class NotificationController {
   @pragma('vm:entry-point')
   static Future<void> onActionReceivedImplementationMethod(
       ReceivedAction receivedAction) async {
+
+    print('tap action received!!');
     print(receivedAction.payload ?? 'null payload');
     onDismissActionReceivedMethod(receivedAction);
     final payload = receivedAction.payload;
@@ -639,6 +644,7 @@ class NotificationController {
 Future<void> snoozeAlarm({
   required ReceivedAction receivedAction
 }) async {
+  print('alarm snoozed');
   // var nowDate = DateTime.now().add(Duration(hours: hoursFromNow, seconds: 5));
   await AwesomeNotifications().createNotification(
     schedule: NotificationInterval(interval: 300,repeats: false,timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()),

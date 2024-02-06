@@ -9,14 +9,14 @@ import 'package:meroupachar/src/data/model/department_model.dart';
 import '../../core/api.dart';
 
 
-final getDepartmentList = FutureProvider((ref) => DepartmentServices().getDepartmentList());
+final getDepartmentList = FutureProvider.family((ref,String token) => DepartmentServices().getDepartmentList(token: token));
 
 class DepartmentServices{
 
   final dio = Dio();
 
-  Future<List<Department>> getDoctorDepartments() async {
-    dio.options.headers['Authorization'] = Api.bearerToken;
+  Future<List<Department>> getDoctorDepartments({required String token}) async {
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try {
       final response = await dio.get(Api.getDoctorDepartment,);
 
@@ -30,8 +30,8 @@ class DepartmentServices{
     }
   }
 
-  Future<List<Department>> getDepartmentList() async {
-    dio.options.headers['Authorization'] = Api.bearerToken;
+  Future<List<Department>> getDepartmentList({required String token}) async {
+    dio.options.headers['Authorization'] = 'Bearer $token';
     try {
       final response = await dio.get(Api.getDepartmentList,);
 
