@@ -30,7 +30,8 @@ class UpdateDocProfile extends ConsumerStatefulWidget {
   final bool isWideScreen;
   final bool isNarrowScreen;
   final User user;
-  UpdateDocProfile(this.isWideScreen, this.isNarrowScreen, this.user);
+  final String token;
+  UpdateDocProfile(this.isWideScreen, this.isNarrowScreen, this.user,this.token);
 
   @override
   ConsumerState<UpdateDocProfile> createState() => _UpdateOrgProfileState();
@@ -77,7 +78,7 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateDocProfile> {
   void initState() {
     super.initState();
     user = widget.user;
-    token = user.token ?? '';
+    token = widget.token ?? '';
 
     tempProfileImage = user.profileImage == null ? null :user.profileImage!;
     tempSignImage = user.signatureImage == null ? null :user.signatureImage!;

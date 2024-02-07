@@ -16,6 +16,8 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/domain/model/reminder_model.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/domain/services/med_services.dart';
+import 'package:workmanager/workmanager.dart';
+import '../../../../../../../main.dart';
 import '../../../../../../core/resources/color_manager.dart';
 import '../../../../../../core/resources/style_manager.dart';
 import '../../../../../../core/resources/value_manager.dart';
@@ -1506,6 +1508,7 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                             setState(() {
                               isPostingData = true;
                             });
+
 
                             /// FOR EVERYDAY....
                            if(selectedPatternId == 1){

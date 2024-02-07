@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +17,20 @@ import 'package:meroupachar/src/presentation/patient/reminder/domain/model/remin
 // import 'package:timezone/data/latest.dart' as tz;
 // import 'package:background_fetch/background_fetch.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
+import 'package:workmanager/workmanager.dart';
 
+
+
+
+// @pragma('vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
+// void callbackDispatcher() {
+//   Workmanager().executeTask((task, inputData) {
+//     ReceivedAction receivedAction = ReceivedAction();
+//     receivedAction.payload = inputData;
+//     NotificationController.onDismissActionReceivedMethod(receivedAction);
+//     return Future.value(true);
+//   });
+// }
 
 
 // final box = Provider<String?>((ref) => null);
@@ -45,6 +59,8 @@ Future<void> main() async {
 
   await NotificationController.initializeLocalNotifications();
   await NotificationController.initializeIsolateReceivePort();
+
+
 
   // BackgroundFetch.configure(
   //     BackgroundFetchConfig(

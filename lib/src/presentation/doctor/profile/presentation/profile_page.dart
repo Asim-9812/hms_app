@@ -32,7 +32,8 @@ import '../../../login/presentation/status_page.dart';
 
 class DocProfilePage extends ConsumerStatefulWidget {
   final User user;
-  DocProfilePage(this.user);
+  final String token;
+  DocProfilePage(this.user,this.token);
 
   @override
   ConsumerState<DocProfilePage> createState() => _DocProfilePageState();
@@ -62,7 +63,7 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
   @override
   void initState(){
     super.initState();
-    token = widget.user.token ?? '';
+    token = widget.token ?? '';
 
     // Add a post-frame callback to scroll to the end after the layout is built
     WidgetsBinding.instance?.addPostFrameCallback((_) {
@@ -344,7 +345,7 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text('Version 1.0.4',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                                Text('Version 1.0.5',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
                                 h10,
                                 Text('Developed by Search Technology',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
                                 h10,
@@ -430,7 +431,7 @@ class _DocProfilePageState extends ConsumerState<DocProfilePage> {
             ),
             w10,
             InkWell(
-                onTap: ()=>Get.to(()=>UpdateDocProfile(isWideScreen,isNarrowScreen,user)),
+                onTap: ()=>Get.to(()=>UpdateDocProfile(isWideScreen,isNarrowScreen,user,userBox[0].token!)),
                 child: FaIcon(FontAwesomeIcons.penToSquare,color: ColorManager.primaryDark,))
           ],
         ),

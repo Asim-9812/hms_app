@@ -14,6 +14,7 @@ import 'package:meroupachar/src/presentation/patient/reminder/domain/model/remin
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/general/generalDetails.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/medicine/medDetails.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/reminder_tabs.dart';
+import 'package:workmanager/workmanager.dart';
 
 import '../../../main.dart';
 import '../../app/app.dart';
@@ -60,7 +61,7 @@ class NotificationController {
           )
         ],
 
-        debug: false);
+        debug: true);
 
     // Get initial notification action is optional
     initialAction = await AwesomeNotifications()
@@ -68,10 +69,14 @@ class NotificationController {
   }
 
   static ReceivePort? receivePort;
+
+  @pragma('vm:entry-point')
   static Future<void> initializeIsolateReceivePort() async {
     receivePort = ReceivePort('Notification action port in main isolate')
       ..listen(
-              (silentData) => onActionReceivedImplementationMethod(silentData));
+              (silentData){
+                print('this is the silent data : $silentData');
+              });
 
     // This initialization only happens on main isolate
     IsolateNameServer.registerPortWithName(
@@ -85,6 +90,7 @@ class NotificationController {
   static Future<void> startListeningNotificationEvents() async {
     AwesomeNotifications()
         .setListeners(
+      // onNotificationDisplayedMethod: onDisplayedAction,
       onActionReceivedMethod: onActionReceivedMethod,
       onDismissActionReceivedMethod: onDismissActionReceivedMethod);
   }
@@ -92,15 +98,23 @@ class NotificationController {
   ///  *********************************************
   ///     NOTIFICATION EVENTS
   ///  *********************************************
-  ///
+  // @pragma('vm:entry-point')
+  // static Future<void> onDisplayedAction(
+  //     ReceivedNotification receivedAction) async {
+  //
+  //   print('notification displayed');
+  //   await initializeLocalNotifications();
+  //   await initializeIsolateReceivePort();
+  //   await startListeningNotificationEvents();
+  // }
+
   @pragma('vm:entry-point')
   static Future<void> onActionReceivedMethod(
       ReceivedAction receivedAction) async {
 
-    print('action received!!');
 
     if (receivedAction.actionType == ActionType.SilentAction ||
-        receivedAction.actionType == ActionType.SilentBackgroundAction) {
+        receivedAction.actionType == ActionType.DismissAction) {
       // For background actions, you must hold the execution until the end
       if(receivedAction.buttonKeyPressed == 'SNOOZE'){
         // final SnackBar snackBar = SnackBar(content: Text("Snoozed for 5 minutes"));
@@ -113,6 +127,7 @@ class NotificationController {
         await onDismissActionReceivedMethod(receivedAction);
       }
     }
+
     else {
       // this process is only necessary when you need to redirect the user
       // to a new page or use a valid context, since parallel isolates do not
@@ -486,8 +501,6 @@ class NotificationController {
   static Future<void> onActionReceivedImplementationMethod(
       ReceivedAction receivedAction) async {
 
-    print('tap action received!!');
-    print(receivedAction.payload ?? 'null payload');
     onDismissActionReceivedMethod(receivedAction);
     final payload = receivedAction.payload;
     final userBox = Hive.box<User>('session').values.toList();
@@ -522,6 +535,7 @@ class NotificationController {
     //         (route) =>
     //     (route.settings.name != '/notification-page') || route.isFirst,
     //     arguments: receivedAction);
+
 
   }
 
@@ -670,7 +684,7 @@ Future<void> snoozeAlarm({
       NotificationActionButton(
           key: 'DISMISSED',
           label: 'Dismiss',
-          actionType: ActionType.SilentBackgroundAction
+          actionType: ActionType.DismissAction
       ),
     ],
   );
@@ -705,7 +719,7 @@ Future<void> postAlarm({
       NotificationActionButton(
           key: 'DISMISSED',
           label: 'Dismiss',
-          actionType: ActionType.SilentBackgroundAction
+          actionType: ActionType.Default
       ),
     ],
   );
@@ -748,7 +762,7 @@ Future<void> myNotifyTaskSchedule({
       NotificationActionButton(
           key: 'DISMISSED',
           label: 'Dismiss',
-          actionType: ActionType.SilentBackgroundAction
+          actionType: ActionType.Default
       ),
     ],
   );
@@ -779,10 +793,12 @@ Future<void> myNotificationSchedules({
       NotificationActionButton(
           key: 'DISMISSED',
           label: 'Dismiss',
-          actionType: ActionType.SilentBackgroundAction
+          actionType: ActionType.Default
       ),
     ],
   );
+
+
 
 }
 

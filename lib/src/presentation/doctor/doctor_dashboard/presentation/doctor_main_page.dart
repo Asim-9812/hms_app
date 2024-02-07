@@ -151,6 +151,7 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
     final screenSize = MediaQuery.of(context).size;
 
     final userBox = Hive.box<User>('session').values.toList();
+    final token = userBox[0].token;
     final user = ref.watch(userInfoProvider(userBox[0].userID!));
 
     // Check if width is greater than height
@@ -349,6 +350,7 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
 
           body: user.when(
               data: (data){
+                print(data.token);
                 return PageView(
                   onPageChanged: (value){
                     setState(() {
@@ -357,11 +359,11 @@ class _AnimatedBarExampleState extends ConsumerState<DoctorMainPage> with Single
                   },
                   controller: controller,
                   children: [
-                    DoctorHomePage(isWideScreen,isNarrowScreen,noticeBool,data),
+                    DoctorHomePage(isWideScreen,isNarrowScreen,noticeBool,userBox[0]),
                     DocumentPage(isWideScreen,isNarrowScreen,false),
-                    PatientReports(userCode : data.code!,userId: data.userID!,token: data.token!,),
+                    PatientReports(userCode : data.code!,userId: data.userID!,token: token!,),
                     DoctorUtilityPage(),
-                    DocProfilePage(data)
+                    DocProfilePage(data,userBox[0].token!)
                   ],
                 );
               },
