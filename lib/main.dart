@@ -21,17 +21,56 @@ import 'package:workmanager/workmanager.dart';
 
 
 
+@pragma('vm:entry-point')
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
 
-// @pragma('vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
-// void callbackDispatcher() {
-//   Workmanager().executeTask((task, inputData) {
-//     ReceivedAction receivedAction = ReceivedAction();
-//     receivedAction.payload = inputData;
-//     NotificationController.onDismissActionReceivedMethod(receivedAction);
-//     return Future.value(true);
-//   });
-// }
+    try{
+      final allDateList = inputData!['dateList'] as List<dynamic>;
+      final todayList = allDateList.where((element) => (DateFormat('yyyy-MM-dd').format(DateTime.parse(element))).toString() == (DateFormat('yyyy-MM-dd').format(DateTime.now())).toString()).toList();
+      // final body = inputData!['name'];
+      print(todayList);
+      return Future.value(true);
+    } catch(e){
+      print(e);
+      return Future.value(false);
+    }
 
+
+    //final todayList = allDateList.where((element) => DateFormat('yyyy-MM-dd').format(DateTime.parse(element)) == DateFormat('yyyy-MM-dd').format(DateTime.now())).toList();
+    //
+    // // List to hold all the Future objects for notifications
+    // List<Future<void>> notificationFutures = [];
+    //
+    // for(var dates in todayList){
+    //   int i = 20;
+    //   // Create notification and add the Future to the list
+    //   notificationFutures.add(
+    //       AwesomeNotifications().createNotification(
+    //           content: NotificationContent(
+    //             id: 234,
+    //             channelKey: 'alerts',
+    //             title: task,
+    //             body: body,
+    //             criticalAlert: true,
+    //           ),
+    //           schedule: NotificationInterval(interval: i)
+    //       )
+    //   );
+    //   print(i);
+    //   i += 20;
+    // }
+    //
+    // // Wait for all notifications to be created
+    // await Future.wait(notificationFutures);
+    // print("Native called background task: $task");
+    // print("Native called background task: $inputData");
+
+
+
+
+  });
+}
 
 // final box = Provider<String?>((ref) => null);
 
@@ -126,6 +165,11 @@ Future<void> main() async {
 
 
 
+
+  Workmanager().initialize(
+      callbackDispatcher, // The top level function, aka callbackDispatcher
+      isInDebugMode: true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+  );
 
 
 

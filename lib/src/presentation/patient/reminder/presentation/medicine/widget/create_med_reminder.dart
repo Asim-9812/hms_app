@@ -1542,71 +1542,71 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                             int contentId = Random().nextInt(9999);
                             int initialContentId = Random().nextInt(9999);
 
-                              final NotificationContent content = NotificationContent(
-                                id: contentId,
-                                channelKey: 'alerts',
-                                title: _medicineNameController.text.trim(),
-                                body: '${_strengthController.text} ${selectedStrengthUnit} ${selectedMealName}',
-                                notificationLayout: NotificationLayout.Default,
-                                //actionType : ActionType.DisabledAction,
-                                color: Colors.black,
-                                category: NotificationCategory.Alarm,
-                                wakeUpScreen: true,
-                                timeoutAfter: Duration(minutes: 1),
-
-
-                                displayOnForeground: true,
-                                displayOnBackground: true,
-                                backgroundColor: Colors.black,
-                                // customSound: 'resource://raw/notif',
-                                payload: {
-                                  'reminderTypeId' : '1',
-                                  'dateId': '1'
-                                },
-                              );
-
-
-                              print(firstDate);
-                              print(initialDate);
-
-                              // final NotificationCalendar schedule = NotificationCalendar.fromDate(date: fi22rstDate);
-                              final NotificationCalendar schedule = NotificationCalendar(
-                                year: firstDate.year,
-                                month: firstDate.month,
-                                day: firstDate.day,
-                                hour: firstDate.hour,
-                                minute: firstDate.minute,
-                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
-                              );
-
-
-                            final NotificationContent initialContent = NotificationContent(
-                              id: initialContentId,
-                              channelKey: 'alerts',
-                              title: _medicineNameController.text.trim(),
-                              body: '10 minutes before your medicine',
-                              notificationLayout: NotificationLayout.Default,
-                              //actionType : ActionType.DisabledAction,
-                              color: Colors.black,
-                              wakeUpScreen: true,
-                              displayOnForeground: true,
-                              displayOnBackground: true,
-                              backgroundColor: Colors.black,
-
-                            );
-                            final NotificationCalendar initialSchedule = NotificationCalendar(
-                                year: initialDate.year,
-                                month: initialDate.month,
-                                day: initialDate.day,
-                                hour: initialDate.hour,
-                                minute: initialDate.minute,
-                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
-                            );
-
-
-                              await NotificationController.scheduleNotifications(schedule: schedule, content: content);
-                              await NotificationController.scheduleInitialNotifications(schedule: initialSchedule, content: initialContent);
-
+                            //   final NotificationContent content = NotificationContent(
+                            //     id: contentId,
+                            //     channelKey: 'alerts',
+                            //     title: _medicineNameController.text.trim(),
+                            //     body: '${_strengthController.text} ${selectedStrengthUnit} ${selectedMealName}',
+                            //     notificationLayout: NotificationLayout.Default,
+                            //     //actionType : ActionType.DisabledAction,
+                            //     color: Colors.black,
+                            //     category: NotificationCategory.Alarm,
+                            //     wakeUpScreen: true,
+                            //     timeoutAfter: Duration(minutes: 1),
+                            //
+                            //
+                            //     displayOnForeground: true,
+                            //     displayOnBackground: true,
+                            //     backgroundColor: Colors.black,
+                            //     // customSound: 'resource://raw/notif',
+                            //     payload: {
+                            //       'reminderTypeId' : '1',
+                            //       'dateId': '1'
+                            //     },
+                            //   );
+                            //
+                            //
+                            //   print(firstDate);
+                            //   print(initialDate);
+                            //
+                            //   // final NotificationCalendar schedule = NotificationCalendar.fromDate(date: fi22rstDate);
+                            //   final NotificationCalendar schedule = NotificationCalendar(
+                            //     year: firstDate.year,
+                            //     month: firstDate.month,
+                            //     day: firstDate.day,
+                            //     hour: firstDate.hour,
+                            //     minute: firstDate.minute,
+                            //     timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                            //   );
+                            //
+                            //
+                            // final NotificationContent initialContent = NotificationContent(
+                            //   id: initialContentId,
+                            //   channelKey: 'alerts',
+                            //   title: _medicineNameController.text.trim(),
+                            //   body: '10 minutes before your medicine',
+                            //   notificationLayout: NotificationLayout.Default,
+                            //   //actionType : ActionType.DisabledAction,
+                            //   color: Colors.black,
+                            //   wakeUpScreen: true,
+                            //   displayOnForeground: true,
+                            //   displayOnBackground: true,
+                            //   backgroundColor: Colors.black,
+                            //
+                            // );
+                            // final NotificationCalendar initialSchedule = NotificationCalendar(
+                            //     year: initialDate.year,
+                            //     month: initialDate.month,
+                            //     day: initialDate.day,
+                            //     hour: initialDate.hour,
+                            //     minute: initialDate.minute,
+                            //     timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                            // );
+                            //
+                            //
+                            //   await NotificationController.scheduleNotifications(schedule: schedule, content: content);
+                            //   await NotificationController.scheduleInitialNotifications(schedule: initialSchedule, content: initialContent);
+                            //
 
 
                             Reminder reminder = Reminder(
@@ -1644,6 +1644,30 @@ class _EditReminderPageState extends ConsumerState<CreateMedReminder> {
                             );
 
                             _addReminder(reminder);
+
+
+
+                            //DateTime date = scheduleList.firstWhere((element) => element.reminderDate.isAfter(DateTime.now()));
+
+                            Workmanager().registerPeriodicTask(
+                              "medicine-reminder-${reminder.reminderId}",
+                              "${reminder.medicineName}",
+                              inputData: {
+                                'dateList' : scheduleList.map((e) => e.reminderDate.toString()).toList()
+                              },
+                              // backoffPolicy: BackoffPolicy.linear,
+                              // When no frequency is provided the default 15 minutes is set.
+                              // Minimum frequency is 15 min. Android will automatically change your frequency to 15 min if you have configured a lower frequency.
+                              frequency: Duration(minutes: 15),
+                                constraints: Constraints(
+                                    networkType: NetworkType.not_required,
+                                    requiresBatteryNotLow: false,
+                                    requiresCharging: false,
+                                    requiresDeviceIdle: false,
+                                    requiresStorageNotLow: false,
+                                ),
+                              // existingWorkPolicy: ExistingWorkPolicy.append
+                            );
 
 
 
