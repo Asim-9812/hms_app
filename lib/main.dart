@@ -25,11 +25,44 @@ import 'package:workmanager/workmanager.dart';
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
 
+
+    await NotificationController.initializeLocalNotifications();
+    await NotificationController.initializeIsolateReceivePort();
+    await NotificationController.startListeningNotificationEvents();
+
     try{
+      await AwesomeNotifications().cancelAll();
       final allDateList = inputData!['dateList'] as List<dynamic>;
       final todayList = allDateList.where((element) => (DateFormat('yyyy-MM-dd').format(DateTime.parse(element))).toString() == (DateFormat('yyyy-MM-dd').format(DateTime.now())).toString()).toList();
-      // final body = inputData!['name'];
-      print(todayList);
+      for(var i in todayList){
+        print(i);
+        final date = DateTime.parse(i);
+
+        NotificationCalendar schedule = NotificationCalendar(
+            year: date.year,
+            month: date.month,
+            day: date.day,
+            hour: date.hour,
+            minute: date.minute,
+            timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+        );
+        NotificationContent content = NotificationContent(
+          id: Random().nextInt(9999),
+          channelKey: 'alerts',
+          title: '$task',
+          body: '${inputData['body']}',
+          category: NotificationCategory.Alarm,
+          displayOnForeground: true,
+          displayOnBackground: true,
+          payload: {
+            'reminderTypeId' : inputData['reminderTypeId']
+          }
+        );
+
+
+        await NotificationController.scheduleNotifications( schedule: schedule, content: content);
+
+      }
       return Future.value(true);
     } catch(e){
       print(e);

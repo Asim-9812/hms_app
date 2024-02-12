@@ -501,7 +501,7 @@ class NotificationController {
   static Future<void> onActionReceivedImplementationMethod(
       ReceivedAction receivedAction) async {
 
-    onDismissActionReceivedMethod(receivedAction);
+    // onDismissActionReceivedMethod(receivedAction);
     final payload = receivedAction.payload;
     final userBox = Hive.box<User>('session').values.toList();
 
