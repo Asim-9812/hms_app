@@ -1031,7 +1031,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
 
                                     final NotificationContent content = NotificationContent(
                                       id: contentId,
-                                      channelKey: 'alerts',
+                                      channelKey: 'general_alerts',
                                       title: _titleController.text.trim(),
                                       body: _descriptionController.text,
                                       notificationLayout: NotificationLayout
@@ -1076,7 +1076,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
 
                                       final NotificationContent initialContent = NotificationContent(
                                         id: initialContentId,
-                                        channelKey: 'alerts',
+                                        channelKey: 'general_alerts',
                                         title: _titleController.text.trim(),
                                         body: _descriptionController.text,
                                         notificationLayout: NotificationLayout
@@ -1147,7 +1147,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
 
                                     final NotificationContent content = NotificationContent(
                                       id: contentId,
-                                      channelKey: 'alerts',
+                                      channelKey: 'general_alerts',
                                       title: _titleController.text.trim(),
                                       body: _descriptionController.text,
                                       notificationLayout: NotificationLayout
@@ -1168,13 +1168,14 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                     );
 
                                     final NotificationCalendar schedule = NotificationCalendar(
-                                year: firstDate.year,
-                                month: firstDate.month,
-                                day: firstDate.day,
-                                hour: firstDate.hour,
-                                minute: firstDate.minute,
-                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
-                              );
+                                        year: firstDate.year,
+                                        month: firstDate.month,
+                                        day: firstDate.day,
+                                        hour: firstDate.hour,
+                                        minute: firstDate.minute,
+                                        repeats: true,
+                                        timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                                    );
 
                                     contentList.add(content.id!);
 
@@ -1188,7 +1189,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
 
                                       final NotificationContent content = NotificationContent(
                                         id: initialContentId,
-                                        channelKey: 'alerts',
+                                        channelKey: 'general_alerts',
                                         title: _titleController.text.trim(),
                                         body: _descriptionController.text,
                                         notificationLayout: NotificationLayout
@@ -1204,13 +1205,14 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                       );
 
                                       final NotificationCalendar schedule = NotificationCalendar(
-                                year: initialDate.year,
-                                month: initialDate.month,
-                                day: initialDate.day,
-                                hour: initialDate.hour,
-                                minute: initialDate.minute,
-                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
-                            );
+                                          year: initialDate.year,
+                                          month: initialDate.month,
+                                          day: initialDate.day,
+                                          hour: initialDate.hour,
+                                          minute: initialDate.minute,
+                                          repeats: true,
+                                          timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                                      );
 
 
                                       contentList.add(content.id!);
@@ -1262,9 +1264,10 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
 
                                     int contentId = Random().nextInt(9999);
                                     int initialContentId = Random().nextInt(9999);
+
                                     final NotificationContent content = NotificationContent(
                                       id: contentId,
-                                      channelKey: 'alerts',
+                                      channelKey: 'general_alerts',
                                       title: _titleController.text.trim(),
                                       body: _descriptionController.text,
                                       notificationLayout: NotificationLayout
@@ -1287,26 +1290,24 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
 
 
                                     final NotificationCalendar schedule = NotificationCalendar(
-                                year: firstDate.year,
-                                month: firstDate.month,
-                                day: firstDate.day,
-                                hour: firstDate.hour,
-                                minute: firstDate.minute,
-                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
-                              );
+                                        year: firstDate.year,
+                                        month: firstDate.month,
+                                        day: firstDate.day,
+                                        hour: firstDate.hour,
+                                        minute: firstDate.minute,
+                                        timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                                    );
 
 
 
-                                    await NotificationController
-                                        .scheduleNotifications(
+                                    await NotificationController.scheduleNotifications(
                                         schedule: schedule,
                                         content: content);
-
 
                                     if(remindMe){
                                       final NotificationContent initialContent = NotificationContent(
                                         id: initialContentId,
-                                        channelKey: 'alerts',
+                                        channelKey: 'general_alerts',
                                         title: _titleController.text.trim(),
                                         body: _descriptionController.text,
                                         notificationLayout: NotificationLayout
@@ -1322,21 +1323,100 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                       );
 
                                       final NotificationCalendar schedule = NotificationCalendar(
-                                year: initialDate.year,
-                                month: initialDate.month,
-                                day: initialDate.day,
-                                hour: initialDate.hour,
-                                minute: initialDate.minute,
-                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
-                            );
+                                          year: initialDate.year,
+                                          month: initialDate.month,
+                                          day: initialDate.day,
+                                          hour: initialDate.hour,
+                                          minute: initialDate.minute,
+                                          timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                                      );
 
-                                      await NotificationController
-                                          .scheduleInitialNotifications(
+                                      await NotificationController.scheduleInitialNotifications(
                                           schedule: schedule,
                                           content: initialContent);
 
 
                                     }
+
+
+
+
+
+                                    for(var i in days!){
+                                      final indexOfWeek = daysOfWeekMedication.indexOf(i) +1;
+                                      final NotificationContent content = NotificationContent(
+                                        id: contentId,
+                                        channelKey: 'general_alerts',
+                                        title: _titleController.text.trim(),
+                                        body: _descriptionController.text,
+                                        notificationLayout: NotificationLayout
+                                            .Default,
+                                        color: Colors.black,
+
+                                        //
+                                        backgroundColor: Colors.black,
+                                        category: NotificationCategory.Alarm,
+                                        timeoutAfter: Duration(minutes: 1),
+
+                                        wakeUpScreen: true,
+
+                                        // customSound: 'resource://raw/notif',
+                                        payload: {
+                                          'reminderTypeId': '2',
+                                          'dateTime': firstDate.toString()
+                                        },
+                                      );
+
+
+                                      final NotificationCalendar schedule = NotificationCalendar(
+                                          weekday: indexOfWeek,
+                                          repeats: true,
+                                          timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                                      );
+
+
+
+                                      await NotificationController.scheduleNotifications(
+                                          schedule: schedule,
+                                          content: content);
+
+
+                                      if(remindMe){
+                                        final NotificationContent initialContent = NotificationContent(
+                                          id: initialContentId,
+                                          channelKey: 'general_alerts',
+                                          title: _titleController.text.trim(),
+                                          body: _descriptionController.text,
+                                          notificationLayout: NotificationLayout
+                                              .Default,
+                                          color: Colors.black,
+
+                                          wakeUpScreen: true,
+
+
+                                          //
+                                          backgroundColor: Colors.black,
+
+                                        );
+
+                                        final NotificationCalendar schedule = NotificationCalendar(
+                                            weekday: indexOfWeek,
+                                            repeats: true,
+                                            timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                                        );
+
+                                        await NotificationController.scheduleInitialNotifications(
+                                            schedule: schedule,
+                                            content: initialContent);
+
+
+                                      }
+
+
+                                    }
+
+
+
 
                                     GeneralReminderModel reminder = GeneralReminderModel(
                                         reminderId: Random().nextInt(1000),
@@ -1370,6 +1450,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
 
                                   /// FOR INTERVALS....
                                   if (selectedPatternId == 4) {
+                                    final initialInterval = int.parse(_intervalDurationController.text) *24 *60 *60;
                                     final DateTime firstDate = DateTime(
                                         startDateIntake!.year,
                                         startDateIntake!.month,
@@ -1383,7 +1464,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
 
                                     final NotificationContent content = NotificationContent(
                                       id: contentId,
-                                      channelKey: 'alerts',
+                                      channelKey: 'general_alerts',
                                       title: _titleController.text.trim(),
                                       body: _descriptionController.text,
                                       notificationLayout: NotificationLayout
@@ -1406,13 +1487,13 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
 
 
                                     final NotificationCalendar schedule = NotificationCalendar(
-                                year: firstDate.year,
-                                month: firstDate.month,
-                                day: firstDate.day,
-                                hour: firstDate.hour,
-                                minute: firstDate.minute,
-                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
-                              );
+                                        year: firstDate.year,
+                                        month: firstDate.month,
+                                        day: firstDate.day,
+                                        hour: firstDate.hour,
+                                        minute: firstDate.minute,
+                                        timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                                    );
 
                                     contentList.add(content.id!);
 
@@ -1425,7 +1506,7 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                     if(remindMe){
                                       final NotificationContent initialContent = NotificationContent(
                                         id: initialContentId,
-                                        channelKey: 'alerts',
+                                        channelKey: 'general_alerts',
                                         title: _titleController.text.trim(),
                                         body: _descriptionController.text,
                                         notificationLayout: NotificationLayout
@@ -1440,13 +1521,17 @@ class _EditReminderPageState extends ConsumerState<EditGeneralReminder> {
                                       );
 
                                       final NotificationCalendar initialSchedule = NotificationCalendar(
-                                year: initialDate.year,
-                                month: initialDate.month,
-                                day: initialDate.day,
-                                hour: initialDate.hour,
-                                minute: initialDate.minute,
-                                timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
-                            );
+                                          year: initialDate.year,
+                                          month: initialDate.month,
+                                          day: initialDate.day,
+                                          hour: initialDate.hour,
+                                          minute: initialDate.minute,
+                                          timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+                                      );
+
+
+
+                                      final NotificationInterval initialIntervals = NotificationInterval(interval: initialInterval,repeats: true,);
 
 
 

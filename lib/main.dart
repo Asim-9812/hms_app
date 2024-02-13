@@ -31,13 +31,22 @@ void callbackDispatcher() {
     await NotificationController.startListeningNotificationEvents();
 
     try{
-      await AwesomeNotifications().cancelAll();
+      await AwesomeNotifications().cancelNotificationsByChannelKey('alerts');
       final allDateList = inputData!['dateList'] as List<dynamic>;
       final todayList = allDateList.where((element) => (DateFormat('yyyy-MM-dd').format(DateTime.parse(element))).toString() == (DateFormat('yyyy-MM-dd').format(DateTime.now())).toString()).toList();
       for(var i in todayList){
         print(i);
         final date = DateTime.parse(i);
+        final initialDate = DateTime.parse(i).subtract(Duration(minutes: 10));
 
+        NotificationCalendar initialSchedule = NotificationCalendar(
+            year: initialDate.year,
+            month: initialDate.month,
+            day: initialDate.day,
+            hour: initialDate.hour,
+            minute: initialDate.minute,
+            timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+        );
         NotificationCalendar schedule = NotificationCalendar(
             year: date.year,
             month: date.month,
@@ -46,6 +55,7 @@ void callbackDispatcher() {
             minute: date.minute,
             timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
         );
+
         NotificationContent content = NotificationContent(
           id: Random().nextInt(9999),
           channelKey: 'alerts',
@@ -56,11 +66,33 @@ void callbackDispatcher() {
           displayOnBackground: true,
           payload: {
             'reminderTypeId' : inputData['reminderTypeId']
-          }
+          },
+          wakeUpScreen: true,
+          timeoutAfter: Duration(minutes: 1),
+          autoDismissible: true,
+          criticalAlert: true,
+          locked: true,
+        );
+        NotificationContent initialContent = NotificationContent(
+          id: Random().nextInt(9999),
+          channelKey: 'alerts',
+          title: '$task',
+          body: '10 minutes before your medicine',
+          displayOnForeground: true,
+          displayOnBackground: true,
+          // payload: {
+          //   'reminderTypeId' : inputData['reminderTypeId']
+          // },
+          wakeUpScreen: true,
+          autoDismissible: true,
+          actionType: ActionType.DismissAction,
+          criticalAlert: true,
+          locked: true,
         );
 
-
+        await NotificationController.scheduleNotifications( schedule: initialSchedule, content: initialContent);
         await NotificationController.scheduleNotifications( schedule: schedule, content: content);
+
 
       }
       return Future.value(true);
@@ -201,8 +233,10 @@ Future<void> main() async {
 
   Workmanager().initialize(
       callbackDispatcher, // The top level function, aka callbackDispatcher
-      isInDebugMode: true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+      isInDebugMode: false // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
   );
+
+
 
 
 

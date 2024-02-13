@@ -13,6 +13,7 @@ import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/domain/model/reminder_model.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/medicine/widget/edit_med_page.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/medicine/widget/edit_med_page.dart';
+import 'package:workmanager/workmanager.dart';
 
 import '../../../../../core/resources/color_manager.dart';
 import '../../../../../core/resources/style_manager.dart';
@@ -405,9 +406,10 @@ class _MedDetailsState extends State<MedDetails> {
                                        ),
                                        onPressed: ()async{
 
-                                           await NotificationController.cancelNotifications(id: reminderBox.contentId);
-                                           await NotificationController.cancelNotifications(id: reminderBox.initialContentId);
-
+                                           // await NotificationController.cancelNotifications(id: reminderBox.contentId);
+                                           // await NotificationController.cancelNotifications(id: reminderBox.initialContentId);
+                                           //
+                                        await Workmanager().cancelByUniqueName('medicine-reminder-${reminderBox.reminderId}');
 
                                          reminder.deleteAt(index);
                                          setState(() {

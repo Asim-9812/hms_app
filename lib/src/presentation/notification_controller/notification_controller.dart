@@ -13,13 +13,8 @@ import 'package:meroupachar/src/presentation/patient/reminder/domain/model/gener
 import 'package:meroupachar/src/presentation/patient/reminder/domain/model/reminder_model.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/general/generalDetails.dart';
 import 'package:meroupachar/src/presentation/patient/reminder/presentation/medicine/medDetails.dart';
-import 'package:meroupachar/src/presentation/patient/reminder/presentation/reminder_tabs.dart';
-import 'package:workmanager/workmanager.dart';
-
-import '../../../main.dart';
 import '../../app/app.dart';
 import '../login/domain/model/user.dart';
-import '../patient/patient_dashboard/presentation/patient_main_page.dart';
 
 
 
@@ -49,6 +44,19 @@ class NotificationController {
           NotificationChannel(
               channelKey: 'alerts',
               channelName: 'Alerts',
+              channelDescription: 'Notification for meroUpachar',
+              playSound: true,
+              onlyAlertOnce: true,
+              criticalAlerts: true,
+              groupAlertBehavior: GroupAlertBehavior.Children,
+              importance: NotificationImportance.High,
+              defaultPrivacy: NotificationPrivacy.Private,
+              defaultColor: Colors.deepPurple,
+              ledColor: Colors.deepPurple
+          ),
+          NotificationChannel(
+              channelKey: 'general_alerts',
+              channelName: 'General_Alerts',
               channelDescription: 'Notification for meroUpachar',
               playSound: true,
               onlyAlertOnce: true,
@@ -155,345 +163,15 @@ class NotificationController {
   static Future<void> onDismissActionReceivedMethod(
       ReceivedAction receivedAction) async {
 
-    print('dismiss action received!!');
-
-    print(receivedAction.payload);
-
-    final payload = receivedAction.payload;
-    if(payload !=null){
-      if(payload['reminderTypeId'] == '1'){
-        print('executed 2');
-        final allReminderBox = Hive.box<Reminder>('med_reminder');
-        final reminderBox = Hive.box<Reminder>('med_reminder').values.toList();
-        final reminderIndex = reminderBox.indexWhere((element) => element.medicineName == receivedAction.title);
-        final reminder = reminderBox.firstWhere((element) => element.medicineName == receivedAction.title);
-        cancelNotifications(id: reminder.contentId);
-        cancelNotifications(id: reminder.initialContentId);
-        final dateList = reminder.dateList;
-        final index = dateList.indexWhere((element) => element.dateId.toString() == payload['dateId'])+1;
-        if(dateList.length > index){
-          print(index);
-          final newDate = dateList[index];
-          final newInitialDate = newDate.reminderDate.subtract(Duration(minutes: 10));
-          print(newDate.reminderDate);
-          print(newInitialDate);
-          final contentId = Random().nextInt(9999);
-          final initialContentId = Random().nextInt(9999);
-          await scheduleNotifications(
-              content: NotificationContent(
-                  id: contentId,
-                  channelKey: 'alerts',
-                  title: reminder.medicineName,
-                  body: '${reminder.strength} ${reminder.unit} ${reminder.meal}',
-                  payload: {
-                    'reminderTypeId' : '1',
-                    'dateId' : newDate.dateId.toString()
-                  },
-                  criticalAlert: true,
-                  displayOnBackground: true,
-                  displayOnForeground: true,
-                  fullScreenIntent: true,
-                  wakeUpScreen: true,
-                  category: NotificationCategory.Alarm,
-                  timeoutAfter: const Duration(minutes: 1)
-              ),
-              schedule: NotificationCalendar(
-                  year: newDate.reminderDate.year,
-                  month: newDate.reminderDate.month,
-                  day: newDate.reminderDate.day,
-                  hour: newDate.reminderDate.hour,
-                  minute: newDate.reminderDate.minute,
-                  timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
-              )
-          );
-          await scheduleInitialNotifications(
-              schedule:NotificationCalendar(
-                  year: newInitialDate.year,
-                  month: newInitialDate.month,
-                  day: newInitialDate.day,
-                  hour: newInitialDate.hour,
-                  minute: newInitialDate.minute,
-                  timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
-              ),
-              content: NotificationContent(
-                id: initialContentId,
-                channelKey: 'alerts',
-                title: reminder.medicineName,
-                body: '10 minutes before your medicine',
-                notificationLayout: NotificationLayout.Default,
-                //actionType : ActionType.DisabledAction,
-                color: Colors.black,
-                wakeUpScreen: true,
-                displayOnForeground: true,
-                displayOnBackground: true,
-                backgroundColor: Colors.black,
-              )
-          );
-          Reminder reminderModel = Reminder(
-              reminderId: reminder.reminderId,
-              userId: reminder.userId,
-              medTypeId: reminder.medTypeId,
-              medTypeName: reminder.medTypeName,
-              medicineName: reminder.medicineName,
-              strength: reminder.strength,
-              unit: reminder.unit,
-              frequency: reminder.frequency,
-              scheduleTime: reminder.scheduleTime,
-              medicationDuration: reminder.medicationDuration,
-              startDate: reminder.startDate,
-              endDate: reminder.endDate,
-              mealTypeId: reminder.mealTypeId,
-              meal: reminder.meal,
-              reminderPattern: reminder.reminderPattern,
-              reminderImage: reminder.reminderImage,
-              notes: reminder.notes,
-              summary: reminder.summary,
-              contentId: contentId,
-              dateList: reminder.dateList,
-              reminderTypeId: 1,
-              initialContentId: initialContentId
-          );
-          allReminderBox.putAt(reminderIndex, reminderModel);
-
-        }
-      }
-      else if(payload['reminderTypeId'] == '2'){
-        final allReminderBox = Hive.box<GeneralReminderModel>('general_reminder_box');
-        final reminderBox = Hive.box<GeneralReminderModel>('general_reminder_box').values.toList();
-        final reminderIndex = reminderBox.indexWhere((element) => element.title == receivedAction.title);
-        final reminder = reminderBox.firstWhere((element) => element.title == receivedAction.title);
-        cancelNotifications(id: reminder.contentId);
-        if(reminder.initialReminder != null){
-          cancelNotifications(id: reminder.initialContentId!);
-        }
-
-        int addedTime = 0;
-        Duration? duration ;
-        final contentId = Random().nextInt(9999);
-        final initialContentId = Random().nextInt(9999);
-
-        if(reminder.initialReminder != null){
-          addedTime = reminder.initialReminder!.initialReminder;
-          if(reminder.initialReminder!.initialReminderTypeId == 1){
-            duration = Duration(minutes: addedTime);
-          }
-          else if(reminder.initialReminder!.initialReminderTypeId  == 2){
-            duration = Duration(hours: addedTime);
-          }
-          else if(reminder.initialReminder!.initialReminderTypeId  == 3){
-            duration = Duration(days: addedTime);
-          }
-        }
-        if(reminder.reminderPattern.reminderPatternId ==2){
-          final dateList = DateTime.parse(payload['dateTime']!);
-          final newDate = dateList.add(Duration(days: 1));
-
-          final newInitialDate = newDate.subtract(duration??Duration(seconds: 0));
-          scheduleNotifications(
-              content: NotificationContent(
-                  id: contentId,
-                  channelKey: 'alerts',
-                  title: reminder.title,
-                  body: reminder.description,
-                  payload: {
-                    'reminderTypeId' : '2',
-                    'dateId' : newDate.toString()
-                  },
-                  criticalAlert: true,
-                  displayOnBackground: true,
-                  displayOnForeground: true,
-                  fullScreenIntent: true,
-                  wakeUpScreen: true,
-                  category: NotificationCategory.Alarm,
-                  timeoutAfter: const Duration(minutes: 1)
-              ),
-              schedule: NotificationCalendar(
-                  year: newDate.year,
-                  month: newDate.month,
-                  day: newDate.day,
-                  hour: newDate.hour,
-                  minute: newDate.minute,
-                  timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
-              )
-          );
-          if(reminder.initialReminder!= null){
-            scheduleInitialNotifications(
-                schedule: NotificationCalendar(
-                    year: newInitialDate.year,
-                    month: newInitialDate.month,
-                    day: newInitialDate.day,
-                    hour: newInitialDate.hour,
-                    minute: newInitialDate.minute,
-                    timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
-                ),
-                content: NotificationContent(
-                  id: initialContentId,
-                  channelKey: 'alerts',
-                  title: reminder.title,
-                  body: reminder.description,
-                  notificationLayout: NotificationLayout.Default,
-                  //actionType : ActionType.DisabledAction,
-                  color: Colors.black,
-                  wakeUpScreen: true,
-                  displayOnForeground: true,
-                  displayOnBackground: true,
-                  backgroundColor: Colors.black,
-                )
-            );
-          }
-
-          GeneralReminderModel reminderModel = GeneralReminderModel(reminderId: reminder.reminderId, title: reminder.title, description: reminder.description, time: reminder.time, startDate: reminder.startDate, reminderPattern: reminder.reminderPattern, userId: reminder.userId, contentId: contentId, reminderTypeId: reminder.reminderTypeId);
-          allReminderBox.putAt(reminderIndex, reminderModel);
-        }
-        if(reminder.reminderPattern.reminderPatternId ==3){
-          final dateList = DateTime.parse(payload['dateTime']!);
-          String day ='';
-          DateTime? newAddedDate ;
-
-          int addedDatesCount = 0;
-
-          do {
-            DateTime newDate = dateList.add(
-                Duration(days: addedDatesCount));
-
-            day = DateFormat('EEEE').format(newDate);
-            newAddedDate = newDate;
-
-
-            addedDatesCount++;
-          } while (reminder.reminderPattern.daysOfWeek!.contains(day));
-
-          final newInitialDate = newAddedDate.subtract(duration??Duration(seconds: 0));
-          scheduleNotifications(
-              content: NotificationContent(
-                  id: contentId,
-                  channelKey: 'alerts',
-                  title: reminder.title,
-                  body: reminder.description,
-                  payload: {
-                    'reminderTypeId' : '2',
-                    'dateId' : newAddedDate.toString()
-                  },
-                  criticalAlert: true,
-                  displayOnBackground: true,
-                  displayOnForeground: true,
-                  fullScreenIntent: true,
-                  wakeUpScreen: true,
-                  category: NotificationCategory.Alarm,
-                  timeoutAfter: const Duration(minutes: 1)
-              ),
-              schedule: NotificationCalendar(
-                  year: newAddedDate.year,
-                  month: newAddedDate.month,
-                  day: newAddedDate.day,
-                  hour: newAddedDate.hour,
-                  minute: newAddedDate.minute,
-                  timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
-              )
-          );
-          if(reminder.initialReminder!= null){
-            scheduleInitialNotifications(
-                schedule:NotificationCalendar(
-                    year: newInitialDate.year,
-                    month: newInitialDate.month,
-                    day: newInitialDate.day,
-                    hour: newInitialDate.hour,
-                    minute: newInitialDate.minute,
-                    timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
-                ),
-                content: NotificationContent(
-                  id: initialContentId,
-                  channelKey: 'alerts',
-                  title: reminder.title,
-                  body: reminder.description,
-                  notificationLayout: NotificationLayout.Default,
-                  //actionType : ActionType.DisabledAction,
-                  color: Colors.black,
-                  wakeUpScreen: true,
-                  displayOnForeground: true,
-                  displayOnBackground: true,
-                  backgroundColor: Colors.black,
-                )
-            );
-          }
-
-          GeneralReminderModel reminderModel = GeneralReminderModel(reminderId: reminder.reminderId, title: reminder.title, description: reminder.description, time: reminder.time, startDate: reminder.startDate, reminderPattern: reminder.reminderPattern, userId: reminder.userId, contentId: contentId, reminderTypeId: reminder.reminderTypeId);
-          allReminderBox.putAt(reminderIndex, reminderModel);
-        }
-        if(reminder.reminderPattern.reminderPatternId ==4){
-          final dateList = DateTime.parse(payload['dateTime']!);
-          final newDate = dateList.add(Duration(days: reminder.reminderPattern.interval ?? 0));
-
-          final newInitialDate = newDate.subtract(duration??Duration(seconds: 0));
-
-          scheduleNotifications(
-              content: NotificationContent(
-                  id: contentId,
-                  channelKey: 'alerts',
-                  title: reminder.title,
-                  body: reminder.description,
-                  payload: {
-                    'reminderTypeId' : '2',
-                    'dateId' : newDate.toString()
-                  },
-                  criticalAlert: true,
-                  displayOnBackground: true,
-                  displayOnForeground: true,
-                  fullScreenIntent: true,
-                  wakeUpScreen: true,
-                  category: NotificationCategory.Alarm,
-                  timeoutAfter: const Duration(minutes: 1)
-              ),
-              schedule: NotificationCalendar(
-                  year: newDate.year,
-                  month: newDate.month,
-                  day: newDate.day,
-                  hour: newDate.hour,
-                  minute: newDate.minute,
-                  timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
-              ),
-          );
-          if(reminder.initialReminder!= null){
-            scheduleInitialNotifications(
-                schedule: NotificationCalendar(
-                    year: newInitialDate.year,
-                    month: newInitialDate.month,
-                    day: newInitialDate.day,
-                    hour: newInitialDate.hour,
-                    minute: newInitialDate.minute,
-                    timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
-                ),
-                content: NotificationContent(
-                  id: initialContentId,
-                  channelKey: 'alerts',
-                  title: reminder.title,
-                  body: reminder.description,
-                  notificationLayout: NotificationLayout.Default,
-                  //actionType : ActionType.DisabledAction,
-                  color: Colors.black,
-                  wakeUpScreen: true,
-                  displayOnForeground: true,
-                  displayOnBackground: true,
-                  backgroundColor: Colors.black,
-                )
-            );
-          }
-
-          GeneralReminderModel reminderModel = GeneralReminderModel(reminderId: reminder.reminderId, title: reminder.title, description: reminder.description, time: reminder.time, startDate: reminder.startDate, reminderPattern: reminder.reminderPattern, userId: reminder.userId, contentId: contentId, reminderTypeId: reminder.reminderTypeId);
-          allReminderBox.putAt(reminderIndex, reminderModel);
-        }
-
-      }
-      else{
         if (receivedAction.buttonKeyPressed != 'DISMISSED' && !isPostAlarmExecuted) {
           await postAlarmNotification(receivedAction);
           isPostAlarmExecuted = true;
           print('executed');
         }
-      }
 
 
-    }
+
+
 
   }
 
@@ -793,7 +471,7 @@ Future<void> myNotificationSchedules({
       NotificationActionButton(
           key: 'DISMISSED',
           label: 'Dismiss',
-          actionType: ActionType.Default
+          actionType: ActionType.DismissAction
       ),
     ],
   );
