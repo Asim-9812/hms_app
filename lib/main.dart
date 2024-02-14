@@ -31,13 +31,19 @@ void callbackDispatcher() {
     await NotificationController.startListeningNotificationEvents();
 
     try{
-      await AwesomeNotifications().cancelNotificationsByChannelKey('alerts');
-      final allDateList = inputData!['dateList'] as List<dynamic>;
+      final contentId = int.parse(inputData!['id']);
+      final allDateList = inputData['dateList'] as List<dynamic>;
       final todayList = allDateList.where((element) => (DateFormat('yyyy-MM-dd').format(DateTime.parse(element))).toString() == (DateFormat('yyyy-MM-dd').format(DateTime.now())).toString()).toList();
-      for(var i in todayList){
-        print(i);
+      for(int j=0;j<todayList.length;j++){
+        final i = todayList[j];
+
         final date = DateTime.parse(i);
         final initialDate = DateTime.parse(i).subtract(Duration(minutes: 10));
+        // await AwesomeNotifications().cancel((contentId*100)+j);
+        // await AwesomeNotifications().cancel((contentId*1000)+j);
+        print((contentId*100)+j);
+        print((contentId*1000)+j);
+
 
         NotificationCalendar initialSchedule = NotificationCalendar(
             year: initialDate.year,
@@ -57,7 +63,7 @@ void callbackDispatcher() {
         );
 
         NotificationContent content = NotificationContent(
-          id: Random().nextInt(9999),
+          id: (contentId*100)+j ,
           channelKey: 'alerts',
           title: '$task',
           body: '${inputData['body']}',
@@ -74,7 +80,7 @@ void callbackDispatcher() {
           locked: true,
         );
         NotificationContent initialContent = NotificationContent(
-          id: Random().nextInt(9999),
+          id: (contentId*1000)+j,
           channelKey: 'alerts',
           title: '$task',
           body: '10 minutes before your medicine',
@@ -85,12 +91,12 @@ void callbackDispatcher() {
           // },
           wakeUpScreen: true,
           autoDismissible: true,
-          actionType: ActionType.DismissAction,
-          criticalAlert: true,
-          locked: true,
+          // actionType: ActionType.DismissAction,
+          // criticalAlert: true,
+          // locked: true,
         );
 
-        await NotificationController.scheduleNotifications( schedule: initialSchedule, content: initialContent);
+        await NotificationController.scheduleInitialNotifications( schedule: initialSchedule, content: initialContent);
         await NotificationController.scheduleNotifications( schedule: schedule, content: content);
 
 
@@ -233,7 +239,7 @@ Future<void> main() async {
 
   Workmanager().initialize(
       callbackDispatcher, // The top level function, aka callbackDispatcher
-      isInDebugMode: false // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+      isInDebugMode: true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
   );
 
 
