@@ -130,10 +130,6 @@ class NotificationController {
         await snoozeMedNotification(receivedAction);
 
       }
-      else if(receivedAction.buttonKeyPressed == 'DISMISSED'){
-        print('dismissed action received');
-        await onDismissActionReceivedMethod(receivedAction);
-      }
     }
 
     else {
@@ -163,15 +159,17 @@ class NotificationController {
   static Future<void> onDismissActionReceivedMethod(
       ReceivedAction receivedAction) async {
 
+    if(receivedAction.payload != null ){
+      if(receivedAction.payload!['postAlarm'] == 'true'){
         if (receivedAction.buttonKeyPressed != 'DISMISSED' && !isPostAlarmExecuted) {
           await postAlarmNotification(receivedAction);
           isPostAlarmExecuted = true;
           print('executed');
         }
 
+      }
 
-
-
+    }
 
   }
 
@@ -336,7 +334,6 @@ class NotificationController {
 Future<void> snoozeAlarm({
   required ReceivedAction receivedAction
 }) async {
-  print('alarm snoozed');
   // var nowDate = DateTime.now().add(Duration(hours: hoursFromNow, seconds: 5));
   await AwesomeNotifications().createNotification(
     schedule: NotificationInterval(interval: 300,repeats: false,timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()),
@@ -350,21 +347,12 @@ Future<void> snoozeAlarm({
       color: Colors.black,
       backgroundColor: Colors.black,
       category: NotificationCategory.Alarm,
-      timeoutAfter: Duration(minutes: 1)
+      timeoutAfter: Duration(minutes: 1),
+      payload: {
+        'reminderTypeId' : '${receivedAction.payload!['reminderTypeId']}'
+      }
 
     ),
-    actionButtons: [
-      NotificationActionButton(
-          key: 'SNOOZE',
-          label: 'Snooze',
-          actionType: ActionType.SilentAction
-      ),
-      NotificationActionButton(
-          key: 'DISMISSED',
-          label: 'Dismiss',
-          actionType: ActionType.DismissAction
-      ),
-    ],
   );
 }
 
@@ -386,7 +374,7 @@ Future<void> postAlarm({
       category: NotificationCategory.Alarm,
       // actionType: ActionType.DisabledAction,
       customSound: 'resource://raw/notif',
-      payload: {'postAlarm' : 'true'},
+      payload: {'postAlarm' : 'false'},
     ),
     actionButtons: [
       NotificationActionButton(

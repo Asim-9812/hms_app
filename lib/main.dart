@@ -71,7 +71,8 @@ void callbackDispatcher() {
           displayOnForeground: true,
           displayOnBackground: true,
           payload: {
-            'reminderTypeId' : inputData['reminderTypeId']
+            'reminderTypeId' : inputData['reminderTypeId'],
+            'postAlarm' : 'true'
           },
           wakeUpScreen: true,
           timeoutAfter: Duration(minutes: 1),
@@ -86,9 +87,10 @@ void callbackDispatcher() {
           body: '10 minutes before your medicine',
           displayOnForeground: true,
           displayOnBackground: true,
-          // payload: {
-          //   'reminderTypeId' : inputData['reminderTypeId']
-          // },
+          payload: {
+            'reminderTypeId' : inputData['reminderTypeId'],
+            'postAlarm' : 'false'
+          },
           wakeUpScreen: true,
           autoDismissible: true,
           // actionType: ActionType.DismissAction,
@@ -239,7 +241,7 @@ Future<void> main() async {
 
   Workmanager().initialize(
       callbackDispatcher, // The top level function, aka callbackDispatcher
-      isInDebugMode: true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+      isInDebugMode: false // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
   );
 
 
